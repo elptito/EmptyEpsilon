@@ -31,6 +31,7 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setBeamWeapon);
     /// Setup a beam weapon texture
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setBeamTexture);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setBeamType);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setBeamWeaponEnergyPerFire);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setBeamWeaponHeatPerFire);
     /// Set the amount of missile tubes, limited to a maximum of 16.
@@ -69,7 +70,7 @@ std::unordered_map<string, P<ShipTemplate> > ShipTemplate::templateMap;
 ShipTemplate::ShipTemplate()
 {
     if (game_server) { LOG(ERROR) << "ShipTemplate objects can not be created during a scenario."; destroy(); return; }
-    
+
     type = Ship;
     class_name = "No class";
     class_name = "No sub-class";
@@ -99,8 +100,15 @@ ShipTemplate::ShipTemplate()
     radar_trace = "RadarArrow.png";
 }
 
-void ShipTemplate::setBeamTexture(int index, string texture)
+void ShipTemplate::setBeamType(int index, string beam_type)
+{
+    if (index >= 0 && index < max_beam_weapons)
+    {
+        beams[index].setBeamType(beam_type);
+    }
+}
 
+void ShipTemplate::setBeamTexture(int index, string texture)
 {
     if (index >= 0 && index < max_beam_weapons)
     {
@@ -402,7 +410,7 @@ P<ShipTemplate> ShipTemplate::copy(string new_name)
 
     result->rooms = rooms;
     result->doors = doors;
-    
+
     return result;
 }
 

@@ -10,9 +10,10 @@ class BeamTemplate : public sf::NonCopyable
 public:
     BeamTemplate();
 
+    string getBeamType();
+    void setBeamType(string type);
 
     string getBeamTexture();
-
     void setBeamTexture(string texture);
 
     /**
@@ -43,10 +44,11 @@ public:
 
     float getHeatPerFire();
     void setHeatPerFire(float heat);
-    
+
     BeamTemplate& operator=(const BeamTemplate& other);
 
 protected:
+    string beam_type;
     string beam_texture;
     float direction; //Value between 0 and 360 (degrees)
     float arc; //Value between 0 and 360

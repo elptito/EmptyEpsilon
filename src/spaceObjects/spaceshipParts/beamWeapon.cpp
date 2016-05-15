@@ -5,6 +5,7 @@
 
 BeamWeapon::BeamWeapon()
 {
+    beam_type = "damage";
     arc = 0;
     direction = 0;
     range = 0;
@@ -21,11 +22,22 @@ void BeamWeapon::setParent(SpaceShip* parent)
     assert(!this->parent);
     this->parent = parent;
 
+    parent->registerMemberReplication(&beam_type);
     parent->registerMemberReplication(&arc);
     parent->registerMemberReplication(&direction);
     parent->registerMemberReplication(&range);
     parent->registerMemberReplication(&cycle_time);
     parent->registerMemberReplication(&cooldown, 0.5);
+}
+
+void BeamWeapon::setBeamType(string beam_type)
+{
+    this->beam_type = beam_type;
+}
+
+string BeamWeapon::getBeamType()
+{
+    return beam_type;
 }
 
 void BeamWeapon::setArc(float arc)

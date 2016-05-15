@@ -44,6 +44,7 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setJumpDrive);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, hasWarpDrive);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setWarpDrive);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getBeamWeaponType);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getBeamWeaponArc);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getBeamWeaponDirection);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getBeamWeaponRange);
@@ -53,6 +54,7 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getBeamWeaponHeatPerFire);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setBeamWeapon);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setBeamWeaponTexture);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setBeamWeaponType);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setBeamWeaponEnergyPerFire);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setBeamWeaponHeatPerFire);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setWeaponTubeCount);
@@ -175,6 +177,7 @@ void SpaceShip::applyTemplateValues()
     for(int n=0; n<max_beam_weapons; n++)
     {
         beam_weapons[n].setPosition(ship_template->model_data->getBeamPosition(n));
+        beam_weapons[n].setBeamType(ship_template->beams[n].getBeamType());
         beam_weapons[n].setArc(ship_template->beams[n].getArc());
         beam_weapons[n].setDirection(ship_template->beams[n].getDirection());
         beam_weapons[n].setRange(ship_template->beams[n].getRange());
@@ -240,7 +243,10 @@ void SpaceShip::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, flo
         for(int n=0; n<max_beam_weapons; n++)
         {
             if (beam_weapons[n].getRange() == 0.0) continue;
-            sf::Color color = sf::Color::Red;
+            sf::Color color;
+            color = sf::Color::Red;
+            if (beam_weapons[n].getBeamType() == "tractor")
+                color = sf::Color::Cyan;
             if (beam_weapons[n].getCooldown() > 0)
                 color = sf::Color(255, 255 * (beam_weapons[n].getCooldown() / beam_weapons[n].getCycleTime()), 0);
 

@@ -2,6 +2,7 @@
 
 BeamTemplate::BeamTemplate()
 {
+    beam_type = "damage";
     direction = 0;
     range = 0;
     cycle_time = 0;
@@ -10,6 +11,16 @@ BeamTemplate::BeamTemplate()
 
     energy_per_beam_fire = 3.0;
     heat_per_beam_fire = 0.02;
+}
+
+string BeamTemplate::getBeamType()
+{
+    return beam_type;
+}
+
+void BeamTemplate::setBeamType(string type)
+{
+    beam_type = type;
 }
 
 string BeamTemplate::getBeamTexture()
@@ -113,6 +124,7 @@ void BeamTemplate::setHeatPerFire(float heat)
 
 BeamTemplate& BeamTemplate::operator=(const BeamTemplate& other)
 {
+    beam_type = other.beam_type;
     beam_texture = other.beam_texture;
     direction = other.direction;
     arc = other.arc;

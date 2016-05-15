@@ -306,6 +306,11 @@ public:
         }
     }
 
+    string getBeamWeaponType(int index) {
+        if (index < 0 || index >= max_beam_weapons)
+            return "";
+        return beam_weapons[index].getBeamType();
+    }
     float getBeamWeaponArc(int index) { if (index < 0 || index >= max_beam_weapons) return 0.0; return beam_weapons[index].getArc(); }
     float getBeamWeaponDirection(int index) { if (index < 0 || index >= max_beam_weapons) return 0.0; return beam_weapons[index].getDirection(); }
     float getBeamWeaponRange(int index) { if (index < 0 || index >= max_beam_weapons) return 0.0; return beam_weapons[index].getRange(); }
@@ -332,6 +337,13 @@ public:
         if (index < 0 || index >= max_beam_weapons)
             return;
         beam_weapons[index].setBeamTexture(texture);
+    }
+
+    void setBeamWeaponType(int index, string beam_type)
+    {
+        if (index < 0 || index >= max_beam_weapons)
+            return;
+        beam_weapons[index].setBeamType(beam_type);
     }
 
     void setBeamWeaponEnergyPerFire(int index, float energy) { if (index < 0 || index >= max_beam_weapons) return; return beam_weapons[index].setEnergyPerFire(energy); }
