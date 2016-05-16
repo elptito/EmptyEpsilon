@@ -30,7 +30,7 @@ string BeamTemplate::getBeamTexture()
 
 void BeamTemplate::setBeamTexture(string texture)
 {
-    //TODO: Add some more inteligent input checking
+    //TODO: Add some more intelligent input checking
     beam_texture = texture;
 }
 

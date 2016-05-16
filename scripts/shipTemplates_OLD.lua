@@ -153,8 +153,14 @@ template:addDoor(5, 2, false);
 
 --[[ Neutral or special ship types --]]
 --Tug, used for transport of small goods (like weapons)
-template = ShipTemplate():setName("Tug"):setModel("space_tug")
+template = ShipTemplate():setName("Player Tug"):setModel("space_tug"):setType("playership")
 template:setRadarTrace("radar_tug.png")
+--                       Arc, Dir,  Range, CycleTime, Dmg
+template:setBeamWeapon(0, 45, 180, 1000.0,       0.1,   1)
+template:setBeamType(0, "tractor")
+template:setBeamTexture(0, "beam_blue.png")
+template:setBeamWeaponEnergyPerFire(0, 0.005)
+template:setBeamWeaponHeatPerFire(0, 0.001)
 template:setHull(50)
 template:setShields(20)
 template:setSpeed(100, 10, 15)
@@ -164,6 +170,38 @@ template:setWeaponStorage("Mine", 3)
 template:setWeaponStorage("EMP", 2)
 template:setDescription([[The tugboat is a reliable, but small and un-armed transport ship. Due to it's low cost, it is a favourite ship to teach the ropes to fledgeling captains, without risking friendly fire.]])
 
+template:addRoomSystem(3, 0, 1, 1, "Maneuver");
+template:addRoomSystem(1, 0, 2, 1, "BeamWeapons");
+
+template:addRoomSystem(0, 1, 1, 2, "RearShield");
+template:addRoomSystem(1, 1, 2, 2, "Reactor");
+template:addRoomSystem(3, 1, 2, 1, "Warp");
+template:addRoomSystem(3, 2, 2, 1, "JumpDrive");
+template:addRoomSystem(5, 1, 1, 2, "FrontShield");
+
+template:addRoomSystem(1, 3, 2, 1, "MissileSystem");
+template:addRoomSystem(3, 3, 1, 1, "Impulse");
+
+template:addDoor(2, 1, true);
+template:addDoor(3, 1, true);
+template:addDoor(1, 1, false);
+template:addDoor(3, 1, false);
+template:addDoor(3, 2, false);
+template:addDoor(3, 3, true);
+template:addDoor(2, 3, true);
+template:addDoor(5, 1, false);
+template:addDoor(5, 2, false);
+
+--[[ Neutral or special ship types --]]
+--Tug, used for transport of small goods (like weapons)
+template = ShipTemplate():setName("Tug"):setModel("space_tug")
+template:setRadarTrace("radar_tug.png")
+--                       Arc, Dir,  Range, CycleTime, Dmg
+template:setBeamWeapon(0, 45, 180, 1000.0,       0.1,   1)
+template:setBeamType(0, "tractor")
+template:setBeamTexture(0, "beam_blue.png")
+template:setBeamWeaponEnergyPerFire(0, 0.005)
+template:setBeamWeaponHeatPerFire(0, 0.001)
 --List of possible fighters --
 -- Intercepter (anti fighter) -> High speed, low visibility, front beam weapons
 -- Bomber (anti capital) -> Low speed, high visibility, high armor (for a fighter), high shields (for a fighter), multiple missiles

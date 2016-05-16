@@ -18,7 +18,7 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setType);
     /// Set the default AI behaviour. EE has 3 types of AI coded into the game right now: "default", "fighter", "missilevolley"
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setDefaultAI);
-    /// Set the 3D model to be used for this template. The model referers to data set in the model_data.lua file.
+    /// Set the 3D model to be used for this template. The model refers to data set in the model_data.lua file.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setModel);
     /// Supply a list of ship classes that can be docked to this ship. setDockClasses("Starfighter") will allow all small starfighter type ships to dock with this ship.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setDockClasses);

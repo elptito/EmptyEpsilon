@@ -182,5 +182,35 @@ void BeamWeapon::fire(P<SpaceObject> target, ESystem system_target)
     DamageInfo info(parent, DT_Energy, hit_location);
     info.frequency = parent->beam_frequency; // Beam weapons now always use frequency of the ship.
     info.system_target = system_target;
-    target->takeDamage(damage, info);
+
+    if (beam_type == "tractor")
+    {
+        // Shields should reduce/resist tractors, but shields are a
+        // ShipTemplateBasedObject concept, not SpaceObject.
+        // float shield_factor = target->getShieldDamageFactor(info, 0);
+        // Larger ships can tow smaller ships more easily.
+        float radius_factor = parent->getRadius() / target->getRadius();
+        sf::Vector2f diff = parent->getPosition() - target->getPosition();
+        float distance = sf::length(diff);
+        // Tractor force increases as the target ship nears the towing ship.
+        // The tractor beam's "damage" value multiplies its effective force.
+        float force = (damage * (range / distance)) * radius_factor;
+        // A target within half of the beam's range isn't pulled any closer, but
+        // can still approach the ship towing it.
+        if (distance > (range / 2))
+        {
+            // Stole this from the black hole physics, which means it works best
+            // when the beam speed is very fast. Since this happens server-side,
+            // it looks jerky on the client.
+            target->setPosition(target->getPosition() + diff / distance * force);
+        }
+        else
+        {
+            target->setPosition(target->getPosition() + diff / distance);
+        }
+    }
+    else
+    {
+        target->takeDamage(damage, info);
+    }
 }

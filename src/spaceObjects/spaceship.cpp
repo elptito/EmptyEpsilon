@@ -243,12 +243,18 @@ void SpaceShip::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, flo
         for(int n=0; n<max_beam_weapons; n++)
         {
             if (beam_weapons[n].getRange() == 0.0) continue;
-            sf::Color color;
-            color = sf::Color::Red;
+            sf::Color color = sf::Color::Red;
             if (beam_weapons[n].getBeamType() == "tractor")
+            {
                 color = sf::Color::Cyan;
-            if (beam_weapons[n].getCooldown() > 0)
-                color = sf::Color(255, 255 * (beam_weapons[n].getCooldown() / beam_weapons[n].getCycleTime()), 0);
+                if (beam_weapons[n].getCooldown() > 0)
+                    color = sf::Color(255 * (beam_weapons[n].getCooldown() / beam_weapons[n].getCycleTime()), 255, 255);
+            }
+            else
+            {
+                if (beam_weapons[n].getCooldown() > 0)
+                    color = sf::Color(255, 255 * (beam_weapons[n].getCooldown() / beam_weapons[n].getCycleTime()), 0);
+            }
 
             float direction = beam_weapons[n].getDirection();
             float arc = beam_weapons[n].getArc();
