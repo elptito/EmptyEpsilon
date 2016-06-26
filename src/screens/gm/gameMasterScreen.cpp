@@ -66,10 +66,20 @@ GameMasterScreen::GameMasterScreen()
     player_ship_selector->setPosition(270, -20, ABottomLeft)->setSize(250, 50);
     
     CPU_ship_selector = new GuiSelector(this, "CPU_SHIP_SELECTOR", [this](int index, string value) {
+        P<SpaceObject> ship = space_object_list[value.toInt()];
+        if (ship)
+            target = ship;
+        main_radar->setViewPosition(ship->getPosition());
+        targets.set(ship);
     });
     CPU_ship_selector->setPosition(270, -70, ABottomLeft)->setSize(250, 50);
     
     space_station_selector = new GuiSelector(this, "SPACE_STATION_SELECTOR", [this](int index, string value) {
+        P<SpaceObject> station = space_object_list[value.toInt()];
+        if (station)
+            target = station;
+        main_radar->setViewPosition(station->getPosition());
+        targets.set(station);
     });
     space_station_selector->setPosition(270, -120, ABottomLeft)->setSize(250, 50);
 
