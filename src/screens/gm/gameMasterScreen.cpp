@@ -64,6 +64,10 @@ GameMasterScreen::GameMasterScreen()
         targets.set(ship);
     });
     player_ship_selector->setPosition(270, -20, ABottomLeft)->setSize(250, 50);
+    
+    CPU_ship_selector = new GuiSelector(this, "CPU_SHIP_SELECTOR", [this](int index, string value) {
+    });
+    player_ship_selector->setPosition(270, -70, ABottomLeft)->setSize(250, 50);
 
     create_button = new GuiButton(this, "CREATE_OBJECT_BUTTON", "Create...", [this]() {
         object_creation_screen->show();
@@ -206,6 +210,20 @@ void GameMasterScreen::update(float delta)
         }else{
             if (player_ship_selector->indexByValue(string(n)) != -1)
                 player_ship_selector->removeEntry(player_ship_selector->indexByValue(string(n)));
+        }
+    }
+    
+    // Add and remove entries from the CPU ship list.
+    foreach(SpaceObject, obj, space_object_list)
+    {
+        P<SpaceShip> ship = obj;
+        if (obj)
+        {
+            if (CPU_ship_selector->indexByValue(string(n)) == -1)
+                CPU_ship_selector->addEntry(obj->getTypeName() + " " + obj->getCallSign(), string(n));
+        }else{
+            if (CPU_ship_selector->indexByValue(string(n)) != -1)
+                CPU_ship_selector->removeEntry(CPU_ship_selector->indexByValue(string(n)));
         }
     }
 
