@@ -214,7 +214,7 @@ void GameMasterScreen::update(float delta)
     }
     
     // Add and remove entries from the CPU ship list.
-    int n = 0
+    int n = 0;
     foreach(SpaceObject, obj, space_object_list)
     {
         P<SpaceShip> ship = obj;
@@ -226,7 +226,7 @@ void GameMasterScreen::update(float delta)
             if (CPU_ship_selector->indexByValue(string(n)) != -1)
                 CPU_ship_selector->removeEntry(CPU_ship_selector->indexByValue(string(n)));
         }
-    n += 1
+    n += 1;
     }
 
     for(P<SpaceObject> obj : targets.getTargets())
