@@ -67,7 +67,7 @@ GameMasterScreen::GameMasterScreen()
     
     CPU_ship_selector = new GuiSelector(this, "CPU_SHIP_SELECTOR", [this](int index, string value) {
     });
-    player_ship_selector->setPosition(270, -70, ABottomLeft)->setSize(250, 50);
+    CPU_ship_selector->setPosition(270, -70, ABottomLeft)->setSize(250, 50);
 
     create_button = new GuiButton(this, "CREATE_OBJECT_BUTTON", "Create...", [this]() {
         object_creation_screen->show();
