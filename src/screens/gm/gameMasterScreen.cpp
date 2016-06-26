@@ -68,6 +68,10 @@ GameMasterScreen::GameMasterScreen()
     CPU_ship_selector = new GuiSelector(this, "CPU_SHIP_SELECTOR", [this](int index, string value) {
     });
     CPU_ship_selector->setPosition(270, -70, ABottomLeft)->setSize(250, 50);
+    
+    space_station_selector = new GuiSelector(this, "SPACE_STATION_SELECTOR", [this](int index, string value) {
+    });
+    space_station_selector->setPosition(270, -120, ABottomLeft)->setSize(250, 50);
 
     create_button = new GuiButton(this, "CREATE_OBJECT_BUTTON", "Create...", [this]() {
         object_creation_screen->show();
@@ -213,11 +217,12 @@ void GameMasterScreen::update(float delta)
         }
     }
     
-    // Add and remove entries from the CPU ship list.
+    // Add and remove entries from the CPU ship and space station list.
     int n = 0;
     foreach(SpaceObject, obj, space_object_list)
     {
         P<SpaceShip> ship = obj;
+        P<SpaceStation> station = obj;
         if (ship)
         {
             if (CPU_ship_selector->indexByValue(string(n)) == -1)
@@ -225,6 +230,14 @@ void GameMasterScreen::update(float delta)
         }else{
             if (CPU_ship_selector->indexByValue(string(n)) != -1)
                 CPU_ship_selector->removeEntry(CPU_ship_selector->indexByValue(string(n)));
+        }
+        if (station)
+        {
+            if (space_station_selector->indexByValue(string(n)) == -1)
+                space_station_selector->addEntry(station->getTypeName() + " " + station->getCallSign(), string(n));
+        }else{
+            if (space_station_selector->indexByValue(string(n)) != -1)
+                space_station_selector->removeEntry(space_station_selector->indexByValue(string(n)));
         }
     n += 1;
     }
