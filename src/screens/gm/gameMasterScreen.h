@@ -42,6 +42,7 @@ private:
     GuiButton* ship_tweak_button;
     GuiButton* export_button;
     GuiSelector* player_ship_selector;
+    GuiSelector* CPU_ship_selector;
     
     enum EClickAndDragState
     {
