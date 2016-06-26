@@ -43,6 +43,7 @@ private:
     GuiButton* export_button;
     GuiSelector* player_ship_selector;
     GuiSelector* CPU_ship_selector;
+    GuiSelector* space_station_selector;
     
     enum EClickAndDragState
     {
