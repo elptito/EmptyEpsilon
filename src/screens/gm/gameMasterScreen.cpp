@@ -218,10 +218,10 @@ void GameMasterScreen::update(float delta)
     foreach(SpaceObject, obj, space_object_list)
     {
         P<SpaceShip> ship = obj;
-        if (obj)
+        if (ship)
         {
             if (CPU_ship_selector->indexByValue(string(n)) == -1)
-                CPU_ship_selector->addEntry(obj->getTypeName() + " " + obj->getCallSign(), string(n));
+                CPU_ship_selector->addEntry(ship->getTypeName() + " " + ship->getCallSign(), string(n));
         }else{
             if (CPU_ship_selector->indexByValue(string(n)) != -1)
                 CPU_ship_selector->removeEntry(CPU_ship_selector->indexByValue(string(n)));
