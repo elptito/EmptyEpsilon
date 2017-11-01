@@ -245,16 +245,6 @@ void ScreenMainScreen::onClick(sf::Vector2f mouse_position)
     {
         switch(my_spaceship->main_screen_setting)
         {
-        default:
-            if (gameGlobalInfo->allow_main_screen_tactical_radar)
-                my_spaceship->commandMainScreenSetting(MSS_Tactical);
-            else if (gameGlobalInfo->allow_main_screen_long_range_radar)
-                my_spaceship->commandMainScreenSetting(MSS_LongRange);
-            else if (gameGlobalInfo->allow_main_screen_global_range_radar)
-                my_spaceship->commandMainScreenSetting(MSS_GlobalRange);
-            else if (gameGlobalInfo->allow_main_screen_ship_state)
-                my_spaceship->commandMainScreenSetting(MSS_ShipState);
-            break;
         case MSS_Tactical:
             if (gameGlobalInfo->allow_main_screen_long_range_radar)
                 my_spaceship->commandMainScreenSetting(MSS_LongRange);
@@ -287,6 +277,16 @@ void ScreenMainScreen::onClick(sf::Vector2f mouse_position)
             else if (gameGlobalInfo->allow_main_screen_global_range_radar)
                 my_spaceship->commandMainScreenSetting(MSS_GlobalRange);
             break;
+        default:
+            if (gameGlobalInfo->allow_main_screen_tactical_radar)
+                my_spaceship->commandMainScreenSetting(MSS_Tactical);
+            else if (gameGlobalInfo->allow_main_screen_long_range_radar)
+                my_spaceship->commandMainScreenSetting(MSS_LongRange);
+            else if (gameGlobalInfo->allow_main_screen_global_range_radar)
+                my_spaceship->commandMainScreenSetting(MSS_GlobalRange);
+            else if (gameGlobalInfo->allow_main_screen_ship_state)
+                my_spaceship->commandMainScreenSetting(MSS_ShipState);
+            break;
         }
     }
 }
@@ -311,17 +311,25 @@ void ScreenMainScreen::onKey(sf::Event::KeyEvent key, int unicode)
         if (my_spaceship)
             my_spaceship->commandMainScreenSetting(MSS_Back);
         break;
-    case sf::Keyboard::T:
+    case sf::Keyboard::W:
         if (my_spaceship)
             my_spaceship->commandMainScreenSetting(MSS_Target);
         break;
-    case sf::Keyboard::Tab:
+    case sf::Keyboard::X:
         if (my_spaceship && gameGlobalInfo->allow_main_screen_tactical_radar)
             my_spaceship->commandMainScreenSetting(MSS_Tactical);
         break;
-    case sf::Keyboard::Q:
+    case sf::Keyboard::C:
         if (my_spaceship && gameGlobalInfo->allow_main_screen_long_range_radar)
             my_spaceship->commandMainScreenSetting(MSS_LongRange);
+        break;
+    case sf::Keyboard::V:
+        if (my_spaceship && gameGlobalInfo->allow_main_screen_global_range_radar)
+            my_spaceship->commandMainScreenSetting(MSS_GlobalRange);
+        break;
+    case sf::Keyboard::B:
+        if (my_spaceship && gameGlobalInfo->allow_main_screen_ship_state)
+            my_spaceship->commandMainScreenSetting(MSS_ShipState);
         break;
     case sf::Keyboard::F:
         first_person = !first_person;
