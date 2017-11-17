@@ -50,7 +50,8 @@ private:
 
     sf::Vector2f mouse_down_position;
 public:
-    RelayScreen(GuiContainer* owner);
+    bool has_comms;
+    RelayScreen(GuiContainer* owner, bool has_comms = true);
 
     virtual void onDraw(sf::RenderTarget& window);
 };
