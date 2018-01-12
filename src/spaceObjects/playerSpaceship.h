@@ -264,7 +264,8 @@ public:
     void commandSetProbe3DLink(int32_t id);
     void commandLoadTube(int8_t tubeNumber, string missileType);
     void commandUnloadTube(int8_t tubeNumber);
-    void commandFireTube(int8_t tubeNumber, float missile_target_angle);
+    void commandFireTube(int8_t tubeNumber, float missile_target_angle);    
+    void commandFireTubeAtTarget(int8_t tubeNumber, P<SpaceObject> target);
     void commandSetShields(bool enabled);
     void commandMainScreenSetting(EMainScreenSetting mainScreen);
     void commandMainScreenOverlay(EMainScreenOverlay mainScreen);
@@ -376,9 +377,6 @@ public:
 
     // Script export function
     virtual string getExportLine();
-    
-    // Calculate firing solution for a tube and a target
-    virtual float getFiringSolution(int8_t tubeNumber, P<SpaceObject> target);
 };
 REGISTER_MULTIPLAYER_ENUM(ECommsState);
 template<> int convert<EAlertLevel>::returnType(lua_State* L, EAlertLevel l);
