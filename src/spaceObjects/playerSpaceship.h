@@ -391,9 +391,6 @@ public:
 
     // Script export function
     virtual string getExportLine();
-    
-    // Calculate firing solution for a tube and a target
-    virtual float getFiringSolution(int8_t tubeNumber, P<SpaceObject> target);
 };
 REGISTER_MULTIPLAYER_ENUM(ECommsState);
 template<> int convert<EAlertLevel>::returnType(lua_State* L, EAlertLevel l);

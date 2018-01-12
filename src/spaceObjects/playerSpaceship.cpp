@@ -66,7 +66,6 @@ REGISTER_SCRIPT_SUBCLASS(PlayerSpaceship, SpaceShip)
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getScanProbeCount);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setMaxScanProbeCount);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getMaxScanProbeCount);
-    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getFiringSolution);
 
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, hasGravitySensor);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setGravitySensor);
@@ -2289,26 +2288,6 @@ bool PlayerSpaceship::canBeLandedOn(P<SpaceObject> obj)
 string PlayerSpaceship::getExportLine()
 {
     return "PlayerSpaceship():setTemplate(\"" + template_name + "\"):setPosition(" + string(getPosition().x, 0) + ", " + string(getPosition().y, 0) + ")" + getScriptExportModificationsOnTemplate();;
-}
-
-float PlayerSpaceship::getFiringSolution(int8_t tube_number, P<SpaceObject> target){
-  float target_angle = 0.0;
-  float default_angle = 0.0;
-  
-  if (tube_number < 0 || tube_number >= getWeaponTubeCount())
-    return 0.0;
-  
-  default_angle = getRotation() + weapon_tube[tube_number].getDirection();
-  
-  if (!target)
-    return default_angle;
-  
-  target_angle = weapon_tube[tube_number].calculateFiringSolution(target);
-  
-  if (target_angle == std::numeric_limits<float>::infinity())
-      return default_angle;
-    
-  return target_angle;
 }
 
 #ifndef _MSC_VER
