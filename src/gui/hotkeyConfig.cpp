@@ -5,15 +5,15 @@
 HotkeyConfig hotkeys;
 
 HotkeyConfig::HotkeyConfig()
-{
+{  // this list includes all Hotkeys and their standard configuration
     newCategory("GENERAL", "General");
-    newKey("NEXT_STATION", "Switch to next crew station");
-    newKey("PREV_STATION", "Switch to previous crew station");
-    newKey("STATION_HELMS", "Switch to helms station");
-    newKey("STATION_WEAPONS", "Switch to weapons station");
-    newKey("STATION_ENGINEERING", "Switch to engineering station");
-    newKey("STATION_SCIENCE", "Switch to science station");
-    newKey("STATION_RELAY", "Switch to relay station");
+    newKey("NEXT_STATION", std::make_tuple("Switch to next crew station", "Tab"));
+    newKey("PREV_STATION", std::make_tuple("Switch to previous crew station", ""));
+    newKey("STATION_HELMS", std::make_tuple("Switch to helms station", "F2"));
+    newKey("STATION_WEAPONS", std::make_tuple("Switch to weapons station", "F3"));
+    newKey("STATION_ENGINEERING", std::make_tuple("Switch to engineering station", "F4"));
+    newKey("STATION_SCIENCE", std::make_tuple("Switch to science station", "F5"));
+    newKey("STATION_RELAY", std::make_tuple("Switch to relay station", "F6"));
     
     newCategory("HELMS", "Helms");
     newKey("INC_IMPULSE", "Increase impulse");
@@ -35,20 +35,21 @@ HotkeyConfig::HotkeyConfig()
     newKey("INC_JUMP", "Increase jump distance");
     newKey("DEC_JUMP", "Decrease jump distance");
     newKey("JUMP", "Initiate jump");
-    //newKey("COMBAT_LEFT", "Combat maneuver left");
-    //newKey("COMBAT_RIGHT", "Combat maneuver right");
-    //newKey("COMBAT_BOOST", "Combat maneuver boost");
+    newKey("COMBAT_LEFT", "Combat maneuver left");
+    newKey("COMBAT_RIGHT", "Combat maneuver right");
+    newKey("COMBAT_BOOST", "Combat maneuver boost");
+    newKey("COMBAT_STOP", "Stop Combat maneuver");
 
     newCategory("WEAPONS", "Weapons");
-    newKey("SELECT_MISSILE_TYPE_HOMING", "Select homing");
-    newKey("SELECT_MISSILE_TYPE_NUKE", "Select nuke");
-    newKey("SELECT_MISSILE_TYPE_MINE", "Select mine");
-    newKey("SELECT_MISSILE_TYPE_EMP", "Select EMP");
-    newKey("SELECT_MISSILE_TYPE_HVLI", "Select HVLI");
+    newKey("SELECT_MISSILE_TYPE_HOMING", std::make_tuple("Select homing", "Num1"));
+    newKey("SELECT_MISSILE_TYPE_NUKE", std::make_tuple("Select nuke", "Num2"));
+    newKey("SELECT_MISSILE_TYPE_MINE", std::make_tuple("Select mine", "Num3"));
+    newKey("SELECT_MISSILE_TYPE_EMP", std::make_tuple("Select EMP", "Num4"));
+    newKey("SELECT_MISSILE_TYPE_HVLI", std::make_tuple("Select HVLI", "Num5"));
     for(int n=0; n<max_weapon_tubes; n++)
-        newKey("LOAD_TUBE_" + string(n+1), "Load tube " + string(n+1));
+        newKey(std::string("LOAD_TUBE_") + string(n+1), std::make_tuple(std::string("Load tube ") + string(n+1), ""));
     for(int n=0; n<max_weapon_tubes; n++)
-        newKey("UNLOAD_TUBE_" + string(n+1), "Unload tube " + string(n+1));
+        newKey(std::string("UNLOAD_TUBE_") + string(n+1), std::make_tuple(std::string("Unload tube ") + string(n+1), ""));
     for(int n=0; n<max_weapon_tubes; n++)
         newKey("FIRE_TUBE_" + string(n+1), "Fire tube " + string(n+1));
     newKey("NEXT_ENEMY_TARGET", "Select next target");
@@ -65,6 +66,9 @@ HotkeyConfig::HotkeyConfig()
     newKey("DISABLE_AIM_LOCK", "Disable missile aim lock");
     newKey("AIM_MISSILE_LEFT", "Turn missile aim to the left");
     newKey("AIM_MISSILE_RIGHT", "Turn missile aim to the right");
+	  newKey("SHIELD_CAL_INC", "Increase shield frequency target");
+    newKey("SHIELD_CAL_DEC", "Decrease shield frequency target");
+    newKey("SHIELD_CAL_START", "Start shield calibration");
     
     newCategory("ENGINEERING", "Engineering");
     newKey("SELECT_REACTOR", "Select reactor system");
@@ -91,7 +95,53 @@ HotkeyConfig::HotkeyConfig()
     newKey("SELF_DESTRUCT_START", "Start self-destruct");
     newKey("SELF_DESTRUCT_CONFIRM", "Confirm self-destruct");
     newKey("SELF_DESTRUCT_CANCEL", "Cancel self-destruct");
-
+    newKey("ACTIVE_AUTO_COOLANT", "Activation Auto coolant");
+    newKey("ACTIVE_AUTO_REPAIR", "Activation Auto repair");
+    
+    newCategory("POWER_MANAGEMENT", "Power Management");
+    for(int n=0; n<SYS_COUNT; n++)
+    {
+      newKey(getSystemName(ESystem(n))+ string("_POWER_UP"), getSystemName(ESystem(n))+ string(" Power Up"));
+      newKey(getSystemName(ESystem(n))+ string("_POWER_DOWN"), getSystemName(ESystem(n))+ string(" Power Down"));
+      newKey(getSystemName(ESystem(n))+ string("_COOLANT_UP"), getSystemName(ESystem(n))+ string(" Coolant Up"));
+      newKey(getSystemName(ESystem(n))+ string("_COOLANT_DOWN"), getSystemName(ESystem(n))+string(" Coolant Down"));
+      newKey(getSystemName(ESystem(n))+ string("_RESET"), getSystemName(ESystem(n))+string(" Reset"));
+    }
+	
+    newCategory("SCIENCE", "Science");
+    newKey("NEXT_ENEMY_SCAN", "Select next target");
+    newKey("NEXT_SCAN", "Select next target (any)");
+    newKey("SCAN_START", "Start scan");
+    newKey("NEXT_INFO_TARGET", "Next info on target");
+    newKey("SELECT_TACTICAL", "Select tactical info");
+    newKey("SELECT_SYSTEMS", "Select systems info");
+    newKey("SELECT_DESCRIPTION", "Select description info");
+    newKey("SHOW_DATABASE", "Show database");
+    newKey("SHOW_PROBE", "Show probe view");
+    newKey("SHOW_RADAR", "Show radar");
+    newKey("INCREASE_ZOOM", "Increase Zoom");
+    newKey("DECREASE_ZOOM", "Decrease Zoom");
+    for(int n=0; n<3; n++)
+    {
+        newKey("MOVE_LEFT_SCAN_" + string(n+1), "Move left scan " + string(n+1));
+        newKey("MOVE_RIGHT_SCAN_" + string(n+1), "Move right scan " + string(n+1));
+    }
+	
+	newCategory("RELAY", "Relay");
+    newKey("OPEN_COMM", "Open communication");
+    newKey("NEXT_ENEMY_RELAY", "Select next target");
+    newKey("NEXT_RELAY", "Select next target (any)");
+    newKey("LINK_SCIENCE", "Link probe to science");
+    newKey("BEGIN_HACK", "Begin Hack");
+    newKey("ADD_WAYPOINT", "Add a waypoint");
+    newKey("DELETE_WAYPOINT", "Delelte waypoint");
+    newKey("LAUNCH_PROBE", "Launch probe");
+    newKey("INCREASE_ZOOM", "Increase Zoom");
+    newKey("DECREASE_ZOOM", "Decrease Zoom");
+    newKey("OPEN_LOG", "Open log");
+    newKey("ALERTE_NORMAL", "Alert normal");
+    newKey("ALERTE_YELLOW", "Alert yellow");
+    newKey("ALERTE_RED", "Alert red");
 }
 
 static std::vector<std::pair<string, sf::Keyboard::Key> > sfml_key_names = {
@@ -204,7 +254,7 @@ void HotkeyConfig::load()
     {
         for(HotkeyConfigItem& item : cat.hotkeys)
         {
-            string key_config = PreferencesManager::get("HOTKEY." + cat.key + "." + item.key);
+            string key_config = PreferencesManager::get(std::string("HOTKEY.") + cat.key + "." + item.key, std::get<1>(item.value));
             item.load(key_config);
         }
     }
@@ -218,9 +268,7 @@ std::vector<HotkeyResult> HotkeyConfig::getHotkey(sf::Event::KeyEvent key)
         for(HotkeyConfigItem& item : cat.hotkeys)
         {
             if (item.hotkey.code == key.code && item.hotkey.alt == key.alt && item.hotkey.control == key.control && item.hotkey.shift == key.shift && item.hotkey.system == key.system)
-            {
                 results.emplace_back(cat.key, item.key);
-            }
         }
     }
     return results;
@@ -233,9 +281,9 @@ void HotkeyConfig::newCategory(string key, string name)
     categories.back().name = name;
 }
 
-void HotkeyConfig::newKey(string key, string name)
+void HotkeyConfig::newKey(string key, std::tuple<string, string> value)
 {
-    categories.back().hotkeys.emplace_back(key, name);
+    categories.back().hotkeys.emplace_back(key, value);
 }
 
 std::vector<string> HotkeyConfig::getCategories()
@@ -265,7 +313,7 @@ std::vector<std::pair<string, string>> HotkeyConfig::listHotkeysByCategory(strin
                 for(auto key_name : sfml_key_names)
                 {
                     if (key_name.second == item.hotkey.code)
-                        ret.push_back({item.name, key_name.first});
+                        ret.push_back({std::get<0>(item.value), key_name.first});
                 }
             }
         }
@@ -274,10 +322,10 @@ std::vector<std::pair<string, string>> HotkeyConfig::listHotkeysByCategory(strin
     return ret;
 }
 
-HotkeyConfigItem::HotkeyConfigItem(string key, string name)
+HotkeyConfigItem::HotkeyConfigItem(string key, std::tuple<string, string> value)
 {
     this->key = key;
-    this->name = name;
+    this->value = value;
     hotkey.code = sf::Keyboard::KeyCount;
     hotkey.alt = false;
     hotkey.control = false;

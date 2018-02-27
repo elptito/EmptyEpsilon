@@ -36,6 +36,7 @@ private:
     GuiAutoLayout* option_buttons;
     GuiButton* hack_target_button;
     GuiToggleButton* link_to_science_button;
+    GuiToggleButton* link_to_3D_port_button;
     GuiButton* delete_waypoint_button;
     GuiButton* launch_probe_button;
 
@@ -51,7 +52,8 @@ private:
 public:
     RelayScreen(GuiContainer* owner);
 
-    virtual void onDraw(sf::RenderTarget& window);
+    virtual void onDraw(sf::RenderTarget& window) override;
+    virtual void onHotkey(const HotkeyResult& key) override;
 };
 
 #endif//RELAY_SCREEN_H

@@ -111,17 +111,28 @@ void GuiScrollbar::setValue(int value)
         func(value);
 }
 
-int GuiScrollbar::getValue()
+int GuiScrollbar::getValue() const
 {
     return value;
 }
 
-int GuiScrollbar::getMax()
+int GuiScrollbar::getMax() const
 {
     return max_value;
 }
 
-int GuiScrollbar::getMin()
+int GuiScrollbar::getMin() const
 {
     return min_value;
+}
+
+void GuiScrollbar::onHotkey(const HotkeyResult& key)
+{
+    if (key.category == "GENERAL")
+    {
+        if (key.hotkey == "ARROW_UP")
+            setValue(getValue() - 1);
+        if (key.hotkey == "ARROW_DOWN")
+			setValue(getValue() + 1);
+    }
 }

@@ -49,8 +49,6 @@ public:
     constexpr static float max_scanning_delay = 6.0;
     // Maximum number of self-destruction confirmation codes
     constexpr static int max_self_destruct_codes = 3;
-    // Scan probe capacity
-    constexpr static int max_scan_probes = 8;
     // Subsystem effectiveness base rates
     static float system_power_user_factor[];
     
@@ -130,6 +128,9 @@ public:
     std::vector<CustomShipFunction> custom_functions;
 
     std::vector<sf::Vector2f> waypoints;
+    
+    // Scan probe capacity
+    int max_scan_probes;
     int scan_probe_stock;
     float scan_probe_recharge;
 
@@ -148,6 +149,7 @@ public:
     EAlertLevel alert_level;
 
     int32_t linked_science_probe_id;
+    int32_t linked_probe_3D_id;
 
     PlayerSpaceship();
 
@@ -181,6 +183,11 @@ public:
     void setEnergyLevelMax(float amount) { max_energy_level = std::max(0.0f, amount); energy_level = std::min(energy_level, max_energy_level); }
     float getEnergyLevel() { return energy_level; }
     float getEnergyLevelMax() { return max_energy_level; }
+    
+    void setScanProbeCount(int amount) { scan_probe_stock = std::max(0, std::min(amount, max_scan_probes)); }
+    int getScanProbeCount() { return scan_probe_stock; }
+    void setMaxScanProbeCount(int amount) { max_scan_probes = std::max(0, amount); scan_probe_stock = std::min(scan_probe_stock, max_scan_probes); }
+    int getMaxScanProbeCount() { return max_scan_probes; }
 
     void addCustomButton(ECrewPosition position, string name, string caption, ScriptSimpleCallback callback);
     void addCustomInfo(ECrewPosition position, string name, string caption);
@@ -196,6 +203,7 @@ public:
     void commandJump(float distance);
     void commandSetTarget(P<SpaceObject> target);
     void commandSetScienceLink(int32_t id);
+    void commandSetProbe3DLink(int32_t id);
     void commandLoadTube(int8_t tubeNumber, EMissileWeapons missileType);
     void commandUnloadTube(int8_t tubeNumber);
     void commandFireTube(int8_t tubeNumber, float missile_target_angle);
@@ -285,6 +293,7 @@ public:
 };
 REGISTER_MULTIPLAYER_ENUM(ECommsState);
 template<> int convert<EAlertLevel>::returnType(lua_State* L, EAlertLevel l);
+template<> void convert<EAlertLevel>::param(lua_State* L, int& idx, EAlertLevel& al);
 REGISTER_MULTIPLAYER_ENUM(EAlertLevel);
 
 static inline sf::Packet& operator << (sf::Packet& packet, const PlayerSpaceship::CustomShipFunction& csf) { return packet << uint8_t(csf.type) << uint8_t(csf.crew_position) << csf.name << csf.caption; } \

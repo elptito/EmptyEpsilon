@@ -52,6 +52,11 @@ REGISTER_SCRIPT_SUBCLASS(PlayerSpaceship, SpaceShip)
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setEnergyLevelMax);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getEnergyLevel);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getEnergyLevelMax);
+    
+    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setScanProbeCount);
+    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getScanProbeCount);
+    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setMaxScanProbeCount);
+    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getMaxScanProbeCount);
 
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, addCustomButton);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, addCustomInfo);
@@ -97,6 +102,8 @@ REGISTER_SCRIPT_SUBCLASS(PlayerSpaceship, SpaceShip)
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandConfirmDestructCode);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandCombatManeuverBoost);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetScienceLink);
+    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetProbe3DLink);
+    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetAlertLevel);
 
     // Return the number of Engineering repair crews on the ship.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getRepairCrewCount);
@@ -162,10 +169,11 @@ static const int16_t CMD_COMBAT_MANEUVER_STRAFE = 0x0022;
 static const int16_t CMD_LAUNCH_PROBE = 0x0023;
 static const int16_t CMD_SET_ALERT_LEVEL = 0x0024;
 static const int16_t CMD_SET_SCIENCE_LINK = 0x0025;
-static const int16_t CMD_ABORT_DOCK = 0x0026;
-static const int16_t CMD_SET_MAIN_SCREEN_OVERLAY = 0x0027;
-static const int16_t CMD_HACKING_FINISHED = 0x0028;
-static const int16_t CMD_CUSTOM_FUNCTION = 0x0029;
+static const int16_t CMD_SET_PROBE_3D_LINK = 0x0026;
+static const int16_t CMD_ABORT_DOCK = 0x0027;
+static const int16_t CMD_SET_MAIN_SCREEN_OVERLAY = 0x0028;
+static const int16_t CMD_HACKING_FINISHED = 0x0029;
+static const int16_t CMD_CUSTOM_FUNCTION = 0x0030;
 
 string alertLevelToString(EAlertLevel level)
 {
@@ -203,6 +211,7 @@ PlayerSpaceship::PlayerSpaceship()
     scanning_delay = 0.0;
     scanning_complexity = 0;
     scanning_depth = 0;
+    max_scan_probes = 8;
     scan_probe_stock = max_scan_probes;
     scan_probe_recharge = 0.0;
     alert_level = AL_Normal;
@@ -242,6 +251,7 @@ PlayerSpaceship::PlayerSpaceship()
     registerMemberReplication(&self_destruct_countdown, 0.2);
     registerMemberReplication(&alert_level);
     registerMemberReplication(&linked_science_probe_id);
+    registerMemberReplication(&linked_probe_3D_id);
     registerMemberReplication(&control_code);
     registerMemberReplication(&custom_functions);
 
@@ -595,6 +605,10 @@ void PlayerSpaceship::applyTemplateValues()
         setWarpDrive(true);
         setJumpDrive(true);
         break;
+    case PWJ_None:
+        setWarpDrive(false);
+        setJumpDrive(false);
+        break;
     }
 
     // Set the ship's number of repair crews in Engineering from the ship's
@@ -890,6 +904,7 @@ void PlayerSpaceship::addCustomMessageWithCallback(ECrewPosition position, strin
     CustomShipFunction& csf = custom_functions.back();
     csf.type = CustomShipFunction::Type::Message;
     csf.name = name;
+    csf.crew_position = position;
     csf.caption = caption;
     csf.callback = callback;
 }
@@ -1431,6 +1446,11 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
             packet >> linked_science_probe_id;
         }
         break;
+	case CMD_SET_PROBE_3D_LINK:
+        {
+            packet >> linked_probe_3D_id;
+        }
+        break;
     case CMD_HACKING_FINISHED:
         {
             uint32_t id;
@@ -1449,10 +1469,15 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
             {
                 if (csf.name == name)
                 {
-                    if (csf.type == CustomShipFunction::Type::Message)
-                        removeCustom(name);
                     if (csf.type == CustomShipFunction::Type::Button || csf.type == CustomShipFunction::Type::Message)
+                    {
                         csf.callback.call();
+                    }
+                    if (csf.type == CustomShipFunction::Type::Message)
+                    {
+                        removeCustom(name);
+                        break;
+                    }
                 }
             }
         }
@@ -1757,6 +1782,12 @@ void PlayerSpaceship::commandCustomFunction(string name)
 void PlayerSpaceship::commandSetScienceLink(int32_t id){
     sf::Packet packet;
     packet << CMD_SET_SCIENCE_LINK << id;
+    sendClientCommand(packet);
+}
+
+void PlayerSpaceship::commandSetProbe3DLink(int32_t id){
+    sf::Packet packet;
+    packet << CMD_SET_PROBE_3D_LINK << id;
     sendClientCommand(packet);
 }
 
