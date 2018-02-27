@@ -2,6 +2,13 @@
 #include "main.h"
 #include "explosionEffect.h"
 
+/// ExplosionEffect is a visible explosion, like from nukes, missiles, ship destruction, etc
+/// Example: ExplosionEffect():setPosition(500,5000):setSize(20)
+REGISTER_SCRIPT_SUBCLASS(ExplosionEffect, SpaceObject)
+{
+    REGISTER_SCRIPT_CLASS_FUNCTION(ExplosionEffect, setSize);
+}
+
 REGISTER_MULTIPLAYER_CLASS(ExplosionEffect, "ExplosionEffect");
 ExplosionEffect::ExplosionEffect()
 : SpaceObject(1000.0, "ExplosionEffect")
@@ -40,13 +47,13 @@ void ExplosionEffect::draw3DTransparent()
     sf::Vector3f v3 = sf::Vector3f( 1,  1, 0);
     sf::Vector3f v4 = sf::Vector3f(-1,  1, 0);
 
-    basicShader->setParameter("textureMap", *textureManager.getTexture("fire_sphere_texture.png"));
-    sf::Shader::bind(basicShader);
+    ShaderManager::getShader("basicShader")->setParameter("textureMap", *textureManager.getTexture("fire_sphere_texture.png"));
+    sf::Shader::bind(ShaderManager::getShader("basicShader"));
     Mesh* m = Mesh::getMesh("sphere.obj");
     m->render();
 
-    basicShader->setParameter("textureMap", *textureManager.getTexture("fire_ring.png"));
-    sf::Shader::bind(basicShader);
+    ShaderManager::getShader("basicShader")->setParameter("textureMap", *textureManager.getTexture("fire_ring.png"));
+    sf::Shader::bind(ShaderManager::getShader("basicShader"));
     glScalef(1.5, 1.5, 1.5);
     glBegin(GL_QUADS);
     glTexCoord2f(0, 0);
@@ -61,8 +68,8 @@ void ExplosionEffect::draw3DTransparent()
     glPopMatrix();
     
     
-    billboardShader->setParameter("textureMap", *textureManager.getTexture("particle.png"));
-    sf::Shader::bind(billboardShader);
+    ShaderManager::getShader("billboardShader")->setParameter("textureMap", *textureManager.getTexture("particle.png"));
+    sf::Shader::bind(ShaderManager::getShader("billboardShader"));
     scale = Tween<float>::easeInCubic(f, 0.0, 1.0, 0.3f, 5.0f);
     float r = Tween<float>::easeInQuad(f, 0.0, 1.0, 1.0f, 0.0f);
     float g = Tween<float>::easeOutQuad(f, 0.0, 1.0, 1.0f, 0.0f);

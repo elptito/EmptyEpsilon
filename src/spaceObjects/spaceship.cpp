@@ -27,6 +27,11 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setWeaponStorage);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setWeaponStorageMax);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getShieldsFrequency);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setShieldsFrequency);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getMaxEnergy);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setMaxEnergy);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getEnergy);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setEnergy);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getSystemHealth);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setSystemHealth);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getSystemHeat);
@@ -150,19 +155,23 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
         systems[n].coolant_level = 0.0;
         systems[n].coolant_request = 0.0;
         systems[n].heat_level = 0.0;
+        systems[n].hacked_level = 0.0;
 
         registerMemberReplication(&systems[n].health, 0.1);
+        registerMemberReplication(&systems[n].hacked_level, 0.1);
     }
 
     for(int n = 0; n < max_beam_weapons; n++)
     {
         beam_weapons[n].setParent(this);
     }
+
     for(int n = 0; n < max_weapon_tubes; n++)
     {
         weapon_tube[n].setParent(this);
         weapon_tube[n].setIndex(n);
     }
+
     for(int n = 0; n < MW_Count; n++)
     {
         weapon_storage[n] = 0;
@@ -173,6 +182,8 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
 
     scanning_complexity_value = -1;
     scanning_depth_value = -1;
+
+    setRadarSignatureInfo(0.05, 0.3, 0.3);
 
     if (game_server)
         setCallSign(gameGlobalInfo->getNextShipCallsign());
@@ -452,7 +463,7 @@ void SpaceShip::update(float delta)
             impulse_request = 0.0;
         }
         if ((docking_state == DS_Docked) || (docking_state == DS_Docking))
-            warp_request= 0.0;
+            warp_request = 0.0;
     }
 
     float rotationDiff = sf::angleDifference(getRotation(), target_rotation);
@@ -555,7 +566,11 @@ void SpaceShip::update(float delta)
                 current_impulse = impulse_request;
         }
     }
+
+    // Add heat based on warp factor.
     addHeat(SYS_Warp, current_warp * delta * heat_per_warp);
+
+    // Determine forward direction and velocity.
     sf::Vector2f forward = sf::vector2FromAngle(getRotation());
     setVelocity(forward * (current_impulse * impulse_max_speed * getSystemEffectiveness(SYS_Impulse) + current_warp * warp_speed_per_warp_level * getSystemEffectiveness(SYS_Warp)));
 
@@ -584,26 +599,34 @@ void SpaceShip::update(float delta)
             combat_maneuver_strafe_active = combat_maneuver_strafe_request;
     }
 
+    // If the ship is making a combat maneuver ...
     if (combat_maneuver_boost_active != 0.0 || combat_maneuver_strafe_active != 0.0)
     {
-        combat_maneuver_charge -= combat_maneuver_boost_active * delta / combat_maneuver_boost_max_time;
+        // ... consume its combat maneuver boost.
+        combat_maneuver_charge -= fabs(combat_maneuver_boost_active) * delta / combat_maneuver_boost_max_time;
         combat_maneuver_charge -= fabs(combat_maneuver_strafe_active) * delta / combat_maneuver_strafe_max_time;
+
+        // Use boost only if we have boost available.
         if (combat_maneuver_charge <= 0.0)
         {
             combat_maneuver_charge = 0.0;
             combat_maneuver_boost_request = 0.0;
             combat_maneuver_strafe_request = 0.0;
-        }else{
+        }else
+        {
             setVelocity(getVelocity() + forward * combat_maneuver_boost_speed * combat_maneuver_boost_active);
             setVelocity(getVelocity() + sf::vector2FromAngle(getRotation() + 90) * combat_maneuver_strafe_speed * combat_maneuver_strafe_active);
         }
+    // If the ship isn't making a combat maneuver, recharge its boost.
     }else if (combat_maneuver_charge < 1.0)
     {
         combat_maneuver_charge += (delta / combat_maneuver_charge_time) * (getSystemEffectiveness(SYS_Maneuver) + getSystemEffectiveness(SYS_Impulse)) / 2.0;
         if (combat_maneuver_charge > 1.0)
             combat_maneuver_charge = 1.0;
     }
-    addHeat(SYS_Impulse, combat_maneuver_boost_active * delta * heat_per_combat_maneuver_boost);
+
+    // Add heat to systems consuming combat maneuver boost.
+    addHeat(SYS_Impulse, fabs(combat_maneuver_boost_active) * delta * heat_per_combat_maneuver_boost);
     addHeat(SYS_Maneuver, fabs(combat_maneuver_strafe_active) * delta * heat_per_combat_maneuver_strafe);
 
     for(int n = 0; n < max_beam_weapons; n++)
@@ -614,6 +637,11 @@ void SpaceShip::update(float delta)
     for(int n=0; n<max_weapon_tubes; n++)
     {
         weapon_tube[n].update(delta);
+    }
+
+    for(int n=0; n<SYS_COUNT; n++)
+    {
+        systems[n].hacked_level = std::max(0.0f, systems[n].hacked_level - delta / unhack_time);
     }
 
     model_info.engine_scale = std::min(1.0f, (float) std::max(fabs(getAngularVelocity() / turn_speed), fabs(current_impulse)));
@@ -828,6 +856,40 @@ bool SpaceShip::isFullyScannedByFaction(int faction_id)
     return getScannedStateForFaction(faction_id) >= SS_FullScan;
 }
 
+bool SpaceShip::canBeHackedBy(P<SpaceObject> other)
+{
+    return (!(this->isFriendly(other)) && this->isFriendOrFoeIdentifiedBy(other)) ;
+}
+
+std::vector<std::pair<string, float>> SpaceShip::getHackingTargets()
+{
+    std::vector<std::pair<string, float>> results;
+    for(unsigned int n=0; n<SYS_COUNT; n++)
+    {
+        if (n != SYS_Reactor && hasSystem(ESystem(n)))
+        {
+            results.emplace_back(getSystemName(ESystem(n)), systems[n].hacked_level);
+        }
+    }
+    return results;
+}
+
+void SpaceShip::hackFinished(P<SpaceObject> source, string target)
+{
+    for(unsigned int n=0; n<SYS_COUNT; n++)
+    {
+        if (hasSystem(ESystem(n)))
+        {
+            if (target == getSystemName(ESystem(n)))
+            {
+                systems[n].hacked_level = std::min(1.0f, systems[n].hacked_level + 0.5f);
+                return;
+            }
+        }
+    }
+    LOG(WARNING) << "Unknown hacked target: " << target;
+}
+
 float SpaceShip::getShieldDamageFactor(DamageInfo& info, int shield_index)
 {
     float frequency_damage_factor = 1.0;
@@ -953,10 +1015,22 @@ bool SpaceShip::hasSystem(ESystem system)
 float SpaceShip::getSystemEffectiveness(ESystem system)
 {
     float power = systems[system].power_level;
-    if (energy_level < 10.0)
-        power = std::max(0.1f, power);
+    power *= (1.0f - systems[system].hacked_level * 0.75f);
+
+    // Degrade all systems except the reactor once energy level drops below 10.
+    if (system != SYS_Reactor)
+    {
+        if (energy_level < 10.0 && energy_level > 0.0 && power > 0.0)
+            power = std::min((10.0f * energy_level) / power, power);
+        else if (energy_level <= 0.0 || power <= 0.0)
+            power = 0.0f;
+    }
+
+    // Degrade damaged systems.
     if (gameGlobalInfo && gameGlobalInfo->use_system_damage)
         return std::max(0.0f, power * systems[system].health);
+
+    // If a system cannot be damaged, excessive heat degrades it.
     return std::max(0.0f, power * (1.0f - systems[system].heat_level));
 }
 
@@ -1031,7 +1105,7 @@ void SpaceShip::addBroadcast(int threshold, string message)
         P<PlayerSpaceship> ship = gameGlobalInfo->getPlayerShip(n);
         if (ship)
         {
-            if (factionInfo[this->getFactionId()]->states[ship->getFactionId()] == FVF_Friendly)
+            if (this->isFriendly(ship))
             {
                 color = sf::Color(154,255,154); //ally = light green
                 addtolog = 1;
@@ -1041,7 +1115,7 @@ void SpaceShip::addBroadcast(int threshold, string message)
                 color = sf::Color(128,128,128); //neutral = grey
                 addtolog = 1;
             }
-            else if ((factionInfo[this->getFactionId()]->states[ship->getFactionId()] == FVF_Enemy) && (threshold == FVF_Enemy))
+            else if ((this->isEnemy(ship)) && (threshold == FVF_Enemy))
             {
                 color = sf::Color(255,102,102); //enemy = light red
                 addtolog = 1;
@@ -1064,7 +1138,12 @@ std::unordered_map<string, string> SpaceShip::getGMInfo()
 
 string SpaceShip::getScriptExportModificationsOnTemplate()
 {
+    // Exports attributes common to ships as Lua script function calls.
+    // Initialize the exported string.
     string ret = "";
+
+    // If traits don't differ from the ship template, don't bother exporting
+    // them.
     if (getTypeName() != ship_template->getName())
         ret += ":setTypeName(" + getTypeName() + ")";
     if (hull_max != ship_template->hull)
@@ -1080,42 +1159,59 @@ string SpaceShip::getScriptExportModificationsOnTemplate()
     if (has_warp_drive != (ship_template->warp_speed > 0))
         ret += ":setWarpDrive(" + string(has_warp_drive ? "true" : "false") + ")";
 
-    /// shield data
+    // Shield data
+    // Determine whether to export shield data.
     bool add_shields_max_line = getShieldCount() != ship_template->shield_count;
     bool add_shields_line = getShieldCount() != ship_template->shield_count;
-    for(int n=0; n<getShieldCount(); n++)
+
+    // If shield max and level don't differ from the template, don't bother
+    // exporting them.
+    for(int n = 0; n < getShieldCount(); n++)
     {
         if (getShieldMax(n) != ship_template->shield_level[n])
             add_shields_max_line = true;
         if (getShieldLevel(n) != ship_template->shield_level[n])
             add_shields_line = true;
     }
+
+    // If we're exporting shield max ...
     if (add_shields_max_line)
     {
         ret += ":setShieldsMax(";
-        for(int n=0; n<getShieldCount(); n++)
+
+        // ... for each shield, export the shield max.
+        for(int n = 0; n < getShieldCount(); n++)
         {
             if (n > 0)
                 ret += ", ";
-            ret += getShieldMax(n);
+
+            ret += string(getShieldMax(n));
         }
+
         ret += ")";
     }
+
+    // If we're exporting shield level ...
     if (add_shields_line)
     {
         ret += ":setShields(";
-        for(int n=0; n<getShieldCount(); n++)
+
+        // ... for each shield, export the shield level.
+        for(int n = 0; n < getShieldCount(); n++)
         {
             if (n > 0)
                 ret += ", ";
-            ret += getShieldLevel(n);
+
+            ret += string(getShieldLevel(n));
         }
+
         ret += ")";
     }
 
     ///Missile weapon data
     if (weapon_tube_count != ship_template->weapon_tube_count)
         ret += ":setWeaponTubeCount(" + string(weapon_tube_count) + ")";
+
     for(int n=0; n<weapon_tube_count; n++)
     {
         WeaponTube& tube = weapon_tube[n];

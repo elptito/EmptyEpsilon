@@ -1,5 +1,5 @@
-#ifndef SPACE_SHIP_H
-#define SPACE_SHIP_H
+#ifndef SPACESHIP_H
+#define SPACESHIP_H
 
 #include "shipTemplateBasedObject.h"
 #include "spaceStation.h"
@@ -41,6 +41,7 @@ public:
     float heat_level; //0.0-1.0, system will damage at 1.0
     float coolant_level; //0.0-10.0
     float coolant_request;
+    float hacked_level; //0.0-1.0
 
     float getHeatingDelta()
     {
@@ -63,6 +64,7 @@ public:
     constexpr static float heat_per_combat_maneuver_boost = 0.2;
     constexpr static float heat_per_combat_maneuver_strafe = 0.2;
     constexpr static float heat_per_warp = 0.02;
+    constexpr static float unhack_time = 180.0f; //It takes this amount of time to go from 100% hacked to 0% hacked for systems.
 
     float energy_level;
     float max_energy_level;
@@ -167,8 +169,6 @@ public:
 
     SpaceShip(string multiplayerClassName, float multiplayer_significant_range=-1);
 
-    virtual RawRadarSignatureInfo getRadarSignatureInfo() { return RawRadarSignatureInfo(0.05, 0.3, 0.3); }
-
 #if FEATURE_3D_RENDERING
     virtual void draw3DTransparent() override;
 #endif
@@ -260,6 +260,10 @@ public:
     bool isFriendOrFoeIdentifiedByFaction(int faction_id);
     bool isFullyScannedByFaction(int faction_id);
 
+    virtual bool canBeHackedBy(P<SpaceObject> other) override;
+    virtual std::vector<std::pair<string, float> > getHackingTargets() override;
+    virtual void hackFinished(P<SpaceObject> source, string target) override;
+
     /*!
      * Check if ship has certain system
      */
@@ -284,6 +288,10 @@ public:
     int getWeaponStorageMax(EMissileWeapons weapon) { if (weapon == MW_None) return 0; return weapon_storage_max[weapon]; }
     void setWeaponStorage(EMissileWeapons weapon, int amount) { if (weapon == MW_None) return; weapon_storage[weapon] = amount; }
     void setWeaponStorageMax(EMissileWeapons weapon, int amount) { if (weapon == MW_None) return; weapon_storage_max[weapon] = amount; weapon_storage[weapon] = std::min(int(weapon_storage[weapon]), amount); }
+    float getMaxEnergy() { return max_energy_level; }
+    void setMaxEnergy(float amount) { if (amount > 0.0) { max_energy_level = amount;} }
+    float getEnergy() { return energy_level; }
+    void setEnergy(float amount) { if ( (amount > 0.0) && (amount <= max_energy_level)) { energy_level = amount; } }
     float getSystemHealth(ESystem system) { if (system >= SYS_COUNT) return 0.0; if (system <= SYS_None) return 0.0; return systems[system].health; }
     void setSystemHealth(ESystem system, float health) { if (system >= SYS_COUNT) return; if (system <= SYS_None) return; systems[system].health = std::min(1.0f, std::max(-1.0f, health)); }
     float getSystemHeat(ESystem system) { if (system >= SYS_COUNT) return 0.0; if (system <= SYS_None) return 0.0; return systems[system].heat_level; }
@@ -346,6 +354,7 @@ public:
     float getBeamWeaponHeatPerFire(int index) { if (index < 0 || index >= max_beam_weapons) return 0.0; return beam_weapons[index].getHeatPerFire(); }
 
     int getShieldsFrequency(void){ return shield_frequency; }
+    void setShieldsFrequency(float freq) { if ((freq > SpaceShip::max_frequency) || (freq < 0)) return; shield_frequency = freq;}
 
     void setBeamWeapon(int index, float arc, float direction, float range, float cycle_time, float damage)
     {
@@ -411,4 +420,4 @@ string frequencyToString(int frequency);
 #include "spaceship.hpp"
 #endif
 
-#endif//SPACE_SHIP_H
+#endif//SPACESHIP_H

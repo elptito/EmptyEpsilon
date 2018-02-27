@@ -2,6 +2,13 @@
 #include "main.h"
 #include "electricExplosionEffect.h"
 
+/// ElectricExplosionEffect is a visible electrical explosion, as seen from EMP missiles
+/// Example: ElectricExplosionEffect():setPosition(500,5000):setSize(20)
+REGISTER_SCRIPT_SUBCLASS(ElectricExplosionEffect, SpaceObject)
+{
+    REGISTER_SCRIPT_CLASS_FUNCTION(ElectricExplosionEffect, setSize);
+}
+
 REGISTER_MULTIPLAYER_CLASS(ElectricExplosionEffect, "ElectricExplosionEffect");
 ElectricExplosionEffect::ElectricExplosionEffect()
 : SpaceObject(1000.0, "ElectricExplosionEffect")
@@ -36,16 +43,16 @@ void ElectricExplosionEffect::draw3DTransparent()
     glScalef(scale * size, scale * size, scale * size);
     glColor3f(alpha, alpha, alpha);
     
-    basicShader->setParameter("textureMap", *textureManager.getTexture("electric_sphere_texture.png"));
-    sf::Shader::bind(basicShader);
+    ShaderManager::getShader("basicShader")->setParameter("textureMap", *textureManager.getTexture("electric_sphere_texture.png"));
+    sf::Shader::bind(ShaderManager::getShader("basicShader"));
     Mesh* m = Mesh::getMesh("sphere.obj");
     m->render();
     glScalef(0.5, 0.5, 0.5);
     m->render();
     glPopMatrix();
     
-    billboardShader->setParameter("textureMap", *textureManager.getTexture("particle.png"));
-    sf::Shader::bind(billboardShader);
+    ShaderManager::getShader("billboardShader")->setParameter("textureMap", *textureManager.getTexture("particle.png"));
+    sf::Shader::bind(ShaderManager::getShader("billboardShader"));
     scale = Tween<float>::easeInCubic(f, 0.0, 1.0, 0.3f, 3.0f);
     float r = Tween<float>::easeOutQuad(f, 0.0, 1.0, 1.0f, 0.0f);
     float g = Tween<float>::easeOutQuad(f, 0.0, 1.0, 1.0f, 0.0f);
