@@ -33,7 +33,7 @@ private:
     GuiButton* password_entry_ok;
     GuiButton* password_cancel;
     GuiButton* password_confirmation;
-    
+
     GuiToggleButton* main_screen_button;
     GuiToggleButton* crew_position_button[max_crew_positions];
     GuiToggleButton* main_screen_controls_button;
@@ -42,9 +42,10 @@ private:
     GuiToggleButton* window_button;
     GuiSlider* window_angle;
     GuiLabel* window_angle_label;
+    GuiToggleButton* probe_button;
     GuiToggleButton* topdown_button;
     GuiToggleButton* cinematic_view_button;
-    
+
 public:
     ShipSelectionScreen();
 
@@ -55,10 +56,10 @@ private:
      * Being a main screen requires a bit more than the normal GUI, so we need to do some checks.
      */
     bool canDoMainScreen() { return PostProcessor::isEnabled() && sf::Shader::isAvailable(); }
-    
+
     void updateReadyButton();
     void updateCrewTypeOptions();
-    
+
     void onReadyClick();
 };
 

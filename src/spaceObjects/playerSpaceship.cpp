@@ -52,7 +52,7 @@ REGISTER_SCRIPT_SUBCLASS(PlayerSpaceship, SpaceShip)
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setEnergyLevelMax);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getEnergyLevel);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getEnergyLevelMax);
-    
+
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setScanProbeCount);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getScanProbeCount);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setMaxScanProbeCount);
@@ -102,6 +102,7 @@ REGISTER_SCRIPT_SUBCLASS(PlayerSpaceship, SpaceShip)
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandConfirmDestructCode);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandCombatManeuverBoost);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetScienceLink);
+    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetProbe3DLink);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetAlertLevel);
 
     // Return the number of Engineering repair crews on the ship.
@@ -168,10 +169,11 @@ static const int16_t CMD_COMBAT_MANEUVER_STRAFE = 0x0022;
 static const int16_t CMD_LAUNCH_PROBE = 0x0023;
 static const int16_t CMD_SET_ALERT_LEVEL = 0x0024;
 static const int16_t CMD_SET_SCIENCE_LINK = 0x0025;
-static const int16_t CMD_ABORT_DOCK = 0x0026;
-static const int16_t CMD_SET_MAIN_SCREEN_OVERLAY = 0x0027;
-static const int16_t CMD_HACKING_FINISHED = 0x0028;
-static const int16_t CMD_CUSTOM_FUNCTION = 0x0029;
+static const int16_t CMD_SET_PROBE_3D_LINK = 0x0026;
+static const int16_t CMD_ABORT_DOCK = 0x0027;
+static const int16_t CMD_SET_MAIN_SCREEN_OVERLAY = 0x0028;
+static const int16_t CMD_HACKING_FINISHED = 0x0029;
+static const int16_t CMD_CUSTOM_FUNCTION = 0x0030;
 
 string alertLevelToString(EAlertLevel level)
 {
@@ -251,6 +253,7 @@ PlayerSpaceship::PlayerSpaceship()
     registerMemberReplication(&self_destruct_countdown, 0.2);
     registerMemberReplication(&alert_level);
     registerMemberReplication(&linked_science_probe_id);
+    registerMemberReplication(&linked_probe_3D_id);
     registerMemberReplication(&control_code);
     registerMemberReplication(&custom_functions);
 
@@ -498,7 +501,7 @@ void PlayerSpaceship::update(float delta)
             if (!useEnergy(energy_warp_per_second * delta * powf(warp_request, 1.2f) * (shields_active ? 1.5 : 1.0)))
                 // If there's not enough energy, fall out of warp.
                 warp_request = 0;
-                
+
             for(float n=0; n<=4; n++)
             {
                 if ((current_warp > n-0.1 && current_warp < n+0.1) && warp_indicator != n)
@@ -639,7 +642,7 @@ void PlayerSpaceship::takeHullDamage(float damage_amount, DamageInfo& info)
     {
         hull_damage_indicator = 1.5;
     }
-    
+
     float systems_diff[SYS_COUNT];
     for(int n=0; n<SYS_COUNT; n++)
     {
@@ -648,7 +651,7 @@ void PlayerSpaceship::takeHullDamage(float damage_amount, DamageInfo& info)
 
     // Take hull damage like any other ship.
     SpaceShip::takeHullDamage(damage_amount, info);
-    
+
     // Infos for log intern
     string system_damage = string(abs(damage_amount)) + string(" damages to hull. System affected : ");
     for(int n=0; n<SYS_COUNT; n++)
@@ -1505,6 +1508,11 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
             packet >> linked_science_probe_id;
         }
         break;
+    case CMD_SET_PROBE_3D_LINK:
+        {
+            packet >> linked_probe_3D_id;
+        }
+        break;
     case CMD_HACKING_FINISHED:
         {
             uint32_t id;
@@ -1836,6 +1844,12 @@ void PlayerSpaceship::commandCustomFunction(string name)
 void PlayerSpaceship::commandSetScienceLink(int32_t id){
     sf::Packet packet;
     packet << CMD_SET_SCIENCE_LINK << id;
+    sendClientCommand(packet);
+}
+
+void PlayerSpaceship::commandSetProbe3DLink(int32_t id){
+    sf::Packet packet;
+    packet << CMD_SET_PROBE_3D_LINK << id;
     sendClientCommand(packet);
 }
 

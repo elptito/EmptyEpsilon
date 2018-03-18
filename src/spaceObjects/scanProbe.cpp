@@ -18,7 +18,7 @@ ScanProbe::ScanProbe()
     registerMemberReplication(&target_position);
     registerMemberReplication(&lifetime, 60.0);
     setRadarSignatureInfo(0.0, 0.2, 0);
-    
+
     switch(irandom(1, 3))
     {
     case 1:
@@ -49,7 +49,8 @@ void ScanProbe::update(float delta)
 
 bool ScanProbe::canBeTargetedBy(P<SpaceObject> other)
 {
-    return (getTarget() - getPosition()) < getRadius();
+    //return (getTarget() - getPosition()) < getRadius();
+    return true;
 }
 
 void ScanProbe::takeDamage(float damage_amount, DamageInfo info)
