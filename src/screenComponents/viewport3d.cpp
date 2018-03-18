@@ -57,7 +57,7 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    
+
     glRotatef(90, 1, 0, 0);
     glScalef(1,1,-1);
     glRotatef(-camera_pitch, 1, 0, 0);
@@ -131,11 +131,6 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
             glPopMatrix();
         }
     }
-    glColor4f(1,1,1,1);
-    glDisable(GL_BLEND);
-    sf::Texture::bind(NULL);
-    glDepthMask(true);
-    glEnable(GL_DEPTH_TEST);
 
     {
         float lightpos1[4] = {0, 0, 0, 1.0};
@@ -145,7 +140,18 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
         glLightfv(GL_LIGHT0, GL_POSITION, lightpos0);
     }
 
-    PVector<SpaceObject> renderList;
+    class RenderInfo
+    {
+    public:
+        RenderInfo(SpaceObject* obj, float d)
+        : object(obj), depth(d)
+        {}
+
+        SpaceObject* object;
+        float depth;
+    };
+    std::vector<std::vector<RenderInfo>> render_lists;
+
     sf::Vector2f viewVector = sf::vector2FromAngle(camera_yaw);
     float depth_cutoff_back = camera_position.z * -tanf((90+camera_pitch + camera_fov/2.0) / 180.0f * M_PI);
     float depth_cutoff_front = camera_position.z * -tanf((90+camera_pitch - camera_fov/2.0) / 180.0f * M_PI);
@@ -162,39 +168,64 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
             continue;
         if (depth > 0 && obj->getRadius() / depth < 1.0 / 500)
             continue;
-        renderList.push_back(obj);
+        int render_list_index = std::max(0, int((depth + obj->getRadius()) / 25000));
+        while(render_list_index >= int(render_lists.size()))
+            render_lists.emplace_back();
+        render_lists[render_list_index].emplace_back(*obj, depth);
     }
 
-    foreach(SpaceObject, obj, renderList)
+    for(int n=render_lists.size() - 1; n >= 0; n--)
     {
-        glPushMatrix();
-        glTranslatef(-camera_position.x,-camera_position.y, -camera_position.z);
-        glTranslatef(obj->getPosition().x, obj->getPosition().y, 0);
-        glRotatef(obj->getRotation(), 0, 0, 1);
+        auto& render_list = render_lists[n];
+        std::sort(render_list.begin(), render_list.end(), [](const RenderInfo& a, const RenderInfo& b) { return a.depth > b.depth; });
 
-        obj->draw3D();
-        glPopMatrix();
-    }
-    sf::Shader::bind(NULL);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE, GL_ONE);
-    glDisable(GL_CULL_FACE);
-    glDepthMask(false);
-    foreach(SpaceObject, obj, renderList)
-    {
-        glPushMatrix();
-        glTranslatef(-camera_position.x,-camera_position.y, -camera_position.z);
-        glTranslatef(obj->getPosition().x, obj->getPosition().y, 0);
-        glRotatef(obj->getRotation(), 0, 0, 1);
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        _glPerspective(camera_fov, rect.width/rect.height, 1.f, 25000.f * (n + 1));
+        glMatrixMode(GL_MODELVIEW);
+        glDepthMask(true);
+        glClear(GL_DEPTH_BUFFER_BIT);
 
-        obj->draw3DTransparent();
-        glPopMatrix();
+        glColor4f(1,1,1,1);
+        glDisable(GL_BLEND);
+        sf::Texture::bind(NULL);
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_CULL_FACE);
+        for(auto info : render_list)
+        {
+            SpaceObject* obj = info.object;
+
+            glPushMatrix();
+            glTranslatef(-camera_position.x,-camera_position.y, -camera_position.z);
+            glTranslatef(obj->getPosition().x, obj->getPosition().y, 0);
+            glRotatef(obj->getRotation(), 0, 0, 1);
+
+            obj->draw3D();
+            glPopMatrix();
+        }
+        sf::Shader::bind(NULL);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE);
+        glDisable(GL_CULL_FACE);
+        glDepthMask(false);
+        for(auto info : render_list)
+        {
+            SpaceObject* obj = info.object;
+
+            glPushMatrix();
+            glTranslatef(-camera_position.x,-camera_position.y, -camera_position.z);
+            glTranslatef(obj->getPosition().x, obj->getPosition().y, 0);
+            glRotatef(obj->getRotation(), 0, 0, 1);
+
+            obj->draw3DTransparent();
+            glPopMatrix();
+        }
     }
 
     glPushMatrix();
     glTranslatef(-camera_position.x,-camera_position.y, -camera_position.z);
     ParticleEngine::render();
-    
+
     if (show_spacedust && my_spaceship)
     {
         static std::vector<sf::Vector3f> space_dust;
@@ -205,7 +236,7 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
         sf::Vector2f dust_vector = my_spaceship->getVelocity() / 100.0f;
         sf::Vector3f dust_center = sf::Vector3f(my_spaceship->getPosition().x, my_spaceship->getPosition().y, 0.0);
         glColor4f(0.7, 0.5, 0.35, 0.07);
-        
+
         for(unsigned int n=0; n<space_dust.size(); n++)
         {
             const float maxDustDist = 500.0f;
@@ -273,16 +304,17 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
 
     window.popGLStates();
 
-    if (show_callsigns)
+    if (show_callsigns && render_lists.size() > 0)
     {
-        foreach(SpaceObject, obj, renderList)
+        for(auto info : render_lists[0])
         {
-            if (!obj->canBeTargetedBy(my_spaceship) || obj == my_spaceship)
+            SpaceObject* obj = info.object;
+            if (!obj->canBeTargetedBy(my_spaceship) || obj == *my_spaceship)
                 continue;
             string call_sign = obj->getCallSign();
             if (call_sign == "")
                 continue;
-            
+
             sf::Vector3f screen_position = worldToScreen(window, sf::Vector3f(obj->getPosition().x, obj->getPosition().y, obj->getRadius()));
             if (screen_position.z < 0)
                 continue;
@@ -292,11 +324,11 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
             drawText(window, sf::FloatRect(screen_position.x, screen_position.y, 0, 0), call_sign, ACenter, 20 * distance_factor, bold_font, sf::Color(255, 255, 255, 128 * distance_factor));
         }
     }
-    
+
     if (show_headings && my_spaceship)
     {
         float distance = 2500.f;
-        
+
         for(int angle = 0; angle < 360; angle += 30)
         {
             sf::Vector2f world_pos = my_spaceship->getPosition() + sf::vector2FromAngle(float(angle - 90)) * distance;
@@ -311,7 +343,7 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
 sf::Vector3f GuiViewport3D::worldToScreen(sf::RenderTarget& window, sf::Vector3f world)
 {
     world -= camera_position;
-    
+
     //Transformation vectors
     float fTempo[8];
     //Modelview transform
@@ -342,7 +374,7 @@ sf::Vector3f GuiViewport3D::worldToScreen(sf::RenderTarget& window, sf::Vector3f
     //ret.z = (1.0+fTempo[6])*0.5;	//Between 0 and 1
     //Set Z to distance into the screen (negative is behind the screen)
     ret.z = -fTempo[2];
-    
+
     ret.x = ret.x * window.getView().getSize().x / window.getSize().x;
     ret.y = ret.y * window.getView().getSize().y / window.getSize().y;
     ret.y = window.getView().getSize().y - ret.y;

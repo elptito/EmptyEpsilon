@@ -936,6 +936,7 @@ void PlayerSpaceship::addCustomMessageWithCallback(ECrewPosition position, strin
     CustomShipFunction& csf = custom_functions.back();
     csf.type = CustomShipFunction::Type::Message;
     csf.name = name;
+    csf.crew_position = position;
     csf.caption = caption;
     csf.callback = callback;
 }
@@ -1522,10 +1523,15 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
             {
                 if (csf.name == name)
                 {
-                    if (csf.type == CustomShipFunction::Type::Message)
-                        removeCustom(name);
                     if (csf.type == CustomShipFunction::Type::Button || csf.type == CustomShipFunction::Type::Message)
+                    {
                         csf.callback.call();
+                    }
+                    if (csf.type == CustomShipFunction::Type::Message)
+                    {
+                        removeCustom(name);
+                        break;
+                    }
                 }
             }
         }

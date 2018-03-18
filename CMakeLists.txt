@@ -7,6 +7,9 @@ option(ENABLE_CRASH_LOGGER "Enable the drmingw crash logging facilities" OFF)
 if(NOT DEFINED SERIOUS_PROTON_DIR)
  message(FATAL_ERROR "SERIOUS_PROTON_DIR was not set. Unable to continue")
 endif(NOT DEFINED SERIOUS_PROTON_DIR)
+if(NOT IS_ABSOLUTE "${SERIOUS_PROTON_DIR}")
+  get_filename_component(SERIOUS_PROTON_DIR "${CMAKE_BINARY_DIR}/${SERIOUS_PROTON_DIR}" ABSOLUTE)
+endif()
 
 # if(DEFINED ENABLE_CRASH_LOGGER)
 #  if(WIN32)
@@ -22,8 +25,26 @@ if(NOT DEFINED CPACK_PACKAGE_VERSION_MAJOR)
  string(TIMESTAMP CPACK_PACKAGE_VERSION_PATCH "%d")
 endif(NOT DEFINED CPACK_PACKAGE_VERSION_MAJOR)
 
+# Set our optimization flags.
+set(OPTIMIZER_FLAGS "")
+if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+    # On gcc, we want some general optimalizations that improve speed a lot.
+    set(OPTIMIZER_FLAGS "${OPTIMIZER_FLAGS} -O3 -flto -funsafe-math-optimizations")
+
+    # If we are compiling for a rasberry pi, we want to aggressively optimize for the CPU we are running on.
+    # Note that this check only works if we are compiling directly on the pi, as it is a dirty way of checkif if we are on the pi.
+    if(EXISTS /opt/vc/include/bcm_host.h OR COMPILE_FOR_PI)
+        set(OPTIMIZER_FLAGS "${OPTIMIZER_FLAGS} -mcpu=native -mfpu=neon-vfpv4 -mfloat-abi=hard")
+    endif()
+endif()
+
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+
+set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} ${OPTIMIZER_FLAGS}")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${OPTIMIZER_FLAGS}")
+set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO} -g1 ${OPTIMIZER_FLAGS}")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -g1 ${OPTIMIZER_FLAGS}")
 
 # install resources, scripts, and packs to app bundle instead of system dir.
 if(APPLE)
@@ -204,15 +225,16 @@ set(SOURCES
 	src/ai/ai.cpp
 	src/ai/aiFactory.cpp
 	src/ai/missileVolleyAI.cpp
-	src/hardware/dmx512SerialDevice.cpp
-	src/hardware/enttecDMXProDevice.cpp
-	src/hardware/sACNDMXDevice.cpp
-	src/hardware/uDMXDevice.cpp
 	src/hardware/hardwareController.cpp
 	src/hardware/hardwareMappingEffects.cpp
 	src/hardware/hardwareOutputDevice.cpp
 	src/hardware/serialDriver.cpp
-	src/hardware/virtualOutputDevice.cpp
+	src/hardware/devices/dmx512SerialDevice.cpp
+	src/hardware/devices/enttecDMXProDevice.cpp
+	src/hardware/devices/sACNDMXDevice.cpp
+	src/hardware/devices/uDMXDevice.cpp
+	src/hardware/devices/virtualOutputDevice.cpp
+	src/hardware/devices/philipsHueDevice.cpp
 )
 if(WIN32)
     list(APPEND SOURCES EmptyEpsilon.rc)
@@ -325,7 +347,7 @@ foreach(SP_SOURCE
 	src/lua/lgc.c
 	src/lua/lbitlib.c
 	)
-  	list(APPEND SOURCES ${SERIOUS_PROTON_DIR}${SP_SOURCE})
+	list(APPEND SOURCES ${SERIOUS_PROTON_DIR}/${SP_SOURCE})
 endforeach()
 
 add_definitions(-DWINDOW_TITLE="EmptyEpsilon")
@@ -377,7 +399,13 @@ if(WIN32)
   install(FILES ${MING_DLL_PATH}/libstdc++-6.dll DESTINATION .)
   install(FILES ${MING_DLL_PATH}/libgcc_s_sjlj-1.dll DESTINATION .)
   install(FILES /usr/i686-w64-mingw32/lib/libwinpthread-1.dll DESTINATION .)
-  install(FILES ${SFML_ROOT}/bin/openal32.dll DESTINATION .)
+  install(FILES ${SFML_ROOT}/bin/OpenAL32.dll DESTINATION .)
+  install(FILES ${SFML_ROOT}/bin/libFLAC-8.dll DESTINATION .)
+  install(FILES ${SFML_ROOT}/bin/libjpeg-62.dll DESTINATION .)
+  install(FILES ${SFML_ROOT}/bin/libogg-0.dll DESTINATION .)
+  install(FILES ${SFML_ROOT}/bin/libvorbis-0.dll DESTINATION .)
+  install(FILES ${SFML_ROOT}/bin/libvorbisenc-2.dll DESTINATION .)
+  install(FILES ${SFML_ROOT}/bin/libvorbisfile-3.dll DESTINATION .)
   install(FILES ${SFML_ROOT}/bin/sfml-audio-2.dll DESTINATION .)
   install(FILES ${SFML_ROOT}/bin/sfml-graphics-2.dll DESTINATION .)
   install(FILES ${SFML_ROOT}/bin/sfml-network-2.dll DESTINATION .)
