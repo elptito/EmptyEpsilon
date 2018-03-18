@@ -36,6 +36,7 @@ private:
     GuiAutoLayout* option_buttons;
     GuiButton* hack_target_button;
     GuiToggleButton* link_to_science_button;
+    GuiToggleButton* link_to_3D_port_button;
     GuiButton* delete_waypoint_button;
     GuiButton* launch_probe_button;
 
@@ -44,7 +45,7 @@ private:
 
     GuiSlider* zoom_slider;
     GuiLabel* zoom_label;
-    
+
     GuiHackingDialog* hacking_dialog;
 
     sf::Vector2f mouse_down_position;
