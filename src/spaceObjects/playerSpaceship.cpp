@@ -1315,7 +1315,7 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
                 comms_state = CS_ChannelOpenGM;
 
                 addToShipLog("Opened communication channel to " + comms_target_name, colorConfig.log_generic);
-                comms_incomming_message = "Opened comms with " + comms_target->getCallSign();
+                comms_incomming_message = "Opened comms with " + comms_target_name;
             }else{
                 addToShipLog("Refused hail from " + comms_target_name, colorConfig.log_generic);
                 comms_state = CS_Inactive;
