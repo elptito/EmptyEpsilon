@@ -1238,6 +1238,7 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
                 P<PlayerSpaceship> player = comms_target;
                 comms_state = CS_OpeningChannel;
                 comms_open_delay = comms_channel_open_time;
+                comms_target_name = comms_target->getCallSign()
                 comms_incomming_message = "Opened comms with " + comms_target_name;
                 addToShipLog("Hailing: " + comms_target_name, colorConfig.log_generic);
             }else{
