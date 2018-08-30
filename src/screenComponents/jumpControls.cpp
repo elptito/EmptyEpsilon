@@ -35,14 +35,14 @@ void GuiJumpControls::onDraw(sf::RenderTarget& window)
     {
         if (my_spaceship->jump_delay > 0.0)
         {
-            label->setKey("Jump in");
+            label->setKey("Jump dans");
             label->setValue(string(int(ceilf(my_spaceship->jump_delay))));
             slider->disable();
             button->disable();
             charge_bar->hide();
         }else if (my_spaceship->jump_drive_charge < my_spaceship->jump_drive_max_distance)
         {
-            label->setKey("Charging");
+            label->setKey("Chargement");
             label->setValue("...");
             slider->hide();
             button->disable();

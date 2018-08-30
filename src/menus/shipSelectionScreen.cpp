@@ -37,16 +37,16 @@ ShipSelectionScreen::ShipSelectionScreen()
     // List the station types and stations in the right column.
     GuiAutoLayout* stations_layout = new GuiAutoLayout(right_container, "CREW_POSITION_BUTTON_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
     stations_layout->setPosition(0, 50, ATopCenter)->setSize(400, 500);
-    (new GuiLabel(stations_layout, "CREW_POSITION_SELECT_LABEL", "Select your station", 30))->addBackground()->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(stations_layout, "CREW_POSITION_SELECT_LABEL", "Choisissez votre poste", 30))->addBackground()->setSize(GuiElement::GuiSizeMax, 50);
 
     // Crew type selector
     crew_type_selector = new GuiSelector(stations_layout, "CREW_TYPE_SELECTION", [this](int index, string value) {
         updateCrewTypeOptions();
     });
-    crew_type_selector->setOptions({"6/5 player crew", "4/3 player crew", "1 player crew/extras", "Alternative options"})->setSize(GuiElement::GuiSizeMax, 50);
+    crew_type_selector->setOptions({"Equipage 6/5 joueurs", "Equipage 4/3 joueurs", "Equipage 1 joueur / Extras", "Poste alternatif"})->setSize(GuiElement::GuiSizeMax, 50);
 
     // Main screen button
-    main_screen_button = new GuiToggleButton(stations_layout, "MAIN_SCREEN_BUTTON", "Main screen", [this](bool value) {
+    main_screen_button = new GuiToggleButton(stations_layout, "MAIN_SCREEN_BUTTON", "Ecran principal", [this](bool value) {
         for(int n=0; n<max_crew_positions; n++)
         {
             crew_position_button[n]->setValue(false);
@@ -67,13 +67,13 @@ ShipSelectionScreen::ShipSelectionScreen()
     }
 
     // Main screen controls button
-    main_screen_controls_button = new GuiToggleButton(stations_layout, "MAIN_SCREEN_CONTROLS_ENABLE", "Main screen controls", [](bool value) {
+    main_screen_controls_button = new GuiToggleButton(stations_layout, "MAIN_SCREEN_CONTROLS_ENABLE", "Controle ecran principal", [](bool value) {
         my_player_info->commandSetMainScreenControl(value);
     });
     main_screen_controls_button->setValue(my_player_info->main_screen_control)->setSize(GuiElement::GuiSizeMax, 50);
     
     // Game master button
-    game_master_button = new GuiToggleButton(stations_layout, "GAME_MASTER_BUTTON", "Game master", [this](bool value) {
+    game_master_button = new GuiToggleButton(stations_layout, "GAME_MASTER_BUTTON", "Maitre de jeu", [this](bool value) {
         window_button->setValue(false);
         topdown_button->setValue(false);
         cinematic_view_button->setValue(false);
@@ -83,7 +83,7 @@ ShipSelectionScreen::ShipSelectionScreen()
     // Ship window button and angle slider
     window_button_row = new GuiAutoLayout(stations_layout, "", GuiAutoLayout::LayoutHorizontalLeftToRight);
     window_button_row->setSize(GuiElement::GuiSizeMax, 50);
-    window_button = new GuiToggleButton(window_button_row, "WINDOW_BUTTON", "Ship window", [this](bool value) {
+    window_button = new GuiToggleButton(window_button_row, "WINDOW_BUTTON", "Fenetre", [this](bool value) {
         game_master_button->setValue(false);
         topdown_button->setValue(false);
         cinematic_view_button->setValue(false);
@@ -121,8 +121,8 @@ ShipSelectionScreen::ShipSelectionScreen()
 
     // Player ship selection panel
     (new GuiPanel(left_container, "SHIP_SELECTION_BOX"))->setPosition(0, 50, ATopCenter)->setSize(550, 560);
-    (new GuiLabel(left_container, "SHIP_SELECTION_LABEL", "Select ship", 30))->addBackground()->setPosition(0, 50, ATopCenter)->setSize(510, 50);
-    no_ships_label = new GuiLabel(left_container, "SHIP_SELECTION_NO_SHIPS_LABEL", "Waiting for server to spawn a ship", 30);
+    (new GuiLabel(left_container, "SHIP_SELECTION_LABEL", "Choisir vaisseau", 30))->addBackground()->setPosition(0, 50, ATopCenter)->setSize(510, 50);
+    no_ships_label = new GuiLabel(left_container, "SHIP_SELECTION_NO_SHIPS_LABEL", "Attente du serveur", 30);
     no_ships_label->setPosition(0, 100, ATopCenter)->setSize(460, 50);
 
     // Player ship list
@@ -172,7 +172,7 @@ ShipSelectionScreen::ShipSelectionScreen()
 
         // Spawn a ship of the selected template near 0,0 and give it a random
         // heading.
-        (new GuiButton(left_container, "CREATE_SHIP_BUTTON", "Spawn player ship", [this, ship_template_selector]() {
+        (new GuiButton(left_container, "CREATE_SHIP_BUTTON", "Creer vaisseau joueur", [this, ship_template_selector]() {
             P<PlayerSpaceship> ship = new PlayerSpaceship();
 
             if (ship)
@@ -187,7 +187,7 @@ ShipSelectionScreen::ShipSelectionScreen()
 
         // If this is the server, the "back" button goes to the scenario
         // selection/server creation screen.
-        (new GuiButton(left_container, "DISCONNECT", "Scenario selection", [this]() {
+        (new GuiButton(left_container, "DISCONNECT", "Choix scenario", [this]() {
             destroy();
             new ServerCreationScreen();
         }))->setPosition(0, -50, ABottomCenter)->setSize(300, 50);
@@ -201,8 +201,8 @@ ShipSelectionScreen::ShipSelectionScreen()
         }))->setPosition(0, -50, ABottomCenter)->setSize(300, 50);
     }
 
-    // The "Ready" button.
-    ready_button = new GuiButton(right_container, "READY_BUTTON", "Ready", [this]() {
+    // The "Pret" button.
+    ready_button = new GuiButton(right_container, "READY_BUTTON", "Pret", [this]() {
         this->onReadyClick();
     });
     ready_button->setPosition(0, -50, ABottomCenter)->setSize(300, 50);
@@ -220,7 +220,7 @@ ShipSelectionScreen::ShipSelectionScreen()
     password_label->setPosition(0, 40, ATopCenter);
     password_entry = new GuiTextEntry(password_entry_box, "PASSWORD_ENTRY", "");
     password_entry->setPosition(20, 0, ACenterLeft)->setSize(400, 50);
-    password_cancel = new GuiButton(password_entry_box, "PASSWORD_CANCEL_BUTTON", "Cancel", [this]() {
+    password_cancel = new GuiButton(password_entry_box, "PASSWORD_CANCEL_BUTTON", "Annuler", [this]() {
         // Reset the dialog.
         password_label->setText("Enter this ship's control code:");
         password_entry->setText("");
@@ -341,7 +341,7 @@ void ShipSelectionScreen::update(float delta)
         {
             if (my_spaceship->hasPlayerAtPosition(ECrewPosition(n)))
             {
-                crew_position_button[n]->setText(button_text + " (occupied)");
+                crew_position_button[n]->setText(button_text + " (pris)");
             } else {
                 crew_position_button[n]->setText(button_text);
             }

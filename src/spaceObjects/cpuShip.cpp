@@ -159,7 +159,7 @@ void CpuShip::orderDefendLocation(sf::Vector2f position)
 {
     orders = AI_DefendLocation;
     order_target_location = position;
-    this->addBroadcast(FVF_Friendly, "Defending " + string(position.x) + "," + string(position.y) + ".");
+    this->addBroadcast(FVF_Friendly, "Defense " + string(position.x) + "," + string(position.y) + ".");
 }
 
 void CpuShip::orderDefendTarget(P<SpaceObject> object)
@@ -168,7 +168,7 @@ void CpuShip::orderDefendTarget(P<SpaceObject> object)
         return;
     orders = AI_DefendTarget;
     order_target = object;
-    this->addBroadcast(FVF_Friendly, "Defending " + object->getCallSign() + ".");
+    this->addBroadcast(FVF_Friendly, "Defense " + object->getCallSign() + ".");
 }
 
 void CpuShip::orderFlyFormation(P<SpaceObject> object, sf::Vector2f offset)

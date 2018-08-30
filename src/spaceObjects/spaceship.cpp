@@ -1255,15 +1255,15 @@ string getMissileWeaponName(EMissileWeapons missile)
     case MW_None:
         return "-";
     case MW_Homing:
-        return "Homing";
+        return "TCC";
     case MW_Nuke:
-        return "Nuke";
+        return "TCN";
     case MW_Mine:
         return "Mine";
     case MW_EMP:
-        return "EMP";
+        return "TCI";
     case MW_HVLI:
-        return "HVLI";
+        return "TBHV";
     default:
         return "UNK: " + string(int(missile));
     }

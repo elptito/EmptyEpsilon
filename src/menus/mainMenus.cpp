@@ -70,7 +70,7 @@ MainMenu::MainMenu()
     (new GuiImage(this, "LOGO", "logo_full"))->setPosition(0, title_y, ATopCenter)->setSize(logo_size_x, logo_size_y);
     (new GuiLabel(this, "VERSION", "Version: " + string(VERSION_NUMBER), 20))->setPosition(0, title_y + logo_size, ATopCenter)->setSize(0, 20);
 
-    (new GuiButton(this, "START_SERVER", "Start server", [this]() {
+    (new GuiButton(this, "START_SERVER", "Lancer serveur", [this]() {
         new EpsilonServer();
         if (game_server)
         {
@@ -79,7 +79,7 @@ MainMenu::MainMenu()
         }
     }))->setPosition(sf::Vector2f(50, -230), ABottomLeft)->setSize(300, 50);
 
-    (new GuiButton(this, "START_CLIENT", "Start client", [this]() {
+    (new GuiButton(this, "START_CLIENT", "Lancer client", [this]() {
         new ServerBrowserMenu(ServerBrowserMenu::Local);
         destroy();
     }))->setPosition(sf::Vector2f(50, -170), ABottomLeft)->setSize(300, 50);
@@ -89,7 +89,7 @@ MainMenu::MainMenu()
         destroy();
     }))->setPosition(sf::Vector2f(50, -110), ABottomLeft)->setSize(300, 50);
 
-    (new GuiButton(this, "QUIT", "Quit", [this]() {
+    (new GuiButton(this, "QUIT", "Quitter", [this]() {
         engine->shutdown();
     }))->setPosition(sf::Vector2f(50, -50), ABottomLeft)->setSize(300, 50);
 

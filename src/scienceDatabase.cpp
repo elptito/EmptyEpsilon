@@ -61,12 +61,12 @@ void fillDefaultDatabaseData()
         {
             if (n == m) continue;
 
-            string stance = "Neutral";
+            string stance = "Neutre";
             switch(factionInfo[n]->states[m])
             {
-                case FVF_Neutral: stance = "Neutral"; break;
-                case FVF_Enemy: stance = "Enemy"; break;
-                case FVF_Friendly: stance = "Friendly"; break;
+                case FVF_Neutral: stance = "Neutre"; break;
+                case FVF_Enemy: stance = "Ennemi"; break;
+                case FVF_Friendly: stance = "Ami"; break;
             }
             entry->addKeyValue(factionInfo[m]->getName(), stance);
         }
@@ -74,7 +74,7 @@ void fillDefaultDatabaseData()
     }
 
     P<ScienceDatabase> shipDatabase = new ScienceDatabase();
-    shipDatabase->setName("Ships");
+    shipDatabase->setName("Vaisseaux");
 
     std::vector<string> template_names = ShipTemplate::getTemplateNameList(ShipTemplate::Ship);
     std::sort(template_names.begin(), template_names.end());
@@ -108,9 +108,9 @@ void fillDefaultDatabaseData()
         
         entry->model_data = ship_template->model_data;
 
-        entry->addKeyValue("Class", ship_template->getClass());
-        entry->addKeyValue("Sub-class", ship_template->getSubClass());
-        entry->addKeyValue("Size", string(int(ship_template->model_data->getRadius())));
+        entry->addKeyValue("Classe", ship_template->getClass());
+        entry->addKeyValue("Sous-classe", ship_template->getSubClass());
+        entry->addKeyValue("Taille", string(int(ship_template->model_data->getRadius())));
         string shield_info = "";
         for(int n=0; n<ship_template->shield_count; n++)
         {
@@ -118,18 +118,18 @@ void fillDefaultDatabaseData()
                 shield_info += "/";
             shield_info += string(int(ship_template->shield_level[n]));
         }
-        entry->addKeyValue("Shield", shield_info);
-        entry->addKeyValue("Hull", string(int(ship_template->hull)));
-        entry->addKeyValue("Move speed", string(int(ship_template->impulse_speed)));
-        entry->addKeyValue("Turn speed", string(int(ship_template->turn_speed)));
+        entry->addKeyValue("Bouclier", shield_info);
+        entry->addKeyValue("Carlingue", string(int(ship_template->hull)));
+        entry->addKeyValue("Vitesse", string(int(ship_template->impulse_speed)));
+        entry->addKeyValue("Rotation", string(int(ship_template->turn_speed)));
         if (ship_template->warp_speed > 0.0)
         {
-            entry->addKeyValue("Has warp drive", "True");
-            entry->addKeyValue("Warp speed", string(int(ship_template->warp_speed)));
+            entry->addKeyValue("Moteur WARP", "True");
+            entry->addKeyValue("Vitesse WARP", string(int(ship_template->warp_speed)));
         }
         if (ship_template->has_jump_drive)
         {
-            entry->addKeyValue("Has jump drive", "True");
+            entry->addKeyValue("Moteur JUMP", "True");
         }
         for(int n=0; n<max_beam_weapons; n++)
         {
@@ -137,27 +137,27 @@ void fillDefaultDatabaseData()
             {
                 string name = "?";
                 if (std::abs(sf::angleDifference(0.0f, ship_template->beams[n].getDirection())) <= 45)
-                    name = "Front";
+                    name = "Avant";
                 if (std::abs(sf::angleDifference(90.0f, ship_template->beams[n].getDirection())) < 45)
-                    name = "Right";
+                    name = "Droite";
                 if (std::abs(sf::angleDifference(-90.0f, ship_template->beams[n].getDirection())) < 45)
-                    name = "Left";
+                    name = "Gauche";
                 if (std::abs(sf::angleDifference(180.0f, ship_template->beams[n].getDirection())) <= 45)
-                    name = "Rear";
+                    name = "Arriere";
 
-                entry->addKeyValue(name + " beam weapon", string(ship_template->beams[n].getDamage() / ship_template->beams[n].getCycleTime(), 2) + " DPS");
+                entry->addKeyValue(name + " arme laser", string(ship_template->beams[n].getDamage() / ship_template->beams[n].getCycleTime(), 2) + " DPS");
             }
         }
         if (ship_template->weapon_tube_count > 0)
         {
-            entry->addKeyValue("Missile tubes", string(ship_template->weapon_tube_count));
-            entry->addKeyValue("Missile load time", string(int(ship_template->weapon_tube[0].load_time)));
+            entry->addKeyValue("tubes de missile", string(ship_template->weapon_tube_count));
+            entry->addKeyValue("Vit. chargement missile", string(int(ship_template->weapon_tube[0].load_time)));
         }
         for(int n=0; n < MW_Count; n++)
         {
             if (ship_template->weapon_storage[n] > 0)
             {
-                entry->addKeyValue("Storage " + getMissileWeaponName(EMissileWeapons(n)), string(ship_template->weapon_storage[n]));
+                entry->addKeyValue("Stock " + getMissileWeaponName(EMissileWeapons(n)), string(ship_template->weapon_storage[n]));
             }
         }
         if (ship_template->getDescription().length() > 0)

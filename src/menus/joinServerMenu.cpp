@@ -16,7 +16,7 @@ JoinServerScreen::JoinServerScreen(ServerBrowserMenu::SearchSource source, sf::I
     
     status_label = new GuiLabel(this, "STATUS", "Connecting...", 30);
     status_label->setPosition(0, 300, ATopCenter)->setSize(0, 50);
-    (new GuiButton(this, "BTN_CANCEL", "Cancel", [this]() {
+    (new GuiButton(this, "BTN_CANCEL", "Annuler", [this]() {
         destroy();
         disconnectFromServer();
         new ServerBrowserMenu(this->source);

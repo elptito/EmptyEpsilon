@@ -30,27 +30,27 @@ void GuiPowerDamageIndicator::onDraw(sf::RenderTarget& window)
     if (health <= 0.0)
     {
         color = colorConfig.overlay_damaged;
-        display_text = "DAMAGED";
+        display_text = "ENDOMMAGE";
     }else if ((system == SYS_Warp || system == SYS_JumpDrive) && WarpJammer::isWarpJammed(my_spaceship->getPosition()))
     {
         color = colorConfig.overlay_jammed;
-        display_text = "JAMMED";
+        display_text = "BLOQUE";
     }else if (power == 0.0)
     {
         color = colorConfig.overlay_no_power;
-        display_text = "NO POWER";
+        display_text = "AUCUNE PUISSANCE";
     }else if (my_spaceship->energy_level < 10)
     {
         color = colorConfig.overlay_low_energy;
-        display_text = "LOW ENERGY";
+        display_text = "ENERGIE FAIBLE";
     }else if (power < 0.3)
     {
         color = colorConfig.overlay_low_power;
-        display_text = "LOW POWER";
+        display_text = "FAIBLE PUISSANCE";
     }else if (heat > 0.90)
     {
         color = colorConfig.overlay_overheating;
-        display_text = "OVERHEATING";
+        display_text = "SURCHAUFFE";
     }else if (hacked_level > 0.1)
     {
         color = colorConfig.overlay_hacked;

@@ -30,7 +30,7 @@ CrewStationScreen::CrewStationScreen()
     
     message_text = new GuiScrollText(message_frame, "", "");
     message_text->setTextSize(20)->setPosition(20, 20, ATopLeft)->setSize(900 - 40, 200 - 40);
-    message_close_button = new GuiButton(message_frame, "", "Close", [this]() {
+    message_close_button = new GuiButton(message_frame, "", "Fin", [this]() {
         if (my_spaceship)
         {
             for(PlayerSpaceship::CustomShipFunction& csf : my_spaceship->custom_functions)
@@ -257,26 +257,26 @@ string CrewStationScreen::listHotkeysLimited(string station)
 	string ret = "";
 	keyboard_general = "";
 	for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("General"))
-		if (shortcut.first == "Switch to next crew station" || shortcut.first =="Switch to previous crew station") 				
+		if (shortcut.first == "Station suivante" || shortcut.first =="Station precedente") 				
 			keyboard_general += shortcut.second + ":\t" + shortcut.first + "\n";
-	if (station == "Tactical")
+	if (station == "Tactique")
 	{	
 		
-		for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Helms"))
+		for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Pilote"))
             ret += shortcut.second + ":\t" + shortcut.first + "\n";
-		for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Weapons"))
+		for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Armes"))
 		{
-			if (shortcut.first != "Toggle shields") 
+			if (shortcut.first != "Action boucliers") 
 				ret += shortcut.second + ":\t" + shortcut.first + "\n";
 		}
 	}
 	else if (station == "Engineering+")
 	{
-		for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Engineering"))
+		for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Ingenieur"))
             ret += shortcut.second + ":\t" + shortcut.first + "\n";
-        for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Weapons"))
+        for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Armes"))
         {
-            if (shortcut.first == "Toggle shields") 
+            if (shortcut.first == "Action boucliers") 
 				ret += shortcut.second + ":\t" + shortcut.first + "\n";
 		}
 	}
@@ -286,11 +286,11 @@ string CrewStationScreen::listHotkeysLimited(string station)
 //		return ret;
 //	----
 
-	else if (station == "Single Pilot")
+	else if (station == "Pilote seul")
 	{
-		for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Helms"))
+		for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Pilote"))
             ret += shortcut.second + ":\t" + shortcut.first + "\n";
-		for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Weapons"))
+		for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Armes"))
 			ret += shortcut.second + ":\t" + shortcut.first + "\n";
 	}
     return ret;

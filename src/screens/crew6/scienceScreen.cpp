@@ -89,11 +89,11 @@ ScienceScreen::ScienceScreen(GuiContainer* owner)
     scan_button->setSize(GuiElement::GuiSizeMax, 50);
 
     // Simple scan data.
-    info_callsign = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_CALLSIGN", 0.4, "Callsign", "");
+    info_callsign = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_CALLSIGN", 0.4, "ID", "");
     info_callsign->setSize(GuiElement::GuiSizeMax, 30);
     info_distance = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_DISTANCE", 0.4, "Distance", "");
     info_distance->setSize(GuiElement::GuiSizeMax, 30);
-    info_heading = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_HEADING", 0.4, "Heading", "");
+    info_heading = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_HEADING", 0.4, "Direction", "");
     info_heading->setSize(GuiElement::GuiSizeMax, 30);
     info_relspeed = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_REL_SPEED", 0.4, "Rel. Speed", "");
     info_relspeed->setSize(GuiElement::GuiSizeMax, 30);
@@ -115,9 +115,9 @@ ScienceScreen::ScienceScreen(GuiContainer* owner)
         }
     });
     info_type_button->setTextSize(20)->setPosition(0, 1, ATopRight)->setSize(50, 28);
-    info_shields = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_SHIELDS", 0.4, "Shields", "");
+    info_shields = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_SHIELDS", 0.4, "Boucliers", "");
     info_shields->setSize(GuiElement::GuiSizeMax, 30);
-    info_hull = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_HULL", 0.4, "Hull", "");
+    info_hull = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_HULL", 0.4, "Carlingue", "");
     info_hull->setSize(GuiElement::GuiSizeMax, 30);
 
     // Full scan data
@@ -129,7 +129,7 @@ ScienceScreen::ScienceScreen(GuiContainer* owner)
     // If the server uses frequencies, add the Tactical sidebar page.
     if (gameGlobalInfo->use_beam_shield_frequencies)
     {
-        sidebar_pager->addEntry("Tactical", "Tactical");
+        sidebar_pager->addEntry("Tactique", "Tactique");
     }
 
     // Add sidebar page for systems.
@@ -171,7 +171,7 @@ ScienceScreen::ScienceScreen(GuiContainer* owner)
     database_view->hide()->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
     // Probe view button
-    probe_view_button = new GuiToggleButton(radar_view, "PROBE_VIEW", "Probe View", [this](bool value){
+    probe_view_button = new GuiToggleButton(radar_view, "PROBE_VIEW", "Vue Sonde", [this](bool value){
         P<ScanProbe> probe;
 
         if (game_server)
@@ -209,7 +209,7 @@ ScienceScreen::ScienceScreen(GuiContainer* owner)
         background_gradient->setVisible(index == 0);
         database_view->setVisible(index == 1);
     });
-    view_mode_selection->setOptions({"Radar", "Database"})->setSelectionIndex(0)->setPosition(20, -20, ABottomLeft)->setSize(200, 100);
+    view_mode_selection->setOptions({"Radar", "Base de donnees"})->setSelectionIndex(0)->setPosition(20, -20, ABottomLeft)->setSize(200, 100);
 
     // Scanning dialog.
     new GuiScanningDialog(this, "SCANNING_DIALOG");
@@ -345,7 +345,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
                 sidebar_pager->setVisible(sidebar_pager->entryCount() > 1);
 
                 // Check sidebar pager state.
-                if (sidebar_pager_selection == "Tactical")
+                if (sidebar_pager_selection == "Tactique")
                 {
                     info_shield_frequency->show();
                     info_beam_frequency->show();

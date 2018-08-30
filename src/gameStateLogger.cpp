@@ -323,7 +323,7 @@ void GameStateLogger::writeShipEntry(JSONGenerator& json, P<SpaceShip> ship)
             JSONGenerator tube = json.arrayCreateDict();
             if (ship->weapon_tube[n].isEmpty())
             {
-                tube.write("state", "empty");
+                tube.write("state", "vide");
             }
             else if (ship->weapon_tube[n].isLoaded())
             {

@@ -76,8 +76,8 @@ ShipTemplate::ShipTemplate()
     if (game_server) { LOG(ERROR) << "ShipTemplate objects can not be created during a scenario."; destroy(); return; }
     
     type = Ship;
-    class_name = "No class";
-    class_name = "No sub-class";
+    class_name = "Sans classe";
+    class_name = "Sans sous-classe";
     shares_energy_with_docked = true;
     repair_docked = false;
     energy_storage_amount = 1000;
@@ -178,7 +178,7 @@ void ShipTemplate::setName(string name)
     }
 
     templateMap[name] = this;
-    if (name.startswith("Player "))
+    if (name.startswith("Joueur "))
         name = name.substr(7);
     this->name = name;
 }
@@ -294,15 +294,15 @@ string getSystemName(ESystem system)
 {
     switch(system)
     {
-    case SYS_Reactor: return "Reactor";
-    case SYS_BeamWeapons: return "Beam Weapons";
-    case SYS_MissileSystem: return "Missile System";
-    case SYS_Maneuver: return "Maneuvering";
-    case SYS_Impulse: return "Impulse Engines";
-    case SYS_Warp: return "Warp Drive";
-    case SYS_JumpDrive: return "Jump Drive";
-    case SYS_FrontShield: return "Front Shield Generator";
-    case SYS_RearShield: return "Rear Shield Generator";
+    case SYS_Reactor: return "Reacteur";
+    case SYS_BeamWeapons: return "Faisceau laser";
+    case SYS_MissileSystem: return "Systeme de missiles";
+    case SYS_Maneuver: return "Manoeuvres";
+    case SYS_Impulse: return "Moteur subluminique";
+    case SYS_Warp: return "Moteur WARP";
+    case SYS_JumpDrive: return "Moteur JUMP";
+    case SYS_FrontShield: return "Generateur Bouclier Av.";
+    case SYS_RearShield: return "Generateur Bouclier Ar.";
     default:
         return "UNKNOWN";
     }

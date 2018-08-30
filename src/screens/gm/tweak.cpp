@@ -32,7 +32,7 @@ GuiObjectTweak::GuiObjectTweak(GuiContainer* owner, ETweakType tweak_type)
         pages.push_back(new GuiShipTweakBase(this));
         list->addEntry("Base", "");
         pages.push_back(new GuiShipTweakShields(this));
-        list->addEntry("Shields", "");
+        list->addEntry("Boucliers", "");
         pages.push_back(new GuiShipTweakMissileTubes(this));
         list->addEntry("Tubes", "");
         pages.push_back(new GuiShipTweakMissileWeapons(this));
@@ -63,7 +63,7 @@ GuiObjectTweak::GuiObjectTweak(GuiContainer* owner, ETweakType tweak_type)
     pages[0]->show();
     list->setSelectionIndex(0);
 
-    (new GuiButton(this, "CLOSE_BUTTON", "Close", [this]() {
+    (new GuiButton(this, "CLOSE_BUTTON", "Fin", [this]() {
         hide();
     }))->setTextSize(20)->setPosition(-10, 0, ATopRight)->setSize(70, 30);
 }
@@ -170,12 +170,12 @@ GuiShipTweakBase::GuiShipTweakBase(GuiContainer* owner)
    
     // Warp and jump drive toggles
     (new GuiLabel(right_col, "", "Special drives:", 30))->setSize(GuiElement::GuiSizeMax, 50);
-    warp_toggle = new GuiToggleButton(right_col, "", "Warp Drive", [this](bool value) {
+    warp_toggle = new GuiToggleButton(right_col, "", "Moteur WARP", [this](bool value) {
         target->setWarpDrive(value);
     });
     warp_toggle->setSize(GuiElement::GuiSizeMax, 40);
 
-    jump_toggle = new GuiToggleButton(right_col, "", "Jump Drive", [this](bool value) {
+    jump_toggle = new GuiToggleButton(right_col, "", "Moteur JUMP", [this](bool value) {
         target->setJumpDrive(value);
     });
     jump_toggle->setSize(GuiElement::GuiSizeMax, 40);

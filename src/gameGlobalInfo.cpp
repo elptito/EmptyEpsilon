@@ -185,13 +185,13 @@ string playerWarpJumpDriveToString(EPlayerWarpJumpDrive player_warp_jump_drive)
     switch(player_warp_jump_drive)
     {
     case PWJ_ShipDefault:
-        return "Ship default";
+        return "Par defaut";
     case PWJ_WarpDrive:
         return "Warp-drive";
     case PWJ_JumpDrive:
         return "Jump-drive";
     case PWJ_WarpAndJumpDrive:
-        return "Both";
+        return "Double";
     default:
         return "?";
     }

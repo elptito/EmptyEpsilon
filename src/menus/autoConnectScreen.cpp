@@ -19,7 +19,7 @@ AutoConnectScreen::AutoConnectScreen(ECrewPosition crew_position, bool control_m
     status_label = new GuiLabel(this, "STATUS", "Searching for server...", 50);
     status_label->setPosition(0, 300, ATopCenter)->setSize(0, 50);
 
-    string position_name = "Main screen";
+    string position_name = "Ecran principal";
     if (crew_position < max_crew_positions)
         position_name = getCrewPositionName(crew_position);
 

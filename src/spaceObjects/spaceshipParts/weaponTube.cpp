@@ -284,13 +284,13 @@ EMissileWeapons WeaponTube::getLoadType()
 string WeaponTube::getTubeName()
 {
     if (std::abs(sf::angleDifference(0.0f, direction)) <= 45)
-        return "Front";
+        return "Avant";
     if (std::abs(sf::angleDifference(90.0f, direction)) < 45)
-        return "Right";
+        return "Droite";
     if (std::abs(sf::angleDifference(-90.0f, direction)) < 45)
-        return "Left";
+        return "Gauche";
     if (std::abs(sf::angleDifference(180.0f, direction)) <= 45)
-        return "Rear";
+        return "Arriere";
     return "?" + string(direction);
 }
 

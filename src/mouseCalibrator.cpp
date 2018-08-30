@@ -11,14 +11,14 @@ MouseCalibrator::MouseCalibrator(string filename)
     state = 0;
     InputHandler::mouse_transform = sf::Transform();
     
-    (new GuiLabel(this, "MAIN_LABEL", "Touch Calibration", 50))->setPosition(0, 100, ATopCenter)->setSize(0, 300);
+    (new GuiLabel(this, "MAIN_LABEL", "Calibration ecran", 50))->setPosition(0, 100, ATopCenter)->setSize(0, 300);
     screen_box[0] = new GuiPanel(this, "BOX_0");
     screen_box[0]->setPosition(50, 50, ATopLeft)->setSize(50, 50);
     screen_box[1] = new GuiPanel(this, "BOX_1");
     screen_box[1]->setPosition(-50, 50, ATopRight)->setSize(50, 50);
     screen_box[2] = new GuiPanel(this, "BOX_2");
     screen_box[2]->setPosition(-50, -50, ABottomRight)->setSize(50, 50);
-    ready_button = new GuiButton(this, "READY_BUTTON", "Finished", [this]() {
+    ready_button = new GuiButton(this, "READY_BUTTON", "Fini", [this]() {
         destroy();
         returnToMainMenu();
     });

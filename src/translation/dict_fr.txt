@@ -1,0 +1,367 @@
+Anglais,Francais
+" \(occupied\)"," \(pris\)"
+" arme laser"," arme laser"
+" degats a la carlingue"," degats a la carlingue"
+" degats a la carlingue. Systeme affecte : "," degats a la carlingue. Systeme affecte : "
+" Bouclier: OFF"," Bouclier: OFF"
+" Bouclier: ON"," Bouclier: ON"
+" gagne"," gagne"
+"&INPUT_TYPE=TEXT&OUTPUT_TYPE=AUDIO&AUDIO=WAVE_FILE&LOCALE=fr&VOICE=upmc-pierre","&INPUT_TYPE=TEXT&OUTPUT_TYPE=AUDIO&AUDIO=WAVE_FILE&LOCALE=fr&VOICE=upmc-pierre"
+": Vide",": Vide"
+Accepted hail from ,Communication acceptee avec 
+Beam frequency changed : ,Changement de frequence des lasers : 
+Beam system target changed : ,Changement de cible des lasers : 
+Beam/shield frequencies,Utiliser frequences
+Defending ,Defense 
+Enter \[,Entrer \[
+Hailed by ,Contacte par 
+Jump in: ,Jump dans : 
+Launch probe \(,Lancer sonde \(
+None,Non
+Player ,Joueur 
+Radar range: ,Portee du radar : 
+Scan complexity: ,Complexite du scan : 
+Server IP: ,IP Serveur : 
+Server name: ,Nom du Serveur : 
+Server password: ,Mot de passe : 
+Server visibility: ,Visibilite Serveur : 
+Shields frequency changed : ,Changement de frequence des boucliers : 
+SHIP DESTROYED!,VAISSEAU DETRUIT!
+Storage ,Stock 
+System afffected : ,Systeme affecte : 
+Target - Destroyed,Cible - Detruite
+Target activated : ,Cible activee : 
+This ship will self-destruct in exactly 10 seconds.,"Ce vaisseau s'auto-detruira dans exactement 10 secondes"
+Waiting for autorization input: ,"Attente des codes d'autorisation"
+1 player crew/extras,Equipage 1 joueur / Extras
+4/3 player crew,Equipage 4/3 joueurs
+6/5 player crew,Equipage 6/5 joueurs
+Advanced,Avance
+Alert level,Niveau Alerte
+Alternative options,Poste alternatif
+Answer,Repondre
+Auto destruction activated,"Activation de l'auto destruction"
+Auto destruction canceled,"Annulation de l'auto destruction"
+Back,Arriere
+Beam Info,Cible laser
+Beam info,Info Laser
+Beam Weapons,Faisceau laser
+Biomass frequency,Frequence de bio-masse
+Both,Double
+Calibrate,Calibrer
+Calibrating,Calibrage
+Calibration speed,Vitesse de calibrage
+Callsign,Identification
+Cancel,Annuler
+Cancel,Annuler
+Cancel Docking,Annuler dock
+Charge rate,Vitesse de rechargement
+Charging,Chargement
+Class,Classe
+Close,Fin
+Close server,Fermer serveur
+Combat maneuver,Manoeuvre de combat
+Combat recharge rate,Rechargement manoeuvre
+Communications channel closed,Communication coupee
+Communications where suddenly cut,Communication coupee soudainement 
+Confirm!,Confirmer !
+Coolant,Refroidissement
+Damage Control,Controle des dommages
+Damage negate,Diminution des degats
+Damage on your shields,Degats a vos boucliers
+Damage with your beams,Degats avec vos lasers
+DAMAGED,ENDOMMAGE
+Database,Base de donnees
+Defeat!,Defaite !
+Delete Waypoint,Supprimer Marqueur
+Docking aborded,Procedure de docking stoppe
+Docking requested,Procedure de docking en cours
+Doppler stability,Stabilite Doppler
+Duration, Duree
+Electric signature,Signature energetique
+EMP,TCI
+Empty,Vide
+empty,vide
+en_US,fr
+Enemy,Ennemi
+Energy,Energie
+Energy production,"Production d'energie"
+Engineering,Ingenieur
+Extra damage,Accroissement des degats
+Finished,Fini
+Firing,Feu
+Firing rate,Vitesse de tirs
+Friendly,Ami
+Front,Avant
+Front Shields,Boucliers Avant
+Front Shield Generator,Generateur Bouclier Av.
+Game master,Maitre de jeu
+Game Paused,Mission en pause
+Game rules,Regles du jeu
+Gravity well signature,Signature de gravite
+Has jump drive,Moteur JUMP
+Has warp drive,Moteur WARP
+Have a nice day.,Passez une bonne journee
+Heading,Direction
+Helms,Pilote
+Homing,TCC
+Hull,Carlingue
+HVLI,TBHV
+Ignore,Ignorer
+Impulse,Impulsion
+Impulse Engines,Moteur subluminique
+Impulse speed,Vitesse subluminique
+Infinity impropability,Improbabilite infinie
+Infra-red color shift,Modification infra-rouge
+Ionic phase shift,Dephasage ionique
+JAMMED,BLOQUE
+Jump Drive,Moteur JUMP
+Jump drive jump speed,Vitesse de JUMP
+Jump drive recharge rate,Rechargement JUMP
+Jump in,Jump dans
+Jump Initialisation,Initialisation du Jump
+Jumpdrive jump speed,Rapidite du Jump
+Jumpdrive recharge rate,Rechargement du Jump
+LAN only,LAN
+Launch Probe,Lancer sonde
+Left,Gauche
+Link to Science, Lier a Analyste
+Load,Charger
+Loading,Chargement
+Lock,Cibler
+Long range radar,Radar longue portee
+LongRange,Longue portee
+LOW ENERGY,ENERGIE FAIBLE
+LOW POWER,FAIBLE PUISSANCE
+Main Screen,Ecran principal
+Main screen,Ecran principal
+Main screen controls,Controle ecran principal
+Main screen options,"Options de l'ecran principal"
+Maneuvering,Manoeuvres
+Mine,Mine
+Missile fire,Missile tire
+Missile load time,Vit. chargement missile
+Missile System,Systeme de missiles
+Missile tubes,tubes de missile
+Move speed,Vitesse
+Neutral,Neutre
+No,Non
+No class,Sans classe
+No data,Pas de donnees
+NO POWER,AUCUNE PUISSANCE
+No reply...,Pas de reponse
+No sub-class,Sans sous-classe
+None \(delay\),Aucun \(delai\)
+Nuke,TCN
+Open comms,Ouvrir Comms
+Opening communications...,Ouverture des communications
+Operations,Operations
+Other party closed communications,Communication coupee volontairement
+OVERHEATING,SURCHAUFFE
+Oxygen,Oxygene
+Per-system damage,Degats par systeme 
+Place Waypoint,Placer Marqueur
+Player ship options,Options du vaisseau joueur
+Player ships,Vaisseaux Joueur
+Power,Puissance
+Power Management,Gestion energie
+Probe View,Vue Sonde
+Quit,Quitter
+Radiation halftime,Intervalle de rayonnement 
+Radio profile,Profil radio
+Raspberry jam prevention,Prevention des framboises
+Reactor,Reacteur
+Ready,Pret
+Rear,Arriere
+Rear Shields,Bouclier Arriere
+Rear Shield Generator,Generateur Bouclier Ar.
+RED ALERT,ALERTE ROUGE
+Rel.Speed,Vit.actuelle
+Relay,Relai
+Reload rate,Vitesse de rechargement
+Request Dock,Se docker
+Return,Retour
+Right,Droite
+Scan,Scanner
+Scenario Selection,Choix scenario
+Scenario selection,Choix scenario
+Science,Analyste
+Select ship,Choisir vaisseau
+Select ship:,Choix du vaisseau
+Select your station,Choisissez votre poste
+Self destruct,Auto destruction
+Self destruct activated!,Auto destruction activee !
+Server configuration,Configuration du serveur
+Shield,Bouclier
+Shields,Boucliers
+Shields on,Boucliers actives
+Shields: ON,Bouclier: ON
+Shileds off,Boucliers desactives
+Ship default,Par defaut
+Ship window,Fenetre
+Ships,Vaisseaux
+Ships log,Log Vaisseau
+Single Pilot,Pilote seul
+Size,Taille
+Spawn player ship,Creer vaisseau joueur
+Speed,Vitesse
+Start,Demarrer
+Start client,Lancer client
+Start hacking,Commencer hack
+Start of extern log,Debut du log externe
+Start of intern log,Debut du log interne
+Start of log,Debut du log
+Start scenario,Lancer le scenario
+Start server,Lancer serveur
+Sub-class,Sous-classe
+Tactical,Tactique
+Tactical radar,Radar tactique
+Top down 3D,Vue 3D
+Touch Calibration,Calibration ecran
+Turn speed,Rotation
+Turning speed,Vitesse de rotation
+Undock,Se Dedocker
+Undocking requested,Demande de dedocking
+Unload,Decharger
+Unloading,Dechargement
+Unpause,Reprendre
+Victory!,Victoire !
+Waiting for server to spawn a ship,Attente du serveur
+Warp Drive,Moteur WARP
+Warp drive speed,Vitesse de WARP
+Warp speed,Vitesse WARP
+Warpdrive speed,Vitesse de WARP
+Weapons,Armes
+YELLOW ALERT,ALERTE JAUNE
+Yes,Oui
+Zerospace audio frequency,Frequence audio a gravite nulle
+Switch to next crew station,Station suivante
+Switch to previous crew station,Station precedente
+Switch to helms station,Station pilote
+Switch to weapons station,Station artilleur
+Switch to engineering station,Station ingenieur
+Switch to science station,Station analyste
+Switch to relay station,Station relais
+Increase impulse,Augmenter Impulsion
+Decrease impulse,Diminuer Impulsion
+Zero impulse,Impulsion nulle
+Max impulse,Impulsion max
+Max reverse impulse,Impulsion max inverse
+Turn left,Tourner a gauche
+Turn right,Tourner a droite
+Warp off,WARP 0
+"Actions dock",Actions dock
+Initiate docking,Demander dock
+Abort docking,Annuler demande dock
+Undock,Se dedocker
+Increase jump distance,Augmentation distance JUMP
+Decrease jump distance,Diminution distance JUMP
+Initiate jump,Activer JUMP
+Combat maneuver left,Manoeuvre de combat gauche
+Combat maneuver right,Manoeuvre de combat droite
+Combat maneuver boost,Manoeuvre de combat avant
+Select homing,Selectionner TCC
+Select nuke,Selectionner TCN
+Select mine,Selectionner Mine
+Select EMP,Selectionner TCI
+Select HVLI,Selectionner TBHV
+Load tube 1,Chargement tube 1
+Unload tube 1,Dechargement tube 1
+Fire tube 1,Feu tube 1
+Load tube 2,Chargement tube 2
+Unload tube 2,Dechargement tube 2
+Fire tube 2,Feu tube 2
+Load tube 3,Chargement tube 3
+Unload tube 3,Dechargement tube 3
+Fire tube 3,Feu tube 3
+Load tube 4,Chargement tube 4
+Unload tube 4,Dechargement tube 4
+Fire tube 4,Feu tube 4
+Load tube 5,Chargement tube 5
+Unload tube 5,Dechargement tube 5
+Fire tube 5,Feu tube 5
+Load tube 6,Chargement tube 6
+Unload tube 6,Dechargement tube 6
+Fire tube 6,Feu tube 6
+Select next target,Cible ennemie suivante
+Select next target (any),Cible suivante
+Toggle shields,Action boucliers
+Enable shields,Activer Boucliers
+Disable shields,Desactiver Boucliers
+Next beam subsystem target type,systeme cible suivant
+Previous beam subsystem target type,systeme cible precedent
+Increase beam frequency,augmenter frequence lasers
+Decrease beam frequency,Diminuer frequence lasers
+Toggle missile aim lock,Action visee manuelle
+Enable missile aim lock,activer visee manuelle
+Disable missile aim lock,desactiver visee manuelle
+Turn missile aim to the left,visee manuelle a gauche
+Turn missile aim to the right,visee manuelle a droite
+Select reactor system,Selectionner systeme reacteur
+Select beam weapon system,Selectionner systeme lasers
+Select missile weapon system,Selectionner systeme missiles
+Select maneuvering system,Selectionner systeme manoeuvre
+Select impulse system,Selectionner systeme subluminique
+Select warp system,Selectionner systeme WARP
+Select jump drive system,Selectionner systeme JUMP
+Select front shields system,Selectionner systeme boucliers avants
+Select rear shields system,Selectionner systeme boucliers arrieres
+Increase system power,Augmenter puissance du systeme
+Decrease system power,Diminuer puissance du systeme
+Increase system coolant,Augmenter refroidissement du systeme
+Decrease system coolant,Diminuer refroidissement du systeme
+Next repair crew,Equipe de reparation suivante
+Crew move up,Deplacer equipe de reparation haut
+Crew move down,Deplacer equipe de reparation bas
+Crew move left,Deplacer equipe de reparation gauche
+Crew move right,Deplacer equipe de reparation droite
+Increase shield frequency target,Augmenter frequence boucliers
+Decrease shield frequency target,Diminuer frequence boucliers
+Start shield calibration,Calibrer les boucliers
+Start self-destruct,"Activer l'auto destruction"
+Confirm self-destruct,"Confirmer l'auto destruction"
+Cancel self-destruct,"Annuler l'auto destruction"
+Select next target,Cible ennemie suivante
+Select next target (any),Cible suivante
+Start scan,Commencer scan
+Next info on target,Information suivante sur cible
+Select tactical info,Information tactique
+Select systems info,Information systemes
+Select description info,Information description
+Show database,Afficher base de donnees
+Show probe view,Afficher vue sonde
+Show radar,Afficher radar
+Increase Zoom,Augmenter zoom
+Decrease Zoom,Diminuer zoom
+Move left scan 1,Deplacer barre de scan 1 a gauche
+Move right scan 1,Deplacer barre de scan 1 a droite
+Move left scan 2,Deplacer barre de scan 2 a gauche
+Move right scan 2,Deplacer barre de scan 2 a droite
+Move left scan 3,Deplacer barre de scan 3 a gauche
+Move right scan 3,Deplacer barre de scan 3 a droite
+Move left scan 4,Deplacer barre de scan 4 a gauche
+Move right scan 4,Deplacer barre de scan 4 a droite
+Open communication,Ouvrir communications
+Select next target,Cible ennemie suivante
+Select next target (any),Cible suivante
+Link probe to science,"Lier la probe a l'analyste"
+Begin Hack,Hacker la cible
+Add a waypoint,Ajouter un marqueur
+Delelte waypoint,Supprimer un marqueur
+Launch probe,Lancer une sonde
+Increase Zoom,Augmenter zoom
+Decrease Zoom,Diminuer zoom
+Open log,Ouvrir le log
+Alert normal,Alerte normale
+Alert yellow,Alerte jaune
+Alert red,Alerte rouge
+Target Lock,Verrouiller Cible
+Show comms,Afficher Comms
+"Selectionner cible du hack...","Selectionner cible du hack..."
+Hacking FAILED,Hack rate
+Hacking SUCCESS,Hack reussi
+"Hack en cours ","Hack en cours "
+"Hack en cours: 0%","Hack en cours: 0%"
+"Systeme cible:","Systeme cible:"
+Global Range,Radar global
+Ship State,Etat Vaisseau

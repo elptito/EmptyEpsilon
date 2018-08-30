@@ -19,7 +19,7 @@ ServerBrowserMenu::ServerBrowserMenu(SearchSource source)
     new GuiOverlay(this, "", colorConfig.background);
     (new GuiOverlay(this, "", sf::Color::White))->setTextureTiled("gui/BackgroundCrosses");
 
-    (new GuiButton(this, "BACK", "Back", [this]() {
+    (new GuiButton(this, "BACK", "Arriere", [this]() {
         destroy();
         returnToMainMenu();
     }))->setPosition(50, -50, ABottomLeft)->setSize(300, 50);

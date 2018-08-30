@@ -18,10 +18,10 @@ GuiIndicatorOverlays::GuiIndicatorOverlays(GuiContainer* owner)
     shield_low_warning_overlay = new GuiOverlay(this, "SHIELD_LOW", sf::Color(255, 0, 0, 0));
     pause_overlay = new GuiOverlay(this, "PAUSE", sf::Color(0, 0, 0, 128));
     (new GuiPanel(pause_overlay, "PAUSE_BOX"))->setPosition(0, 0, ACenter)->setSize(500, 100);
-    (new GuiLabel(pause_overlay, "PAUSE_LABEL", "Game Paused", 70))->setPosition(0, 0, ACenter)->setSize(500, 100);
+    (new GuiLabel(pause_overlay, "PAUSE_LABEL", "Mission en pause", 70))->setPosition(0, 0, ACenter)->setSize(500, 100);
     if (game_server)
     {
-        (new GuiButton(pause_overlay, "PAUSE_RESUME", "Unpause", []() {
+        (new GuiButton(pause_overlay, "PAUSE_RESUME", "Reprendre", []() {
             engine->setGameSpeed(1.0);
         }))->setPosition(0, 75, ACenter)->setSize(500, 50);
     }
@@ -112,11 +112,11 @@ void GuiIndicatorOverlays::onDraw(sf::RenderTarget& window)
             if (my_spaceship)
             {
                 if (factionInfo[gameGlobalInfo->getVictoryFactionId()]->states[my_spaceship->getFactionId()] == FVF_Enemy)
-                    victory_label->setText("Defeat!");
+                    victory_label->setText("Defaite !");
                 else
-                    victory_label->setText("Victory!");
+                    victory_label->setText("Victoire !");
             }else{
-                victory_label->setText(factionInfo[gameGlobalInfo->getVictoryFactionId()]->getName() + " wins");
+                victory_label->setText(factionInfo[gameGlobalInfo->getVictoryFactionId()]->getName() + " gagne");
             }
         }
     }else{

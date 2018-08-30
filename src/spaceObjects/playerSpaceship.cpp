@@ -178,8 +178,8 @@ string alertLevelToString(EAlertLevel level)
     // Convert an EAlertLevel to a string.
     switch(level)
     {
-    case AL_RedAlert: return "RED ALERT";
-    case AL_YellowAlert: return "YELLOW ALERT";
+    case AL_RedAlert: return "ALERTE ROUGE";
+    case AL_YellowAlert: return "ALERTE JAUNE";
     case AL_Normal: return "Normal";
     default:
         return "???";
@@ -294,7 +294,7 @@ PlayerSpaceship::PlayerSpaceship()
     setCallSign("PL" + string(getMultiplayerId()));
 
     // Initialize the ship's log.
-    addToShipLog("Start of log", colorConfig.log_generic);
+    addToShipLog("Debut du log", colorConfig.log_generic);
 }
 
 void PlayerSpaceship::update(float delta)
@@ -959,7 +959,7 @@ bool PlayerSpaceship::hailCommsByGM(string target_name)
         return false;
 
     // Log the hail.
-    addToShipLog("Hailed by " + target_name, colorConfig.log_generic);
+    addToShipLog("Contacte par " + target_name, colorConfig.log_generic);
 
     // Set comms to the hail state and notify Relay/comms.
     comms_state = CS_BeingHailedByGM;
@@ -1225,7 +1225,7 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
                         addToShipLog("Hail suddenly went dead.", colorConfig.log_generic);
                         comms_state = CS_ChannelBroken;
                     }else{
-                        addToShipLog("Accepted hail from " + comms_target->getCallSign(), colorConfig.log_generic);
+                        addToShipLog("Communication acceptee avec " + comms_target->getCallSign(), colorConfig.log_generic);
                         comms_reply_id.clear();
                         comms_reply_message.clear();
                         if (comms_incomming_message == "")

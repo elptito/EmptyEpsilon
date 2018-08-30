@@ -43,7 +43,7 @@ void GameMasterChatDialog::onDraw(sf::RenderTarget& window)
 
     if (!player)
     {
-        disableComms("Target - Destroyed");
+        disableComms("Cible - Detruite");
         return;
     }
     

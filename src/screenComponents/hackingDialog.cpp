@@ -40,7 +40,7 @@ GuiHackingDialog::GuiHackingDialog(GuiContainer* owner, string id)
     reset_button->setSize(200, 50);
     reset_button->setPosition(25, 75 + hacking_field_size * 50, ATopLeft);
 
-    GuiButton* close_button = new GuiButton(minigame_box, "", "Close", [this]()
+    GuiButton* close_button = new GuiButton(minigame_box, "", "Fin", [this]()
     {
         hide();
     });
@@ -54,7 +54,7 @@ GuiHackingDialog::GuiHackingDialog(GuiContainer* owner, string id)
     target_selection_box = new GuiPanel(this, id + "_BOX");
     target_selection_box->setSize(300, 545)->setPosition(400, 0, ACenter);
 
-    GuiLabel* target_selection_label = new GuiLabel(target_selection_box, "", "Target system:", 25);
+    GuiLabel* target_selection_label = new GuiLabel(target_selection_box, "", "Systeme cible:", 25);
     target_selection_label->setSize(GuiElement::GuiSizeMax, 50)->setPosition(0, 15);
     
     target_list = new GuiListbox(target_selection_box, "", [this](int index, string value)
@@ -157,13 +157,13 @@ void GuiHackingDialog::resetMinigame()
     correct_count = 0;
     
     progress_bar->setValue(0.0f);
-    status_label->setText("Hacking in progress: 0%");
+    status_label->setText("Hack en cours: 0%");
     reset_button->enable();
 }
 
 void GuiHackingDialog::disableMinigame()
 {
-    status_label->setText("Select hacking target...");
+    status_label->setText("Selectionner cible du hack...");
     
     for(int x=0; x<hacking_field_size; x++)
     {
@@ -228,15 +228,15 @@ void GuiHackingDialog::onFieldClick(int x, int y)
     
     if (error_count > 1)
     {
-        status_label->setText("Hacking FAILED");
+        status_label->setText("Hack rate");
         progress_bar->setValue(0.0f);
     }else if (correct_count == (hacking_field_size * hacking_field_size - bomb_count))
     {
-        status_label->setText("Hacking SUCCESS");
+        status_label->setText("Hack reussi");
         reset_time = engine->getElapsedTime() + auto_reset_time;
         progress_bar->setValue(1.0f);
     }else{
-        status_label->setText("Hacking in progress: " + string(correct_count * 100 / (hacking_field_size * hacking_field_size - bomb_count)) + "%");
+        status_label->setText("Hack en cours " + string(correct_count * 100 / (hacking_field_size * hacking_field_size - bomb_count)) + "%");
         progress_bar->setValue(float(correct_count) / float(hacking_field_size * hacking_field_size - bomb_count));
     }
 }

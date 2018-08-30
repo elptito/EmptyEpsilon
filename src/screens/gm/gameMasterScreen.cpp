@@ -83,7 +83,7 @@ GameMasterScreen::GameMasterScreen()
     });
     copy_selected_button->setTextSize(20)->setPosition(-20, -45, ABottomRight)->setSize(125, 25);
 
-    cancel_create_button = new GuiButton(this, "CANCEL_CREATE_BUTTON", "Cancel", [this]() {
+    cancel_create_button = new GuiButton(this, "CANCEL_CREATE_BUTTON", "Annuler", [this]() {
         create_button->show();
         cancel_create_button->hide();
     });
@@ -521,7 +521,7 @@ GuiGlobalMessageEntry::GuiGlobalMessageEntry(GuiContainer* owner)
     message_entry = new GuiTextEntry(box, "MESSAGE_ENTRY", "");
     message_entry->setPosition(0, 20, ATopCenter)->setSize(700, 50);
     
-    (new GuiButton(box, "CLOSE_BUTTON", "Cancel", [this]() {
+    (new GuiButton(box, "CLOSE_BUTTON", "Annuler", [this]() {
         this->hide();
     }))->setPosition(20, -20, ABottomLeft)->setSize(300, 50);
 
@@ -608,7 +608,7 @@ GuiObjectCreationScreen::GuiObjectCreationScreen(GameMasterScreen* gm_screen)
         listbox->addEntry(template_name, template_name);
     }
     
-    (new GuiButton(box, "CLOSE_BUTTON", "Cancel", [this]() {
+    (new GuiButton(box, "CLOSE_BUTTON", "Annuler", [this]() {
         create_script = "";
         this->hide();
     }))->setPosition(20, -20, ABottomLeft)->setSize(300, 50);

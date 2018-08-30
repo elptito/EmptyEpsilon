@@ -18,7 +18,7 @@ GuiScanningDialog::GuiScanningDialog(GuiContainer* owner, string id)
     box = new GuiPanel(this, id + "_BOX");
     box->setSize(500, 545)->setPosition(0, 0, ACenter);
     
-    signal_label = new GuiLabel(box, id + "_LABEL", "Electric signature", 30);
+    signal_label = new GuiLabel(box, id + "_LABEL", "Signature electronique", 30);
     signal_label->addBackground()->setPosition(0, 20, ATopCenter)->setSize(450, 50);
     
     signal_quality = new GuiSignalQualityIndicator(box, id + "_SIGNAL");
@@ -32,7 +32,7 @@ GuiScanningDialog::GuiScanningDialog(GuiContainer* owner, string id)
         sliders[n] = new GuiSlider(box, id + "_SLIDER_" + string(n), 0.0, 1.0, 0.0, nullptr);
         sliders[n]->setPosition(0, 200 + n * 70, ATopCenter)->setSize(450, 50);
     }
-    cancel_button = new GuiButton(box, id + "_CANCEL", "Cancel", []() {
+    cancel_button = new GuiButton(box, id + "_CANCEL", "Annuler", []() {
         if (my_spaceship)
             my_spaceship->commandScanCancel();
     });
@@ -107,17 +107,17 @@ void GuiScanningDialog::setupParameters()
     switch(irandom(0, 10))
     {
     default:
-    case 0: label += "Electric signature"; break;
-    case 1: label += "Biomass frequency"; break;
-    case 2: label += "Gravity well signature"; break;
-    case 3: label += "Radiation halftime"; break;
-    case 4: label += "Radio profile"; break;
-    case 5: label += "Ionic phase shift"; break;
-    case 6: label += "Infra-red color shift"; break;
-    case 7: label += "Doppler stability"; break;
-    case 8: label += "Raspberry jam prevention"; break;
-    case 9: label += "Infinity impropability"; break;
-    case 10: label += "Zerospace audio frequency"; break;
+    case 0: label += "Signature electronique"; break;
+    case 1: label += "Frequence de bio-masse"; break;
+    case 2: label += "Signature de gravite"; break;
+    case 3: label += "Intervalle de rayonnement "; break;
+    case 4: label += "Profil radio"; break;
+    case 5: label += "Dephasage ionique"; break;
+    case 6: label += "Modification infra-rouge"; break;
+    case 7: label += "Stabilite Doppler"; break;
+    case 8: label += "Prevention des framboises"; break;
+    case 9: label += "Improbabilite infinie"; break;
+    case 10: label += "Frequence audio a gravite nulle"; break;
     }
     signal_label->setText(label);
 }

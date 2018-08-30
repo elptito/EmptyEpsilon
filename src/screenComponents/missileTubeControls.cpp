@@ -20,7 +20,7 @@ GuiMissileTubeControls::GuiMissileTubeControls(GuiContainer* owner, string id)
         TubeRow row;
         row.layout = new GuiAutoLayout(this, id + "_ROW_" + string(n), LayoutHorizontalLeftToRight);
         row.layout->setSize(GuiElement::GuiSizeMax, 50);
-        row.load_button = new GuiButton(row.layout, id + "_" + string(n) + "_LOAD_BUTTON", "Load", [this, n]() {
+        row.load_button = new GuiButton(row.layout, id + "_" + string(n) + "_LOAD_BUTTON", "Charger", [this, n]() {
             if (!my_spaceship)
                 return;
             if (my_spaceship->weapon_tube[n].isEmpty())
@@ -55,7 +55,7 @@ GuiMissileTubeControls::GuiMissileTubeControls(GuiContainer* owner, string id)
         (new GuiPowerDamageIndicator(row.fire_button, id + "_" + string(n) + "_PDI", SYS_MissileSystem, ACenterRight))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
         row.loading_bar = new GuiProgressbar(row.layout, id + "_" + string(n) + "_PROGRESS", 0, 1.0, 0);
         row.loading_bar->setColor(sf::Color(128, 128, 128))->setSize(200, 50);
-        row.loading_label = new GuiLabel(row.loading_bar, id + "_" + string(n) + "_PROGRESS_LABEL", "Loading", 35);
+        row.loading_label = new GuiLabel(row.loading_bar, id + "_" + string(n) + "_PROGRESS_LABEL", "Chargement", 35);
         row.loading_label->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
         
         rows[n] = row;
@@ -104,41 +104,41 @@ void GuiMissileTubeControls::onDraw(sf::RenderTarget& window){
         if(tube.isEmpty())
         {
             rows[n].load_button->setEnable(tube.canLoad(load_type));
-            rows[n].load_button->setText("Load");
+            rows[n].load_button->setText("Charger");
             rows[n].fire_button->disable()->show();
-            rows[n].fire_button->setText(tube.getTubeName() + ": Empty");
+            rows[n].fire_button->setText(tube.getTubeName() + ": Vide");
             rows[n].loading_bar->hide();
         }else if(tube.isLoaded())
         {
             rows[n].load_button->enable();
-            rows[n].load_button->setText("Unload");
+            rows[n].load_button->setText("Decharger");
             rows[n].fire_button->enable()->show();
             rows[n].fire_button->setText(tube.getTubeName() + ": " + getMissileWeaponName(tube.getLoadType()));
             rows[n].loading_bar->hide();
         }else if(tube.isLoading())
         {
             rows[n].load_button->disable();
-            rows[n].load_button->setText("Load");
+            rows[n].load_button->setText("Charger");
             rows[n].fire_button->hide();
             rows[n].fire_button->setText(tube.getTubeName() + ": " + getMissileWeaponName(tube.getLoadType()));
             rows[n].loading_bar->show();
             rows[n].loading_bar->setValue(tube.getLoadProgress());
-            rows[n].loading_label->setText("Loading");
+            rows[n].loading_label->setText("Chargement");
         }else if(tube.isUnloading())
         {
             rows[n].load_button->disable();
-            rows[n].load_button->setText("Unload");
+            rows[n].load_button->setText("Decharger");
             rows[n].fire_button->hide();
             rows[n].fire_button->setText(getMissileWeaponName(tube.getLoadType()));
             rows[n].loading_bar->show();
             rows[n].loading_bar->setValue(tube.getUnloadProgress());
-            rows[n].loading_label->setText("Unloading");
+            rows[n].loading_label->setText("Dechargement");
         }else if(tube.isFiring())
         {
             rows[n].load_button->disable();
-            rows[n].load_button->setText("Load");
+            rows[n].load_button->setText("Charger");
             rows[n].fire_button->disable()->show();
-            rows[n].fire_button->setText("Firing");
+            rows[n].fire_button->setText("Feu");
             rows[n].loading_bar->hide();
         }
     }

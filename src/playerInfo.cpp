@@ -153,7 +153,7 @@ void PlayerInfo::spawnUI()
         
         //Ship log screen, if you have comms, you have ships log. (note this is mostly replaced by the [at the bottom of the screen openable log]
         if (crew_position[singlePilot])
-            screen->addStationTab(new ShipLogScreen(screen), max_crew_positions, "Ships log", "");
+            screen->addStationTab(new ShipLogScreen(screen), max_crew_positions, "Log Vaisseau", "");
         
         GuiSelfDestructEntry* sde = new GuiSelfDestructEntry(screen, "SELF_DESTRUCT_ENTRY");
         for(int n=0; n<max_crew_positions; n++)
@@ -185,18 +185,18 @@ string getCrewPositionName(ECrewPosition position)
 {
     switch(position)
     {
-    case helmsOfficer: return "Helms";
-    case weaponsOfficer: return "Weapons";
-    case engineering: return "Engineering";
-    case scienceOfficer: return "Science";
-    case relayOfficer: return "Relay";
-    case tacticalOfficer: return "Tactical";
+    case helmsOfficer: return "Pilote";
+    case weaponsOfficer: return "Artilleur";
+    case engineering: return "Ingenieur";
+    case scienceOfficer: return "Analyste";
+    case relayOfficer: return "Relai";
+    case tacticalOfficer: return "Tactique";
     case engineeringAdvanced: return "Engineering+";
     case operationsOfficer: return "Operations";
-    case singlePilot: return "Single Pilot";
-    case damageControl: return "Damage Control";
-    case powerManagement: return "Power Management";
-    case databaseView: return "Database";
+    case singlePilot: return "Pilote seul";
+    case damageControl: return "Controle des dommages";
+    case powerManagement: return "Gestion energie";
+    case databaseView: return "Base de donnees";
     default: return "ErrUnk: " + string(position);
     }
 }
