@@ -12,11 +12,12 @@ if (length(args)!=3) {
 	args[3] <- "/root/SeriousProton"
 }
 
-dir_dict <- args[1]
-dir_EE <- args[2]
-dir_SP <- args[3] 
+setwd("D:/Bibliothèque Utilisateurs/thomas/Documents/GitHub/EmptyEpsilon/src")
 
 
+dir_dict <- "D:/Bibliothèque Utilisateurs/thomas/Documents/GitHub/EmptyEpsilon/src/translation"
+dir_EE <- "D:/Bibliothèque Utilisateurs/thomas/Documents/GitHub/EmptyEpsilon"
+dir_SP <- "D:/Bibliothèque Utilisateurs/thomas/Documents/GitHub/SeriousProton"
 
 setwd(dir_dict)
 Traduction_fr <- read.table("dict_fr.txt",header = TRUE,sep=",",stringsAsFactors=FALSE)

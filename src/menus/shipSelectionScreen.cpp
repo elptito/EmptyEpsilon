@@ -91,14 +91,14 @@ ShipSelectionScreen::ShipSelectionScreen()
     window_button->setSize(175, 50);
 
     window_angle = new GuiSlider(window_button_row, "WINDOW_ANGLE", 0.0, 359.0, 0.0, [this](float value) {
-        window_angle_label->setText(string(int(window_angle->getValue())) + " degrees");
+        window_angle_label->setText(string(int(window_angle->getValue())) + " degres");
     });
     window_angle->setSize(GuiElement::GuiSizeMax, 50);
-    window_angle_label = new GuiLabel(window_angle, "WINDOW_ANGLE_LABEL", "0 degrees", 30);
+    window_angle_label = new GuiLabel(window_angle, "WINDOW_ANGLE_LABEL", "0 degre", 30);
     window_angle_label->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
     // Top-down view button
-    topdown_button = new GuiToggleButton(stations_layout, "TOP_DOWN_3D_BUTTON", "Top-down 3D view", [this](bool value) {
+    topdown_button = new GuiToggleButton(stations_layout, "TOP_DOWN_3D_BUTTON", "Vue de haut (3D)", [this](bool value) {
         game_master_button->setValue(false);
         window_button->setValue(false);
         cinematic_view_button->setValue(false);
@@ -106,7 +106,7 @@ ShipSelectionScreen::ShipSelectionScreen()
     topdown_button->setSize(GuiElement::GuiSizeMax, 50);
 
     // Cinematic view button
-    cinematic_view_button = new GuiToggleButton(stations_layout, "CINEMATIC_VIEW_BUTTON", "Cinematic view", [this](bool value) {
+    cinematic_view_button = new GuiToggleButton(stations_layout, "CINEMATIC_VIEW_BUTTON", "Vue cinematique", [this](bool value) {
         game_master_button->setValue(false);
         window_button->setValue(false);
         topdown_button->setValue(false);
@@ -135,7 +135,7 @@ ShipSelectionScreen::ShipSelectionScreen()
             // ... and it has a control code, ask the player for it.
             if (ship->control_code.length() > 0)
             {
-                LOG(INFO) << "Player selected " << ship->getCallSign() << ", which has a control code.";
+                LOG(INFO) << "Vaisseau choisi " << ship->getCallSign() << ", avec un code de securite.";
                 // Hide the ship selection UI temporarily to deter sneaky ship thieves.
                 left_container->hide();
                 right_container->hide();
@@ -194,7 +194,7 @@ ShipSelectionScreen::ShipSelectionScreen()
     }else{
         // If this is a client, the "back" button disconnects from the server
         // and returns to the main menu.
-        (new GuiButton(left_container, "DISCONNECT", "Disconnect", [this]() {
+        (new GuiButton(left_container, "DISCONNECT", "Deconnecter", [this]() {
             destroy();
             disconnectFromServer();
             returnToMainMenu();
@@ -216,13 +216,13 @@ ShipSelectionScreen::ShipSelectionScreen()
     password_overlay->hide();
     password_entry_box = new GuiPanel(password_overlay, "PASSWORD_ENTRY_BOX");
     password_entry_box->setPosition(0, 350, ATopCenter)->setSize(600, 200);
-    password_label = new GuiLabel(password_entry_box, "PASSWORD_LABEL", "Enter this ship's control code:", 30);
+    password_label = new GuiLabel(password_entry_box, "PASSWORD_LABEL", "Entrez le code de securite du vaisseau :", 30);
     password_label->setPosition(0, 40, ATopCenter);
     password_entry = new GuiTextEntry(password_entry_box, "PASSWORD_ENTRY", "");
     password_entry->setPosition(20, 0, ACenterLeft)->setSize(400, 50);
     password_cancel = new GuiButton(password_entry_box, "PASSWORD_CANCEL_BUTTON", "Annuler", [this]() {
         // Reset the dialog.
-        password_label->setText("Enter this ship's control code:");
+        password_label->setText("Entrez le code de securite du vaisseau :");
         password_entry->setText("");
         // Hide the password overlay and show the ship selection screen.
         password_overlay->hide();
@@ -248,21 +248,21 @@ ShipSelectionScreen::ShipSelectionScreen()
             if (password != control_code)
             {
                 // Password doesn't match. Unset the player ship selection.
-                LOG(INFO) << "Password doesn't match control code. Attempt: " << password;
+                LOG(INFO) << "Mot de passe de securite incorrect. Tentative : " << password;
                 my_player_info->commandSetShipId(-1);
                 // Notify the player.
-                password_label->setText("Incorrect control code. Re-enter code for " + ship->getCallSign() + ":");
+                password_label->setText("Code de securite incorrect. Re-indiquez le code pour " + ship->getCallSign() + " :");
                 // Reset the dialog.
                 password_entry->setText("");
             }
             else
             {
                 // Password matches.
-                LOG(INFO) << "Password matches control code.";
+                LOG(INFO) << "Mot de passe de securite correct.";
                 // Set the player ship.
                 my_player_info->commandSetShipId(ship->getMultiplayerId());
                 // Notify the player.
-                password_label->setText("Control code accepted.\nGranting access to " + ship->getCallSign() + ".");
+                password_label->setText("Mot de passe de securite correct..\nAutorisation pour acceder au " + ship->getCallSign() + ".");
                 // Reset and hide the password field.
                 password_entry->setText("");
                 password_entry->hide();
@@ -281,7 +281,7 @@ ShipSelectionScreen::ShipSelectionScreen()
         password_entry->show();
         password_cancel->show();
         password_entry_ok->show();
-        password_label->setText("Enter this ship's control code:")->setPosition(0, 40, ATopCenter);
+        password_label->setText("Entrez le code de securite du vaisseau :")->setPosition(0, 40, ATopCenter);
         password_confirmation->hide();
         // Hide the dialog.
         password_overlay->hide();

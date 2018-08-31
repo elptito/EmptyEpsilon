@@ -210,12 +210,12 @@ void ShipTemplateBasedObject::update(float delta)
 std::unordered_map<string, string> ShipTemplateBasedObject::getGMInfo()
 {
     std::unordered_map<string, string> ret;
-    ret["CallSign"] = callsign;
+    ret["ID"] = callsign;
     ret["Type"] = type_name;
     ret["Carlingue"] = string(hull_strength) + "/" + string(hull_max);
     for(int n=0; n<shield_count; n++)
     {
-        ret["Bouclier" + string(n + 1)] = string(shield_level[n]) + "/" + string(shield_max[n]);
+        ret["Bouclier " + string(n + 1)] = string(shield_level[n]) + "/" + string(shield_max[n]);
     }
     return ret;
 }
