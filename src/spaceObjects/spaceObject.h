@@ -125,6 +125,7 @@ public:
     int scanning_complexity_value;
     int scanning_depth_value;
     string callsign;
+    float hull;
     uint8_t personality_id;
 
     SpaceObject(float collisionRange, string multiplayerName, float multiplayer_significant_range=-1);
@@ -214,7 +215,7 @@ public:
     virtual bool canBeHackedBy(P<SpaceObject> other);
     virtual std::vector<std::pair<string, float> > getHackingTargets();
     virtual void hackFinished(P<SpaceObject> source, string target);
-    virtual void takeDamage(float damage_amount, DamageInfo info) {}
+    virtual void takeDamage(float damage_amount, DamageInfo info);
     virtual std::unordered_map<string, string> getGMInfo() { return std::unordered_map<string, string>(); }
     virtual string getExportLine() { return ""; }
 

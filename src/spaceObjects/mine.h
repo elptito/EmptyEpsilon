@@ -29,7 +29,7 @@ public:
     virtual void collide(Collisionable* target, float force);
     void eject();
     void explode();
-    
+
     virtual string getExportLine() { return "Mine():setPosition(" + string(getPosition().x, 0) + ", " + string(getPosition().y, 0) + ")"; }
 
 private:

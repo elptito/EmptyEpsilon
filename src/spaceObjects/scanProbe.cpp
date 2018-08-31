@@ -12,13 +12,14 @@ REGISTER_MULTIPLAYER_CLASS(ScanProbe, "ScanProbe");
 ScanProbe::ScanProbe()
 : SpaceObject(100, "ScanProbe")
 {
-    lifetime = 60 * 10;
+    lifetime = 60 * 20;
+    hull = 2;
 
     registerMemberReplication(&owner_id);
     registerMemberReplication(&target_position);
     registerMemberReplication(&lifetime, 60.0);
     setRadarSignatureInfo(0.0, 0.2, 0);
-    
+
     switch(irandom(1, 3))
     {
     case 1:
@@ -45,16 +46,6 @@ void ScanProbe::update(float delta)
         sf::Vector2f v = normalize(target_position - getPosition());
         setPosition(getPosition() + v * delta * probe_speed);
     }
-}
-
-bool ScanProbe::canBeTargetedBy(P<SpaceObject> other)
-{
-    return (getTarget() - getPosition()) < getRadius();
-}
-
-void ScanProbe::takeDamage(float damage_amount, DamageInfo info)
-{
-    destroy();
 }
 
 void ScanProbe::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range)

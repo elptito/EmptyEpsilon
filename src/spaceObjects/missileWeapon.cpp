@@ -8,7 +8,8 @@ MissileWeapon::MissileWeapon(string multiplayerName, const MissileWeaponData& da
     target_id = -1;
     target_angle = 0;
     lifetime = data.lifetime;
-    
+    hull = 5;
+
     registerMemberReplication(&target_id);
     registerMemberReplication(&target_angle);
 
@@ -59,6 +60,26 @@ void MissileWeapon::collide(Collisionable* target, float force)
 
     hitObject(object);
     destroy();
+}
+
+void MissileWeapon::takeDamage(float damage_amount, DamageInfo info)
+{
+    // If no hull, then it could no be destroyed
+    if(hull <= 0)
+        return;
+    if (info.type == DT_EMP)
+        return;
+    if (random(1,100)<50)
+        return;
+
+    hull -= damage_amount;
+    if (hull <= 0)
+    {
+        P<ExplosionEffect> e = new ExplosionEffect();
+        e->setSize(getRadius());
+        e->setPosition(getPosition());
+        destroy();
+    }
 }
 
 void MissileWeapon::updateMovement()

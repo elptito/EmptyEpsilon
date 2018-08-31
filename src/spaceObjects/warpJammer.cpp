@@ -24,7 +24,7 @@ WarpJammer::WarpJammer()
     setRadarSignatureInfo(0.05, 0.5, 0.0);
 
     registerMemberReplication(&range);
-    
+
     model_info.setData("shield_generator");
 }
 
@@ -51,20 +51,6 @@ void WarpJammer::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, fl
         range_circle.setOutlineColor(sf::Color(255, 255, 255, 64));
         range_circle.setOutlineThickness(2.0);
         window.draw(range_circle);
-    }
-}
-
-void WarpJammer::takeDamage(float damage_amount, DamageInfo info)
-{
-    if (info.type == DT_EMP)
-        return;
-    hull -= damage_amount;
-    if (hull <= 0)
-    {
-        P<ExplosionEffect> e = new ExplosionEffect();
-        e->setSize(getRadius());
-        e->setPosition(getPosition());
-        destroy();
     }
 }
 

@@ -1,6 +1,7 @@
 #include "spaceObject.h"
 #include "factionInfo.h"
 #include "gameGlobalInfo.h"
+#include "explosionEffect.h"
 
 #include "scriptInterface.h"
 /// The SpaceObject is the base for every object which can be seen in space.
@@ -112,11 +113,13 @@ SpaceObject::SpaceObject(float collision_range, string multiplayer_name, float m
     space_object_list.push_back(this);
     faction_id = 0;
     personality_id = 0;
+    hull = 0;
 
     scanning_complexity_value = 0;
     scanning_depth_value = 0;
 
     registerMemberReplication(&callsign);
+    registerMemberReplication(&hull);
     registerMemberReplication(&faction_id);
     registerMemberReplication(&personality_id);
     registerMemberReplication(&scanned_by_faction);
@@ -153,9 +156,29 @@ void SpaceObject::destroy()
     MultiplayerObject::destroy();
 }
 
+void SpaceObject::takeDamage(float damage_amount, DamageInfo info)
+{
+    // If no hull, then it could no be destroyed
+    if(hull <= 0)
+        return;
+    if (info.type == DT_EMP)
+        return;
+
+    hull -= damage_amount;
+    if (hull <= 0)
+    {
+        P<ExplosionEffect> e = new ExplosionEffect();
+        e->setSize(getRadius());
+        e->setPosition(getPosition());
+        destroy();
+    }
+}
+
 bool SpaceObject::canBeTargetedBy(P<SpaceObject> other)
 {
-    return false;
+    if(hull <= 0)
+        return false;
+    return true;
 }
 
 bool SpaceObject::canBeSelectedBy(P<SpaceObject> other)

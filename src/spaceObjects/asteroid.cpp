@@ -20,13 +20,14 @@ Asteroid::Asteroid()
     setRotation(random(0, 360));
     rotation_speed = random(0.1, 0.8);
     z = random(-50, 50);
+    hull = random(25,75);
     size = getRadius();
     model_number = irandom(1, 10);
     setRadarSignatureInfo(0.05, 0, 0);
 
     registerMemberReplication(&z);
     registerMemberReplication(&size);
-    
+
     PathPlannerManager::getInstance()->addAvoidObject(this, 300);
 }
 
