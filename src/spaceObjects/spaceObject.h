@@ -7,12 +7,30 @@
 #include "factionInfo.h"
 #include "shipTemplate.h"
 
+//PVector<Personality> personality;
+
+//Personality::Personality()
+//{
+//    personality.push_back(P_normal);
+//    personality.push_back(P_peaceful);
+//    personality.push_back(P_hostile);
+//    personality.push_back(P_solo);
+//}
+
 enum EDamageType
 {
     DT_Energy,
     DT_Kinetic,
     DT_EMP
 };
+
+//enum EPersonality
+//{
+//    P_normal = 1,
+//    P_peaceful = 2,
+//    P_hostile = 3,
+//    P_solo = 4
+//};
 
 class DamageInfo
 {
@@ -81,6 +99,7 @@ class SpaceObject : public Collisionable, public MultiplayerObject
 {
     float object_radius;
     uint8_t faction_id;
+
     struct
     {
         string not_scanned;
@@ -98,6 +117,7 @@ class SpaceObject : public Collisionable, public MultiplayerObject
      * is SS_NotScanned
      */
     std::vector<EScannedState> scanned_by_faction;
+
 public:
     string comms_script_name;
     ScriptSimpleCallback comms_script_callback;
@@ -105,6 +125,7 @@ public:
     int scanning_complexity_value;
     int scanning_depth_value;
     string callsign;
+    uint8_t personality_id;
 
     SpaceObject(float collisionRange, string multiplayerName, float multiplayer_significant_range=-1);
 
@@ -205,6 +226,13 @@ public:
     string getFaction() { return factionInfo[this->faction_id]->getName(); }
     void setFactionId(unsigned int faction_id) { this->faction_id = faction_id; }
     unsigned int getFactionId() { return faction_id; }
+
+    void setPersonalityId(unsigned int personality_id) {
+        this->personality_id = personality_id;
+    }
+    string getPersonality();
+    unsigned int getPersonalityId() { return personality_id; }
+
     void setReputationPoints(float amount);
     int getReputationPoints();
     bool takeReputationPoints(float amount);

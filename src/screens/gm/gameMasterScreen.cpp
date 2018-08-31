@@ -54,6 +54,18 @@ GameMasterScreen::GameMasterScreen()
         faction_selector->addEntry(info->getName(), info->getName());
     faction_selector->setPosition(20, 70, ATopLeft)->setSize(250, 50);
 
+    personality_selector = new GuiSelector(this, "FACTION_SELECTOR", [this](int index, string value) {
+        for(P<SpaceObject> obj : targets.getTargets())
+        {
+            obj->setPersonalityId(index);
+        }
+    });
+    personality_selector->addEntry("Normal","Normal");
+    personality_selector->addEntry("Pacifique","Pacifique");
+    personality_selector->addEntry("Hostile","Hostile");
+    personality_selector->addEntry("Solo","Solo");
+    personality_selector->setPosition(20, 120, ATopLeft)->setSize(250, 50);
+
     global_message_button = new GuiButton(this, "GLOBAL_MESSAGE_BUTTON", "Message global", [this]() {
         global_message_entry->show();
     });
@@ -140,10 +152,10 @@ GameMasterScreen::GameMasterScreen()
             n++;
         }
     });
-    gm_script_options->setPosition(20, 130, ATopLeft)->setSize(250, 500);
+    gm_script_options->setPosition(20, 190, ATopLeft)->setSize(250, 500);
 
     order_layout = new GuiAutoLayout(this, "ORDER_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
-    order_layout->setPosition(20, 130, ATopLeft)->setSize(250, GuiElement::GuiSizeMax);
+    order_layout->setPosition(20, 190, ATopLeft)->setSize(250, GuiElement::GuiSizeMax);
 
     (new GuiLabel(order_layout, "ORDERS_LABEL", "Ordres:", 20))->addBackground()->setSize(GuiElement::GuiSizeMax, 30);
     (new GuiButton(order_layout, "ORDER_IDLE", "Repos", [this]() {
@@ -446,7 +458,10 @@ void GameMasterScreen::onMouseUp(sf::Vector2f position)
             }
             targets.set(space_objects);
             if (space_objects.size() > 0)
+            {
                 faction_selector->setSelectionIndex(space_objects[0]->getFactionId());
+                personality_selector->setSelectionIndex(space_objects[0]->getPersonalityId());
+            }
         }
         break;
     default:
