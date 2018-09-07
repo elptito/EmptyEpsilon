@@ -70,7 +70,7 @@ ScienceScreen::ScienceScreen(GuiContainer* owner)
 
     sidebar_selector = new GuiSelector(radar_view, "", [this](int index, string value)
     {
-        info_sidebar->setVisible(index == 0);    
+        info_sidebar->setVisible(index == 0);
         custom_function_sidebar->setVisible(index == 1);
     });
     sidebar_selector->setOptions({"Scanning", "Other"});
@@ -95,7 +95,7 @@ ScienceScreen::ScienceScreen(GuiContainer* owner)
     info_distance->setSize(GuiElement::GuiSizeMax, 30);
     info_heading = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_HEADING", 0.4, "Direction", "");
     info_heading->setSize(GuiElement::GuiSizeMax, 30);
-    info_relspeed = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_REL_SPEED", 0.4, "Rel. Speed", "");
+    info_relspeed = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_REL_SPEED", 0.4, "Vitesse Rel.", "");
     info_relspeed->setSize(GuiElement::GuiSizeMax, 30);
     info_faction = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_FACTION", 0.4, "Faction", "");
     info_faction->setSize(GuiElement::GuiSizeMax, 30);
@@ -164,7 +164,7 @@ ScienceScreen::ScienceScreen(GuiContainer* owner)
 
     // Prep and hide the description text area.
     info_description = new GuiScrollText(info_sidebar, "SCIENCE_DESC", "");
-    info_description->setTextSize(28)->setMargins(20, 20, 0, 0)->setSize(GuiElement::GuiSizeMax, 400)->hide();
+    info_description->setTextSize(28)->setMargins(20, 20, 0, 0)->setSize(GuiElement::GuiSizeMax, 350)->hide();
 
     // Prep and hide the database view.
     database_view = new DatabaseViewComponent(this);
@@ -178,7 +178,7 @@ ScienceScreen::ScienceScreen(GuiContainer* owner)
             probe = game_server->getObjectById(my_spaceship->linked_science_probe_id);
         else
             probe = game_client->getObjectById(my_spaceship->linked_science_probe_id);
-        
+
         if (value && probe)
         {
             sf::Vector2f probe_position = probe->getPosition();
@@ -251,7 +251,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
         if (targets.get() && Nebula::blockedByNebula(my_spaceship->getPosition(), targets.get()->getPosition()))
             targets.clear();
     }
-    
+
     sidebar_selector->setVisible(sidebar_selector->getSelectionIndex() > 0 || custom_function_sidebar->hasEntries());
 
     info_callsign->setValue("-");
@@ -290,6 +290,26 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
         P<SpaceShip> ship = obj;
         P<SpaceStation> station = obj;
 
+        // Info latérale
+
+        // Toujours :
+            // ID
+            // Distance
+            // Rel. Speed
+            // Description de base
+
+        // Si Scan simple ou allié :
+            // Faction
+            // Type
+            // Boucliers
+            // Carlingue
+            // Description scan simple
+
+        // Si scan amélioré
+            // Description amélioré
+            // Fréquences
+            // Systèmes
+
         sf::Vector2f position_diff = obj->getPosition() - my_spaceship->getPosition();
         float distance = sf::length(position_diff);
         float heading = sf::vector2ToAngle(position_diff) - 270;
@@ -306,6 +326,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
         info_heading->setValue(string(int(heading)));
         info_relspeed->setValue(string(rel_velocity / 1000.0f * 60.0f, 1) + DISTANCE_UNIT_1K + "/min");
 
+        // En un coup, récupération de toute les descriptions possibles
         string description = obj->getDescriptionFor(my_spaceship);
         string sidebar_pager_selection = sidebar_pager->getSelectionValue();
 
@@ -323,98 +344,93 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
             sidebar_pager->removeEntry(sidebar_pager->indexByValue("Description"));
         }
 
-        // If the target is a ship, show information about the ship based on how
-        // deeply we've scanned it.
-        if (ship)
+        // De base, pas de sidebar
+        sidebar_pager->hide();
+
+        // On a simple scan or deeper, show the faction, ship type, shields,
+        // hull integrity, and database reference button.
+        if (obj->getScannedStateFor(my_spaceship) >= SS_SimpleScan)
         {
-            // On a simple scan or deeper, show the faction, ship type, shields,
-            // hull integrity, and database reference button.
-            if (ship->getScannedStateFor(my_spaceship) >= SS_SimpleScan)
+            info_hull->setValue(int(obj->getHull()));
+
+            if (ship)
             {
-                info_faction->setValue(factionInfo[obj->getFactionId()]->getName());
-                info_type->setValue(ship->getTypeName());
+                info_faction->setValue(factionInfo[ship->getFactionId()]->getName());
                 info_type_button->show();
+                info_type->setValue(ship->getTypeName());
                 info_shields->setValue(ship->getShieldDataString());
                 info_hull->setValue(int(ship->getHull()));
             }
 
-            // On a full scan, show tactical and systems data (if any), and its
-            // description (if one is set).
-            if (ship->getScannedStateFor(my_spaceship) >= SS_FullScan)
+            if (station)
             {
-                sidebar_pager->setVisible(sidebar_pager->entryCount() > 1);
-
-                // Check sidebar pager state.
-                if (sidebar_pager_selection == "Tactique")
-                {
-                    info_shield_frequency->show();
-                    info_beam_frequency->show();
-
-                    for(int n = 0; n < SYS_COUNT; n++)
-                    {
-                        info_system[n]->hide();
-                    }
-
-                    info_description->hide();
-                }
-                else if (sidebar_pager_selection == "Systems")
-                {
-                    info_shield_frequency->hide();
-                    info_beam_frequency->hide();
-
-                    for(int n = 0; n < SYS_COUNT; n++)
-                    {
-                        info_system[n]->show();
-                    }
-                    
-                    info_description->hide();
-                }
-                else if (sidebar_pager_selection == "Description")
-                {
-                    info_shield_frequency->hide();
-                    info_beam_frequency->hide();
-
-                    for(int n = 0; n < SYS_COUNT; n++)
-                    {
-                        info_system[n]->hide();
-                    }
-
-                    info_description->show();
-                }
-                else
-                {
-                    LOG(WARNING) << "Invalid pager state: " << sidebar_pager_selection;
-                }
-
-                // If beam and shield frequencies are enabled on the server,
-                // populate their graphs.
-                if (gameGlobalInfo->use_beam_shield_frequencies)
-                {
-                    info_shield_frequency->setFrequency(ship->shield_frequency);
-                    info_beam_frequency->setFrequency(ship->beam_frequency);
-                }
-                
-                // Show the status of each subsystem.
-                for(int n = 0; n < SYS_COUNT; n++)
-                {
-                    float system_health = ship->systems[n].health;
-                    info_system[n]->setValue(string(int(system_health * 100.0f)) + "%")->setColor(sf::Color(255, 127.5 * (system_health + 1), 127.5 * (system_health + 1), 255));
-                }
+                info_faction->setValue(factionInfo[station->getFactionId()]->getName());
+                info_shields->setValue(station->getShieldDataString());
+                info_hull->setValue(int(station->getHull()));
             }
         }
 
-        // If the target isn't a ship, show basic info.
-        else
+        // On a full scan : frequencies
+        // Only for ship
+        if (obj->getScannedStateFor(my_spaceship) >= SS_FullScan && ship)
         {
-            sidebar_pager->hide();
-            info_faction->setValue(factionInfo[obj->getFactionId()]->getName());
+            sidebar_pager->setVisible(sidebar_pager->entryCount() > 1);
 
-            // If the target is a station, show basic tactical info.
-            if (station)
+            // Check sidebar pager state.
+            if (sidebar_pager_selection == "Tactique")
             {
-                info_type->setValue(station->template_name);
-                info_shields->setValue(station->getShieldDataString());
-                info_hull->setValue(int(station->getHull()));
+                info_shield_frequency->show();
+                info_beam_frequency->show();
+
+                for(int n = 0; n < SYS_COUNT; n++)
+                {
+                    info_system[n]->hide();
+                }
+
+                info_description->hide();
+            }
+            else if (sidebar_pager_selection == "Systems")
+            {
+                info_shield_frequency->hide();
+                info_beam_frequency->hide();
+
+                for(int n = 0; n < SYS_COUNT; n++)
+                {
+                    info_system[n]->show();
+                }
+
+                info_description->hide();
+            }
+            else if (sidebar_pager_selection == "Description")
+            {
+                info_shield_frequency->hide();
+                info_beam_frequency->hide();
+
+                for(int n = 0; n < SYS_COUNT; n++)
+                {
+                    info_system[n]->hide();
+                }
+
+                info_description->show();
+            }
+            else
+            {
+                LOG(WARNING) << "Invalid pager state: " << sidebar_pager_selection;
+            }
+
+            // If beam and shield frequencies are enabled on the server,
+            // populate their graphs.
+            if (gameGlobalInfo->use_beam_shield_frequencies)
+            {
+                info_shield_frequency->setFrequency(ship->shield_frequency);
+                info_beam_frequency->setFrequency(ship->beam_frequency);
+            }
+
+            // Show the status of each subsystem.
+            for(int n = 0; n < SYS_COUNT; n++)
+            {
+                float system_health = ship->systems[n].health;
+                info_system[n]->setValue(string(int(system_health * 100.0f)) + "%")->setColor(sf::Color(255, 127.5 * (system_health + 1), 127.5 * (system_health + 1), 255));
             }
         }
     }

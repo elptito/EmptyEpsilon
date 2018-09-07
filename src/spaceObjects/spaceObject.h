@@ -195,6 +195,8 @@ public:
     virtual string getCallSign() { return callsign; }
     virtual bool canBeDockedBy(P<SpaceObject> obj) { return false; }
     virtual bool hasShield() { return false; }
+    void setHull(float amount) { hull = amount; }
+    float getHull() { return hull; }
     virtual bool canHideInNebula() { return true; }
     virtual bool canBeTargetedBy(P<SpaceObject> other);
     virtual bool canBeSelectedBy(P<SpaceObject> other);

@@ -194,6 +194,8 @@ bool SpaceObject::canBeSelectedBy(P<SpaceObject> other)
 
 bool SpaceObject::canBeScannedBy(P<SpaceObject> other)
 {
+    if (getScannedStateFor(other) == SS_NotScanned)
+        return true;
     if (getScannedStateFor(other) == SS_FullScan)
         return false;
     if (scanning_complexity_value > 0)

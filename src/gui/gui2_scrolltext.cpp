@@ -5,6 +5,7 @@ GuiScrollText::GuiScrollText(GuiContainer* owner, string id, string text)
 : GuiElement(owner, id), text(text), text_size(30)
 {
     auto_scroll_down = false;
+
     scrollbar = new GuiScrollbar(this, id + "_SCROLL", 0, 1, 0, nullptr);
     scrollbar->setPosition(0, 0, ATopRight)->setSize(50, GuiElement::GuiSizeMax);
 }
@@ -29,7 +30,7 @@ GuiScrollText* GuiScrollText::setScrollbarWidth(float width)
 void GuiScrollText::onDraw(sf::RenderTarget& window)
 {
     LineWrapResult wrap = doLineWrap(this->text, text_size, rect.width - scrollbar->getSize().x);
-    
+
     int start_pos = 0;
     for(int n=0; n<scrollbar->getValue(); n++)
     {
@@ -40,6 +41,12 @@ void GuiScrollText::onDraw(sf::RenderTarget& window)
     if (start_pos > 0)
         wrap.text = wrap.text.substr(start_pos);
     int max_lines = rect.height / main_font->getLineSpacing(text_size);
+
+    if (wrap.line_count < 12)
+        setScrollbarWidth(0);
+    else
+        setScrollbarWidth(20);
+
     if (wrap.line_count - scrollbar->getValue() > max_lines)
     {
         int end_pos = 0;
@@ -52,7 +59,7 @@ void GuiScrollText::onDraw(sf::RenderTarget& window)
         if (end_pos > 0)
             wrap.text = wrap.text.substr(0, end_pos);
     }
-    
+
     if (scrollbar->getMax() != wrap.line_count)
     {
         int diff = wrap.line_count - scrollbar->getMax();
