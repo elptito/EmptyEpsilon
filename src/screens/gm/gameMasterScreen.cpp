@@ -6,6 +6,7 @@
 #include "spaceObjects/cpuShip.h"
 #include "spaceObjects/spaceStation.h"
 #include "spaceObjects/wormHole.h"
+#include "spaceObjects/explosionEffect.h"
 
 #include "screenComponents/radarView.h"
 
@@ -479,7 +480,21 @@ void GameMasterScreen::onKey(sf::Event::KeyEvent key, int unicode)
         for(P<SpaceObject> obj : targets.getTargets())
         {
             if (obj)
+            {
+                P<ExplosionEffect> e = new ExplosionEffect();
+                e->setSize(obj->getRadius());
+                e->setPosition(obj->getPosition());
                 obj->destroy();
+            }
+        }
+        break;
+    case sf::Keyboard::S:
+        for(P<SpaceObject> obj : targets.getTargets())
+        {
+            if (obj)
+            {
+                obj->destroy();
+            }
         }
         break;
     case sf::Keyboard::F5:
