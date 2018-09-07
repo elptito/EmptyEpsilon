@@ -53,7 +53,7 @@ void ScienceDatabase::setLongDescription(string text)
 void fillDefaultDatabaseData()
 {
     P<ScienceDatabase> factionDatabase = new ScienceDatabase();
-    factionDatabase->setName("Factions");
+    factionDatabase->setName("Federations");
     for(unsigned int n=0; n<factionInfo.size(); n++)
     {
         P<ScienceDatabase> entry = factionDatabase->addEntry(factionInfo[n]->getName());
@@ -84,6 +84,10 @@ void fillDefaultDatabaseData()
     for(string& template_name : template_names)
     {
         P<ShipTemplate> ship_template = ShipTemplate::getTemplate(template_name);
+
+        if (ship_template->getSecret())
+            continue;
+
         string class_name = ship_template->getClass();
         string subclass_name = ship_template->getSubClass();
         if (class_set.find(class_name) == class_set.end())
@@ -92,9 +96,9 @@ void fillDefaultDatabaseData()
             class_set.insert(class_name);
         }
     }
-    
+
     std::sort(class_list.begin(), class_list.end());
-    
+
     std::map<string, P<ScienceDatabase> > class_database_entries;
     for(string& class_name : class_list)
     {
@@ -104,8 +108,12 @@ void fillDefaultDatabaseData()
     for(string& template_name : template_names)
     {
         P<ShipTemplate> ship_template = ShipTemplate::getTemplate(template_name);
+
+        if (ship_template->getSecret())
+            continue;
+
         P<ScienceDatabase> entry = class_database_entries[ship_template->getClass()]->addEntry(template_name);
-        
+
         entry->model_data = ship_template->model_data;
 
         entry->addKeyValue("Classe", ship_template->getClass());

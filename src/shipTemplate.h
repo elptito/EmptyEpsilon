@@ -71,6 +71,7 @@ private:
     string class_name;
     string sub_class_name;
     TemplateType type;
+    bool secret;
 public:
     string getName();
     string getDescription();
@@ -78,6 +79,9 @@ public:
     string getSubClass();
     void setType(TemplateType type);
     TemplateType getType();
+
+    void setSecret(bool enabled) { secret = enabled; }
+    bool getSecret(){ return secret; }
 
     P<ModelData> model_data;
 
@@ -87,7 +91,7 @@ public:
     std::unordered_set<string> can_be_docked_by_class;
     bool shares_energy_with_docked;
     bool repair_docked;
-    
+
     float energy_storage_amount;
     int repair_crew_count;
     string default_ai_name;

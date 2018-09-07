@@ -47,10 +47,10 @@ public:
     virtual void takeHullDamage(float damage_amount, DamageInfo& info);
     virtual void destroyedByDamage(DamageInfo& info) = 0;
     virtual float getShieldDamageFactor(DamageInfo& info, int shield_index);
-    
+
     void setCanBeDestroyed(bool enabled) { can_be_destroyed = enabled; }
     bool getCanBeDestroyed(){ return can_be_destroyed; }
-    
+
     virtual void applyTemplateValues() = 0;
     virtual float getShieldRechargeRate(int shield_index);
 
@@ -91,7 +91,7 @@ public:
     void setSharesEnergyWithDocked(bool enabled) { shares_energy_with_docked = enabled; }
     bool getRepairDocked() { return repair_docked; }
     void setRepairDocked(bool enabled) { repair_docked = enabled; }
-    
+
     string getShieldDataString();
 };
 

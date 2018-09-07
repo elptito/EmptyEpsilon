@@ -11,6 +11,10 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setName);
     /// Set the class name, and subclass name for the ship. Used to divide ships into different classes.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setClass);
+    /// Set is the ShipTemplate is secret (not shown in database), false by default
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setSecret);
+    /// Check if the ShipTemplate is secret (not shown in database)
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, getSecret);
     /// Set the description shown for this ship in the science database.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setDescription);
     /// Sets the type of template. Defaults to normal ships, so then it does not need to be set.
@@ -74,10 +78,11 @@ std::unordered_map<string, P<ShipTemplate> > ShipTemplate::templateMap;
 ShipTemplate::ShipTemplate()
 {
     if (game_server) { LOG(ERROR) << "ShipTemplate objects can not be created during a scenario."; destroy(); return; }
-    
+
     type = Ship;
     class_name = "Sans classe";
     class_name = "Sans sous-classe";
+    secret = false;
     shares_energy_with_docked = true;
     repair_docked = false;
     energy_storage_amount = 1000;
@@ -434,7 +439,7 @@ P<ShipTemplate> ShipTemplate::copy(string new_name)
 
     result->rooms = rooms;
     result->doors = doors;
-    
+
     return result;
 }
 
