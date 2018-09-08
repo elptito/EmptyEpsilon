@@ -36,6 +36,7 @@ private:
     GuiObjectCreationScreen* object_creation_screen;
     GuiObjectTweak* player_tweak_dialog;
     GuiObjectTweak* ship_tweak_dialog;
+    GuiObjectTweak* template_tweak_dialog;
     GuiObjectTweak* object_tweak_dialog;
 
     GuiAutoLayout* info_layout;

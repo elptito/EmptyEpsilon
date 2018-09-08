@@ -52,6 +52,10 @@ public:
     // Subsystem effectiveness base rates
     static float system_power_user_factor[];
 
+    bool has_gravity_sensor;
+	bool has_electrical_sensor;
+	bool has_biological_sensor;
+
     constexpr static int16_t CMD_PLAY_CLIENT_SOUND = 0x0001;
 
     // Content of a line in the ship's log
@@ -188,6 +192,14 @@ public:
     int getScanProbeCount() { return scan_probe_stock; }
     void setMaxScanProbeCount(int amount) { max_scan_probes = std::max(0, amount); scan_probe_stock = std::min(scan_probe_stock, max_scan_probes); }
     int getMaxScanProbeCount() { return max_scan_probes; }
+
+    // Radar capabilities
+    bool hasGravitySensor() { return has_gravity_sensor; }
+    bool hasElectricalSensor() { return has_electrical_sensor; }
+    bool hasBiologicalSensor() { return has_biological_sensor; }
+    void setGravitySensor(bool has_gravity) { has_gravity_sensor = has_gravity; }
+    void setElectricalSensor(bool has_electrical) { has_electrical_sensor = has_electrical; }
+    void setBiologicalSensor(bool has_biological) { has_biological_sensor = has_biological; }
 
     void addCustomButton(ECrewPosition position, string name, string caption, ScriptSimpleCallback callback);
     void addCustomInfo(ECrewPosition position, string name, string caption);

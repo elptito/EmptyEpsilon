@@ -3,6 +3,8 @@
 #include "scienceScreen.h"
 #include "scienceDatabase.h"
 #include "spaceObjects/nebula.h"
+#include "spaceObjects/asteroid.h"
+#include "spaceObjects/mine.h"
 
 #include "screenComponents/radarView.h"
 #include "screenComponents/rawScannerDataRadarOverlay.h"
@@ -119,6 +121,8 @@ ScienceScreen::ScienceScreen(GuiContainer* owner)
     info_shields->setSize(GuiElement::GuiSizeMax, 30);
     info_hull = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_HULL", 0.4, "Carlingue", "");
     info_hull->setSize(GuiElement::GuiSizeMax, 30);
+    info_signatures = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_SIGNATURES", 0.4, "Signatures", "");
+    info_signatures->setSize(GuiElement::GuiSizeMax, 30);
 
     // Full scan data
 
@@ -262,6 +266,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
     info_type->setValue("-");
     info_shields->setValue("-");
     info_hull->setValue("-");
+    info_signatures->setValue("-");
     info_shield_frequency->setFrequency(-1)->hide();
     info_beam_frequency->setFrequency(-1)->hide();
     info_description->hide();
@@ -289,6 +294,8 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
         P<SpaceObject> obj = targets.get();
         P<SpaceShip> ship = obj;
         P<SpaceStation> station = obj;
+        P<Asteroid> asteroid = obj;
+        P<Mine> mine = obj;
 
         // Info latérale
 
@@ -351,7 +358,20 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
         // hull integrity, and database reference button.
         if (obj->getScannedStateFor(my_spaceship) >= SS_SimpleScan)
         {
-            info_hull->setValue(int(obj->getHull()));
+
+            string show_signature_gravity = "-";
+            string show_signature_biological = "-";
+            string show_signature_electrical = "-";
+            if(my_spaceship->has_gravity_sensor)
+                show_signature_gravity = string(obj->radar_signature.gravity);
+            if(my_spaceship->has_biological_sensor)
+                show_signature_biological = string(obj->radar_signature.biological);
+            if(my_spaceship->has_electrical_sensor)
+                show_signature_electrical = string(obj->radar_signature.electrical);
+            string radarSignatureString = show_signature_gravity + " / " + show_signature_biological + " / "  + show_signature_electrical;
+            info_signatures->setValue(radarSignatureString);
+
+            info_hull->setValue(int(obj->hull));
 
             if (ship)
             {

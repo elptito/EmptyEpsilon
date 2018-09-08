@@ -115,6 +115,11 @@ GameMasterScreen::GameMasterScreen()
                 ship_tweak_dialog->open(obj);
                 break;
             }
+			else if (P<ShipTemplateBasedObject>(obj))
+			{
+                template_tweak_dialog->open(obj);
+                break;
+            }
             else
             {
                 object_tweak_dialog->open(obj);
@@ -190,6 +195,8 @@ GameMasterScreen::GameMasterScreen()
 
     player_tweak_dialog = new GuiObjectTweak(this, TW_Player);
     player_tweak_dialog->hide();
+	template_tweak_dialog = new GuiObjectTweak(this, TW_Template);
+    template_tweak_dialog->hide();
     ship_tweak_dialog = new GuiObjectTweak(this, TW_Ship);
     ship_tweak_dialog->hide();
     object_tweak_dialog = new GuiObjectTweak(this, TW_Object);

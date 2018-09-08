@@ -100,15 +100,6 @@ class SpaceObject : public Collisionable, public MultiplayerObject
     float object_radius;
     uint8_t faction_id;
 
-    struct
-    {
-        string not_scanned;
-        string friend_of_foe_identified;
-        string simple_scan;
-        string full_scan;
-    } object_description;
-    RawRadarSignatureInfo radar_signature;
-
     /*!
      * Scan state per faction. Implementation wise, this vector is resized when
      * a scan is done. The vector is indexed by faction ID, which means the
@@ -122,6 +113,14 @@ public:
     string comms_script_name;
     ScriptSimpleCallback comms_script_callback;
 
+    struct
+    {
+        string not_scanned;
+        string friend_of_foe_identified;
+        string simple_scan;
+        string full_scan;
+    } object_description;
+
     int scanning_complexity_value;
     int scanning_depth_value;
     string callsign;
@@ -134,6 +133,7 @@ public:
     void setRadius(float radius) { object_radius = radius; setCollisionRadius(radius); }
 
     // Return the object's raw radar signature. The default signature is 0,0,0.
+    RawRadarSignatureInfo radar_signature;
     virtual RawRadarSignatureInfo getRadarSignatureInfo() { return radar_signature; }
     void setRadarSignatureInfo(float grav, float elec, float bio) { radar_signature = RawRadarSignatureInfo(grav, elec, bio); }
     float getRadarSignatureGravity() { return radar_signature.gravity; }

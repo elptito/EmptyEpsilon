@@ -1,6 +1,7 @@
 #include "tweak.h"
 #include "playerInfo.h"
 #include "spaceObjects/spaceship.h"
+#include "spaceObjects/spaceObject.h"
 
 #include "gui/gui2_listbox.h"
 #include "gui/gui2_autolayout.h"
@@ -27,12 +28,21 @@ GuiObjectTweak::GuiObjectTweak(GuiContainer* owner, ETweakType tweak_type)
     list->setSize(300, GuiElement::GuiSizeMax);
     list->setPosition(25, 25, ATopLeft);
 
-    if (tweak_type == TW_Ship || tweak_type == TW_Player)
+    pages.push_back(new GuiObjectTweakBase(this));
+    list->addEntry("Base", "");
+
+    if (tweak_type == TW_Template || tweak_type == TW_Ship || tweak_type == TW_Player)
     {
-        pages.push_back(new GuiShipTweakBase(this));
-        list->addEntry("Base", "");
+        pages.push_back(new GuiTemplateTweak(this));
+        list->addEntry("Structure fixe", "");
         pages.push_back(new GuiShipTweakShields(this));
         list->addEntry("Boucliers", "");
+    }
+
+    if (tweak_type == TW_Ship || tweak_type == TW_Player)
+    {
+        pages.push_back(new GuiShipTweak(this));
+        list->addEntry("Structure mobile", "");
         pages.push_back(new GuiShipTweakMissileTubes(this));
         list->addEntry("Tubes", "");
         pages.push_back(new GuiShipTweakMissileWeapons(this));
@@ -47,12 +57,6 @@ GuiObjectTweak::GuiObjectTweak(GuiContainer* owner, ETweakType tweak_type)
     {
         pages.push_back(new GuiShipTweakPlayer(this));
         list->addEntry("Joueur", "");
-    }
-
-    if (tweak_type == TW_Object)
-    {
-        pages.push_back(new GuiObjectTweakBase(this));
-        list->addEntry("Base", "");
     }
 
     for(GuiTweakPage* page : pages)
@@ -86,7 +90,7 @@ void GuiObjectTweak::onDraw(sf::RenderTarget& window)
         hide();
 }
 
-GuiShipTweakBase::GuiShipTweakBase(GuiContainer* owner)
+GuiObjectTweakBase::GuiObjectTweakBase(GuiContainer* owner)
 : GuiTweakPage(owner)
 {
     GuiAutoLayout* left_col = new GuiAutoLayout(this, "LEFT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
@@ -107,25 +111,95 @@ GuiShipTweakBase::GuiShipTweakBase(GuiContainer* owner)
     // Edit object's description.
     // TODO: Fix long strings in GuiTextEntry, or make a new GUI element for
     // editing long strings.
-    (new GuiLabel(left_col, "", "Description:", 30))->setSize(GuiElement::GuiSizeMax, 50);
-
+    (new GuiLabel(left_col, "", "Description base:", 30))->setSize(GuiElement::GuiSizeMax, 50);
     description = new GuiTextEntry(left_col, "", "");
     description->setSize(GuiElement::GuiSizeMax, 50);
     description->callback([this](string text) {
-        target->setDescription(text);
+        target->object_description.not_scanned = text;
+        //target->setDescription(text);
+    });
+    (new GuiLabel(left_col, "", "Description simple:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    description_scan = new GuiTextEntry(left_col, "", "");
+    description_scan->setSize(GuiElement::GuiSizeMax, 50);
+    description_scan->callback([this](string text) {
+        target->object_description.simple_scan = text;
+    });
+    (new GuiLabel(left_col, "", "Description complete:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    description_full_scan = new GuiTextEntry(left_col, "", "");
+    description_full_scan->setSize(GuiElement::GuiSizeMax, 50);
+    description_full_scan->callback([this](string text) {
+        target->object_description.full_scan = text;
     });
 
-    (new GuiLabel(left_col, "", "Vitesse subluminique:", 30))->setSize(GuiElement::GuiSizeMax, 50);
-    impulse_speed_slider = new GuiSlider(left_col, "", 0.0, 250, 0.0, [this](float value) {
-        target->impulse_max_speed = value;
+    (new GuiLabel(left_col, "", "Carlingue:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    hull_slider = new GuiSlider(left_col, "", 0.0, 500, 0.0, [this](float value) {
+        target->hull = value;
     });
-    impulse_speed_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    hull_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
-    (new GuiLabel(left_col, "", "Vitesse de rotation:", 30))->setSize(GuiElement::GuiSizeMax, 50);
-    turn_speed_slider = new GuiSlider(left_col, "", 0.0, 35, 0.0, [this](float value) {
-        target->turn_speed = value;
+    // Right column
+	// Radar signature
+	//(new GuiLabel(right_col, "", "Radar Signature", 30))->setSize(GuiElement::GuiSizeMax, 50);
+	(new GuiLabel(right_col, "", "Signature Gravitationnelle", 30))->setSize(GuiElement::GuiSizeMax, 50);
+	gravity_s_slider = new GuiSlider(right_col, "", 0.0, 100.0, 0.0, [this](float value) {
+        target->radar_signature.gravity = value / 100.0f;
     });
-    turn_speed_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    gravity_s_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 50);
+ 	(new GuiLabel(right_col, "", "Signature Energetique", 30))->setSize(GuiElement::GuiSizeMax, 50);
+	electrical_s_slider = new GuiSlider(right_col, "", 0.0, 100.0, 0.0, [this](float value) {
+        target->radar_signature.electrical = value / 100.0f;
+    });
+    electrical_s_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 50);
+ 	(new GuiLabel(right_col, "", "Signature Biologique", 30))->setSize(GuiElement::GuiSizeMax, 50);
+	biological_s_slider = new GuiSlider(right_col, "", 0.0, 100.0, 0.0, [this](float value) {
+        target->radar_signature.biological = value / 100.0f;
+    });
+    biological_s_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 50);
+
+    // Scanning complexity
+	(new GuiLabel(right_col, "", "Complexite du Scan", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    scanning_complexity_selector = new GuiSlider(right_col, "", 0, 4, 0, [this](int value) {
+        target->scanning_complexity_value = value;
+    });
+    scanning_complexity_selector->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+ 	// Scanning Channel Depth
+	(new GuiLabel(right_col, "", "Longueur du scan", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    scanning_channel_depth_selector = new GuiSlider(right_col, "", 0, 4, 0, [this](int value) {
+        target->scanning_depth_value = value;
+    });
+    scanning_channel_depth_selector->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
+}
+
+void GuiObjectTweakBase::onDraw(sf::RenderTarget& window)
+{
+    hull_slider->setValue(target->hull);
+}
+
+void GuiObjectTweakBase::open(P<SpaceObject> target)
+{
+    this->target = target;
+
+    callsign->setText(target->callsign);
+    description->setText(target->object_description.not_scanned);
+    description_scan->setText(target->object_description.simple_scan);
+    description_full_scan->setText(target->object_description.full_scan);
+
+    gravity_s_slider->setValue(target->radar_signature.gravity * 100.0f);
+    electrical_s_slider->setValue(target->getRadarSignatureElectrical() * 100.0f);
+	biological_s_slider->setValue(target->getRadarSignatureBiological() * 100.0f);
+
+	scanning_complexity_selector->setValue(target->scanning_complexity_value);
+	scanning_channel_depth_selector->setValue(target->scanning_depth_value);
+}
+
+GuiTemplateTweak::GuiTemplateTweak(GuiContainer* owner)
+: GuiTweakPage(owner)
+{
+    GuiAutoLayout* left_col = new GuiAutoLayout(this, "LEFT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    left_col->setPosition(50, 25, ATopLeft)->setSize(300, GuiElement::GuiSizeMax);
+    GuiAutoLayout* right_col = new GuiAutoLayout(this, "RIGHT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    right_col->setPosition(-25, 25, ATopRight)->setSize(300, GuiElement::GuiSizeMax);
 
     (new GuiLabel(left_col, "", "Direction:", 30))->setSize(GuiElement::GuiSizeMax, 50);
     heading_slider = new GuiSlider(left_col, "", 0.0, 359.9, 0.0, [this](float value) {
@@ -150,14 +224,14 @@ GuiShipTweakBase::GuiShipTweakBase(GuiContainer* owner)
 
     // Hull max and state sliders
     (new GuiLabel(right_col, "", "Carlingue max:", 30))->setSize(GuiElement::GuiSizeMax, 50);
-    hull_max_slider = new GuiSlider(right_col, "", 0.0, 500, 0.0, [this](float value) {
+    hull_max_slider = new GuiSlider(right_col, "", 0.0, 2000, 0.0, [this](float value) {
         target->hull_max = round(value);
         target->hull_strength = std::min(target->hull_strength, target->hull_max);
     });
     hull_max_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
     (new GuiLabel(right_col, "", "Carlingue:", 30))->setSize(GuiElement::GuiSizeMax, 50);
-    hull_slider = new GuiSlider(right_col, "", 0.0, 500, 0.0, [this](float value) {
+    hull_slider = new GuiSlider(right_col, "", 0.0, 2000, 0.0, [this](float value) {
         target->hull_strength = std::min(roundf(value), target->hull_max);
     });
     hull_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
@@ -167,6 +241,122 @@ GuiShipTweakBase::GuiShipTweakBase(GuiContainer* owner)
        target->setCanBeDestroyed(value);
    });
    can_be_destroyed_toggle->setSize(GuiElement::GuiSizeMax, 40);
+}
+ void GuiTemplateTweak::onDraw(sf::RenderTarget& window)
+{
+    heading_slider->setValue(target->getHeading());
+    hull_slider->setValue(target->hull_strength);
+}
+
+ void GuiTemplateTweak::open(P<SpaceObject> target)
+{
+    P<ShipTemplateBasedObject> shipTemplate = target;
+    this->target = shipTemplate;
+
+    type_name->setText(shipTemplate->getTypeName());
+    hull_max_slider->setValue(shipTemplate->hull_max);
+    hull_max_slider->clearSnapValues()->addSnapValue(shipTemplate->ship_template->hull, 5.0f);
+    can_be_destroyed_toggle->setValue(shipTemplate->getCanBeDestroyed());
+}
+
+GuiShipTweakShields::GuiShipTweakShields(GuiContainer* owner)
+: GuiTweakPage(owner)
+{
+    GuiAutoLayout* left_col = new GuiAutoLayout(this, "LEFT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    left_col->setPosition(50, 25, ATopLeft)->setSize(300, GuiElement::GuiSizeMax);
+
+    GuiAutoLayout* right_col = new GuiAutoLayout(this, "RIGHT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    right_col->setPosition(-25, 25, ATopRight)->setSize(300, GuiElement::GuiSizeMax);
+
+    for(int n=0; n<max_shield_count; n++)
+    {
+        (new GuiLabel(left_col, "", "Bouclier " + string(n + 1) + " max:", 20))->setSize(GuiElement::GuiSizeMax, 30);
+        shield_max_slider[n] = new GuiSlider(left_col, "", 0.0, 500, 0.0, [this, n](float value) {
+            target->shield_max[n] = round(value);
+            target->shield_level[n] = std::min(target->shield_level[n], target->shield_max[n]);
+        });
+        shield_max_slider[n]->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    }
+
+    for(int n=0; n<max_shield_count; n++)
+    {
+        (new GuiLabel(right_col, "", "Bouclier " + string(n + 1) + ":", 20))->setSize(GuiElement::GuiSizeMax, 30);
+        shield_slider[n] = new GuiSlider(right_col, "", 0.0, 1000, 0.0, [this, n](float value) {
+            target->shield_level[n] = std::min(roundf(value), target->shield_max[n]);
+        });
+        shield_slider[n]->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    }
+}
+
+void GuiShipTweakShields::onDraw(sf::RenderTarget& window)
+{
+    for(int n=0; n<max_shield_count; n++)
+    {
+        shield_slider[n]->setValue(target->shield_level[n]);
+    }
+}
+
+void GuiShipTweakShields::open(P<SpaceObject> target)
+{
+    P<SpaceShip> ship = target;
+    P<SpaceStation> station = target;
+
+    if (ship)
+    {
+        this->target = ship;
+
+        for(int n = 0; n < max_shield_count; n++)
+        {
+            shield_max_slider[n]->setValue(ship->shield_max[n]);
+            shield_max_slider[n]->clearSnapValues()->addSnapValue(ship->ship_template->shield_level[n], 5.0f);
+        }
+    }
+
+    if (station)
+        {
+        this->target = station;
+
+        for(int n = 0; n < max_shield_count; n++)
+        {
+            shield_max_slider[n]->setValue(station->shield_max[n]);
+            shield_max_slider[n]->clearSnapValues()->addSnapValue(station->ship_template->shield_level[n], 5.0f);
+        }
+    }
+
+
+}
+
+GuiShipTweak::GuiShipTweak(GuiContainer* owner)
+: GuiTweakPage(owner)
+{
+    GuiAutoLayout* left_col = new GuiAutoLayout(this, "LEFT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    left_col->setPosition(50, 25, ATopLeft)->setSize(300, GuiElement::GuiSizeMax);
+    GuiAutoLayout* right_col = new GuiAutoLayout(this, "RIGHT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    right_col->setPosition(-25, 25, ATopRight)->setSize(300, GuiElement::GuiSizeMax);
+
+    // Left column
+    (new GuiLabel(left_col, "", "Vitesse subluminique:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    impulse_speed_slider = new GuiSlider(left_col, "", 0.0, 250, 0.0, [this](float value) {
+        target->impulse_max_speed = value;
+    });
+    impulse_speed_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
+    (new GuiLabel(left_col, "", "Vitesse de rotation:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    turn_speed_slider = new GuiSlider(left_col, "", 0.0, 35, 0.0, [this](float value) {
+        target->turn_speed = value;
+    });
+    turn_speed_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
+    (new GuiLabel(left_col, "", "Direction:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    heading_slider = new GuiSlider(left_col, "", 0.0, 359.9, 0.0, [this](float value) {
+        target->setHeading(value);
+
+        // If the target is a player, also set its target rotation.
+        P<PlayerSpaceship> player = target;
+        if (player)
+            player->commandTargetRotation(value - 90.0f);
+    });
+    heading_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
     // Warp and jump drive toggles
     (new GuiLabel(right_col, "", "Moteurs speciaux:", 30))->setSize(GuiElement::GuiSizeMax, 50);
@@ -179,31 +369,24 @@ GuiShipTweakBase::GuiShipTweakBase(GuiContainer* owner)
         target->setJumpDrive(value);
     });
     jump_toggle->setSize(GuiElement::GuiSizeMax, 40);
-}
 
-void GuiShipTweakBase::onDraw(sf::RenderTarget& window)
+}
+ void GuiShipTweak::onDraw(sf::RenderTarget& window)
 {
     heading_slider->setValue(target->getHeading());
-    hull_slider->setValue(target->hull_strength);
 }
 
-void GuiShipTweakBase::open(P<SpaceObject> target)
+ void GuiShipTweak::open(P<SpaceObject> target)
 {
     P<SpaceShip> ship = target;
     this->target = ship;
 
-    type_name->setText(ship->getTypeName());
-    callsign->setText(ship->callsign);
-    description->setText(ship->getDescription(SS_NotScanned));
     warp_toggle->setValue(ship->has_warp_drive);
     jump_toggle->setValue(ship->hasJumpDrive());
     impulse_speed_slider->setValue(ship->impulse_max_speed);
     impulse_speed_slider->clearSnapValues()->addSnapValue(ship->ship_template->impulse_speed, 5.0f);
     turn_speed_slider->setValue(ship->turn_speed);
     turn_speed_slider->clearSnapValues()->addSnapValue(ship->ship_template->turn_speed, 1.0f);
-    hull_max_slider->setValue(ship->hull_max);
-    hull_max_slider->clearSnapValues()->addSnapValue(ship->ship_template->hull, 5.0f);
-    can_be_destroyed_toggle->setValue(ship->getCanBeDestroyed());
 }
 
 GuiShipTweakMissileWeapons::GuiShipTweakMissileWeapons(GuiContainer* owner)
@@ -337,55 +520,6 @@ void GuiShipTweakMissileTubes::open(P<SpaceObject> target)
     this->target = ship;
 
     missile_tube_amount_selector->setSelectionIndex(ship->weapon_tube_count);
-}
-
-GuiShipTweakShields::GuiShipTweakShields(GuiContainer* owner)
-: GuiTweakPage(owner)
-{
-    GuiAutoLayout* left_col = new GuiAutoLayout(this, "LEFT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
-    left_col->setPosition(50, 25, ATopLeft)->setSize(300, GuiElement::GuiSizeMax);
-
-    GuiAutoLayout* right_col = new GuiAutoLayout(this, "RIGHT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
-    right_col->setPosition(-25, 25, ATopRight)->setSize(300, GuiElement::GuiSizeMax);
-
-    for(int n=0; n<max_shield_count; n++)
-    {
-        (new GuiLabel(left_col, "", "Bouclier " + string(n + 1) + " max:", 20))->setSize(GuiElement::GuiSizeMax, 30);
-        shield_max_slider[n] = new GuiSlider(left_col, "", 0.0, 500, 0.0, [this, n](float value) {
-            target->shield_max[n] = round(value);
-            target->shield_level[n] = std::min(target->shield_level[n], target->shield_max[n]);
-        });
-        shield_max_slider[n]->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
-    }
-
-    for(int n=0; n<max_shield_count; n++)
-    {
-        (new GuiLabel(right_col, "", "Bouclier " + string(n + 1) + ":", 20))->setSize(GuiElement::GuiSizeMax, 30);
-        shield_slider[n] = new GuiSlider(right_col, "", 0.0, 500, 0.0, [this, n](float value) {
-            target->shield_level[n] = std::min(roundf(value), target->shield_max[n]);
-        });
-        shield_slider[n]->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
-    }
-}
-
-void GuiShipTweakShields::onDraw(sf::RenderTarget& window)
-{
-    for(int n=0; n<max_shield_count; n++)
-    {
-        shield_slider[n]->setValue(target->shield_level[n]);
-    }
-}
-
-void GuiShipTweakShields::open(P<SpaceObject> target)
-{
-    P<SpaceShip> ship = target;
-    this->target = ship;
-
-    for(int n = 0; n < max_shield_count; n++)
-    {
-        shield_max_slider[n]->setValue(ship->shield_max[n]);
-        shield_max_slider[n]->clearSnapValues()->addSnapValue(ship->ship_template->shield_level[n], 5.0f);
-    }
 }
 
 GuiShipTweakBeamweapons::GuiShipTweakBeamweapons(GuiContainer* owner)
@@ -566,7 +700,7 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
     // Edit energy level.
     (new GuiLabel(left_col, "", "Energie max:", 30))->setSize(GuiElement::GuiSizeMax, 50);
 
-    max_energy_level_slider = new GuiSlider(left_col, "", 0.0, 2000, 0.0, [this](float value) {
+    max_energy_level_slider = new GuiSlider(left_col, "", 0.0, 5000, 0.0, [this](float value) {
         target->max_energy_level = value;
         target->energy_level = std::min(target->energy_level, target->max_energy_level);
     });
@@ -574,7 +708,7 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
 
     (new GuiLabel(left_col, "", "Energie:", 30))->setSize(GuiElement::GuiSizeMax, 50);
 
-    energy_level_slider = new GuiSlider(left_col, "", 0.0, 2000, 0.0, [this](float value) {
+    energy_level_slider = new GuiSlider(left_col, "", 0.0, 5000, 0.0, [this](float value) {
         target->energy_level = std::min(value, target->max_energy_level);
     });
     energy_level_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
@@ -604,6 +738,21 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
         position[n] = new GuiKeyValueDisplay(right_col, "CREW_POSITION_" + position_name, 0.5, position_name, "-");
         position[n]->setSize(GuiElement::GuiSizeMax, 30);
     }
+
+    // Radar Capabilities
+    (new GuiLabel(right_col, "", "Radar Capabilities:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    gravity_toggle = new GuiToggleButton(right_col, "", "Gravity Sensor", [this](bool value) {
+        target->setGravitySensor(value);
+    });
+    gravity_toggle->setSize(GuiElement::GuiSizeMax, 40);
+    electrical_toggle = new GuiToggleButton(right_col, "", "Electrical Sensor", [this](bool value) {
+        target->setElectricalSensor(value);
+    });
+    electrical_toggle->setSize(GuiElement::GuiSizeMax, 40);
+    biological_toggle = new GuiToggleButton(right_col, "", "Biological Sensor", [this](bool value) {
+        target->setBiologicalSensor(value);
+    });
+    biological_toggle->setSize(GuiElement::GuiSizeMax, 40);
 }
 
 void GuiShipTweakPlayer::onDraw(sf::RenderTarget& window)
@@ -654,61 +803,9 @@ void GuiShipTweakPlayer::open(P<SpaceObject> target)
         // Set and snap strafe speed slider to current value
         combat_maneuver_strafe_speed_slider->setValue(player->combat_maneuver_strafe_speed);
         combat_maneuver_strafe_speed_slider->clearSnapValues()->addSnapValue(player->combat_maneuver_strafe_speed, 20.0f);
+
+        gravity_toggle->setValue(player->has_gravity_sensor);
+        electrical_toggle->setValue(player->has_electrical_sensor);
+        biological_toggle->setValue(player->has_biological_sensor);
     }
-}
-
-GuiObjectTweakBase::GuiObjectTweakBase(GuiContainer* owner)
-: GuiTweakPage(owner)
-{
-    GuiAutoLayout* left_col = new GuiAutoLayout(this, "LEFT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
-    left_col->setPosition(50, 25, ATopLeft)->setSize(300, GuiElement::GuiSizeMax);
-
-    GuiAutoLayout* right_col = new GuiAutoLayout(this, "RIGHT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
-    right_col->setPosition(-25, 25, ATopRight)->setSize(300, GuiElement::GuiSizeMax);
-
-    // Left column
-    // Edit object's callsign.
-    (new GuiLabel(left_col, "", "ID:", 30))->setSize(GuiElement::GuiSizeMax, 50);
-
-    callsign = new GuiTextEntry(left_col, "", "");
-    callsign->setSize(GuiElement::GuiSizeMax, 50);
-    callsign->callback([this](string text) {
-        target->callsign = text;
-    });
-
-    // Edit object's description.
-    // TODO: Fix long strings in GuiTextEntry, or make a new GUI element for
-    // editing long strings.
-    (new GuiLabel(left_col, "", "Description:", 30))->setSize(GuiElement::GuiSizeMax, 50);
-
-    // Set object's description.
-    description = new GuiTextEntry(left_col, "", "");
-    description->setSize(GuiElement::GuiSizeMax, 50);
-    description->callback([this](string text) {
-        target->setDescription(text);
-    });
-
-    // Set object's heading.
-    (new GuiLabel(left_col, "", "Direction:", 30))->setSize(GuiElement::GuiSizeMax, 50);
-    heading_slider = new GuiSlider(left_col, "", 0.0, 359.9, 0.0, [this](float value) {
-        target->setHeading(value);
-    });
-    heading_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
-
-    // Right column
-}
-
-void GuiObjectTweakBase::onDraw(sf::RenderTarget& window)
-{
-    heading_slider->setValue(target->getHeading());
-}
-
-void GuiObjectTweakBase::open(P<SpaceObject> target)
-{
-    this->target = target;
-
-    callsign->setText(target->callsign);
-    // TODO: Fix long strings in GuiTextEntry, or make a new GUI element for
-    // editing long strings.
-    description->setText(target->getDescription(SS_NotScanned));
 }

@@ -19,6 +19,7 @@ enum ETweakType
 {
     TW_Object,  // TODO: Space object
     TW_Ship,    // Ships
+    TW_Template,// Template : Ships & station
     TW_Station, // TODO: Space stations
     TW_Player   // Player ships
 };
@@ -35,7 +36,7 @@ class GuiObjectTweak : public GuiPanel
 {
 public:
     GuiObjectTweak(GuiContainer* owner, ETweakType tweak_type);
-    
+
     void open(P<SpaceObject> target);
 
     virtual void onDraw(sf::RenderTarget& window) override;
@@ -44,27 +45,74 @@ private:
     std::vector<GuiTweakPage*> pages;
 };
 
-class GuiShipTweakBase : public GuiTweakPage
+class GuiObjectTweakBase : public GuiTweakPage
 {
 private:
-    P<SpaceShip> target;
+    P<SpaceObject> target;
+
+    GuiTextEntry* callsign;
+    GuiSlider* hull_slider;
+    GuiTextEntry* description;
+    GuiTextEntry* description_scan;
+    GuiTextEntry* description_full_scan;
+    GuiSlider* gravity_s_slider;
+    GuiSlider* electrical_s_slider;
+    GuiSlider* biological_s_slider;
+    GuiSlider* scanning_complexity_selector;
+    GuiSlider* scanning_channel_depth_selector;
+
+public:
+    GuiObjectTweakBase(GuiContainer* owner);
+
+    virtual void onDraw(sf::RenderTarget& window) override;
+    virtual void open(P<SpaceObject> target) override;
+};
+
+class GuiTemplateTweak : public GuiTweakPage
+{
+private:
+    P<ShipTemplateBasedObject> target;
 
     GuiTextEntry* type_name;
-    GuiTextEntry* callsign;
-    GuiTextEntry* description;
-    GuiToggleButton* warp_toggle;
-    GuiToggleButton* jump_toggle;
-    GuiSlider* impulse_speed_slider;
-    GuiSlider* turn_speed_slider;
     GuiSlider* heading_slider;
     GuiSlider* hull_max_slider;
     GuiSlider* hull_slider;
     GuiToggleButton* can_be_destroyed_toggle;
 public:
-    GuiShipTweakBase(GuiContainer* owner);
+    GuiTemplateTweak(GuiContainer* owner);
+    virtual void onDraw(sf::RenderTarget& window) override;
+    virtual void open(P<SpaceObject> target) override;
+};
+
+class GuiShipTweakShields : public GuiTweakPage
+{
+private:
+    P<ShipTemplateBasedObject> target;
+
+    GuiSlider* shield_max_slider[max_shield_count];
+    GuiSlider* shield_slider[max_shield_count];
+public:
+    GuiShipTweakShields(GuiContainer* owner);
 
     virtual void onDraw(sf::RenderTarget& window) override;
-    
+
+    virtual void open(P<SpaceObject> target) override;
+};
+
+class GuiShipTweak : public GuiTweakPage
+{
+private:
+    P<SpaceShip> target;
+
+    GuiSlider* heading_slider;
+    GuiSlider* impulse_speed_slider;
+    GuiSlider* turn_speed_slider;
+    GuiToggleButton* warp_toggle;
+    GuiToggleButton* jump_toggle;
+
+public:
+    GuiShipTweak(GuiContainer* owner);
+    virtual void onDraw(sf::RenderTarget& window) override;
     virtual void open(P<SpaceObject> target) override;
 };
 
@@ -79,7 +127,7 @@ public:
     GuiShipTweakMissileWeapons(GuiContainer* owner);
 
     virtual void onDraw(sf::RenderTarget& window) override;
-    
+
     virtual void open(P<SpaceObject> target) override;
 };
 
@@ -98,22 +146,7 @@ public:
     GuiShipTweakMissileTubes(GuiContainer* owner);
 
     virtual void onDraw(sf::RenderTarget& window) override;
-    
-    virtual void open(P<SpaceObject> target) override;
-};
 
-class GuiShipTweakShields : public GuiTweakPage
-{
-private:
-    P<SpaceShip> target;
-
-    GuiSlider* shield_max_slider[max_shield_count];
-    GuiSlider* shield_slider[max_shield_count];
-public:
-    GuiShipTweakShields(GuiContainer* owner);
-
-    virtual void onDraw(sf::RenderTarget& window) override;
-    
     virtual void open(P<SpaceObject> target) override;
 };
 
@@ -165,6 +198,9 @@ private:
     GuiSlider* reputation_point_slider;
     GuiSlider* energy_level_slider;
     GuiSlider* max_energy_level_slider;
+    GuiToggleButton* gravity_toggle;
+    GuiToggleButton* electrical_toggle;
+    GuiToggleButton* biological_toggle;
     GuiSlider* combat_maneuver_boost_speed_slider;
     GuiSlider* combat_maneuver_strafe_speed_slider;
     GuiLabel* position_count;
@@ -177,19 +213,4 @@ public:
     virtual void onDraw(sf::RenderTarget& window) override;
 };
 
-class GuiObjectTweakBase : public GuiTweakPage
-{
-private:
-    P<SpaceObject> target;
-
-    GuiTextEntry* callsign;
-    GuiTextEntry* description;
-    GuiSlider* heading_slider;
-public:
-    GuiObjectTweakBase(GuiContainer* owner);
-
-    virtual void open(P<SpaceObject> target);
-
-    virtual void onDraw(sf::RenderTarget& window) override;
-};
 #endif//TWEAK_H

@@ -37,12 +37,12 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
 
         // If the object is more than twice as far away as the maximum radar
         // range, disregard it.
-        if (dist > distance * 2.0)
+        if (dist > distance * 5.0)
             continue;
 
         // The further away the object is, the less its effect on radar data.
         if (dist > distance)
-            scale = (dist - distance) / distance;
+            scale = scale - (dist - distance) / (distance * 5.0 - distance);
 
         // If we're adjacent to the object ...
         if (dist <= obj->getRadius())
@@ -85,24 +85,17 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
         signatures[n].biological = std::max(0.0f, std::min(1.0f, signatures[n].biological));
 
         // ... make some noise ...
-        float r = random(-1, 1);
-        float g = random(-1, 1);
-        float b = random(-1, 1);
+        float r = 0;
+        float g = 0;
+        float b = 0;
 
         // ... and then modify the bands' values based on the object's signature.
-        // Biological signatures amplify the red and green bands.
-        r += signatures[n].biological * 30;
-        g += signatures[n].biological * 30;
-
-        // Electrical signatures amplify the red and blue bands.
-        r += random(-20, 20) * signatures[n].electrical;
-        b += random(-20, 20) * signatures[n].electrical;
-
-        // Gravitational signatures amplify all bands, but especially modify
-        // the green and blue bands.
-        r = r * (1.0f - signatures[n].gravity);
-        g = g * (1.0f - signatures[n].gravity) + 40 * signatures[n].gravity;
-        b = b * (1.0f - signatures[n].gravity) + 40 * signatures[n].gravity;
+        // Biological signatures amplify the green band.
+        if (my_spaceship->has_biological_sensor) { g += random(-20, 20) * signatures[n].biological; }
+        // Electrical signatures amplify the red band.
+        if (my_spaceship->has_electrical_sensor) { r += random(-20, 20) * signatures[n].electrical; }
+        // Gravitational signatures amplify the blue band.
+ 		if (my_spaceship->has_gravity_sensor) { b += random(-20, 20) * signatures[n].gravity; }
 
         // Apply the values to the radar bands.
         amp_r[n] = r;
