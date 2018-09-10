@@ -79,7 +79,7 @@ RelayScreen::RelayScreen(GuiContainer* owner)
     info_callsign = new GuiKeyValueDisplay(sidebar, "SCIENCE_CALLSIGN", 0.4, "ID", "");
     info_callsign->setSize(GuiElement::GuiSizeMax, 30);
 
-    info_faction = new GuiKeyValueDisplay(sidebar, "SCIENCE_FACTION", 0.4, "Faction", "");
+    info_faction = new GuiKeyValueDisplay(sidebar, "SCIENCE_FACTION", 0.4, "Federation", "");
     info_faction->setSize(GuiElement::GuiSizeMax, 30);
 
     zoom_slider = new GuiSlider(this, "ZOOM_SLIDER", 100000.0f, 6250.0f, 100000.0f, [this](float value) {

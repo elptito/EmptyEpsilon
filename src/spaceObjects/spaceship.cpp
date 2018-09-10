@@ -376,38 +376,21 @@ void SpaceShip::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, flo
     // Otherwise, draw the ship-specific icon.
     if (my_spaceship && (getScannedStateFor(my_spaceship) == SS_NotScanned || getScannedStateFor(my_spaceship) == SS_FriendOrFoeIdentified))
     {
-        textureManager.setTexture(objectSprite, "RadarArrow.png");
+		objectSprite.setColor(sf::Color(192, 192, 192));
+        textureManager.setTexture(objectSprite, "RadarBlip.png");
+		objectSprite.setScale(0.1, 0.1);
     }
     else
     {
+		objectSprite.setColor(factionInfo[getFactionId()]->gm_color);
         textureManager.setTexture(objectSprite, radar_trace);
+		if (long_range)
+			objectSprite.setScale(0.7, 0.7);
     }
 
     objectSprite.setRotation(getRotation());
     objectSprite.setPosition(position);
-    if (long_range)
-    {
-        objectSprite.setScale(0.7, 0.7);
-    }
-    if (my_spaceship == this)
-    {
-        objectSprite.setColor(sf::Color(192, 192, 255));
-    }else if (my_spaceship)
-    {
-        if (getScannedStateFor(my_spaceship) != SS_NotScanned)
-        {
-            if (isEnemy(my_spaceship))
-                objectSprite.setColor(sf::Color::Red);
-            else if (isFriendly(my_spaceship))
-                objectSprite.setColor(sf::Color(128, 255, 128));
-            else
-                objectSprite.setColor(sf::Color(128, 128, 255));
-        }else{
-            objectSprite.setColor(sf::Color(192, 192, 192));
-        }
-    }else{
-        objectSprite.setColor(factionInfo[getFactionId()]->gm_color);
-    }
+
     window.draw(objectSprite);
 }
 
