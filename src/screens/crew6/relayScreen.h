@@ -12,6 +12,7 @@ class GuiToggleButton;
 class GuiSlider;
 class GuiLabel;
 class GuiHackingDialog;
+class GuiSelector;
 
 class RelayScreen : public GuiOverlay
 {
@@ -26,13 +27,16 @@ private:
 
     EMode mode;
     TargetsContainer targets;
+    P<SpaceObject> target;
     int drag_waypoint_index;
     GuiRadarView* radar;
 
     GuiKeyValueDisplay* info_callsign;
     GuiKeyValueDisplay* info_faction;
 
-    GuiKeyValueDisplay* info_reputation;
+    //GuiKeyValueDisplay* info_reputation;
+    GuiButton* center_screen_button;
+    GuiSelector* station_selector;
     GuiAutoLayout* option_buttons;
     GuiButton* hack_target_button;
     GuiToggleButton* link_to_science_button;
@@ -44,7 +48,7 @@ private:
 
     GuiSlider* zoom_slider;
     GuiLabel* zoom_label;
-    
+
     GuiHackingDialog* hacking_dialog;
 
     sf::Vector2f mouse_down_position;

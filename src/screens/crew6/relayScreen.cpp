@@ -22,7 +22,7 @@ RelayScreen::RelayScreen(GuiContainer* owner)
 : GuiOverlay(owner, "RELAY_SCREEN", colorConfig.background), mode(TargetSelection)
 {
     targets.setAllowWaypointSelection();
-    radar = new GuiRadarView(this, "RELAY_RADAR", 50000.0f, &targets);
+    radar = new GuiRadarView(this, "RELAY_RADAR", 100000.0f, &targets);
     radar->longRange()->enableWaypoints()->enableCallsigns()->setStyle(GuiRadarView::Rectangular)->setFogOfWarStyle(GuiRadarView::FriendlysShortRangeFogOfWar);
     radar->setAutoCentering(false);
     radar->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
@@ -82,8 +82,8 @@ RelayScreen::RelayScreen(GuiContainer* owner)
     info_faction = new GuiKeyValueDisplay(sidebar, "SCIENCE_FACTION", 0.4, "Faction", "");
     info_faction->setSize(GuiElement::GuiSizeMax, 30);
 
-    zoom_slider = new GuiSlider(this, "ZOOM_SLIDER", 50000.0f, 6250.0f, 50000.0f, [this](float value) {
-        zoom_label->setText("Zoom: " + string(50000.0f / value, 1.0f) + "x"); 
+    zoom_slider = new GuiSlider(this, "ZOOM_SLIDER", 100000.0f, 6250.0f, 100000.0f, [this](float value) {
+        zoom_label->setText("Zoom: " + string(100000.0f / value, 1.0f) + "x");
         radar->setDistance(value);
     });
     zoom_slider->setPosition(20, -70, ABottomLeft)->setSize(250, 50);
@@ -137,9 +137,26 @@ RelayScreen::RelayScreen(GuiContainer* owner)
     });
     launch_probe_button->setSize(GuiElement::GuiSizeMax, 50);
 
+    // Center screen
+    center_screen_button = new GuiButton(option_buttons, "CENTER_SCREEN_BUTTON", "Recentrer ecran", [this]() {
+        if (my_spaceship)
+            radar->setViewPosition(my_spaceship->getPosition());
+    });
+    center_screen_button->setSize(GuiElement::GuiSizeMax, 50);
+
+    // Ship selector
+    station_selector = new GuiSelector(option_buttons, "SPACE_STATION_SELECTOR", [this](int index, string value) {
+        P<SpaceObject> station = space_object_list[value.toInt()];
+        if (station)
+            target = station;
+        radar->setViewPosition(station->getPosition());
+        targets.set(station);
+    });
+    station_selector->setSize(GuiElement::GuiSizeMax, 50);
+
     // Reputation display.
-    info_reputation = new GuiKeyValueDisplay(option_buttons, "INFO_REPUTATION", 0.7, "Reputation:", "");
-    info_reputation->setSize(GuiElement::GuiSizeMax, 40);
+    //info_reputation = new GuiKeyValueDisplay(option_buttons, "INFO_REPUTATION", 0.7, "Reputation:", "");
+    //info_reputation->setSize(GuiElement::GuiSizeMax, 40);
 
     // Bottom layout.
     GuiAutoLayout* layout = new GuiAutoLayout(this, "", GuiAutoLayout::LayoutVerticalBottomToTop);
@@ -185,14 +202,14 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
     if (mouse_wheel_delta != 0.0)
     {
         float view_distance = radar->getDistance() * (1.0 - (mouse_wheel_delta * 0.1f));
-        if (view_distance > 50000.0f)
-            view_distance = 50000.0f;
+        if (view_distance > 100000.0f)
+            view_distance = 100000.0f;
         if (view_distance < 6250.0f)
             view_distance = 6250.0f;
         radar->setDistance(view_distance);
         // Keep the zoom slider in sync.
         zoom_slider->setValue(view_distance);
-        zoom_label->setText("Zoom: " + string(50000.0f / view_distance, 1.0f) + "x");
+        zoom_label->setText("Zoom: " + string(100000.0f / view_distance, 1.0f) + "x");
     }
     ///!
 
@@ -267,8 +284,24 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
     }
     if (my_spaceship)
     {
-        info_reputation->setValue(string(my_spaceship->getReputationPoints(), 0));
+        //info_reputation->setValue(string(my_spaceship->getReputationPoints(), 0));
         launch_probe_button->setText("Lancer sonde (" + string(my_spaceship->scan_probe_stock) + ")");
+
+        // Add and remove entries from the CPU ship and space station list.
+        int n = 0;
+        foreach(SpaceObject, obj, space_object_list)
+        {
+            P<SpaceStation> station = obj;
+            if (station && my_spaceship->isFriendly(station) && station->isFriendly(my_spaceship) && station->getPosition() - my_spaceship->getPosition() < 1000000.0f)
+            {
+                if (station_selector->indexByValue(string(n)) == -1)
+                    station_selector->addEntry(station->getTypeName() + " " + station->getCallSign(), string(n));
+            }else{
+                if (station_selector->indexByValue(string(n)) != -1)
+                    station_selector->removeEntry(station_selector->indexByValue(string(n)));
+            }
+            n += 1;
+        }
     }
 
     if (targets.getWaypointIndex() >= 0)

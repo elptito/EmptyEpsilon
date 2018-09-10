@@ -34,7 +34,7 @@ GameGlobalInfo::GameGlobalInfo()
     allow_main_screen_tactical_radar = true;
     allow_main_screen_long_range_radar = true;
     
-    intercept_all_comms_to_gm = false;
+    intercept_all_comms_to_gm = true;
 
     registerMemberReplication(&scanning_complexity);
     registerMemberReplication(&global_message);
