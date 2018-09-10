@@ -69,7 +69,7 @@ void MissileWeapon::takeDamage(float damage_amount, DamageInfo info)
         return;
     if (info.type == DT_EMP)
         return;
-    if (random(1,100)<50)
+    if (random(1,100)<80-(damage_amount*2))
         return;
 
     hull -= damage_amount;
