@@ -358,6 +358,19 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
     });
     heading_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
+    // Display Boost/Strafe speed sliders
+    (new GuiLabel(left_col, "", "Manoeuvre de combat avant:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    combat_maneuver_boost_speed_slider = new GuiSlider(left_col, "", 0.0, 1000, 0.0, [this](float value) {
+        target->combat_maneuver_boost_speed = value;
+    });
+    combat_maneuver_boost_speed_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
+    (new GuiLabel(left_col, "", "Manoeuvre de combat lateral:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    combat_maneuver_strafe_speed_slider = new GuiSlider(left_col, "", 0.0, 1000, 0.0, [this](float value) {
+        target->combat_maneuver_strafe_speed = value;
+    });
+    combat_maneuver_strafe_speed_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
     // Warp and jump drive toggles
     (new GuiLabel(right_col, "", "Moteurs speciaux:", 30))->setSize(GuiElement::GuiSizeMax, 50);
     warp_toggle = new GuiToggleButton(right_col, "", "Moteur WARP", [this](bool value) {
@@ -387,6 +400,14 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
     impulse_speed_slider->clearSnapValues()->addSnapValue(ship->ship_template->impulse_speed, 5.0f);
     turn_speed_slider->setValue(ship->turn_speed);
     turn_speed_slider->clearSnapValues()->addSnapValue(ship->ship_template->turn_speed, 1.0f);
+
+    // Set and snap boost speed slider to current value
+    combat_maneuver_boost_speed_slider->setValue(ship->combat_maneuver_boost_speed);
+    combat_maneuver_boost_speed_slider->clearSnapValues()->addSnapValue(ship->combat_maneuver_boost_speed, 20.0f);
+
+    // Set and snap strafe speed slider to current value
+    combat_maneuver_strafe_speed_slider->setValue(ship->combat_maneuver_strafe_speed);
+    combat_maneuver_strafe_speed_slider->clearSnapValues()->addSnapValue(ship->combat_maneuver_strafe_speed, 20.0f);
 }
 
 GuiShipTweakMissileWeapons::GuiShipTweakMissileWeapons(GuiContainer* owner)
@@ -697,6 +718,13 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
     });
     reputation_point_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
+    // Edit oxygen.
+    (new GuiLabel(left_col, "", "Oxygen:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+     oxygen_point_slider = new GuiSlider(left_col, "", 0.0, 100.0, 0.0, [this](float value) {
+        target->setOxygenPoints(value);
+    });
+    oxygen_point_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
     // Edit energy level.
     (new GuiLabel(left_col, "", "Energie max:", 30))->setSize(GuiElement::GuiSizeMax, 50);
 
@@ -712,19 +740,6 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
         target->energy_level = std::min(value, target->max_energy_level);
     });
     energy_level_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
-
-    // Display Boost/Strafe speed sliders
-    (new GuiLabel(left_col, "", "Manoeuvre de combat avant:", 30))->setSize(GuiElement::GuiSizeMax, 50);
-    combat_maneuver_boost_speed_slider = new GuiSlider(left_col, "", 0.0, 1000, 0.0, [this](float value) {
-        target->combat_maneuver_boost_speed = value;
-    });
-    combat_maneuver_boost_speed_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
-
-    (new GuiLabel(left_col, "", "Manoeuvre de combat lateral:", 30))->setSize(GuiElement::GuiSizeMax, 50);
-    combat_maneuver_strafe_speed_slider = new GuiSlider(left_col, "", 0.0, 1000, 0.0, [this](float value) {
-        target->combat_maneuver_strafe_speed = value;
-    });
-    combat_maneuver_strafe_speed_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
     // Right column
     // Count and list ship positions and whether they're occupied.
@@ -784,6 +799,9 @@ void GuiShipTweakPlayer::onDraw(sf::RenderTarget& window)
 
     // Update reputation points.
     reputation_point_slider->setValue(target->getReputationPoints());
+
+    // Update oxygen points.
+    oxygen_point_slider->setValue(target->getOxygenPoints());
 }
 
 void GuiShipTweakPlayer::open(P<SpaceObject> target)
@@ -795,14 +813,6 @@ void GuiShipTweakPlayer::open(P<SpaceObject> target)
     {
         // Read ship's control code.
         control_code->setText(player->control_code);
-
-        // Set and snap boost speed slider to current value
-        combat_maneuver_boost_speed_slider->setValue(player->combat_maneuver_boost_speed);
-        combat_maneuver_boost_speed_slider->clearSnapValues()->addSnapValue(player->combat_maneuver_boost_speed, 20.0f);
-
-        // Set and snap strafe speed slider to current value
-        combat_maneuver_strafe_speed_slider->setValue(player->combat_maneuver_strafe_speed);
-        combat_maneuver_strafe_speed_slider->clearSnapValues()->addSnapValue(player->combat_maneuver_strafe_speed, 20.0f);
 
         gravity_toggle->setValue(player->has_gravity_sensor);
         electrical_toggle->setValue(player->has_electrical_sensor);

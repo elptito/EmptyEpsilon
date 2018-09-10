@@ -81,10 +81,10 @@ ScienceScreen::ScienceScreen(GuiContainer* owner)
 
     // Target scan data sidebar.
     info_sidebar = new GuiAutoLayout(radar_view, "SIDEBAR", GuiAutoLayout::LayoutVerticalTopToBottom);
-    info_sidebar->setPosition(-20, 170, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
+    info_sidebar->setPosition(-20, 100, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
 
     custom_function_sidebar = new GuiCustomShipFunctions(radar_view, scienceOfficer, "");
-    custom_function_sidebar->setPosition(-20, 170, ATopRight)->setSize(250, GuiElement::GuiSizeMax)->hide();
+    custom_function_sidebar->setPosition(-20, 100, ATopRight)->setSize(250, GuiElement::GuiSizeMax)->hide();
 
     // Scan button.
     scan_button = new GuiScanTargetButton(info_sidebar, "SCAN_BUTTON", &targets);
@@ -165,6 +165,10 @@ ScienceScreen::ScienceScreen(GuiContainer* owner)
         info_system[n]->setSize(GuiElement::GuiSizeMax, 30);
         info_system[n]->hide();
     }
+
+    info_oxygen = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_SYSTEM_OXYGEN", 0.75, "Oxygene", "-");
+    info_oxygen->setSize(GuiElement::GuiSizeMax, 30);
+    info_oxygen->hide();
 
     // Prep and hide the description text area.
     info_description = new GuiScrollText(info_sidebar, "SCIENCE_DESC", "");
@@ -276,6 +280,8 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
     for(int n = 0; n < SYS_COUNT; n++)
         info_system[n]->setValue("-")->hide();
 
+    info_oxygen->setValue("-")->hide();
+
     if (probe)
     {
         probe_view_button->enable();
@@ -328,10 +334,29 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
         if (fabs(rel_velocity) < 0.01)
             rel_velocity = 0.0;
 
+        string duration = "";
+        if (fabs(rel_velocity) > 0.01)
+        {
+            if (fabs(my_spaceship->getHeading()-heading) < 10)
+            {
+                int seconds = fabs(distance/rel_velocity);
+                int minutes = seconds / 60;
+                 duration += " (";
+                if (minutes < 10)
+                    duration += "0";
+                duration += string(minutes);
+                duration += ":";
+                if (seconds%60 < 10)
+                    duration += "0";
+                duration += string(seconds%60);
+                duration += ")";
+            }
+        }
+
         info_callsign->setValue(obj->getCallSign());
         info_distance->setValue(string(distance / 1000.0f, 1) + DISTANCE_UNIT_1K);
         info_heading->setValue(string(int(heading)));
-        info_relspeed->setValue(string(rel_velocity / 1000.0f * 60.0f, 1) + DISTANCE_UNIT_1K + "/min");
+        info_relspeed->setValue(string(rel_velocity / 1000.0f * 60.0f, 1) + DISTANCE_UNIT_1K + "/min" + duration);
 
         // En un coup, récupération de toute les descriptions possibles
         string description = obj->getDescriptionFor(my_spaceship);
@@ -406,6 +431,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
                 {
                     info_system[n]->hide();
                 }
+                info_oxygen->hide();
 
                 info_description->hide();
             }
@@ -418,6 +444,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
                 {
                     info_system[n]->show();
                 }
+                info_oxygen->show();
 
                 info_description->hide();
             }
@@ -430,6 +457,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
                 {
                     info_system[n]->hide();
                 }
+                info_oxygen->hide();
 
                 info_description->show();
             }
@@ -452,6 +480,11 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
                 float system_health = ship->systems[n].health;
                 info_system[n]->setValue(string(int(system_health * 100.0f)) + "%")->setColor(sf::Color(255, 127.5 * (system_health + 1), 127.5 * (system_health + 1), 255));
             }
+            info_oxygen->setValue(string(obj->oxygen_points) + "%");
+            if (obj->oxygen_points < 20)
+                info_oxygen->setColor(sf::Color::Red);
+            else
+                info_oxygen->setColor(sf::Color::White);
         }
     }
 

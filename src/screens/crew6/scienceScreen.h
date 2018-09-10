@@ -44,6 +44,7 @@ public:
     GuiKeyValueDisplay* info_distance;
     GuiKeyValueDisplay* info_heading;
     GuiKeyValueDisplay* info_relspeed;
+    GuiKeyValueDisplay* info_duration;
 
     GuiKeyValueDisplay* info_faction;
     GuiKeyValueDisplay* info_type;
@@ -55,6 +56,7 @@ public:
     GuiFrequencyCurve* info_shield_frequency;
     GuiFrequencyCurve* info_beam_frequency;
     GuiKeyValueDisplay* info_system[SYS_COUNT];
+    GuiKeyValueDisplay* info_oxygen;
 
     GuiToggleButton* probe_view_button;
     P<ScanProbe> observation_point;

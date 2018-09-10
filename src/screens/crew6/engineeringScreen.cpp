@@ -34,8 +34,10 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner)
     front_shield_display->setIcon("gui/icons/shields-fore")->setTextSize(20)->setPosition(20, 180, ATopLeft)->setSize(240, 40);
     rear_shield_display = new GuiKeyValueDisplay(this, "SHIELDS_DISPLAY", 0.45, "Arriere", "");
     rear_shield_display->setIcon("gui/icons/shields-aft")->setTextSize(20)->setPosition(20, 220, ATopLeft)->setSize(240, 40);
+    oxygen_display = new GuiKeyValueDisplay(this, "OXYGEN_DISPLAY", 0.45, "Oxygene", "");
+    oxygen_display->setIcon("gui/icons/oxygen")->setTextSize(20)->setPosition(20, 260, ATopLeft)->setSize(240, 40);
 
-    (new GuiSelfDestructButton(this, "SELF_DESTRUCT"))->setPosition(20, 260, ATopLeft)->setSize(240, 100);
+    (new GuiSelfDestructButton(this, "SELF_DESTRUCT"))->setPosition(20, 300, ATopLeft)->setSize(240, 100);
 
     GuiElement* system_config_container = new GuiElement(this, "");
     system_config_container->setPosition(0, -20, ABottomCenter)->setSize(750 + 300, GuiElement::GuiSizeMax);
@@ -119,7 +121,7 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner)
     coolant_slider->disable();
 
     (new GuiShipInternalView(system_row_layouts, "SHIP_INTERNAL_VIEW", 48.0f))->setShip(my_spaceship)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
-    
+
     (new GuiCustomShipFunctions(this, engineering, ""))->setPosition(-20, 120, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
 
     previous_energy_level = 0.0;
@@ -143,7 +145,7 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
                 float delta_e = my_spaceship->energy_level - previous_energy_level;
                 float delta_e_per_second = delta_e / delta_t;
                 average_energy_delta = average_energy_delta * 0.99 + delta_e_per_second * 0.01;
-                
+
                 previous_energy_level = my_spaceship->energy_level;
                 previous_energy_measurement = engine->getElapsedTime();
             }
@@ -161,6 +163,12 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
             hull_display->setColor(sf::Color::White);
         front_shield_display->setValue(string(my_spaceship->getShieldPercentage(0)) + "%");
         rear_shield_display->setValue(string(my_spaceship->getShieldPercentage(1)) + "%");
+
+        oxygen_display->setValue(string(my_spaceship->getOxygenPoints(), 0));
+        if (my_spaceship->getOxygenPoints() < 20)
+            oxygen_display->setColor(sf::Color::Red);
+        else
+            oxygen_display->setColor(sf::Color::White);
 
         for(int n=0; n<SYS_COUNT; n++)
         {
@@ -197,7 +205,7 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
             power_label->setText("Puissance: " + string(int(system.power_level * 100)) + "%/" + string(int(system.power_request * 100)) + "%");
             coolant_label->setText("Refroidissement: " + string(int(system.coolant_level / PlayerSpaceship::max_coolant * 100)) + "%/" + string(int(system.coolant_request / PlayerSpaceship::max_coolant * 100)) + "%");
             coolant_slider->setEnable(!my_spaceship->auto_coolant_enabled);
-            
+
             system_effects_index = 0;
             float effectiveness = my_spaceship->getSystemEffectiveness(selected_system);
             switch(selected_system)
@@ -291,7 +299,7 @@ void EngineeringScreen::onHotkey(const HotkeyResult& key)
         if (key.hotkey == "SELECT_JUMP_DRIVE") selectSystem(SYS_JumpDrive);
         if (key.hotkey == "SELECT_FRONT_SHIELDS") selectSystem(SYS_FrontShield);
         if (key.hotkey == "SELECT_REAR_SHIELDS") selectSystem(SYS_RearShield);
-        
+
         if (selected_system != SYS_None)
         {
             if (key.hotkey == "INCREASE_POWER")
@@ -322,7 +330,7 @@ void EngineeringScreen::selectSystem(ESystem system)
 {
     if (my_spaceship && !my_spaceship->hasSystem(system))
         return;
-    
+
     for(int idx=0; idx<SYS_COUNT; idx++)
     {
         system_rows[idx].button->setValue(idx == system);

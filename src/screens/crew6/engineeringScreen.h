@@ -23,11 +23,12 @@ private:
     GuiKeyValueDisplay* hull_display;
     GuiKeyValueDisplay* front_shield_display;
     GuiKeyValueDisplay* rear_shield_display;
+    GuiKeyValueDisplay* oxygen_display;
     GuiLabel* power_label;
     GuiSlider* power_slider;
     GuiLabel* coolant_label;
     GuiSlider* coolant_slider;
-    
+
     class SystemRow
     {
     public:
@@ -50,12 +51,12 @@ private:
     float previous_energy_measurement;
     float previous_energy_level;
     float average_energy_delta;
-    
+
     void addSystemEffect(string key, string value);
     void selectSystem(ESystem system);
 public:
     EngineeringScreen(GuiContainer* owner);
-    
+
     virtual void onDraw(sf::RenderTarget& window) override;
     virtual void onHotkey(const HotkeyResult& key) override;
 };

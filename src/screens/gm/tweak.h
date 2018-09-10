@@ -109,6 +109,8 @@ private:
     GuiSlider* turn_speed_slider;
     GuiToggleButton* warp_toggle;
     GuiToggleButton* jump_toggle;
+    GuiSlider* combat_maneuver_boost_speed_slider;
+    GuiSlider* combat_maneuver_strafe_speed_slider;
 
 public:
     GuiShipTweak(GuiContainer* owner);
@@ -196,13 +198,12 @@ private:
 
     GuiTextEntry* control_code;
     GuiSlider* reputation_point_slider;
+    GuiSlider* oxygen_point_slider;
     GuiSlider* energy_level_slider;
     GuiSlider* max_energy_level_slider;
     GuiToggleButton* gravity_toggle;
     GuiToggleButton* electrical_toggle;
     GuiToggleButton* biological_toggle;
-    GuiSlider* combat_maneuver_boost_speed_slider;
-    GuiSlider* combat_maneuver_strafe_speed_slider;
     GuiLabel* position_count;
     GuiKeyValueDisplay* position[max_crew_positions];
 public:
