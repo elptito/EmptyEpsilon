@@ -21,11 +21,12 @@ ScreenMainScreen::ScreenMainScreen()
     new GuiOverlay(this, "", sf::Color::Black);
 
     viewport = new GuiViewport3D(this, "VIEWPORT");
-    viewport->showCallsigns()->showHeadings()->showSpacedust();
+    //viewport->showCallsigns()->showHeadings()->showSpacedust();
+    viewport->showSpacedust();
     viewport->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
-    
-    (new GuiRadarView(viewport, "VIEWPORT_RADAR", 5000.0f, nullptr))->setStyle(GuiRadarView::CircularMasked)->setSize(200, 200)->setPosition(-20, 20, ATopRight);
-    
+
+    //(new GuiRadarView(viewport, "VIEWPORT_RADAR", 5000.0f, nullptr))->setStyle(GuiRadarView::CircularMasked)->setSize(200, 200)->setPosition(-20, 20, ATopRight);
+
     tactical_radar = new GuiRadarView(this, "TACTICAL", 5000.0f, nullptr);
     tactical_radar->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
     tactical_radar->setRangeIndicatorStepSize(1000.0f)->shortRange()->enableCallsigns()->hide();
@@ -37,7 +38,7 @@ ScreenMainScreen::ScreenMainScreen()
     onscreen_comms->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax)->setVisible(false);
 
     new GuiShipDestroyedPopup(this);
-    
+
     new GuiJumpIndicator(this);
     new GuiSelfDestructIndicator(this);
     new GuiGlobalMessage(this);
@@ -185,7 +186,7 @@ void ScreenMainScreen::onClick(sf::Vector2f mouse_position)
 {
     if (!my_spaceship)
         return;
-    
+
     if (InputHandler::mouseIsPressed(sf::Mouse::Left))
     {
         switch(my_spaceship->main_screen_setting)
@@ -265,7 +266,7 @@ void ScreenMainScreen::onKey(sf::Event::KeyEvent key, int unicode)
     case sf::Keyboard::F:
         first_person = !first_person;
         break;
-    
+
     //TODO: This is more generic code and is duplicated.
     case sf::Keyboard::Escape:
     case sf::Keyboard::Home:

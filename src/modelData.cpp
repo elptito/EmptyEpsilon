@@ -16,6 +16,7 @@ REGISTER_SCRIPT_CLASS(ModelData)
     REGISTER_SCRIPT_CLASS_FUNCTION(ModelData, setSpecular);
     REGISTER_SCRIPT_CLASS_FUNCTION(ModelData, setIllumination);
     REGISTER_SCRIPT_CLASS_FUNCTION(ModelData, setRenderOffset);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ModelData, setRenderRotation);
     REGISTER_SCRIPT_CLASS_FUNCTION(ModelData, setScale);
     REGISTER_SCRIPT_CLASS_FUNCTION(ModelData, setRadius);
     REGISTER_SCRIPT_CLASS_FUNCTION(ModelData, setCollisionBox);
@@ -67,6 +68,11 @@ void ModelData::setIllumination(string illumination_texture_name)
 void ModelData::setRenderOffset(sf::Vector3f mesh_offset)
 {
      this->mesh_offset = mesh_offset;
+}
+
+void ModelData::setRenderRotation(sf::Vector3f mesh_rotation)
+{
+     this->mesh_rotation = mesh_rotation;
 }
 
 void ModelData::setScale(float scale)
@@ -205,6 +211,10 @@ void ModelData::render()
 
     glScalef(scale, scale, scale);
     glTranslatef(mesh_offset.x, mesh_offset.y, mesh_offset.z);
+	glRotatef(mesh_rotation.x, 1.0, 0.0, 0.0);
+	glRotatef(mesh_rotation.y, 0.0, 1.0, 0.0);
+	glRotatef(mesh_rotation.z, 0.0, 0.0, 1.0);
+
     shader->setParameter("baseMap", *texture);
     if (specular_texture)
         shader->setParameter("specularMap", *specular_texture);

@@ -39,6 +39,7 @@ private:
 
     Mesh* mesh;
     sf::Vector3f mesh_offset;
+    sf::Vector3f mesh_rotation;
     sf::Texture* texture;
     sf::Texture* specular_texture;
     sf::Texture* illumination_texture;
@@ -86,6 +87,7 @@ public:
      * Not all models have the same origin, so we can use this to compensate for that.
      */
     void setRenderOffset(sf::Vector3f mesh_offset);
+    void setRenderRotation(sf::Vector3f mesh_rotation);
 
     /*!
      * Set the scale of the model.
