@@ -474,22 +474,7 @@ void PlayerSpaceship::update(float delta)
 
             // Add heat to overpowered subsystems.
             addHeat(ESystem(n), delta * systems[n].getHeatingDelta() * system_heatup_per_second);
-        }
-
-        // If reactor health is worse than -90% and overheating, it explodes,
-        // destroying the ship and damaging a 0.5U radius.
-        if (systems[SYS_Reactor].health < -0.9 && systems[SYS_Reactor].heat_level == 1.0)
-        {
-            ExplosionEffect* e = new ExplosionEffect();
-            e->setSize(1000.0f);
-            e->setPosition(getPosition());
-
-            DamageInfo info(this, DT_Kinetic, getPosition());
-            SpaceObject::damageArea(getPosition(), 500, 30, 60, info, 0.0);
-
-            destroy();
-            return;
-        }
+        }	
 
         if (energy_level < 0.0)
             energy_level = 0.0;

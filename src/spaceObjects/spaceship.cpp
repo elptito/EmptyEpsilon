@@ -632,6 +632,17 @@ void SpaceShip::update(float delta)
         model_info.warp_scale = (10.0f - jump_delay) / 10.0f;
     else
         model_info.warp_scale = 0.0;
+
+    // Diminution de l'oxygene si Hull trop base
+    if (hull_strength / hull_max < 1)
+        removeOxygenPoints((1 - hull_strength / hull_max) * delta);
+
+    // Modifs selon Reacteur
+    float reactor_effectiveness = getSystemEffectiveness(SYS_Reactor);
+    if (reactor_effectiveness < 0.8f)
+        removeOxygenPoints((0.8f - reactor_effectiveness) * delta);
+    else
+        addOxygenPoints(delta * (reactor_effectiveness - 0.8f));
 }
 
 float SpaceShip::getShieldRechargeRate(int shield_index)

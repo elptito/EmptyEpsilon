@@ -469,6 +469,9 @@ void SpaceObject::setOxygenPoints(float amount)
     oxygen_points += amount;
     if (oxygen_points < 0.0)
     	oxygen_points = 0.0;
+	
+	if (oxygen_points > 100.0)
+    	oxygen_points = 100.0;
 }
 
 string SpaceObject::getSectorName()

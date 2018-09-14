@@ -124,7 +124,7 @@ public:
     int scanning_complexity_value;
     int scanning_depth_value;
     string callsign;
-    int oxygen_points;
+    float oxygen_points;
     float hull;
     uint8_t personality_id;
 
