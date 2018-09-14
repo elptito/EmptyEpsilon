@@ -135,6 +135,7 @@ public:
     int max_scan_probes;
     int scan_probe_stock;
     float scan_probe_recharge;
+    float scan_probe_recharge_dock;
 
     string comms_target_name;
     string comms_incomming_message;

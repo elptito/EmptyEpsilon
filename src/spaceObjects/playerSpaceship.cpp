@@ -218,6 +218,7 @@ PlayerSpaceship::PlayerSpaceship()
     scanning_depth = 0;
     max_scan_probes = 8;
     scan_probe_stock = max_scan_probes;
+    scan_probe_recharge_dock = 0.0;
     scan_probe_recharge = 0.0;
     alert_level = AL_Normal;
     shields_active = false;
@@ -354,14 +355,30 @@ void PlayerSpaceship::update(float delta)
         {
             if (scan_probe_stock < max_scan_probes)
             {
-                scan_probe_recharge += delta;
+                scan_probe_recharge_dock += delta;
 
-                if (scan_probe_recharge > scan_probe_charge_time)
+                if (scan_probe_recharge_dock > scan_probe_charge_time)
                 {
                     scan_probe_stock += 1;
+                    scan_probe_recharge_dock = 0.0;
                     scan_probe_recharge = 0.0;
                 }
             }
+        }
+    }else{
+        scan_probe_recharge_dock = 0.0;
+    }
+
+	// Ajout de probe si a l'arret
+	if (current_impulse == 0 && scan_probe_stock < max_scan_probes)
+    {
+        scan_probe_recharge += delta;
+
+        if (scan_probe_recharge > scan_probe_charge_time * 20.0f)
+        {
+            scan_probe_stock += 1;
+            scan_probe_recharge_dock = 0.0;
+            scan_probe_recharge = 0.0;
         }
     }else{
         scan_probe_recharge = 0.0;
@@ -474,7 +491,7 @@ void PlayerSpaceship::update(float delta)
 
             // Add heat to overpowered subsystems.
             addHeat(ESystem(n), delta * systems[n].getHeatingDelta() * system_heatup_per_second);
-        }	
+        }
 
         if (energy_level < 0.0)
             energy_level = 0.0;

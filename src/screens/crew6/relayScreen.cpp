@@ -17,6 +17,7 @@
 #include "gui/gui2_slider.h"
 #include "gui/gui2_label.h"
 #include "gui/gui2_togglebutton.h"
+#include "gui/gui2_progressbar.h"
 
 RelayScreen::RelayScreen(GuiContainer* owner)
 : GuiOverlay(owner, "RELAY_SCREEN", colorConfig.background), mode(TargetSelection)
@@ -137,6 +138,11 @@ RelayScreen::RelayScreen(GuiContainer* owner)
     });
     launch_probe_button->setSize(GuiElement::GuiSizeMax, 50);
 
+    // Rechargement probe
+    progress_probe = new GuiProgressbar(launch_probe_button,"PROBE_PROGRESS", 0, PlayerSpaceship::scan_probe_charge_time * 10.0f, 0.0);
+    progress_probe->setDrawBackground(false);
+    progress_probe->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+
     // Center screen
     center_screen_button = new GuiButton(option_buttons, "CENTER_SCREEN_BUTTON", "Recentrer ecran", [this]() {
         if (my_spaceship)
@@ -214,6 +220,19 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
     ///!
 
     GuiOverlay::onDraw(window);
+
+    // Info progress probe
+    if (my_spaceship)
+    {
+        if (my_spaceship -> current_impulse == 0  && my_spaceship -> scan_probe_stock < my_spaceship -> max_scan_probes)
+        {
+            progress_probe->show();
+            progress_probe->setValue(std::max(my_spaceship->scan_probe_recharge,my_spaceship->scan_probe_recharge_dock));
+        }else{
+            progress_probe->hide();
+        }
+    }
+
 
     info_faction->setValue("-");
 
