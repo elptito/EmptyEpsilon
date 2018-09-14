@@ -169,8 +169,8 @@ void GuiShipRoom::onDraw(sf::RenderTarget& window)
     float f = 1.0;
     if (ship && ship->hasSystem(system))
         f = std::max(0.0f, ship->systems[system].health);
-//    else
-    f = f * ship->getHull() / ship->getHullMax();
+    else
+        f = ship->getHull() / ship->getHullMax();
     draw9Cut(window, rect, "room_background", sf::Color(255, 255 * f, 255 * f, 255));
 
     if (system != SYS_None && ship && ship->hasSystem(system))

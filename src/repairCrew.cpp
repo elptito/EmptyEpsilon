@@ -180,6 +180,23 @@ void RepairCrew::update(float delta)
                 if (ship->systems[system].health > 1.0)
                     ship->systems[system].health = 1.0;
             }
+            else
+            {
+                float hull_old = ship->hull_strength / ship->hull_max;
+                ship->hull_strength += repair_per_second * delta * 10;
+                float hull_new = ship->hull_strength / ship->hull_max;
+
+                if (hull_old <= 0.2 && hull_new > 0.2)
+                    ship->hull_strength = ship->hull_max * 0.2f;
+                else if (hull_old <= 0.4 && hull_new > 0.4)
+                    ship->hull_strength = ship->hull_max * 0.4f;
+                else if (hull_old <= 0.6 && hull_new > 0.6)
+                    ship->hull_strength = ship->hull_max * 0.6f;
+                else if (hull_old <= 0.8 && hull_new > 0.8)
+                    ship->hull_strength = ship->hull_max * 0.8f;
+                else if (hull_new > 1.0)
+                    ship->hull_strength = ship->hull_max;
+            }
             if (ship->auto_repair_enabled && pos == target_position && (system == SYS_None || !ship->hasSystem(system) || ship->systems[system].health == 1.0))
             {
                 int n=irandom(0, SYS_COUNT - 1);
