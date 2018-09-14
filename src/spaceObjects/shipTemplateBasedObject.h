@@ -17,6 +17,7 @@ class ShipTemplateBasedObject : public SpaceObject, public Updatable
 public:
     string template_name;
     string type_name;
+    string public_name;
     string radar_trace;
     string impulse_sound_file = "engine.wav";
     P<ShipTemplate> ship_template;
@@ -57,7 +58,9 @@ public:
     void setTemplate(string template_name);
     void setShipTemplate(string template_name) { LOG(WARNING) << "Deprecated \"setShipTemplate\" function called."; setTemplate(template_name); }
     void setTypeName(string type_name) { this->type_name = type_name; }
+    void setPublicName(string public_name) { this->public_name = public_name; }
     string getTypeName() { return type_name; }
+    string getPublicName() { return public_name; }
 
     float getHull() { return hull_strength; }
     float getHullMax() { return hull_max; }

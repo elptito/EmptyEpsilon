@@ -107,7 +107,7 @@ ScienceScreen::ScienceScreen(GuiContainer* owner)
         P<SpaceShip> ship = targets.get();
         if (ship)
         {
-            if (database_view->findAndDisplayEntry(ship->getTypeName()))
+            if (database_view->findAndDisplayEntry(ship->getPublicName()))
             {
                 view_mode_selection->setSelectionIndex(1);
                 radar_view->hide();
@@ -402,7 +402,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
             {
                 info_faction->setValue(factionInfo[ship->getFactionId()]->getName());
                 info_type_button->show();
-                info_type->setValue(ship->getTypeName());
+                info_type->setValue(ship->getPublicName());
                 info_shields->setValue(ship->getShieldDataString());
                 info_hull->setValue(int(ship->getHull()));
             }

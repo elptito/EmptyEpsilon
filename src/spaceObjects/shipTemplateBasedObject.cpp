@@ -292,6 +292,7 @@ void ShipTemplateBasedObject::setTemplate(string template_name)
     this->template_name = template_name;
     ship_template = new_ship_template;
     type_name = template_name;
+    public_name = new_ship_template->getPublicName();
 
     hull_strength = hull_max = ship_template->hull;
     shield_count = ship_template->shield_count;

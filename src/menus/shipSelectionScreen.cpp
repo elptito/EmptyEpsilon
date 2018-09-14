@@ -71,7 +71,7 @@ ShipSelectionScreen::ShipSelectionScreen()
         my_player_info->commandSetMainScreenControl(value);
     });
     main_screen_controls_button->setValue(my_player_info->main_screen_control)->setSize(GuiElement::GuiSizeMax, 50);
-    
+
     // Game master button
     game_master_button = new GuiToggleButton(stations_layout, "GAME_MASTER_BUTTON", "Maitre de jeu", [this](bool value) {
         window_button->setValue(false);
@@ -165,7 +165,8 @@ ShipSelectionScreen::ShipSelectionScreen()
         for(string& template_name : template_names)
         {
             P<ShipTemplate> ship_template = ShipTemplate::getTemplate(template_name);
-            ship_template_selector->addEntry(template_name + " (" + ship_template->getClass() + ":" + ship_template->getSubClass() + ")", template_name);
+            //ship_template_selector->addEntry(template_name + " (" + ship_template->getClass() + ":" + ship_template->getSubClass() + ")", template_name);
+            ship_template_selector->addEntry(ship_template->getPublicName() + " (" + ship_template->getClass() + ":" + ship_template->getSubClass() + ")", template_name);
         }
         ship_template_selector->setSelectionIndex(0);
         ship_template_selector->setPosition(0, 630, ATopCenter)->setSize(490, 50);
@@ -303,7 +304,7 @@ void ShipSelectionScreen::update(float delta)
         returnToMainMenu();
         return;
     }
-    
+
     // Update the player ship list with all player ships.
     for(int n = 0; n < GameGlobalInfo::max_player_ships; n++)
     {

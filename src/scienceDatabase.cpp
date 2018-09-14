@@ -112,7 +112,8 @@ void fillDefaultDatabaseData()
         if (ship_template->getSecret())
             continue;
 
-        P<ScienceDatabase> entry = class_database_entries[ship_template->getClass()]->addEntry(template_name);
+        //P<ScienceDatabase> entry = class_database_entries[ship_template->getClass()]->addEntry(template_name);
+        P<ScienceDatabase> entry = class_database_entries[ship_template->getClass()]->addEntry(ship_template->getPublicName());
 
         entry->model_data = ship_template->model_data;
 

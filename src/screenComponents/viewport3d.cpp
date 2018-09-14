@@ -52,11 +52,12 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    _glPerspective(camera_fov, rect.width/rect.height, 1.f, 25000.f);
+    //_glPerspective(camera_fov, rect.width/rect.height, 1.f, 25000.f);
+    _glPerspective(camera_fov, rect.width/rect.height, 1.f, 999999.f);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    
+
     glRotatef(90, 1, 0, 0);
     glScalef(1,1,-1);
     glRotatef(-camera_pitch, 1, 0, 0);
@@ -193,7 +194,7 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
     glPushMatrix();
     glTranslatef(-camera_position.x,-camera_position.y, -camera_position.z);
     ParticleEngine::render();
-    
+
     if (show_spacedust && my_spaceship)
     {
         static std::vector<sf::Vector3f> space_dust;
@@ -204,7 +205,7 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
         sf::Vector2f dust_vector = my_spaceship->getVelocity() / 100.0f;
         sf::Vector3f dust_center = sf::Vector3f(my_spaceship->getPosition().x, my_spaceship->getPosition().y, 0.0);
         glColor4f(0.7, 0.5, 0.35, 0.07);
-        
+
         for(unsigned int n=0; n<space_dust.size(); n++)
         {
             const float maxDustDist = 500.0f;
@@ -281,7 +282,7 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
             string call_sign = obj->getCallSign();
             if (call_sign == "")
                 continue;
-            
+
             sf::Vector3f screen_position = worldToScreen(window, sf::Vector3f(obj->getPosition().x, obj->getPosition().y, obj->getRadius()));
             if (screen_position.z < 0)
                 continue;
@@ -291,11 +292,11 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
             drawText(window, sf::FloatRect(screen_position.x, screen_position.y, 0, 0), call_sign, ACenter, 20 * distance_factor, bold_font, sf::Color(255, 255, 255, 128 * distance_factor));
         }
     }
-    
+
     if (show_headings && my_spaceship)
     {
         float distance = 2500.f;
-        
+
         for(int angle = 0; angle < 360; angle += 30)
         {
             sf::Vector2f world_pos = my_spaceship->getPosition() + sf::vector2FromAngle(float(angle - 90)) * distance;
@@ -310,7 +311,7 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
 sf::Vector3f GuiViewport3D::worldToScreen(sf::RenderTarget& window, sf::Vector3f world)
 {
     world -= camera_position;
-    
+
     //Transformation vectors
     float fTempo[8];
     //Modelview transform
@@ -341,7 +342,7 @@ sf::Vector3f GuiViewport3D::worldToScreen(sf::RenderTarget& window, sf::Vector3f
     //ret.z = (1.0+fTempo[6])*0.5;	//Between 0 and 1
     //Set Z to distance into the screen (negative is behind the screen)
     ret.z = -fTempo[2];
-    
+
     ret.x = ret.x * window.getView().getSize().x / window.getSize().x;
     ret.y = ret.y * window.getView().getSize().y / window.getSize().y;
     ret.y = window.getView().getSize().y - ret.y;

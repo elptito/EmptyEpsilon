@@ -131,6 +131,7 @@ int main(int argc, char** argv)
     new DirectoryResourceProvider(RESOURCE_BASE_DIR "resources/");
     new DirectoryResourceProvider(RESOURCE_BASE_DIR "scripts/");
     new DirectoryResourceProvider(RESOURCE_BASE_DIR "packs/SolCommand/");
+    new DirectoryResourceProvider(RESOURCE_BASE_DIR "packs/PZ/");
     PackResourceProvider::addPackResourcesForDirectory(RESOURCE_BASE_DIR "packs");
 #endif
     if (getenv("HOME"))
@@ -138,10 +139,12 @@ int main(int argc, char** argv)
         new DirectoryResourceProvider(string(getenv("HOME")) + "/.emptyepsilon/resources/");
         new DirectoryResourceProvider(string(getenv("HOME")) + "/.emptyepsilon/scripts/");
         new DirectoryResourceProvider(string(getenv("HOME")) + "/.emptyepsilon/packs/SolCommand/");
+        new DirectoryResourceProvider(string(getenv("HOME")) + "/.emptyepsilon/packs/PZ/");
     }
     new DirectoryResourceProvider("resources/");
     new DirectoryResourceProvider("scripts/");
     new DirectoryResourceProvider("packs/SolCommand/");
+    new DirectoryResourceProvider("packs/PZ/");
     PackResourceProvider::addPackResourcesForDirectory("packs");
     textureManager.setDefaultSmooth(true);
     textureManager.setDefaultRepeated(true);

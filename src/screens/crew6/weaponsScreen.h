@@ -20,13 +20,14 @@ private:
     GuiKeyValueDisplay* energy_display;
     GuiKeyValueDisplay* front_shield_display;
     GuiKeyValueDisplay* rear_shield_display;
+    GuiKeyValueDisplay* target_display;
     GuiRadarView* radar;
     GuiMissileTubeControls* tube_controls;
     GuiRotationDial* missile_aim;
     GuiToggleButton* lock_aim;
 public:
     WeaponsScreen(GuiContainer* owner);
-    
+
     virtual void onDraw(sf::RenderTarget& window) override;
     virtual void onHotkey(const HotkeyResult& key) override;
 };
