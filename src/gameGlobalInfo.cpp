@@ -33,7 +33,9 @@ GameGlobalInfo::GameGlobalInfo()
     use_system_damage = true;
     allow_main_screen_tactical_radar = true;
     allow_main_screen_long_range_radar = true;
-    
+    allow_main_screen_global_range_radar = true;
+    allow_main_screen_ship_state = true;
+
     intercept_all_comms_to_gm = true;
 
     registerMemberReplication(&scanning_complexity);
@@ -46,6 +48,8 @@ GameGlobalInfo::GameGlobalInfo()
     registerMemberReplication(&use_system_damage);
     registerMemberReplication(&allow_main_screen_tactical_radar);
     registerMemberReplication(&allow_main_screen_long_range_radar);
+    registerMemberReplication(&allow_main_screen_global_range_radar);
+    registerMemberReplication(&allow_main_screen_ship_state);
 
     for(unsigned int n=0; n<factionInfo.size(); n++)
         reputation_points.push_back(0);
@@ -318,7 +322,7 @@ public:
     : script_name(script_name), variation(variation)
     {
     }
-    
+
     virtual void update(float delta)
     {
         gameGlobalInfo->variation = variation;

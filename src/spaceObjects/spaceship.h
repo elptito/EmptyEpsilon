@@ -14,7 +14,9 @@ enum EMainScreenSetting
     MSS_Right,
     MSS_Target,
     MSS_Tactical,
-    MSS_LongRange
+    MSS_LongRange,
+    MSS_GlobalRange,
+    MSS_ShipState
 };
 template<> void convert<EMainScreenSetting>::param(lua_State* L, int& idx, EMainScreenSetting& mss);
 
@@ -327,7 +329,7 @@ public:
     float getBeamWeaponDirection(int index) { if (index < 0 || index >= max_beam_weapons) return 0.0; return beam_weapons[index].getDirection(); }
     float getBeamWeaponRange(int index) { if (index < 0 || index >= max_beam_weapons) return 0.0; return beam_weapons[index].getRange(); }
 
-    float getBeamWeaponTurretArc(int index) 
+    float getBeamWeaponTurretArc(int index)
     {
         if (index < 0 || index >= max_beam_weapons)
             return 0.0;
