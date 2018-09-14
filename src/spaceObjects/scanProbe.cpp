@@ -2,6 +2,7 @@
 #include "scanProbe.h"
 #include "explosionEffect.h"
 #include "main.h"
+#include "playerSpaceship.h"
 
 #include "scriptInterface.h"
 REGISTER_SCRIPT_SUBCLASS_NO_CREATE(ScanProbe, SpaceObject)
@@ -46,6 +47,21 @@ void ScanProbe::update(float delta)
         sf::Vector2f v = normalize(target_position - getPosition());
         setPosition(getPosition() + v * delta * probe_speed);
     }
+}
+
+void ScanProbe::collide(Collisionable* target, float force)
+{
+    if (!game_server)
+        return;
+    P<PlayerSpaceship> player = P<Collisionable>(target);
+    if (!player)
+        return;
+    if (player -> getMultiplayerId() != owner_id)
+        return;
+    if ((getTarget() - getPosition()) > getRadius())
+        return;
+    player -> scan_probe_stock = player -> scan_probe_stock + 1;
+    destroy();
 }
 
 void ScanProbe::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range)
