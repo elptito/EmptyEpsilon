@@ -645,9 +645,11 @@ GuiShipTweakSystems::GuiShipTweakSystems(GuiContainer* owner)
 : GuiTweakPage(owner)
 {
     GuiAutoLayout* left_col = new GuiAutoLayout(this, "LEFT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
-    left_col->setPosition(50, 25, ATopLeft)->setSize(300, GuiElement::GuiSizeMax);
+    left_col->setPosition(50, 25, ATopLeft)->setSize(200, GuiElement::GuiSizeMax);
+    GuiAutoLayout* center_col = new GuiAutoLayout(this, "CENTER_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    center_col->setPosition(0, 25, ATopCenter)->setSize(200, GuiElement::GuiSizeMax);
     GuiAutoLayout* right_col = new GuiAutoLayout(this, "RIGHT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
-    right_col->setPosition(-25, 25, ATopRight)->setSize(300, GuiElement::GuiSizeMax);
+    right_col->setPosition(-25, 25, ATopRight)->setSize(200, GuiElement::GuiSizeMax);
 
     for(int n=0; n<SYS_COUNT; n++)
     {
@@ -668,6 +670,14 @@ GuiShipTweakSystems::GuiShipTweakSystems(GuiContainer* owner)
         system_heat[n]->setSize(GuiElement::GuiSizeMax, 30);
         system_heat[n]->addSnapValue( 0.0, 0.01);
         system_heat[n]->addSnapValue( 1.0, 0.01);
+
+        (new GuiLabel(center_col, "", getSystemName(system) + " : Hack", 20))->setSize(GuiElement::GuiSizeMax, 30);
+        system_hack[n] = new GuiSlider(center_col, "", 0.0, 1.0, 0.0, [this, n](float value) {
+            target->systems[n].hacked_level = value;
+        });
+        system_hack[n]->setSize(GuiElement::GuiSizeMax, 30);
+        system_hack[n]->addSnapValue( 0.0, 0.01);
+        system_hack[n]->addSnapValue( 1.0, 0.01);
     }
 }
 
@@ -677,6 +687,7 @@ void GuiShipTweakSystems::onDraw(sf::RenderTarget& window)
     {
         system_damage[n]->setValue(target->systems[n].health);
         system_heat[n]->setValue(target->systems[n].heat_level);
+        system_hack[n]->setValue(target->systems[n].hacked_level);
     }
 }
 

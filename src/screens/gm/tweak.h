@@ -182,6 +182,7 @@ private:
 
     GuiSlider* system_damage[SYS_COUNT];
     GuiSlider* system_heat[SYS_COUNT];
+    GuiSlider* system_hack[SYS_COUNT];
 
 public:
     GuiShipTweakSystems(GuiContainer* owner);
