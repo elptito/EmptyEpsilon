@@ -124,7 +124,7 @@ private:
     std::vector<string> comms_reply_message;
     CommsScriptInterface comms_script_interface; // Server only
     // Ship's log container
-    std::vector<ShipLogEntry> ships_log;
+
 
 public:
     std::vector<CustomShipFunction> custom_functions;
@@ -139,6 +139,10 @@ public:
 
     string comms_target_name;
     string comms_incomming_message;
+
+    std::vector<ShipLogEntry> ships_log;
+
+    float hack_time;
 
     // Main screen content
     EMainScreenSetting main_screen_setting;

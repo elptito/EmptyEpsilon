@@ -12,6 +12,7 @@ class GuiImage;
 class GuiArrow;
 class GuiToggleButton;
 class GuiProgressbar;
+class GuiPowerDamageIndicator;
 
 class EngineeringScreen : public GuiOverlay
 {
@@ -34,6 +35,7 @@ private:
     public:
         GuiAutoLayout* layout;
         GuiToggleButton* button;
+        GuiPowerDamageIndicator* state;
         GuiProgressbar* damage_bar;
         GuiLabel* damage_label;
         GuiProgressbar* heat_bar;

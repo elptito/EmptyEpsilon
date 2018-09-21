@@ -9,6 +9,7 @@
 #include "screenComponents/commsOverlay.h"
 #include "screenComponents/shipsLogControl.h"
 #include "screenComponents/hackingDialog.h"
+#include "screenComponents/hackDialog.h"
 #include "screenComponents/customShipFunctions.h"
 
 #include "gui/gui2_autolayout.h"
@@ -99,14 +100,17 @@ RelayScreen::RelayScreen(GuiContainer* owner)
     (new GuiOpenCommsButton(option_buttons, "OPEN_COMMS_BUTTON", &targets))->setSize(GuiElement::GuiSizeMax, 50);
 
     // Hack target
-    hack_target_button = new GuiButton(option_buttons, "HACK_TARGET", "Commencer hack", [this](){
+    hack_target_button = new GuiButton(option_buttons, "HACK_TARGET", "Invite de commande", [this](){
         P<SpaceObject> target = targets.get();
-        if (my_spaceship && target && target->canBeHackedBy(my_spaceship))
+//        if (my_spaceship && target && target->canBeHackedBy(my_spaceship))
+        if (my_spaceship)
         {
-            hacking_dialog->open(target);
+//            hacking_dialog->open(target);
+            hacking_dialog->open();
         }
     });
     hack_target_button->setSize(GuiElement::GuiSizeMax, 50);
+    hack_target_button->enable();
 
     // Link probe to science button.
     link_to_science_button = new GuiToggleButton(option_buttons, "LINK_TO_SCIENCE", " Lier a Analyste", [this](bool value){
@@ -194,7 +198,8 @@ RelayScreen::RelayScreen(GuiContainer* owner)
 
     (new GuiCustomShipFunctions(this, relayOfficer, ""))->setPosition(-20, 240, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
 
-    hacking_dialog = new GuiHackingDialog(this, "");
+    //hacking_dialog = new GuiHackingDialog(this, "");
+    hacking_dialog = new GuiHackDialog(this, "");
 
     new ShipsLog(this);
 
@@ -260,7 +265,7 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
             targets.clear();
     }
 
-    if (targets.get())
+    if (targets.get() && my_spaceship)
     {
         P<SpaceObject> obj = targets.get();
         P<SpaceShip> ship = obj;
@@ -289,14 +294,14 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
             link_to_science_button->setValue(false);
             link_to_science_button->disable();
         }
-        if (my_spaceship && obj->canBeHackedBy(my_spaceship))
-        {
-            hack_target_button->enable();
-        }else{
-            hack_target_button->disable();
-        }
+//        if (my_spaceship && obj->canBeHackedBy(my_spaceship))
+//        {
+//            hack_target_button->enable();
+//        }else{
+//            hack_target_button->disable();
+//        }
     }else{
-        hack_target_button->disable();
+//        hack_target_button->disable();
         link_to_science_button->disable();
         link_to_science_button->setValue(false);
         info_callsign->setValue("-");

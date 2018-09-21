@@ -119,6 +119,7 @@ void fillDefaultDatabaseData()
 
         entry->addKeyValue("Classe", ship_template->getClass());
         entry->addKeyValue("Sous-classe", ship_template->getSubClass());
+        entry->addKeyValue("Systeme informatique", ship_template->getOSName());
         entry->addKeyValue("Taille", string(int(ship_template->model_data->getRadius())));
         string shield_info = "";
         for(int n=0; n<ship_template->shield_count; n++)

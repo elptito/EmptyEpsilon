@@ -6,6 +6,7 @@
 #include "screenComponents/selfDestructButton.h"
 #include "screenComponents/alertOverlay.h"
 #include "screenComponents/customShipFunctions.h"
+#include "screenComponents/powerDamageIndicator.h"
 
 #include "gui/gui2_keyvaluedisplay.h"
 #include "gui/gui2_autolayout.h"
@@ -55,6 +56,10 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner)
             selectSystem(ESystem(n));
         });
         info.button->setSize(300, GuiElement::GuiSizeMax);
+
+        info.state = new GuiPowerDamageIndicator(info.button, id + "_INDICATOR", ESystem(n), ACenterLeft);
+        info.state ->setPosition(0, 0, ABottomLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+
         info.damage_bar = new GuiProgressbar(info.layout, id + "_DAMAGE", 0.0, 1.0, 0.0);
         info.damage_bar->setSize(150, GuiElement::GuiSizeMax);
         if (!gameGlobalInfo->use_system_damage)
@@ -198,6 +203,14 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
 
             info.power_bar->setValue(my_spaceship->systems[n].power_level);
             info.coolant_bar->setValue(my_spaceship->systems[n].coolant_level);
+
+            // Hack information
+            //info.hacked_level = my_spaceship->systems[system].hacked_level;
+            //else if (info.hacked_level > 0.1)
+            //{
+            //color = colorConfig.overlay_hacked;
+            //display_text = "HACKED";
+            //}
         }
         if (selected_system != SYS_None)
         {

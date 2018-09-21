@@ -71,6 +71,8 @@ private:
     string description;
     string class_name;
     string sub_class_name;
+    string os_name;
+    int hack_diff;
     TemplateType type;
     bool secret;
 public:
@@ -84,6 +86,11 @@ public:
 
     void setSecret(bool enabled) { secret = enabled; }
     bool getSecret(){ return secret; }
+
+    void setOSName(string os_name) { this->os_name = os_name; }
+    void setHackDiff(int hack_diff) { this->hack_diff = hack_diff; }
+    string getOSName() { return os_name; }
+    string getHackDiff() { return hack_diff; }
 
     P<ModelData> model_data;
 

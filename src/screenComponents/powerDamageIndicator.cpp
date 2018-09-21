@@ -12,7 +12,7 @@ void GuiPowerDamageIndicator::onDraw(sf::RenderTarget& window)
 {
     if (!my_spaceship)
         return;
-    
+
     sf::Color color;
     string display_text;
 
@@ -30,36 +30,36 @@ void GuiPowerDamageIndicator::onDraw(sf::RenderTarget& window)
     if (health <= 0.0)
     {
         color = colorConfig.overlay_damaged;
-        display_text = "ENDOMMAGE";
+        //display_text = "ENDOMMAGE";
     }else if ((system == SYS_Warp || system == SYS_JumpDrive) && WarpJammer::isWarpJammed(my_spaceship->getPosition()))
     {
         color = colorConfig.overlay_jammed;
-        display_text = "BLOQUE";
+        //display_text = "BLOQUE";
     }else if (power == 0.0)
     {
         color = colorConfig.overlay_no_power;
-        display_text = "AUCUNE PUISSANCE";
+        //display_text = "AUCUNE PUISSANCE";
     }else if (my_spaceship->energy_level < 10)
     {
         color = colorConfig.overlay_low_energy;
-        display_text = "ENERGIE FAIBLE";
+        //display_text = "ENERGIE FAIBLE";
     }else if (power < 0.3)
     {
         color = colorConfig.overlay_low_power;
-        display_text = "FAIBLE PUISSANCE";
+        //display_text = "FAIBLE PUISSANCE";
     }else if (heat > 0.90)
     {
         color = colorConfig.overlay_overheating;
-        display_text = "SURCHAUFFE";
+        //display_text = "SURCHAUFFE";
     }else if (hacked_level > 0.1)
     {
         color = colorConfig.overlay_hacked;
-        display_text = "HACKED";
+        //display_text = "HACKED";
     }else{
         return;
     }
     drawStretched(window, rect, "gui/damage_power_overlay", color);
-    
+
     if (rect.height > rect.width)
         drawVerticalText(window, rect, display_text, ACenter, text_size, bold_font, color);
     else
@@ -130,6 +130,10 @@ void GuiPowerDamageIndicator::onDraw(sf::RenderTarget& window)
     {
         drawIcon(window, "gui/icons/status_overheat", colorConfig.overlay_overheating);
     }
+    if (hacked_level > 0.1)
+    {
+        drawIcon(window, "gui/icons/hack", colorConfig.overlay_hacked);
+    }
 }
 
 void GuiPowerDamageIndicator::drawIcon(sf::RenderTarget& window, string icon_name, sf::Color color)
@@ -141,6 +145,6 @@ void GuiPowerDamageIndicator::drawIcon(sf::RenderTarget& window, string icon_nam
     icon.setPosition(icon_position);
     icon.setColor(color);
     window.draw(icon);
-    
+
     icon_position += icon_offset;
 }

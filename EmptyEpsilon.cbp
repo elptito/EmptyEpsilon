@@ -619,7 +619,9 @@
 		<Unit filename="src/screenComponents/globalMessage.cpp" />
 		<Unit filename="src/screenComponents/globalMessage.h" />
 		<Unit filename="src/screenComponents/hackingDialog.cpp" />
+		<Unit filename="src/screenComponents/hackDialog.cpp" />
 		<Unit filename="src/screenComponents/hackingDialog.h" />
+		<Unit filename="src/screenComponents/hackDialog.h" />
 		<Unit filename="src/screenComponents/helpOverlay.cpp" />
 		<Unit filename="src/screenComponents/helpOverlay.h" />
 		<Unit filename="src/screenComponents/impulseControls.cpp" />

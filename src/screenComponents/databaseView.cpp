@@ -74,7 +74,7 @@ void DatabaseViewComponent::fillListBox()
             item_list->addEntry(sd->getName(), sd->getName());
         }
     }else{
-        item_list->addEntry("Arriere", "");
+        item_list->addEntry("Retour", "");
         foreach(ScienceDatabase, sd, selected_entry->items)
         {
             item_list->addEntry(sd->getName(), sd->getName());

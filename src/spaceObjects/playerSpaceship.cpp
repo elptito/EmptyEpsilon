@@ -321,6 +321,11 @@ void PlayerSpaceship::update(float delta)
     if (jump_indicator > 0)
         jump_indicator -= delta;
 
+    // hack procedure
+    // Si hack, lancement d'un delay
+    if (hack_time > 0)
+        hack_time += delta;
+
     // If shields are calibrating, tick the calibration delay. Factor shield
     // subsystem effectiveness when determining the tick rate.
     if (shield_calibration_delay > 0)

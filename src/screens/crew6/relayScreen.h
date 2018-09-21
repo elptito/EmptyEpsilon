@@ -12,6 +12,7 @@ class GuiToggleButton;
 class GuiSlider;
 class GuiLabel;
 class GuiHackingDialog;
+class GuiHackDialog;
 class GuiSelector;
 class GuiProgressbar;
 
@@ -51,7 +52,8 @@ private:
     GuiSlider* zoom_slider;
     GuiLabel* zoom_label;
 
-    GuiHackingDialog* hacking_dialog;
+    //GuiHackingDialog* hacking_dialog;
+    GuiHackDialog* hacking_dialog;
 
     sf::Vector2f mouse_down_position;
 public:

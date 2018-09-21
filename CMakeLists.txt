@@ -143,6 +143,7 @@ set(SOURCES
 	src/screenComponents/shipsLogControl.cpp
 	src/screenComponents/onScreenKeyboard.cpp
 	src/screenComponents/hackingDialog.cpp
+	src/screenComponents/hackDialog.cpp
 	src/screenComponents/customShipFunctions.cpp
 	src/screenComponents/scrollingBanner.cpp
 	src/gui/colorConfig.cpp

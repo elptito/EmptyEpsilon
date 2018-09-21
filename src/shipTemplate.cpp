@@ -16,6 +16,10 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setSecret);
     /// Check if the ShipTemplate is secret (not shown in database)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, getSecret);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setOSName);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, getOSName);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, getHackDiff);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setHackDiff);
     /// Set the description shown for this ship in the science database.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setDescription);
     /// Sets the type of template. Defaults to normal ships, so then it does not need to be set.
@@ -84,6 +88,8 @@ ShipTemplate::ShipTemplate()
     class_name = "Sans classe";
     class_name = "Sans sous-classe";
     secret = false;
+    hack_diff = 0;
+    os_name = "win58";
     shares_energy_with_docked = true;
     repair_docked = false;
     energy_storage_amount = 1000;
@@ -417,6 +423,8 @@ P<ShipTemplate> ShipTemplate::copy(string new_name)
     result->sub_class_name = sub_class_name;
     result->type = type;
     result->model_data = model_data;
+    result->hack_diff= hack_diff;
+    result->os_name = os_name;
 
     result->can_be_docked_by_class = can_be_docked_by_class;
     result->energy_storage_amount = energy_storage_amount;
