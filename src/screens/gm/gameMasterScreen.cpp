@@ -676,16 +676,20 @@ GuiObjectCreationScreen::GuiObjectCreationScreen(GameMasterScreen* gm_screen)
     }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
     y += 30;
     y = 20;
-    template_names = ShipTemplate::getTemplateNameList(ShipTemplate::Ship);
-    std::sort(template_names.begin(), template_names.end());
+
     GuiListbox* listbox = new GuiListbox(box, "CREATE_SHIPS", [this](int index, string value)
     {
         setCreateScript("CpuShip():setRotation(random(0, 360)):setFactionId(" + string(faction_selector->getSelectionIndex()) + "):setTemplate(\"" + value + "\"):orderRoaming()");
     });
     listbox->setTextSize(20)->setButtonHeight(30)->setPosition(-20, 20, ATopRight)->setSize(300, 460);
-    for(string template_name : template_names)
+
+    template_names = ShipTemplate::getTemplateNameList(ShipTemplate::Ship);
+    std::sort(template_names.begin(), template_names.end());
+
+    for(string& template_name : template_names)
     {
-        listbox->addEntry(template_name, template_name);
+        P<ShipTemplate> ship_template = ShipTemplate::getTemplate(template_name);
+        listbox->addEntry(ship_template->getClass() + " : " + template_name, template_name);
     }
 
     (new GuiButton(box, "CLOSE_BUTTON", "Annuler", [this]() {

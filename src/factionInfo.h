@@ -37,6 +37,18 @@ public:
     string getName() {return this->name;}
 
     /*!
+     * \brief Set name of faction.
+     * \param Name Name of the faction
+     */
+    void setIcon(string icon) { this->icon = icon; }
+
+    /*!
+     * \brief Get name of faction.
+     * \return String Name of the faction
+     */
+    string getIcon() {return this->icon;}
+
+    /*!
      * \brief Get description of faction.
      * \return String description of the faction
      */
@@ -72,6 +84,7 @@ public:
     static unsigned int findFactionId(string name);
 protected:
     string name;
+    string icon;
     string description;
 };
 

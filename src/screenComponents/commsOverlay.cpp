@@ -8,6 +8,8 @@
 #include "gui/gui2_scrolltext.h"
 #include "gui/gui2_listbox.h"
 #include "gui/gui2_textentry.h"
+#include "gui/gui2_element.h"
+#include "gui/gui2_togglebutton.h"
 
 #include "onScreenKeyboard.h"
 
@@ -81,9 +83,29 @@ GuiCommsOverlay::GuiCommsOverlay(GuiContainer* owner)
             my_spaceship->commandCloseTextComm();
     }))->setSize(100, 50)->setPosition(-20, -10, ABottomRight);
 
+
     // Panel for chat communications with GMs and other player ships.
+     // Panel de titre
+    chat_comms_title = new GuiElement(this, "HACK_TITLE_BOX");
+    chat_comms_title ->setSize(800, 50)->setPosition(0, -700, ABottomCenter)->hide();
+
+        // Button to close chat comms.
+    chat_comms_close_button = new GuiButton(chat_comms_title, "CLOSE_BUTTON", "Fin", [this]() {
+        if (my_spaceship)
+            my_spaceship->commandCloseTextComm();
+    });
+    chat_comms_close_button->setTextSize(20)->setPosition(-10, 0, ATopRight)->setSize(60, 30);
+
+    chat_minimize_button = new GuiToggleButton(chat_comms_title, "", "_", [this](bool value)
+    {
+        minimize(value);
+    });
+    chat_minimize_button->setPosition(-70, 0, ATopRight)->setSize(60, 30);
+
+    minimized = false;
+
     chat_comms_box = new GuiPanel(owner, "COMMS_CHAT_BOX");
-    chat_comms_box->hide()->setSize(800, 600)->setPosition(0, -100, ABottomCenter);
+    chat_comms_box->setSize(800, 600)->setPosition(0, -120, ABottomCenter)->hide();
 
     // Message entry field for chat.
     chat_comms_message_entry = new GuiTextEntry(chat_comms_box, "COMMS_CHAT_MESSAGE_ENTRY", "");
@@ -105,13 +127,6 @@ GuiCommsOverlay::GuiCommsOverlay(GuiContainer* owner)
         chat_comms_message_entry->setText("");
     });
     chat_comms_send_button->setPosition(-20, -20, ABottomRight)->setSize(120, 50);
-
-    // Button to close chat comms.
-    chat_comms_close_button = new GuiButton(chat_comms_box, "CLOSE_BUTTON", "Fin", [this]() {
-        if (my_spaceship)
-            my_spaceship->commandCloseTextComm();
-    });
-    chat_comms_close_button->setTextSize(20)->setPosition(-10, 0, ATopRight)->setSize(70, 30);
 
     if (!engine->getObject("mouseRenderer")) //If we are a touch screen, add a on screen keyboard.
     {
@@ -161,7 +176,8 @@ void GuiCommsOverlay::onDraw(sf::RenderTarget& window)
         broken_box->setVisible(my_spaceship->isCommsBroken());
         closed_box->setVisible(my_spaceship->isCommsClosed());
 
-        chat_comms_box->setVisible(my_spaceship->isCommsChatOpen());
+        chat_comms_title->setVisible(my_spaceship->isCommsChatOpen());
+        chat_comms_box->setVisible(my_spaceship->isCommsChatOpen() && !minimized);
         chat_comms_text->setText(my_spaceship->getCommsIncommingMessage());
 
         script_comms_box->setVisible(my_spaceship->isCommsScriptOpen());
@@ -183,6 +199,24 @@ void GuiCommsOverlay::onDraw(sf::RenderTarget& window)
     }
 }
 
+void GuiCommsOverlay::minimize(bool minimize)
+{
+    chat_minimize_button->setValue(minimize);
+    if (minimize != minimized)
+    {
+        if (minimize)
+        {
+            chat_comms_box->hide();
+//            original_height = getSize().y;
+//            setSize(getSize().x, original_height);
+        }else{
+            chat_comms_box->show();
+//            setSize(getSize().x, original_height);
+        }
+    }
+    minimized = minimize;
+}
+
 void GuiCommsOverlay::clearElements()
 {
     // Force all panels to hide, in case hiding the overlay doesn't hide its
@@ -192,6 +226,7 @@ void GuiCommsOverlay::clearElements()
     no_response_box->hide();
     broken_box->hide();
     closed_box->hide();
+    chat_comms_title->hide();
     chat_comms_box->hide();
     script_comms_box->hide();
 }

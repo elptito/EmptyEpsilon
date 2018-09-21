@@ -401,6 +401,10 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
             if (ship)
             {
                 info_faction->setValue(factionInfo[ship->getFactionId()]->getName());
+//                if (factionInfo[ship->getFactionId()]->getIcon() != "")
+//                    info_faction->setIcon("gui/icons/" + factionInfo[ship->getFactionId()]->getIcon());
+//                else
+//                    info_faction->setIcon("");
                 info_type_button->show();
                 info_type->setValue(ship->getPublicName());
                 info_shields->setValue(ship->getShieldDataString());
@@ -410,6 +414,10 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
             if (station)
             {
                 info_faction->setValue(factionInfo[station->getFactionId()]->getName());
+//                if (factionInfo[station->getFactionId()]->getIcon() != "")
+//                    info_faction->setIcon("gui/icons/" + factionInfo[station->getFactionId()]->getIcon());
+//                else
+//                    info_faction->setIcon("");
                 info_shields->setValue(station->getShieldDataString());
                 info_hull->setValue(int(station->getHull()));
             }
