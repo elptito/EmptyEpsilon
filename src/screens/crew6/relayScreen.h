@@ -60,6 +60,7 @@ public:
     RelayScreen(GuiContainer* owner);
 
     virtual void onDraw(sf::RenderTarget& window);
+    virtual void onHotkey(const HotkeyResult& key) override;
 };
 
 #endif//RELAY_SCREEN_H

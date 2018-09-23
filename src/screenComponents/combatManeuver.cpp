@@ -22,7 +22,7 @@ GuiCombatManeuver::GuiCombatManeuver(GuiContainer* owner, string id)
         }
     });
     slider->setPosition(0, -50, ABottomCenter)->setSize(GuiElement::GuiSizeMax, 165);
-    
+
     (new GuiPowerDamageIndicator(slider, id + "_STRAFE_INDICATOR", SYS_Maneuver, ACenterLeft))->setPosition(0, 0, ABottomLeft)->setSize(GuiElement::GuiSizeMax, 50);
     (new GuiPowerDamageIndicator(slider, id + "_BOOST_INDICATOR", SYS_Impulse, ABottomLeft))->setPosition(0, 0, ABottomLeft)->setSize(GuiElement::GuiSizeMax, 50);
 }
@@ -47,11 +47,27 @@ void GuiCombatManeuver::onHotkey(const HotkeyResult& key)
     if (key.category == "HELMS" && my_spaceship)
     {
         if (key.hotkey == "COMBAT_LEFT")
-        {}//TODO
-        else if (key.hotkey == "COMBAT_RIGHT")
-        {}//TODO
-        else if (key.hotkey == "COMBAT_BOOST")
-        {}//TODO
+        {
+            setStrafeValue(-1.0f);
+            my_spaceship->commandCombatManeuverStrafe(-1.0f);
+        }
+        if (key.hotkey == "COMBAT_RIGHT")
+        {
+            setStrafeValue(1.0f);
+			my_spaceship->commandCombatManeuverStrafe(1.0f);
+        }
+        if (key.hotkey == "COMBAT_BOOST")
+        {
+            setBoostValue(1.0f);
+			my_spaceship->commandCombatManeuverBoost(1.0f);
+        }
+        if (key.hotkey == "COMBAT_STOP")
+		{
+			setBoostValue(0.0f);
+			setStrafeValue(0.0f);
+			my_spaceship->commandCombatManeuverBoost(0.0f);
+			my_spaceship->commandCombatManeuverStrafe(0.0f);
+		}
     }
 }
 

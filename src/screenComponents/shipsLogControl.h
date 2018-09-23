@@ -13,6 +13,7 @@ public:
     ShipsLog(GuiContainer* owner, string station);
 
     virtual void onDraw(sf::RenderTarget& window) override;
+    virtual void onHotkey(const HotkeyResult& key) override;
     virtual bool onMouseDown(sf::Vector2f position) override;
 private:
     bool open;

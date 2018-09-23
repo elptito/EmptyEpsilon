@@ -21,7 +21,7 @@ private:
     GuiSignalQualityIndicator* signal_quality;
     GuiSlider* sliders[max_sliders];
     GuiButton* cancel_button;
-    
+
     float target[max_sliders];
     bool locked;
     float lock_start_time;
@@ -30,7 +30,8 @@ public:
     GuiScanningDialog(GuiContainer* owner, string id);
 
     virtual void onDraw(sf::RenderTarget& window);
-    
+    virtual void onHotkey(const HotkeyResult& key) override;
+
     void setupParameters();
     void updateSignal();
 };

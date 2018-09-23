@@ -14,7 +14,7 @@ HotkeyConfig::HotkeyConfig()
     newKey("STATION_ENGINEERING", std::make_tuple("Station ingenieur", "F4"));
     newKey("STATION_SCIENCE", std::make_tuple("Station Analyste", "F5"));
     newKey("STATION_RELAY", std::make_tuple("Station relais", "F6"));
-    
+
     newCategory("HELMS", "Pilote");
     newKey("INC_IMPULSE", std::make_tuple("Augmenter Impulsion", "Up"));
     newKey("DEC_IMPULSE", std::make_tuple("Diminuer Impulsion", "Down"));
@@ -35,9 +35,10 @@ HotkeyConfig::HotkeyConfig()
     newKey("INC_JUMP", std::make_tuple("Augmentation distance JUMP", ""));
     newKey("DEC_JUMP", std::make_tuple("Diminution distance JUMP", ""));
     newKey("JUMP", std::make_tuple("Activer JUMP", ""));
-    //newKey("COMBAT_LEFT", "Manoeuvre de combat gauche");
-    //newKey("COMBAT_RIGHT", "Manoeuvre de combat droite");
-    //newKey("COMBAT_BOOST", "Manoeuvre de combat avant");
+    newKey("COMBAT_LEFT", std::make_tuple("Manoeuvre de combat gauche", ""));
+    newKey("COMBAT_RIGHT", std::make_tuple("Manoeuvre de combat droite", ""));
+    newKey("COMBAT_BOOST", std::make_tuple("Manoeuvre de combat avant", ""));
+    newKey("COMBAT_STOP", std::make_tuple("Stop Combat maneuver", ""));
 
     newCategory("WEAPONS", "Artilleur");
     newKey("SELECT_MISSILE_TYPE_HOMING", std::make_tuple("Selectionner TCC", "Num1"));
@@ -65,7 +66,10 @@ HotkeyConfig::HotkeyConfig()
     newKey("DISABLE_AIM_LOCK", std::make_tuple("desactiver visee manuelle", ""));
     newKey("AIM_MISSILE_LEFT", std::make_tuple("visee manuelle a gauche", ""));
     newKey("AIM_MISSILE_RIGHT", std::make_tuple("visee manuelle a droite", ""));
-    
+    newKey("SHIELD_CAL_INC", std::make_tuple("Increase shield frequency target", ""));
+    newKey("SHIELD_CAL_DEC", std::make_tuple("Decrease shield frequency target", ""));
+    newKey("SHIELD_CAL_START", std::make_tuple("Start shield calibration", ""));
+
     newCategory("ENGINEERING", "Ingenieur");
     newKey("SELECT_REACTOR", std::make_tuple("Selectionner systeme reacteur", "Num1"));
     newKey("SELECT_BEAM_WEAPONS", std::make_tuple("Selectionner systeme lasers", "Num2"));
@@ -80,6 +84,7 @@ HotkeyConfig::HotkeyConfig()
     newKey("DECREASE_POWER", std::make_tuple("Diminuer puissance du systeme", "Down"));
     newKey("INCREASE_COOLANT", std::make_tuple("Augmenter refroidissement du systeme", "Droite"));
     newKey("DECREASE_COOLANT", std::make_tuple("Diminuer refroidissement du systeme", "Gauche"));
+    newKey("RESET", std::make_tuple("Remise a zero du systeme", "Gauche"));
     newKey("NEXT_REPAIR_CREW", std::make_tuple("Equipe de reparation suivante", ""));
     newKey("REPAIR_CREW_MOVE_UP", std::make_tuple("Deplacer equipe de reparation haut", ""));
     newKey("REPAIR_CREW_MOVE_DOWN", std::make_tuple("Deplacer equipe de reparation bas", ""));
@@ -91,6 +96,52 @@ HotkeyConfig::HotkeyConfig()
     newKey("SELF_DESTRUCT_START", std::make_tuple("Activer l'auto destruction", ""));
     newKey("SELF_DESTRUCT_CONFIRM", std::make_tuple("Confirmer l'auto destruction", ""));
     newKey("SELF_DESTRUCT_CANCEL", std::make_tuple("Annuler l'auto destruction", ""));
+    newKey("OPEN_LOG", std::make_tuple("Ouvrir le log", ""));
+
+    newCategory("POWER_MANAGEMENT", "Gestion de l'energie");
+    for(int n=0; n<SYS_COUNT; n++)
+    {
+      newKey(getSystemName(ESystem(n))+ string("_POWER_UP"), std::make_tuple(string("Augmenter puissance ") + getSystemName(ESystem(n)), ""));
+      newKey(getSystemName(ESystem(n))+ string("_POWER_DOWN"), std::make_tuple(string("Diminuer puissance ") + getSystemName(ESystem(n))+ string(" Power Down"), ""));
+      newKey(getSystemName(ESystem(n))+ string("_COOLANT_UP"), std::make_tuple(string("Augmenter refroidissement ") + getSystemName(ESystem(n))+ string(" Coolant Up"), ""));
+      newKey(getSystemName(ESystem(n))+ string("_COOLANT_DOWN"), std::make_tuple(string("Diminuer refroidissement ") + getSystemName(ESystem(n))+string(" Coolant Down"), ""));
+      newKey(getSystemName(ESystem(n))+ string("_RESET"), std::make_tuple(string("Remise a zero ") + getSystemName(ESystem(n)), ""));
+    }
+
+    newCategory("SCIENCE", "Science");
+    newKey("NEXT_ENEMY_SCAN", std::make_tuple("Selectionner ennemi suivant", ""));
+    newKey("NEXT_SCAN", std::make_tuple("Selectionner cible suivant", ""));
+    newKey("SCAN_START", std::make_tuple("Lancer scan", ""));
+    newKey("NEXT_INFO_TARGET", std::make_tuple("Info suivante sur la cible", ""));
+    newKey("SELECT_TACTICAL", std::make_tuple("Selectionner info tactique", ""));
+    newKey("SELECT_SYSTEMS", std::make_tuple("Selectionner info systemes", ""));
+    newKey("SELECT_DESCRIPTION", std::make_tuple("Selectionner description", ""));
+    newKey("SHOW_DATABASE", std::make_tuple("Afficher la base de donnees", ""));
+    newKey("SHOW_PROBE", std::make_tuple("Afficher la vue de la sonde", ""));
+    newKey("SHOW_RADAR", std::make_tuple("Afficher le radar", ""));
+    newKey("INCREASE_ZOOM", std::make_tuple("Augmenter le zoom", ""));
+    newKey("DECREASE_ZOOM", std::make_tuple("Diminuer le zoom", ""));
+    for(int n=0; n<3; n++)
+    {
+        newKey("MOVE_LEFT_SCAN_" + string(n+1), std::make_tuple("Scan " + string(n+1) + " a gauche", ""));
+        newKey("MOVE_RIGHT_SCAN_" + string(n+1), std::make_tuple("Scan " + string(n+1) + " a droite", ""));
+    }
+
+	newCategory("RELAY", "Relai");
+    newKey("OPEN_COMM", std::make_tuple("Ouvrir communication", ""));
+    newKey("NEXT_ENEMY_RELAY", std::make_tuple("Selectionner ennemi suivant", ""));
+    newKey("NEXT_RELAY", std::make_tuple("Selectionner cible suivant", ""));
+    newKey("LINK_SCIENCE", std::make_tuple("Lier la sonde a l'analyste", ""));
+    newKey("BEGIN_HACK", std::make_tuple("Lancer l'invite de commande", ""));
+    newKey("ADD_WAYPOINT", std::make_tuple("Ajouter un marqueur de navigation", ""));
+    newKey("DELETE_WAYPOINT", std::make_tuple("Supprimer un marquer de navigation", ""));
+    newKey("LAUNCH_PROBE", std::make_tuple("Lancer une sonde", ""));
+    newKey("INCREASE_ZOOM", std::make_tuple("Augmenter le zoom", ""));
+    newKey("DECREASE_ZOOM", std::make_tuple("Diminuer le zoom", ""));
+    newKey("OPEN_LOG", std::make_tuple("Ouvrir le log", ""));
+    newKey("ALERTE_NORMAL", std::make_tuple("Aucune Alerte", ""));
+    newKey("ALERTE_YELLOW", std::make_tuple("Alerte jaune", ""));
+    newKey("ALERTE_RED", std::make_tuple("Alerte rouge", ""));
 
 }
 
@@ -153,7 +204,7 @@ static std::vector<std::pair<string, sf::Keyboard::Key> > sfml_key_names = {
     {"Equal", sf::Keyboard::Equal},
     {"Dash", sf::Keyboard::Dash},
     {"Space", sf::Keyboard::Space},
-    {"Retour", sf::Keyboard::Return},
+    {"Return", sf::Keyboard::Return},
     {"BackSpace", sf::Keyboard::BackSpace},
     {"Tab", sf::Keyboard::Tab},
     {"PageUp", sf::Keyboard::PageUp},
@@ -166,8 +217,8 @@ static std::vector<std::pair<string, sf::Keyboard::Key> > sfml_key_names = {
     {"Subtract", sf::Keyboard::Subtract},
     {"Multiply", sf::Keyboard::Multiply},
     {"Divide", sf::Keyboard::Divide},
-    {"Gauche", sf::Keyboard::Left},
-    {"Droite", sf::Keyboard::Right},
+    {"Left", sf::Keyboard::Left},
+    {"Right", sf::Keyboard::Right},
     {"Up", sf::Keyboard::Up},
     {"Down", sf::Keyboard::Down},
     {"Numpad0", sf::Keyboard::Numpad0},

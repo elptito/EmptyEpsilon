@@ -342,6 +342,13 @@ void EngineeringScreen::onHotkey(const HotkeyResult& key)
                 coolant_slider->setValue(my_spaceship->systems[selected_system].coolant_request - 0.5f);
                 my_spaceship->commandSetSystemCoolantRequest(selected_system, coolant_slider->getValue());
             }
+            if (key.hotkey == "RESET")
+            {
+                power_slider->setValue(1.0f);
+                coolant_slider->setValue(0.0f);
+                my_spaceship->commandSetSystemPowerRequest(selected_system, 1.0f);
+                my_spaceship->commandSetSystemCoolantRequest(selected_system, 0.0f);
+            }
         }
     }
 }
