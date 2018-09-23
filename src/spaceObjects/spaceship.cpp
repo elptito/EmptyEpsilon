@@ -1117,7 +1117,7 @@ void SpaceShip::addBroadcast(int threshold, string message)
 
             if (addtolog)
             {
-                ship->addToShipLog(message, color);
+                ship->addToShipLog(message, color, "extern");
             }
         }
     }

@@ -722,12 +722,11 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
     });
 
     // Edit reputation.
-    (new GuiLabel(left_col, "", "Reputation:", 30))->setSize(GuiElement::GuiSizeMax, 50);
-
-    reputation_point_slider = new GuiSlider(left_col, "", 0.0, 9999.0, 0.0, [this](float value) {
-        target->setReputationPoints(value);
+    (new GuiLabel(left_col, "", "Nombre de droides:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+     repair_team_slider = new GuiSlider(left_col, "", 0.0, 2000, 0.0, [this](float value) {
+        target->setRepairCrewCount(value);
     });
-    reputation_point_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    repair_team_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
     // Edit oxygen.
     (new GuiLabel(left_col, "", "Oxygen:", 30))->setSize(GuiElement::GuiSizeMax, 50);
@@ -809,7 +808,7 @@ void GuiShipTweakPlayer::onDraw(sf::RenderTarget& window)
     max_energy_level_slider->setValue(target->max_energy_level);
 
     // Update reputation points.
-    reputation_point_slider->setValue(target->getReputationPoints());
+    repair_team_slider->setValue(target->getRepairCrewCount());
 
     // Update oxygen points.
     oxygen_point_slider->setValue(target->getOxygenPoints());

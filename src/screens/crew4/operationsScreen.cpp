@@ -73,9 +73,9 @@ OperationScreen::OperationScreen(GuiContainer* owner)
         }
     });
     delete_waypoint_button->setPosition(-270, -120, ABottomRight)->setSize(200, 50);
-    
+
     mode = TargetSelection;
 
-    new ShipsLog(this);
+    new ShipsLog(this,"extern");
     (new GuiCommsOverlay(this))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 }

@@ -17,10 +17,10 @@ ShipLogScreen::ShipLogScreen(GuiContainer* owner)
 void ShipLogScreen::onDraw(sf::RenderTarget& window)
 {
     GuiOverlay::onDraw(window);
-    
+
     if (my_spaceship)
     {
-        const std::vector<PlayerSpaceship::ShipLogEntry>& logs = my_spaceship->getShipsLog();
+        const std::vector<PlayerSpaceship::ShipLogEntry>& logs = my_spaceship->getShipsLog("extern");
         if (log_text->getEntryCount() > 0 && logs.size() == 0)
             log_text->clearEntries();
 
@@ -28,7 +28,7 @@ void ShipLogScreen::onDraw(sf::RenderTarget& window)
         {
             log_text->removeEntry(0);
         }
-        
+
         if (log_text->getEntryCount() > 0 && logs.size() > 0 && log_text->getEntryText(0) != logs[0].text)
         {
             bool updated = false;
@@ -45,7 +45,7 @@ void ShipLogScreen::onDraw(sf::RenderTarget& window)
             if (!updated)
                 log_text->clearEntries();
         }
-        
+
         while(log_text->getEntryCount() < logs.size())
         {
             int n = log_text->getEntryCount();

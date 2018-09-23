@@ -201,7 +201,7 @@ RelayScreen::RelayScreen(GuiContainer* owner)
     //hacking_dialog = new GuiHackingDialog(this, "");
     hacking_dialog = new GuiHackDialog(this, "");
 
-    new ShipsLog(this);
+    new ShipsLog(this,"extern");
 
     (new GuiCommsOverlay(this))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 }

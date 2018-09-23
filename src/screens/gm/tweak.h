@@ -198,7 +198,7 @@ private:
     P<PlayerSpaceship> target;
 
     GuiTextEntry* control_code;
-    GuiSlider* reputation_point_slider;
+    GuiSlider* repair_team_slider;;
     GuiSlider* oxygen_point_slider;
     GuiSlider* energy_level_slider;
     GuiSlider* max_energy_level_slider;
