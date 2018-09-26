@@ -39,7 +39,8 @@ void SpaceStation::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, 
     {
         objectSprite.setColor(factionInfo[getFactionId()]->gm_color);
         textureManager.setTexture(objectSprite, radar_trace);
-		sprite_scale = scale * getRadius() * 1.5 / objectSprite.getTextureRect().width;
+		// sprite_scale = scale * getRadius() * 1.5 / objectSprite.getTextureRect().width;
+		sprite_scale = scale * getRadius() * 2 / objectSprite.getTextureRect().width;
     }
     objectSprite.setPosition(position);
 

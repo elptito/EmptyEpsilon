@@ -20,6 +20,7 @@ public:
     virtual void collide(Collisionable* target, float force) override;
 
     void setSize(float size);
+    void setModel(int model_number);
 
     virtual string getExportLine() { return "Asteroid():setPosition(" + string(getPosition().x, 0) + ", " + string(getPosition().y, 0) + ")"; }
 };
@@ -37,6 +38,7 @@ public:
     virtual void draw3D();
 
     void setSize(float size);
+    void setModel(int model_number);
 
     virtual bool canBeTargetedBy(P<SpaceObject> other) { return false; };
     virtual bool canBeSelectedBy(P<SpaceObject> other) { return false; };

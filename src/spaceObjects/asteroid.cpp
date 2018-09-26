@@ -83,6 +83,11 @@ void Asteroid::collide(Collisionable* target, float force)
     destroy();
 }
 
+void Asteroid::setModel(int model_number)
+{
+    model_number = model_number;
+}
+
 void Asteroid::setSize(float size)
 {
     setRadius(size);
@@ -135,4 +140,9 @@ void VisualAsteroid::setSize(float size)
     setRadius(size);
     while(fabs(z) < size * 2)
         z *= random(1.2, 2.0);
+}
+
+void VisualAsteroid::setModel(int model_number)
+{
+    model_number = model_number;
 }

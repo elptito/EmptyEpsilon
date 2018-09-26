@@ -26,6 +26,7 @@ GuiViewport3D::GuiViewport3D(GuiContainer* owner, string id)
     show_callsigns = false;
     show_headings = false;
     show_spacedust = false;
+    show_target = false;
 }
 
 void GuiViewport3D::onDraw(sf::RenderTarget& window)
@@ -223,7 +224,7 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
     }
     glPopMatrix();
 
-    if (my_spaceship && my_spaceship->getTarget())
+    if (my_spaceship && my_spaceship->getTarget() && show_target)
     {
         P<SpaceObject> target = my_spaceship->getTarget();
         glDisable(GL_DEPTH_TEST);

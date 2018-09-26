@@ -16,6 +16,8 @@
 #include "screens/extra/damcon.h"
 
 #include "gui/gui2_overlay.h"
+#include "gui/gui2_panel.h"
+#include "gui/gui2_label.h"
 
 ScreenMainScreen::ScreenMainScreen()
 {
@@ -45,6 +47,12 @@ ScreenMainScreen::ScreenMainScreen()
     ship_state->hide();
     onscreen_comms = new GuiCommsOverlay(this);
     onscreen_comms->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax)->setVisible(false);
+
+    dock_comms = new GuiPanel(this,"DOCK_BOX");
+    dock_comms->setSize(800, 100)->setPosition(0, 250, ATopCenter);
+    label_dock = new GuiLabel(dock_comms, "DOCK_LABEL", "PROCEDURE DE DOCK", 40);
+    label_dock->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax)->setPosition(0, 0, ACenter);
+    dock_comms -> hide();
 
     new GuiShipDestroyedPopup(this);
 
@@ -171,6 +179,18 @@ void ScreenMainScreen::update(float delta)
             global_range_radar->hide();
             ship_state->show();
             break;
+        }
+
+        if (my_spaceship->docking_state != DS_NotDocking)
+        {
+            viewport->hide();
+            tactical_radar->hide();
+            long_range_radar->hide();
+            global_range_radar->hide();
+            ship_state->show();
+            dock_comms->show();
+        }else{
+            dock_comms->hide();
         }
 
         switch(my_spaceship->main_screen_overlay)

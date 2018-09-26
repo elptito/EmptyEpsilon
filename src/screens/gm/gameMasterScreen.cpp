@@ -675,6 +675,10 @@ GuiObjectCreationScreen::GuiObjectCreationScreen(GameMasterScreen* gm_screen)
         setCreateScript("WormHole()");
     }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
     y += 30;
+    (new GuiButton(box, "CREATE_PLANET", "Planet", [this]() {
+        setCreateScript("Planet()");
+    }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
+    y += 30;
     y = 20;
 
     GuiListbox* listbox = new GuiListbox(box, "CREATE_SHIPS", [this](int index, string value)

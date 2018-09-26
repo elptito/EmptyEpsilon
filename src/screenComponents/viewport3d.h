@@ -8,6 +8,7 @@ class GuiViewport3D : public GuiElement
     bool show_callsigns;
     bool show_headings;
     bool show_spacedust;
+    bool show_target;
 
     double projection_matrix[16];
     double model_matrix[16];
@@ -20,6 +21,7 @@ public:
     GuiViewport3D* showCallsigns() { show_callsigns = true; return this; }
     GuiViewport3D* showHeadings() { show_headings = true; return this; }
     GuiViewport3D* showSpacedust() { show_spacedust = true; return this; }
+    GuiViewport3D* showTarget() { show_target = true; return this; }
 private:
     sf::Vector3f worldToScreen(sf::RenderTarget& window, sf::Vector3f world);
 };

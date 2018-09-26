@@ -8,6 +8,8 @@
 class GuiViewport3D;
 class GuiRadarView;
 class GuiCommsOverlay;
+class GuiPanel;
+class GuiLabel;
 class DamageControlScreen;
 class RelayScreen;
 
@@ -19,6 +21,8 @@ private:
     GuiRadarView* tactical_radar;
     GuiRadarView* long_range_radar;
     GuiRadarView* global_range_radar;
+    GuiPanel* dock_comms;
+    GuiLabel* label_dock;
     DamageControlScreen*ship_state;
     bool first_person;
     GuiCommsOverlay* onscreen_comms;
