@@ -371,6 +371,9 @@ void SpaceShip::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, flo
 
     // Set up the radar sprite for objects.
     sf::Sprite objectSprite;
+    float sprite_scale = 0.1;
+    float sprite_max = 2.0;
+    float sprite_min = 0.5;
 
     // If the object is a ship that hasn't been scanned, draw the default icon.
     // Otherwise, draw the ship-specific icon.
@@ -378,19 +381,19 @@ void SpaceShip::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, flo
     {
 		objectSprite.setColor(sf::Color(192, 192, 192));
         textureManager.setTexture(objectSprite, "RadarBlip.png");
-		objectSprite.setScale(0.1, 0.1);
     }
     else
     {
 		objectSprite.setColor(factionInfo[getFactionId()]->gm_color);
         textureManager.setTexture(objectSprite, radar_trace);
+        sprite_scale = std::max(sprite_min,std::min(sprite_max,scale * getRadius() * 2 / objectSprite.getTextureRect().width));
 		if (long_range)
-			objectSprite.setScale(0.7, 0.7);
+			sprite_scale = sprite_scale * 0.7;
     }
 
     objectSprite.setRotation(getRotation());
     objectSprite.setPosition(position);
-
+    objectSprite.setScale(sprite_scale, sprite_scale);
     window.draw(objectSprite);
 }
 
@@ -686,7 +689,8 @@ bool SpaceShip::canBeDockedBy(P<SpaceObject> obj)
     P<SpaceShip> ship = obj;
     if (!ship || !ship->ship_template)
         return false;
-    return ship_template->can_be_docked_by_class.count(ship->ship_template->getClass()) > 0;
+    // return ship_template->can_be_docked_by_class.count(ship->ship_template->getClass()) > 0;
+    return true;
 }
 
 void SpaceShip::collide(Collisionable* other, float force)

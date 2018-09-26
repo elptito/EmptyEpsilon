@@ -33,20 +33,22 @@ void GuiDockingButton::onDraw(sf::RenderTarget& window)
         switch(my_spaceship->docking_state)
         {
         case DS_NotDocking:
-            setText("Se docker");
+
             if (my_spaceship->canStartDocking() && findDockingTarget())
             {
                 enable();
+                setText("Se docker : " + findDockingTarget()->callsign);
             }else{
                 disable();
+                setText("Se docker");
             }
             break;
         case DS_Docking:
-            setText("Annuler dock");
+            setText("Annuler dock : " + findDockingTarget()->callsign);
             enable();
             break;
         case DS_Docked:
-            setText("Se Dedocker");
+            setText("Se Dedocker : " + findDockingTarget()->callsign);
             enable();
             break;
         }
@@ -89,7 +91,7 @@ P<SpaceObject> GuiDockingButton::findDockingTarget()
     foreach(Collisionable, obj, obj_list)
     {
         dock_object = obj;
-        if (dock_object && dock_object->canBeDockedBy(my_spaceship) && (dock_object->getPosition() - my_spaceship->getPosition()) < 1000.0f + dock_object->getRadius())
+        if (obj != my_spaceship && dock_object && dock_object->canBeDockedBy(my_spaceship) && (dock_object->getPosition() - my_spaceship->getPosition()) < 1000.0f + dock_object->getRadius())
             break;
         dock_object = NULL;
     }
