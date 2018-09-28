@@ -311,14 +311,34 @@ void Planet::draw3DTransparent()
 
 void Planet::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range)
 {
-    sf::Sprite object_sprite;
-    textureManager.setTexture(object_sprite, planet_icon);
-    object_sprite.setRotation(getRotation());
-    object_sprite.setPosition(position);
-    float size = getRadius() * scale / object_sprite.getTextureRect().width * 3.0;
-    object_sprite.setScale(size, size);
-    object_sprite.setColor(sf::Color(255, 255, 255));
-    window.draw(object_sprite, sf::BlendAdd);
+    if (long_range){
+        sf::Sprite object_sprite;
+        textureManager.setTexture(object_sprite, planet_icon);
+        object_sprite.setRotation(getRotation());
+        object_sprite.setPosition(position);
+        if (collision_size < 0)
+        {
+            float size = getRadius() * scale * 0.5 / object_sprite.getTextureRect().width * 3.0;
+            object_sprite.setScale(size, size);
+        }
+        else
+        {
+            float size = getRadius() * scale / object_sprite.getTextureRect().width * 3.0;
+            object_sprite.setScale(size, size);
+        }
+        object_sprite.setColor(sf::Color(255, 255, 255));
+        window.draw(object_sprite, sf::BlendAdd);
+    } else if (collision_size > 0)
+    {
+        sf::Sprite object_sprite;
+        textureManager.setTexture(object_sprite, planet_icon);
+        object_sprite.setRotation(getRotation());
+        object_sprite.setPosition(position);
+        float size = getRadius() * collision_size * scale / object_sprite.getTextureRect().width * 3.0;
+        object_sprite.setScale(size, size);
+        object_sprite.setColor(sf::Color(255, 255, 255));
+        window.draw(object_sprite, sf::BlendAdd);
+    }
 }
 
 void Planet::drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range)

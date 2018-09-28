@@ -66,7 +66,7 @@ void fillDefaultDatabaseData()
             {
                 case FVF_Neutral: stance = "Neutre"; break;
                 case FVF_Enemy: stance = "Ennemi"; break;
-                case FVF_Friendly: stance = "Ami"; break;
+                case FVF_Friendly: stance = "Allie"; break;
             }
             entry->addKeyValue(factionInfo[m]->getName(), stance);
         }
