@@ -95,12 +95,12 @@ ShipTemplateBasedObject::ShipTemplateBasedObject(float collision_range, string m
 
     callsign = "[" + string(getMultiplayerId()) + "]";
 
-    hack_diff = 0;
-    os_name = "win58";
+//    hack_diff = 0;
+
     hack_protect = false;
 
-    registerMemberReplication(&hack_diff);
-    registerMemberReplication(&os_name);
+//    registerMemberReplication(&hack_diff);
+//    registerMemberReplication(&os_name);
     registerMemberReplication(&hack_protect);
 
     can_be_destroyed = true;

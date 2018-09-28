@@ -10,6 +10,8 @@ GuiOpenCommsButton::GuiOpenCommsButton(GuiContainer* owner, string id, TargetsCo
         my_spaceship->commandOpenTextComm(this->targets->get());
 }), targets(targets)
 {
+    icon_name = "gui/icons/station-relay";
+    icon_alignment = ACenterLeft;
 }
 
 void GuiOpenCommsButton::onDraw(sf::RenderTarget& window)

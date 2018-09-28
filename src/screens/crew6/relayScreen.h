@@ -40,8 +40,10 @@ private:
     GuiButton* center_screen_button;
     GuiSelector* station_selector;
     GuiAutoLayout* option_buttons;
+//    GuiButton* comm_icon;
     GuiButton* hack_target_button;
     GuiToggleButton* link_to_science_button;
+    GuiButton* add_waypoint_button;
     GuiButton* delete_waypoint_button;
     GuiButton* launch_probe_button;
     GuiProgressbar* progress_probe;

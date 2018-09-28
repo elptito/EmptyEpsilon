@@ -89,7 +89,23 @@ ShipTemplate::ShipTemplate()
     class_name = "Sans sous-classe";
     secret = false;
     hack_diff = 0;
-    os_name = "win58";
+
+    int os_name_counter = irandom(30, 65);
+    int os_name_letter = irandom(0, 9);
+    switch(os_name_letter)
+    {
+    case 0: os_name = "iou" + string(os_name_counter); break;
+    case 1: os_name = "ase" + string(os_name_counter); break;
+    case 2: os_name = "lon" + string(os_name_counter); break;
+    case 3: os_name = "tre" + string(os_name_counter); break;
+    case 4: os_name = "kou" + string(os_name_counter); break;
+    case 5: os_name = "win" + string(os_name_counter); break;
+    case 6: os_name = "ion" + string(os_name_counter); break;
+    case 7: os_name = "pon" + string(os_name_counter); break;
+    case 8: os_name = "hub" + string(os_name_counter); break;
+    case 9: os_name = "zer" + string(os_name_counter); break;
+    }
+
     shares_energy_with_docked = true;
     repair_docked = false;
     energy_storage_amount = 1000;

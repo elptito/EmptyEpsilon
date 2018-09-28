@@ -1372,7 +1372,8 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
         break;
     case CMD_SET_AUTO_REPAIR:
         packet >> auto_repair_enabled;
-        addToShipLog("Reparation automatique active",sf::Color::White,"intern");
+		if (auto_repair_enabled)
+			addToShipLog("Reparation automatique active",sf::Color::White,"intern");
         break;
     case CMD_SET_BEAM_FREQUENCY:
         {

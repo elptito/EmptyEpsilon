@@ -97,6 +97,9 @@ RelayScreen::RelayScreen(GuiContainer* owner)
     option_buttons->setPosition(20, 50, ATopLeft)->setSize(250, GuiElement::GuiSizeMax);
 
     // Open comms button.
+//    comm_icon = new GuiButton(option_buttons, "COMM_ICON_BUTTON", "", [this]() {
+//    });
+//    comm_icon->setIcon("gui/icons/station-relay")->setSize(GuiElement::GuiSizeMax, 50);
     (new GuiOpenCommsButton(option_buttons, "OPEN_COMMS_BUTTON", &targets))->setSize(GuiElement::GuiSizeMax, 50);
 
     // Hack target
@@ -111,6 +114,7 @@ RelayScreen::RelayScreen(GuiContainer* owner)
     });
     hack_target_button->setSize(GuiElement::GuiSizeMax, 50);
     hack_target_button->enable();
+    hack_target_button->setIcon("gui/icons/hack");
 
     // Link probe to science button.
     link_to_science_button = new GuiToggleButton(option_buttons, "LINK_TO_SCIENCE", " Lier a Analyste", [this](bool value){
@@ -120,12 +124,14 @@ RelayScreen::RelayScreen(GuiContainer* owner)
             my_spaceship->commandSetScienceLink(-1);
     });
     link_to_science_button->setSize(GuiElement::GuiSizeMax, 50);
+    link_to_science_button->setIcon("gui/icons/station-science");
 
     // Manage waypoints.
-    (new GuiButton(option_buttons, "WAYPOINT_PLACE_BUTTON", "Placer Marqueur", [this]() {
+    add_waypoint_button = new GuiButton(option_buttons, "WAYPOINT_PLACE_BUTTON", "Placer Marqueur", [this]() {
         mode = WaypointPlacement;
         option_buttons->hide();
-    }))->setSize(GuiElement::GuiSizeMax, 50);
+    });
+    add_waypoint_button->setIcon("gui/icons/waypoint")->setSize(GuiElement::GuiSizeMax, 50);
 
     delete_waypoint_button = new GuiButton(option_buttons, "WAYPOINT_DELETE_BUTTON", "Supprimer Marqueur", [this]() {
         if (my_spaceship && targets.getWaypointIndex() >= 0)
@@ -134,6 +140,7 @@ RelayScreen::RelayScreen(GuiContainer* owner)
         }
     });
     delete_waypoint_button->setSize(GuiElement::GuiSizeMax, 50);
+    delete_waypoint_button->setIcon("gui/icons/waypoint");
 
     // Launch probe button.
     launch_probe_button = new GuiButton(option_buttons, "LAUNCH_PROBE_BUTTON", "Lancer sonde", [this]() {
@@ -141,6 +148,7 @@ RelayScreen::RelayScreen(GuiContainer* owner)
         option_buttons->hide();
     });
     launch_probe_button->setSize(GuiElement::GuiSizeMax, 50);
+    launch_probe_button->setIcon("gui/icons/probe");
 
     // Rechargement probe
     progress_probe = new GuiProgressbar(launch_probe_button,"PROBE_PROGRESS", 0, PlayerSpaceship::scan_probe_charge_time * 10.0f, 0.0);
@@ -153,6 +161,7 @@ RelayScreen::RelayScreen(GuiContainer* owner)
             radar->setViewPosition(my_spaceship->getPosition());
     });
     center_screen_button->setSize(GuiElement::GuiSizeMax, 50);
+    center_screen_button->setIcon("gui/icons/lock");;
 
     // Ship selector
     station_selector = new GuiSelector(option_buttons, "SPACE_STATION_SELECTOR", [this](int index, string value) {
