@@ -176,10 +176,10 @@ GameMasterScreen::GameMasterScreen()
             n++;
         }
     });
-    gm_script_options->setPosition(20, 190, ATopLeft)->setSize(250, 500);
+    gm_script_options->setPosition(20, 200, ATopLeft)->setSize(250, 500);
 
     order_layout = new GuiAutoLayout(this, "ORDER_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
-    order_layout->setPosition(20, 190, ATopLeft)->setSize(250, GuiElement::GuiSizeMax);
+    order_layout->setPosition(-20, 350, ATopRight)->setSize(300, GuiElement::GuiSizeMax);
 
     (new GuiLabel(order_layout, "ORDERS_LABEL", "Ordres:", 20))->addBackground()->setSize(GuiElement::GuiSizeMax, 30);
     (new GuiButton(order_layout, "ORDER_IDLE", "Repos", [this]() {
@@ -311,7 +311,7 @@ void GameMasterScreen::update(float delta)
     tweak_button->setVisible(has_object);
 
     order_layout->setVisible(has_cpu_ship);
-    gm_script_options->setVisible(!has_cpu_ship);
+//    gm_script_options->setVisible(!has_cpu_ship);
     player_comms_hail->setVisible(has_player_ship);
 
     std::unordered_map<string, string> selection_info;
@@ -654,13 +654,12 @@ GuiObjectCreationScreen::GuiObjectCreationScreen(GameMasterScreen* gm_screen)
         setCreateScript("Mine():setFactionId(" + string(faction_selector->getSelectionIndex()) + ")");
     }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
     y += 30;
-    // Default supply drop values copied from scripts/supply_drop.lua
-    (new GuiButton(box, "CREATE_SUPPLY_DROP", "Vaisseau cargo", [this]() {
-        setCreateScript("SupplyDrop():setFactionId(" + string(faction_selector->getSelectionIndex()) + "):setEnergy(500):setWeaponStorage('Nuke', 1):setWeaponStorage('Homing', 4):setWeaponStorage('Mine', 2):setWeaponStorage('EMP', 1)");
-    }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
-    y += 30;
     (new GuiButton(box, "CREATE_ASTEROID", "Asteroide", [this]() {
         setCreateScript("Asteroid()");
+    }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
+    y += 30;
+    (new GuiButton(box, "CREATE_VISUAL_ASTEROID", "Visual Asteroide", [this]() {
+        setCreateScript("VisualAsteroid()");
     }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
     y += 30;
     (new GuiButton(box, "CREATE_BLACKHOLE", "Trou noir", [this]() {

@@ -128,6 +128,10 @@ public:
     float hull;
     uint8_t personality_id;
 
+    float translate_z;
+    float getTranslateZ() { return translate_z; }
+    void setTranslateZ(float translate_z) { translate_z = translate_z; }
+
     SpaceObject(float collisionRange, string multiplayerName, float multiplayer_significant_range=-1);
 
     float getRadius() { return object_radius; }

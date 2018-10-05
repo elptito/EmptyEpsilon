@@ -52,6 +52,7 @@ private:
 
     GuiTextEntry* callsign;
     GuiSlider* hull_slider;
+    GuiSlider* zaxis_slider;
     GuiTextEntry* description;
     GuiTextEntry* description_scan;
     GuiTextEntry* description_full_scan;

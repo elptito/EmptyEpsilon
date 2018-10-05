@@ -12,11 +12,12 @@ WindowScreen::WindowScreen(float angle)
 : angle(angle)
 {
     viewport = new GuiViewport3D(this, "VIEWPORT");
-    viewport->showCallsigns()->showHeadings()->showSpacedust();
+    //viewport->showCallsigns()->showHeadings()->showSpacedust();
+    viewport->showSpacedust();
     viewport->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
     new GuiShipDestroyedPopup(this);
-    
+
     new GuiIndicatorOverlays(this);
 }
 
@@ -34,7 +35,7 @@ void WindowScreen::update(float delta)
     {
         camera_yaw = my_spaceship->getRotation() + angle;
         camera_pitch = 0.0f;
-        
+
         sf::Vector2f position = my_spaceship->getPosition() + sf::rotateVector(sf::Vector2f(my_spaceship->getRadius(), 0), camera_yaw);
 
         camera_position.x = position.x;

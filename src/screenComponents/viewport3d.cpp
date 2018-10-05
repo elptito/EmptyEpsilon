@@ -170,7 +170,7 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
     {
         glPushMatrix();
         glTranslatef(-camera_position.x,-camera_position.y, -camera_position.z);
-        glTranslatef(obj->getPosition().x, obj->getPosition().y, 0);
+        glTranslatef(obj->getPosition().x, obj->getPosition().y, obj->getTranslateZ());
         glRotatef(obj->getRotation(), 0, 0, 1);
 
         obj->draw3D();
@@ -185,7 +185,7 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
     {
         glPushMatrix();
         glTranslatef(-camera_position.x,-camera_position.y, -camera_position.z);
-        glTranslatef(obj->getPosition().x, obj->getPosition().y, 0);
+        glTranslatef(obj->getPosition().x, obj->getPosition().y, obj->getTranslateZ());
         glRotatef(obj->getRotation(), 0, 0, 1);
 
         obj->draw3DTransparent();
@@ -230,7 +230,7 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
         glDisable(GL_DEPTH_TEST);
         glPushMatrix();
         glTranslatef(-camera_position.x,-camera_position.y, -camera_position.z);
-        glTranslatef(target->getPosition().x, target->getPosition().y, 0);
+        glTranslatef(target->getPosition().x, target->getPosition().y, target->getTranslateZ());
 
         ShaderManager::getShader("billboardShader")->setParameter("textureMap", *textureManager.getTexture("redicule2.png"));
         sf::Shader::bind(ShaderManager::getShader("billboardShader"));
@@ -260,7 +260,7 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
     {
         glPushMatrix();
         glTranslatef(-camera_position.x,-camera_position.y, -camera_position.z);
-        glTranslatef(obj->getPosition().x, obj->getPosition().y, 0);
+        glTranslatef(obj->getPosition().x, obj->getPosition().y, target->getTranslateZ());
         glRotatef(obj->getRotation(), 0, 0, 1);
 
         std::vector<sf::Vector2f> collisionShape = obj->getCollisionShape();

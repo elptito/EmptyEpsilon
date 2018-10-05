@@ -182,6 +182,9 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
 
     scanning_complexity_value = -1;
     scanning_depth_value = -1;
+	
+	registerMemberReplication(&scanning_complexity_value);
+	registerMemberReplication(&scanning_depth_value);
 
     setRadarSignatureInfo(0.05, 0.3, 0.3);
 

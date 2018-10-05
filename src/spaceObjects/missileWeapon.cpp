@@ -33,6 +33,17 @@ void MissileWeapon::update(float delta)
 {
     updateMovement();
 
+    P<SpaceObject> target;
+    if (game_server)
+        target = game_server->getObjectById(target_id);
+    else
+        target = game_client->getObjectById(target_id);
+
+    if (translate_z < target->translate_z)
+        translate_z += delta;
+    if (translate_z > target->translate_z)
+        translate_z -= delta;
+
     if (!launch_sound_played)
     {
         soundManager->playSound("missile_launch.wav", getPosition(), 200.0, 1.0);
@@ -47,7 +58,7 @@ void MissileWeapon::update(float delta)
     setVelocity(sf::vector2FromAngle(getRotation()) * data.speed);
 
     if (delta > 0)
-        ParticleEngine::spawn(sf::Vector3f(getPosition().x, getPosition().y, 0), sf::Vector3f(getPosition().x, getPosition().y, 0), sf::Vector3f(1, 0.8, 0.8), sf::Vector3f(0, 0, 0), 5, 20, 5.0);
+        ParticleEngine::spawn(sf::Vector3f(getPosition().x, getPosition().y, translate_z), sf::Vector3f(getPosition().x, getPosition().y, translate_z), sf::Vector3f(1, 0.8, 0.8), sf::Vector3f(0, 0, 0), 5, 20, 5.0);
 }
 
 void MissileWeapon::collide(Collisionable* target, float force)

@@ -18,6 +18,8 @@ REGISTER_SCRIPT_CLASS_NO_CREATE(SpaceObject)
     /// Gets the rotation of this object. In degrees. 0 degrees is pointing to the right of the world. So this does not match the heading of a ship.
     /// The value returned here can also go below 0 degrees or higher then 360 degrees, there is no limiting on the rotation.
     REGISTER_SCRIPT_CLASS_FUNCTION(Collisionable, getRotation);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setTranslateZ);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getTranslateZ);
     /// Get the heading of this object, in the range of 0 to 360. The heading is 90 degrees off from the rotation.
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getHeading);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setHeading);
@@ -125,10 +127,12 @@ SpaceObject::SpaceObject(float collision_range, string multiplayer_name, float m
     personality_id = 0;
     hull = 0;
     oxygen_points = 100;
+    translate_z = 0;
 
     scanning_complexity_value = 0;
     scanning_depth_value = 0;
 
+    registerMemberReplication(&translate_z);
     registerMemberReplication(&callsign);
     registerMemberReplication(&hull);
     registerMemberReplication(&faction_id);
@@ -182,6 +186,7 @@ void SpaceObject::takeDamage(float damage_amount, DamageInfo info)
         P<ExplosionEffect> e = new ExplosionEffect();
         e->setSize(getRadius());
         e->setPosition(getPosition());
+        e->setTranslateZ(getTranslateZ());
         destroy();
     }
 }
@@ -469,7 +474,7 @@ void SpaceObject::setOxygenPoints(float amount)
     oxygen_points += amount;
     if (oxygen_points < 0.0)
     	oxygen_points = 0.0;
-	
+
 	if (oxygen_points > 100.0)
     	oxygen_points = 100.0;
 }

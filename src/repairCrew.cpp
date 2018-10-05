@@ -174,7 +174,7 @@ void RepairCrew::update(float delta)
             position = sf::Vector2f(pos);
 
             ESystem system = ship->ship_template->getSystemAtRoom(pos);
-            if (system != SYS_None)
+            if (system != SYS_None && ship->systems[system].health < 1.0)
             {
                 ship->systems[system].health += repair_per_second * delta;
                 if (ship->systems[system].health > 1.0)
@@ -183,7 +183,7 @@ void RepairCrew::update(float delta)
             else
             {
                 float hull_old = ship->hull_strength / ship->hull_max;
-                ship->hull_strength += repair_per_second * delta * 10;
+                ship->hull_strength += repair_per_second * delta * 20;
                 float hull_new = ship->hull_strength / ship->hull_max;
 
                 if (hull_old <= 0.2 && hull_new > 0.2)

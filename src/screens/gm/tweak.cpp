@@ -137,6 +137,12 @@ GuiObjectTweakBase::GuiObjectTweakBase(GuiContainer* owner)
     });
     hull_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
+    (new GuiLabel(left_col, "", "Axe-Z:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    zaxis_slider = new GuiSlider(left_col, "", -100.0, 100, 0.0, [this](float value) {
+        target->translate_z = value;
+    });
+    zaxis_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
     // Right column
 	// Radar signature
 	//(new GuiLabel(right_col, "", "Radar Signature", 30))->setSize(GuiElement::GuiSizeMax, 50);
@@ -159,13 +165,15 @@ GuiObjectTweakBase::GuiObjectTweakBase(GuiContainer* owner)
     // Scanning complexity
 	(new GuiLabel(right_col, "", "Complexite du Scan", 30))->setSize(GuiElement::GuiSizeMax, 50);
     scanning_complexity_selector = new GuiSlider(right_col, "", 0, 4, 0, [this](int value) {
-        target->scanning_complexity_value = value;
+        target->setScanningParameters(value,target->scanning_depth_value);
+//        target->scanning_complexity_value = value;
     });
     scanning_complexity_selector->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
  	// Scanning Channel Depth
 	(new GuiLabel(right_col, "", "Longueur du scan", 30))->setSize(GuiElement::GuiSizeMax, 50);
     scanning_channel_depth_selector = new GuiSlider(right_col, "", 0, 4, 0, [this](int value) {
-        target->scanning_depth_value = value;
+        target->setScanningParameters(target->scanning_complexity_value,value);
+//        target->scanning_depth_value = value;
     });
     scanning_channel_depth_selector->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
@@ -174,6 +182,9 @@ GuiObjectTweakBase::GuiObjectTweakBase(GuiContainer* owner)
 void GuiObjectTweakBase::onDraw(sf::RenderTarget& window)
 {
     hull_slider->setValue(target->hull);
+
+    scanning_complexity_selector->setValue(target->scanning_complexity_value);
+	scanning_channel_depth_selector->setValue(target->scanning_depth_value);
 }
 
 void GuiObjectTweakBase::open(P<SpaceObject> target)
@@ -191,6 +202,8 @@ void GuiObjectTweakBase::open(P<SpaceObject> target)
 
 	scanning_complexity_selector->setValue(target->scanning_complexity_value);
 	scanning_channel_depth_selector->setValue(target->scanning_depth_value);
+
+	zaxis_slider->setValue(target->translate_z);
 }
 
 GuiTemplateTweak::GuiTemplateTweak(GuiContainer* owner)
@@ -271,9 +284,21 @@ GuiShipTweakShields::GuiShipTweakShields(GuiContainer* owner)
     for(int n=0; n<max_shield_count; n++)
     {
         (new GuiLabel(left_col, "", "Bouclier " + string(n + 1) + " max:", 20))->setSize(GuiElement::GuiSizeMax, 30);
-        shield_max_slider[n] = new GuiSlider(left_col, "", 0.0, 500, 0.0, [this, n](float value) {
-            target->shield_max[n] = round(value);
-            target->shield_level[n] = std::min(target->shield_level[n], target->shield_max[n]);
+        shield_max_slider[n] = new GuiSlider(left_col, "", 0.0, 1000, 0.0, [this, n](float value) {
+            P<SpaceShip> ship = target;
+            P<SpaceStation> station = target;
+            if (ship)
+            {
+                this->target = ship;
+                ship->shield_max[n] = roundf(value);
+                ship->shield_level[n] = std::min(ship->shield_level[n], ship->shield_max[n]);
+            }
+            if (station)
+            {
+                this->target = station;
+                station->shield_max[n] = roundf(value);
+                station->shield_level[n] = std::min(station->shield_level[n], station->shield_max[n]);
+            }
         });
         shield_max_slider[n]->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
     }
@@ -282,7 +307,19 @@ GuiShipTweakShields::GuiShipTweakShields(GuiContainer* owner)
     {
         (new GuiLabel(right_col, "", "Bouclier " + string(n + 1) + ":", 20))->setSize(GuiElement::GuiSizeMax, 30);
         shield_slider[n] = new GuiSlider(right_col, "", 0.0, 1000, 0.0, [this, n](float value) {
-            target->shield_level[n] = std::min(roundf(value), target->shield_max[n]);
+            P<SpaceShip> ship = target;
+            P<SpaceStation> station = target;
+            if (ship)
+            {
+                this->target = ship;
+                ship->shield_level[n] = std::min(roundf(value), ship->shield_max[n]);
+            }
+            if (station)
+            {
+                this->target = station;
+                station->shield_level[n] = std::min(roundf(value), station->shield_max[n]);
+            }
+
         });
         shield_slider[n]->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
     }
@@ -723,7 +760,7 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
 
     // Edit reputation.
     (new GuiLabel(left_col, "", "Nombre de droides:", 30))->setSize(GuiElement::GuiSizeMax, 50);
-     repair_team_slider = new GuiSlider(left_col, "", 0.0, 2000, 0.0, [this](float value) {
+     repair_team_slider = new GuiSlider(left_col, "", 0.0, 15, 0.0, [this](float value) {
         target->setRepairCrewCount(value);
     });
     repair_team_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);

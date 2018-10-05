@@ -37,7 +37,7 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
 
         // If the object is more than twice as far away as the maximum radar
         // range, disregard it.
-        if (dist > distance * 5.0)
+        if (dist > distance * 10.0)
             continue;
 
         // The further away the object is, the less its effect on radar data.
@@ -53,7 +53,7 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
         }else{
             // Otherwise, measure the affected range of angles by the object's
             // distance and radius.
-            float a_diff = asinf(obj->getRadius() / dist) / M_PI * 180.0f;
+            float a_diff = asinf(2*obj->getRadius() / dist) / M_PI * 180.0f;
             float a_center = sf::vector2ToAngle(obj->getPosition() - view_position);
             a_0 = a_center - a_diff;
             a_1 = a_center + a_diff;

@@ -102,7 +102,9 @@ void BeamEffect::update(float delta)
 void BeamEffect::setSource(P<SpaceObject> source, sf::Vector3f offset)
 {
     sourceId = source->getMultiplayerId();
+//    sf::Vector3f(my_spaceship->getPosition().x, my_spaceship->getPosition().y, 0.0)
     sourceOffset = offset;
+    sourceOffset.z = source->getTranslateZ();
     update(0);
 }
 
@@ -111,7 +113,7 @@ void BeamEffect::setTarget(P<SpaceObject> target, sf::Vector2f hitLocation)
     target_id = target->getMultiplayerId();
     float r = target->getRadius();
     hitLocation -= target->getPosition();
-    targetOffset = sf::Vector3f(hitLocation.x + random(-r/2.0, r/2.0), hitLocation.y + random(-r/2.0, r/2.0), random(-r/4.0, r/4.0));
+    targetOffset = sf::Vector3f(hitLocation.x + random(-r/2.0, r/2.0), hitLocation.y + random(-r/2.0, r/2.0), target->getTranslateZ() + random(-r/4.0, r/4.0));
 
     if (target->hasShield())
         targetOffset = sf::normalize(targetOffset) * r;
