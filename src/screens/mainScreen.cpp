@@ -181,17 +181,17 @@ void ScreenMainScreen::update(float delta)
             break;
         }
 
-        if (my_spaceship->docking_state != DS_NotDocking)
-        {
-            viewport->hide();
-            tactical_radar->hide();
-            long_range_radar->hide();
-            global_range_radar->hide();
-            ship_state->show();
-            dock_comms->show();
-        }else{
-            dock_comms->hide();
-        }
+        // if (my_spaceship->docking_state != DS_NotDocking)
+        // {
+            // viewport->hide();
+            // tactical_radar->hide();
+            // long_range_radar->hide();
+            // global_range_radar->hide();
+            // ship_state->show();
+            // dock_comms->show();
+        // }else{
+            // dock_comms->hide();
+        // }
 
         switch(my_spaceship->main_screen_overlay)
         {

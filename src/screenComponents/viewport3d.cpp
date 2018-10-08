@@ -260,7 +260,7 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
     {
         glPushMatrix();
         glTranslatef(-camera_position.x,-camera_position.y, -camera_position.z);
-        glTranslatef(obj->getPosition().x, obj->getPosition().y, target->getTranslateZ());
+        glTranslatef(obj->getPosition().x, obj->getPosition().y, obj->getTranslateZ());
         glRotatef(obj->getRotation(), 0, 0, 1);
 
         std::vector<sf::Vector2f> collisionShape = obj->getCollisionShape();

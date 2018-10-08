@@ -126,7 +126,7 @@ void WeaponTube::spawnProjectile(float target_angle)
             missile->setFactionId(parent->getFactionId());
             missile->target_id = parent->target_id;
             missile->setPosition(fireLocation);
-			missile->setTranslateZ(parent->getTranslateZ());
+			missile->translate_z = parent->translate_z;
             missile->setRotation(parent->getRotation() + direction);
             missile->target_angle = target_angle;
         }
@@ -137,7 +137,7 @@ void WeaponTube::spawnProjectile(float target_angle)
             missile->owner = parent;
             missile->setFactionId(parent->getFactionId());
             missile->setPosition(fireLocation);
-			missile->setTranslateZ(parent->getTranslateZ());
+			missile->translate_z = parent->translate_z;
             missile->setRotation(parent->getRotation() + direction);
             missile->eject();
         }
@@ -148,7 +148,7 @@ void WeaponTube::spawnProjectile(float target_angle)
             missile->owner = parent;
             missile->setFactionId(parent->getFactionId());
             missile->setPosition(fireLocation);
-			missile->setTranslateZ(parent->getTranslateZ());
+			missile->translate_z = parent->translate_z;
             missile->setRotation(parent->getRotation() + direction);
             missile->target_angle = parent->getRotation() + direction;
         }
@@ -160,7 +160,7 @@ void WeaponTube::spawnProjectile(float target_angle)
             missile->setFactionId(parent->getFactionId());
             missile->target_id = parent->target_id;
             missile->setPosition(fireLocation);
-			missile->setTranslateZ(parent->getTranslateZ());
+			missile->translate_z = parent->translate_z;
             missile->setRotation(parent->getRotation() + direction);
             missile->target_angle = target_angle;
         }

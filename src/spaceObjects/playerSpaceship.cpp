@@ -1015,6 +1015,7 @@ bool PlayerSpaceship::hailCommsByGM(string target_name)
 
     // Log the hail.
     addToShipLog("Contacte par " + target_name, colorConfig.log_generic);
+	soundManager->playSound("incoming_com.wav");
 
     // Set comms to the hail state and notify Relay/comms.
     comms_state = CS_BeingHailedByGM;

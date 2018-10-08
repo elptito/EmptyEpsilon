@@ -93,7 +93,8 @@ void BeamEffect::update(float delta)
         targetLocation = target->getPosition() + sf::Vector2f(targetOffset.x, targetOffset.y);
 
     if (delta > 0 && lifetime == 1.0)
-        soundManager->playSound("laser.wav", getPosition(), 500.0, 1.0);
+        soundManager->playSound("laser.wav");
+        //soundManager->playSound("laser.wav", getPosition(), 500.0, 1.0);
     lifetime -= delta;
     if (lifetime < 0)
         destroy();
@@ -102,7 +103,6 @@ void BeamEffect::update(float delta)
 void BeamEffect::setSource(P<SpaceObject> source, sf::Vector3f offset)
 {
     sourceId = source->getMultiplayerId();
-//    sf::Vector3f(my_spaceship->getPosition().x, my_spaceship->getPosition().y, 0.0)
     sourceOffset = offset;
     sourceOffset.z = source->getTranslateZ();
     update(0);

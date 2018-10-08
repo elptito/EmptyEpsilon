@@ -64,7 +64,7 @@ GuiCommsOverlay::GuiCommsOverlay(GuiContainer* owner)
     // Panel for broken communications.
     broken_box = new GuiPanel(owner, "COMMS_BROKEN_BOX");
     broken_box->hide()->setSize(800, 70)->setPosition(0, -250, ABottomCenter);
-    (new GuiLabel(broken_box, "COMMS_BROKEN_LABEL", "Communications were suddenly cut", 40))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax)->setPosition(0, 0, ATopLeft);
+    (new GuiLabel(broken_box, "COMMS_BROKEN_LABEL", "Communication coupee", 40))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax)->setPosition(0, 0, ATopLeft);
 
     // Button to acknowledge broken communications.
     (new GuiButton(broken_box, "COMMS_BROKEN_OK", "Ok", []() {
