@@ -19,6 +19,7 @@
 #include "screens/extra/databaseScreen.h"
 
 #include "screens/extra/shipLogScreen.h"
+#include "screens/extra/radarScreen.h"
 
 #include "screenComponents/mainScreenControls.h"
 #include "screenComponents/selfDestructEntry.h"
@@ -150,11 +151,25 @@ void PlayerInfo::spawnUI()
             screen->addStationTab(new PowerManagementScreen(screen), powerManagement, getCrewPositionName(powerManagement), getCrewPositionIcon(powerManagement));
         if (crew_position[databaseView])
             screen->addStationTab(new DatabaseScreen(screen), databaseView, getCrewPositionName(databaseView), getCrewPositionIcon(databaseView));
+        if (crew_position[tacticalRadar])
+            screen->addStationTab(new RadarScreen(screen,"tactical"), tacticalRadar, getCrewPositionName(tacticalRadar), getCrewPositionIcon(tacticalRadar));
+        if (crew_position[scienceRadar])
+            screen->addStationTab(new RadarScreen(screen,"science"), scienceRadar, getCrewPositionName(scienceRadar), getCrewPositionIcon(scienceRadar));
+        if (crew_position[relayRadar])
+            screen->addStationTab(new RadarScreen(screen,"relay"), relayRadar, getCrewPositionName(relayRadar), getCrewPositionIcon(relayRadar));
+        if (crew_position[logView])
+            screen->addStationTab(new ShipLogScreen(screen,"extern"), logView, getCrewPositionName(logView), getCrewPositionIcon(logView));
+        if (crew_position[internLogView])
+            screen->addStationTab(new ShipLogScreen(screen,"intern"), internLogView, getCrewPositionName(internLogView), getCrewPositionIcon(internLogView));
+        
         
         //Ship log screen, if you have comms, you have ships log. (note this is mostly replaced by the [at the bottom of the screen openable log]
         if (crew_position[singlePilot])
-            screen->addStationTab(new ShipLogScreen(screen), max_crew_positions, "Log Vaisseau", "");
-        
+		{
+            screen->addStationTab(new ShipLogScreen(screen,"extern"), max_crew_positions, "log externe", "");
+            screen->addStationTab(new ShipLogScreen(screen,"intern"), max_crew_positions, "log interne", "");
+        }
+		
         GuiSelfDestructEntry* sde = new GuiSelfDestructEntry(screen, "SELF_DESTRUCT_ENTRY");
         for(int n=0; n<max_crew_positions; n++)
             if (crew_position[n])
@@ -197,6 +212,11 @@ string getCrewPositionName(ECrewPosition position)
     case damageControl: return "Controle des dommages";
     case powerManagement: return "Gestion energie";
     case databaseView: return "Base de donnees";
+    case tacticalRadar: return "Radar Tactique";
+    case scienceRadar: return "Radar Science";
+    case relayRadar: return "Radar Relai";
+	case logView: return "Log View";
+    case internLogView: return "Intern Log View";
     default: return "ErrUnk: " + string(position);
     }
 }
@@ -217,6 +237,11 @@ string getCrewPositionIcon(ECrewPosition position)
     case damageControl: return "";
     case powerManagement: return "";
     case databaseView: return "";
+    case tacticalRadar: return "";
+    case scienceRadar: return "";
+    case relayRadar: return "";
+	case logView: return "";
+    case internLogView: return "";
     default: return "ErrUnk: " + string(position);
     }
 }
@@ -257,7 +282,17 @@ template<> void convert<ECrewPosition>::param(lua_State* L, int& idx, ECrewPosit
         cp = powerManagement;
     else if (str == "database" || str == "databaseview")
         cp = databaseView;
-    
+    else if (str == "tacticalradar" || str == "tacticalradarview")
+        cp = tacticalRadar;
+    else if (str == "scienceradar" || str == "scienceradarview")
+        cp = scienceRadar;
+    else if (str == "relayradar" || str == "relayradarview")
+        cp = relayRadar;
+    else if (str == "log" || str == "logview")
+        cp = logView;
+    else if (str == "internlog" || str == "internlogview")
+        cp = internLogView;
+   
     else
         luaL_error(L, "Unknown value for crew position: %s", str.c_str());
 }
