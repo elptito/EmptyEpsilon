@@ -63,6 +63,10 @@ void GuiJumpControls::onHotkey(const HotkeyResult& key)
 {
     if (key.category == "HELMS" && my_spaceship)
     {
+		if (key.hotkey == "JUMP_MIN")
+            slider->setValue(my_spaceship->jump_drive_min_distance);
+		if (key.hotkey == "JUMP_MAX")
+            slider->setValue(my_spaceship->jump_drive_max_distance);
         if (key.hotkey == "INC_JUMP")
             slider->setValue(slider->getValue() + 1000.0f);
         if (key.hotkey == "DEC_JUMP")

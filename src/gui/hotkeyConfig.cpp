@@ -28,12 +28,16 @@ HotkeyConfig::HotkeyConfig()
     newKey("WARP_2", std::make_tuple("Warp 2", ""));
     newKey("WARP_3", std::make_tuple("Warp 3", ""));
     newKey("WARP_4", std::make_tuple("Warp 4", ""));
+    newKey("WARP_ADD1", std::make_tuple("Warp Plus 1", ""));
+    newKey("WARP_MIN1", std::make_tuple("Warp Moins 1", ""));
     newKey("DOCK_ACTION", std::make_tuple("Actions dock", "D"));
     newKey("DOCK_REQUEST", std::make_tuple("Demander dock", ""));
     newKey("DOCK_ABORT", std::make_tuple("Annuler demande dock", ""));
     newKey("UNDOCK", std::make_tuple("Se Dedocker", "D"));
     newKey("INC_JUMP", std::make_tuple("Augmentation distance JUMP", ""));
     newKey("DEC_JUMP", std::make_tuple("Diminution distance JUMP", ""));
+    newKey("JUMP_MIN", std::make_tuple("Jump min", ""));
+    newKey("JUMP_MAX", std::make_tuple("Jump max", ""));
     newKey("JUMP", std::make_tuple("Activer JUMP", ""));
     newKey("COMBAT_LEFT", std::make_tuple("Manoeuvre de combat gauche", ""));
     newKey("COMBAT_RIGHT", std::make_tuple("Manoeuvre de combat droite", ""));
@@ -82,8 +86,12 @@ HotkeyConfig::HotkeyConfig()
     newKey("SELECT_REAR_SHIELDS", std::make_tuple("Selectionner systeme boucliers arrieres", "Num9"));
     newKey("INCREASE_POWER", std::make_tuple("Augmenter puissance du systeme", "Up"));
     newKey("DECREASE_POWER", std::make_tuple("Diminuer puissance du systeme", "Down"));
+    newKey("POWER_MAX", std::make_tuple("Puissance max du systeme", ""));
+    newKey("POWER_MIN", std::make_tuple("puissance min du systeme", ""));
     newKey("INCREASE_COOLANT", std::make_tuple("Augmenter refroidissement du systeme", "Droite"));
     newKey("DECREASE_COOLANT", std::make_tuple("Diminuer refroidissement du systeme", "Gauche"));
+    newKey("COOLANT_MAX", std::make_tuple("refroidissement max du systeme", ""));
+    newKey("COOLANT_MIN", std::make_tuple("refroidissement min du systeme", ""));
     newKey("RESET", std::make_tuple("Remise a zero du systeme", "Gauche"));
     newKey("NEXT_REPAIR_CREW", std::make_tuple("Equipe de reparation suivante", ""));
     newKey("REPAIR_CREW_MOVE_UP", std::make_tuple("Deplacer equipe de reparation haut", ""));
@@ -112,6 +120,7 @@ HotkeyConfig::HotkeyConfig()
     newKey("NEXT_ENEMY_SCAN", std::make_tuple("Selectionner ennemi suivant", ""));
     newKey("NEXT_SCAN", std::make_tuple("Selectionner cible suivant", ""));
     newKey("SCAN_START", std::make_tuple("Lancer scan", ""));
+    newKey("ABORD_SCAN", std::make_tuple("Stopper scan", ""));
     newKey("NEXT_INFO_TARGET", std::make_tuple("Info suivante sur la cible", ""));
     newKey("SELECT_TACTICAL", std::make_tuple("Selectionner info tactique", ""));
     newKey("SELECT_SYSTEMS", std::make_tuple("Selectionner info systemes", ""));
