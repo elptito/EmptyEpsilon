@@ -180,6 +180,10 @@ void GuiCommsOverlay::onDraw(sf::RenderTarget& window)
         chat_comms_box->setVisible(my_spaceship->isCommsChatOpen() && !minimized);
         chat_comms_text->setText(my_spaceship->getCommsIncommingMessage());
 
+//        chat_comms_message_entry->setFocus(chat_comms_box -> isVisible());
+//        chat_comms_message_entry->setActive(chat_comms_box -> isVisible());
+//        chat_comms_message_entry->setEnable(chat_comms_box -> isVisible());
+
         script_comms_box->setVisible(my_spaceship->isCommsScriptOpen());
         script_comms_text->setText(my_spaceship->getCommsIncommingMessage());
 

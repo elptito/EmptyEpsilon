@@ -334,7 +334,7 @@ void EngineeringScreen::onHotkey(const HotkeyResult& key)
             }
 			if (key.hotkey == "POWER_MAX")
             {
-                power_slider->setValue(1.0f);
+                power_slider->setValue(3.0f);
                 my_spaceship->commandSetSystemPowerRequest(selected_system, power_slider->getValue());
             }
             if (key.hotkey == "POWER_MIN")
@@ -354,7 +354,7 @@ void EngineeringScreen::onHotkey(const HotkeyResult& key)
             }
             if (key.hotkey == "COOLANT_MAX")
             {
-                coolant_slider->setValue(1.0f);
+                coolant_slider->setValue(10.0f);
                 my_spaceship->commandSetSystemCoolantRequest(selected_system, coolant_slider->getValue());
             }
             if (key.hotkey == "COOLANT_MIN")

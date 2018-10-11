@@ -27,7 +27,7 @@ CrewStationScreen::CrewStationScreen()
 
     message_frame = new GuiPanel(this, "");
     message_frame->setPosition(0, 0, ATopCenter)->setSize(900, 230)->hide();
-    
+
     message_text = new GuiScrollText(message_frame, "", "");
     message_text->setTextSize(20)->setPosition(20, 20, ATopLeft)->setSize(900 - 40, 200 - 40);
     message_close_button = new GuiButton(message_frame, "", "Fin", [this]() {
@@ -183,10 +183,10 @@ void CrewStationScreen::onKey(sf::Event::KeyEvent key, int unicode)
         // Toggle keyboard help.
         keyboard_help->frame->setVisible(!keyboard_help->frame->isVisible());
         break;
-    case sf::Keyboard::P:
-        if (game_server)
-            engine->setGameSpeed(0.0);
-        break;
+    //case sf::Keyboard::P:
+    //    if (game_server)
+    //        engine->setGameSpeed(0.0);
+    //    break;
     default:
         break;
     }
@@ -227,7 +227,7 @@ void CrewStationScreen::showTab(GuiElement* element)
             for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory(info.button->getText()))
                 keyboard_category += shortcut.second + ":\t" + shortcut.first + "\n";
 			if (keyboard_category == "")	// special hotkey combination for crew1 and crew4 screens
-				keyboard_category = listHotkeysLimited(info.button->getText());               
+				keyboard_category = listHotkeysLimited(info.button->getText());
 
             keyboard_help->setText(keyboard_general + keyboard_category);
         }else{
@@ -249,20 +249,20 @@ GuiElement* CrewStationScreen::findTab(string name)
 }
 
 string CrewStationScreen::listHotkeysLimited(string station)
-{	
+{
 	string ret = "";
 	keyboard_general = "";
 	for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("General"))
-		if (shortcut.first == "Station suivante" || shortcut.first =="Station precedente") 				
+		if (shortcut.first == "Station suivante" || shortcut.first =="Station precedente")
 			keyboard_general += shortcut.second + ":\t" + shortcut.first + "\n";
 	if (station == "Tactique")
-	{	
-		
+	{
+
 		for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Pilote"))
             ret += shortcut.second + ":\t" + shortcut.first + "\n";
 		for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Armes"))
 		{
-			if (shortcut.first != "Action boucliers") 
+			if (shortcut.first != "Action boucliers")
 				ret += shortcut.second + ":\t" + shortcut.first + "\n";
 		}
 	}
@@ -272,13 +272,13 @@ string CrewStationScreen::listHotkeysLimited(string station)
             ret += shortcut.second + ":\t" + shortcut.first + "\n";
         for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Armes"))
         {
-            if (shortcut.first == "Action boucliers") 
+            if (shortcut.first == "Action boucliers")
 				ret += shortcut.second + ":\t" + shortcut.first + "\n";
 		}
 	}
 
 //	-- not yet used --
-//	else if (station == "Operations") 
+//	else if (station == "Operations")
 //		return ret;
 //	----
 

@@ -151,7 +151,7 @@ RelayScreen::RelayScreen(GuiContainer* owner)
     launch_probe_button->setIcon("gui/icons/probe");
 
     // Rechargement probe
-    progress_probe = new GuiProgressbar(launch_probe_button,"PROBE_PROGRESS", 0, PlayerSpaceship::scan_probe_charge_time * 10.0f, 0.0);
+    progress_probe = new GuiProgressbar(launch_probe_button,"PROBE_PROGRESS", 0, PlayerSpaceship::scan_probe_charge_time * 20.0f, 0.0);
     progress_probe->setDrawBackground(false);
     progress_probe->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
@@ -491,26 +491,26 @@ void RelayScreen::onHotkey(const HotkeyResult& key)
         if (key.hotkey == "INCREASE_ZOOM")
         {
 			float view_distance = radar->getDistance() + 1500.0f;
-			if (view_distance > 50000.0f)
-				view_distance = 50000.0f;
+			if (view_distance > 100000.0f)
+				view_distance = 100000.0f;
 			if (view_distance < 6250.0f)
 				view_distance = 6250.0f;
 			radar->setDistance(view_distance);
 			// Keep the zoom slider in sync.
 			zoom_slider->setValue(view_distance);
-			zoom_label->setText("Zoom: " + string(50000.0f / view_distance, 1.0f) + "x");
+			zoom_label->setText("Zoom: " + string(100000.0f / view_distance, 1.0f) + "x");
 		}
 		if (key.hotkey == "DECREASE_ZOOM")
 		{
 			float view_distance = radar->getDistance() - 1500.0f;
-			if (view_distance > 50000.0f)
-				view_distance = 50000.0f;
+			if (view_distance > 100000.0f)
+				view_distance = 100000.0f;
 			if (view_distance < 6250.0f)
 				view_distance = 6250.0f;
 			radar->setDistance(view_distance);
 			// Keep the zoom slider in sync.
 			zoom_slider->setValue(view_distance);
-			zoom_label->setText("Zoom: " + string(50000.0f / view_distance, 1.0f) + "x");
+			zoom_label->setText("Zoom: " + string(100000.0f / view_distance, 1.0f) + "x");
 		}
         if (key.hotkey == "ALERTE_NORMAL")
         {

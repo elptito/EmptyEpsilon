@@ -28,7 +28,7 @@ void DebugRenderer::render(sf::RenderTarget& window)
     string text = "";
     if (show_fps)
         text = text + "FPS: " + string(fps) + "\n";
-    
+
     if (show_datarate && game_server)
     {
         text = text + string(game_server->getSendDataRate() / 1000, 1) + " kb per second\n";
@@ -53,7 +53,7 @@ void DebugRenderer::render(sf::RenderTarget& window)
             collision_points[n].position.y = window.getView().getSize().y - (timing_graph_points[n].update + timing_graph_points[n].collision) * 10000;
             render_points[n].position.x = float(n);
             render_points[n].position.y = window.getView().getSize().y - (timing_graph_points[n].render + timing_graph_points[n].update + timing_graph_points[n].collision) * 10000;
-            
+
             update_points[n].color = sf::Color::Red;
             server_update_points[n].color = sf::Color::Yellow;
             collision_points[n].color = sf::Color::Cyan;
@@ -63,7 +63,7 @@ void DebugRenderer::render(sf::RenderTarget& window)
         window.draw(update_points);
         window.draw(collision_points);
         window.draw(render_points);
-        
+
         sf::Text text_update("Update: " + string(timing_graph_points.back().update * 1000) + "ms", *main_font, 18);
         sf::Text text_server_update("ServerUpdate: " + string(timing_graph_points.back().server_update * 1000) + "ms", *main_font, 18);
         sf::Text text_collision("Collision: " + string(timing_graph_points.back().collision * 1000) + "ms", *main_font, 18);
@@ -75,7 +75,7 @@ void DebugRenderer::render(sf::RenderTarget& window)
         fps60_line[0].color = sf::Color(255, 255, 255, 128);
         fps60_line[1].color = sf::Color(255, 255, 255, 128);
         window.draw(fps60_line);
-        
+
         text_update.setPosition(0, window.getView().getSize().y - 18 * 4 - 170);
         text_server_update.setPosition(0, window.getView().getSize().y - 18 * 3 - 170);
         text_collision.setPosition(0, window.getView().getSize().y - 18 * 2 - 170);
@@ -97,18 +97,18 @@ void DebugRenderer::render(sf::RenderTarget& window)
 
 void DebugRenderer::handleKeyPress(sf::Event::KeyEvent key, int unicode)
 {
-    if (key.code == sf::Keyboard::F10)
-    {
-        show_fps = !show_fps;
-        show_datarate = !show_datarate;
-    }
-    if (key.code == sf::Keyboard::F11)
-    {
-        show_timing_graph = !show_timing_graph;
-        timing_graph_points.clear();
-        if (show_timing_graph)
-            P<WindowManager>(engine->getObject("windowManager"))->setFrameLimit(0);
-        else
-            P<WindowManager>(engine->getObject("windowManager"))->setFrameLimit(60);
-    }
+//    if (key.code == sf::Keyboard::F10)
+//    {
+//        show_fps = !show_fps;
+//        show_datarate = !show_datarate;
+//    }
+//    if (key.code == sf::Keyboard::F11)
+//    {
+//        show_timing_graph = !show_timing_graph;
+//        timing_graph_points.clear();
+//        if (show_timing_graph)
+//            P<WindowManager>(engine->getObject("windowManager"))->setFrameLimit(0);
+//        else
+//            P<WindowManager>(engine->getObject("windowManager"))->setFrameLimit(60);
+//    }
 }

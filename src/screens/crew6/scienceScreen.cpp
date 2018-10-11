@@ -555,34 +555,116 @@ void ScienceScreen::onHotkey(const HotkeyResult& key)
         }
         if (key.hotkey == "NEXT_SCAN")
         {
-            bool current_found = false;
-            foreach(SpaceObject, obj, space_object_list)
+            PVector<SpaceObject> list_range;
+            P<SpaceObject> obj = targets.get();
+
+            if (!obj)
             {
-                if (obj == targets.get())
+                list_range = my_spaceship->getObjectsInRange(gameGlobalInfo->long_range_radar_range);
+                foreach(SpaceObject, obj, list_range)
                 {
-                    current_found = true;
-                    continue;
+                    if (obj == my_spaceship)
+                        continue;
+                    if (obj->canBeSelectedBy(my_spaceship))
+                    {
+                        targets.set(obj);
+                        return;
+                    }
                 }
-                if (obj == my_spaceship)
-                    continue;
-                if (current_found && sf::length(obj->getPosition() - my_spaceship->getPosition()) < gameGlobalInfo->long_range_radar_range && obj->canBeSelectedBy(my_spaceship))
+            }else{
+                bool current_found = false;
+                list_range = my_spaceship->getObjectsInRange(gameGlobalInfo->long_range_radar_range);
+                foreach(SpaceObject, obj, list_range)
                 {
-                    targets.set(obj);
-//                    my_spaceship->commandSetTarget(targets.get());
-                    return;
+                    if (obj == targets.get())
+                    {
+                        current_found = true;
+                        continue;
+                    }
+                    if (obj == my_spaceship)
+                        continue;
+                    if (current_found && obj->canBeSelectedBy(my_spaceship))
+                    {
+                        targets.set(obj);
+                        return;
+                    }
                 }
             }
-            foreach(SpaceObject, obj, space_object_list)
-            {
-                if (obj == targets.get() || obj == my_spaceship)
-                    continue;
-                if (sf::length(obj->getPosition() - my_spaceship->getPosition()) < gameGlobalInfo->long_range_radar_range && obj->canBeSelectedBy(my_spaceship))
-                {
-                    targets.set(obj);
-//                    my_spaceship->commandSetTarget(targets.get());
-                    return;
-                }
-            }
+
+//            bool current_found = false;
+//			PVector<SpaceObject> list_range;
+//			PVector<SpaceObject> list_range_obj_science;
+//
+//			list_range = my_spaceship->getObjectsInRange(gameGlobalInfo->long_range_radar_range);
+//            foreach(SpaceObject, obj, list_range)
+//			{
+//				if (obj == targets.get())
+//                {
+//                    current_found = true;
+//                    continue;
+//                }
+//                if (obj == my_spaceship)
+//                    continue;
+//                if (current_found && obj->canBeSelectedBy(my_spaceship))
+//                {
+//                    targets.set(obj);
+//                    return;
+//                }
+//			}
+//			list_range = my_spaceship->getObjectsInRange(gameGlobalInfo->long_range_radar_range);
+//            foreach(SpaceObject, obj, list_range)
+//			{
+//				if (obj == targets.get()  || obj == my_spaceship)
+//                    continue;
+//                if (obj->canBeSelectedBy(my_spaceship))
+//                {
+//                    targets.set(obj);
+//                    return;
+//                }
+//			}
+//			list_range = my_spaceship->getObjectsInRange(gameGlobalInfo->long_range_radar_range);
+//            foreach(SpaceObject, obj, list_range)
+//			{
+//				if (obj == my_spaceship)
+//                    continue;
+//                if (obj->canBeSelectedBy(my_spaceship))
+//                {
+//                    targets.set(obj);
+//                    return;
+//                }
+//			}
+//			targets.clear();
+
+
+
+
+
+//            bool current_found = false;
+//            foreach(SpaceObject, obj, space_object_list)
+//            {
+//                if (obj == targets.get())
+//                {
+//                    current_found = true;
+//                    continue;
+//                }
+//                if (obj == my_spaceship)
+//                    continue;
+//                if (current_found && sf::length(obj->getPosition() - my_spaceship->getPosition()) < gameGlobalInfo->long_range_radar_range && obj->canBeSelectedBy(my_spaceship))
+//                {
+//                    targets.set(obj);
+//                    return;
+//                }
+//            }
+//            foreach(SpaceObject, obj, space_object_list)
+//            {
+//                if (obj == targets.get() || obj == my_spaceship)
+//                    continue;
+//                if (sf::length(obj->getPosition() - my_spaceship->getPosition()) < gameGlobalInfo->long_range_radar_range && obj->canBeSelectedBy(my_spaceship))
+//                {
+//                    targets.set(obj);
+//                    return;
+//                }
+//            }
         }
 		if (targets.get())
 		{
@@ -643,7 +725,7 @@ void ScienceScreen::onHotkey(const HotkeyResult& key)
 			background_gradient->show();
 			database_view->hide();
 		}
-		if (key.hotkey == "INCREASE_ZOOM")
+		if (key.hotkey == "DECREASE_ZOOM")
 		{
 			float view_distance = science_radar->getDistance() + 1500.0f;
 			if (view_distance > gameGlobalInfo->long_range_radar_range)
@@ -655,7 +737,7 @@ void ScienceScreen::onHotkey(const HotkeyResult& key)
 			zoom_slider->setValue(view_distance);
 			zoom_label->setText("Zoom: " + string(gameGlobalInfo->long_range_radar_range / view_distance, 1) + "x");
 		}
-		if (key.hotkey == "DECREASE_ZOOM")
+		if (key.hotkey == "INCREASE_ZOOM")
 		{
 			float view_distance = science_radar->getDistance() - 1500.0f;
 			if (view_distance > gameGlobalInfo->long_range_radar_range)
