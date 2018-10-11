@@ -332,6 +332,16 @@ void EngineeringScreen::onHotkey(const HotkeyResult& key)
                 power_slider->setValue(my_spaceship->systems[selected_system].power_request - 0.1f);
                 my_spaceship->commandSetSystemPowerRequest(selected_system, power_slider->getValue());
             }
+			if (key.hotkey == "POWER_MAX")
+            {
+                power_slider->setValue(1.0f);
+                my_spaceship->commandSetSystemPowerRequest(selected_system, power_slider->getValue());
+            }
+            if (key.hotkey == "POWER_MIN")
+            {
+                power_slider->setValue(0.0f);
+                my_spaceship->commandSetSystemPowerRequest(selected_system, power_slider->getValue());
+            }
             if (key.hotkey == "INCREASE_COOLANT")
             {
                 coolant_slider->setValue(my_spaceship->systems[selected_system].coolant_request + 0.5f);
@@ -340,6 +350,16 @@ void EngineeringScreen::onHotkey(const HotkeyResult& key)
             if (key.hotkey == "DECREASE_COOLANT")
             {
                 coolant_slider->setValue(my_spaceship->systems[selected_system].coolant_request - 0.5f);
+                my_spaceship->commandSetSystemCoolantRequest(selected_system, coolant_slider->getValue());
+            }
+            if (key.hotkey == "COOLANT_MAX")
+            {
+                coolant_slider->setValue(1.0f);
+                my_spaceship->commandSetSystemCoolantRequest(selected_system, coolant_slider->getValue());
+            }
+            if (key.hotkey == "COOLANT_MIN")
+            {
+                coolant_slider->setValue(0.0f);
                 my_spaceship->commandSetSystemCoolantRequest(selected_system, coolant_slider->getValue());
             }
             if (key.hotkey == "RESET")

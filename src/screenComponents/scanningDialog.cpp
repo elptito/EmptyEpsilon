@@ -167,6 +167,9 @@ void GuiScanningDialog::onHotkey(const HotkeyResult& key)
 {
     if (key.category == "SCIENCE" && my_spaceship)
     {
+		if (key.hotkey == "ABORD_SCAN")
+            my_spaceship->commandScanCancel();
+            
         for(int n=0; n<max_sliders; n++)
         {
             if (sliders[n]->isVisible())
