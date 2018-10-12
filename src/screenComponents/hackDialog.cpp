@@ -22,8 +22,12 @@ GuiHackDialog::GuiHackDialog(GuiContainer* owner, string id)
     hide();
 
     // Panel de titre
-    hack_title = new GuiElement(this, "HACK_TITLE_BOX");
-    hack_title->setSize(800, 50)->setPosition(0, -700, ABottomCenter);
+    hack_title = new GuiPanel(this, "HACK_TITLE_BOX");
+    hack_title->setSize(600, 50)->setPosition(0, -720, ABottomCenter);
+
+    hack_label = new GuiLabel(hack_title, "", "", 30);
+    hack_label->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+    hack_label->setText("Invite de commande");
 
     // Button to close chat comms.
     hack_close_button = new GuiButton(hack_title, "CLOSE_BUTTON", "Fin", [this]() {
@@ -32,13 +36,13 @@ GuiHackDialog::GuiHackDialog(GuiContainer* owner, string id)
             my_spaceship -> hack_protect = false;
         hide();
     });
-    hack_close_button->setTextSize(20)->setPosition(-10, 0, ATopRight)->setSize(60, 30);
+    hack_close_button->setTextSize(20)->setPosition(-10, 10, ATopRight)->setSize(60, 30);
 
     hack_minimize_button = new GuiToggleButton(hack_title, "", "_", [this](bool value)
     {
         minimize(value);
     });
-    hack_minimize_button->setPosition(-70, 0, ATopRight)->setSize(60, 30);
+    hack_minimize_button->setPosition(-70, 10, ATopRight)->setSize(60, 30);
 
     minimized = false;
 

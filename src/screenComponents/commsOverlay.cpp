@@ -86,21 +86,24 @@ GuiCommsOverlay::GuiCommsOverlay(GuiContainer* owner)
 
     // Panel for chat communications with GMs and other player ships.
      // Panel de titre
-    chat_comms_title = new GuiElement(this, "HACK_TITLE_BOX");
-    chat_comms_title ->setSize(800, 50)->setPosition(0, -700, ABottomCenter)->hide();
+    chat_comms_title = new GuiPanel(this, "HACK_TITLE_BOX");
+    chat_comms_title ->setSize(600, 50)->setPosition(0, -720, ABottomCenter)->hide();
+
+    chat_label = new GuiLabel(chat_comms_title, "", "", 30);
+    chat_label->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
         // Button to close chat comms.
     chat_comms_close_button = new GuiButton(chat_comms_title, "CLOSE_BUTTON", "Fin", [this]() {
         if (my_spaceship)
             my_spaceship->commandCloseTextComm();
     });
-    chat_comms_close_button->setTextSize(20)->setPosition(-10, 0, ATopRight)->setSize(60, 30);
+    chat_comms_close_button->setTextSize(20)->setPosition(-10, 10, ATopRight)->setSize(60, 30);
 
     chat_minimize_button = new GuiToggleButton(chat_comms_title, "", "_", [this](bool value)
     {
         minimize(value);
     });
-    chat_minimize_button->setPosition(-70, 0, ATopRight)->setSize(60, 30);
+    chat_minimize_button->setPosition(-70, 10, ATopRight)->setSize(60, 30);
 
     minimized = false;
 
@@ -177,6 +180,7 @@ void GuiCommsOverlay::onDraw(sf::RenderTarget& window)
         closed_box->setVisible(my_spaceship->isCommsClosed());
 
         chat_comms_title->setVisible(my_spaceship->isCommsChatOpen());
+        chat_label->setText("Communication avec " + my_spaceship->getCommsTargetName());
         chat_comms_box->setVisible(my_spaceship->isCommsChatOpen() && !minimized);
         chat_comms_text->setText(my_spaceship->getCommsIncommingMessage());
 

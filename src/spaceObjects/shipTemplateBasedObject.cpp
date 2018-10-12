@@ -99,8 +99,8 @@ ShipTemplateBasedObject::ShipTemplateBasedObject(float collision_range, string m
 
     hack_protect = false;
 
-//    registerMemberReplication(&hack_diff);
-//    registerMemberReplication(&os_name);
+    registerMemberReplication(&hack_diff);
+    registerMemberReplication(&os_name);
     registerMemberReplication(&hack_protect);
 
     can_be_destroyed = true;
@@ -312,6 +312,9 @@ void ShipTemplateBasedObject::setTemplate(string template_name)
         shield_level[n] = shield_max[n] = ship_template->shield_level[n];
 
     radar_trace = ship_template->radar_trace;
+
+    hack_diff = ship_template->getHackDiff();
+    os_name = ship_template->getOSName();
 
     shares_energy_with_docked = ship_template->shares_energy_with_docked;
     repair_docked = ship_template->repair_docked;

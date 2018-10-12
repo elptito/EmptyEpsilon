@@ -81,8 +81,9 @@ void GuiRadarView::onDraw(sf::RenderTarget& window)
     if (fog_style == NebulaFogOfWar || fog_style == FriendlysShortRangeFogOfWar)
     {
         drawRenderTexture(mask_texture, forground_texture, sf::Color::White, sf::BlendMode(
-            sf::BlendMode::Zero, sf::BlendMode::SrcColor, sf::BlendMode::Add,
-            sf::BlendMode::Zero, sf::BlendMode::SrcColor, sf::BlendMode::Add
+//            sf::BlendMode::Zero, sf::BlendMode::SrcColor, sf::BlendMode::Add,
+//            sf::BlendMode::Zero, sf::BlendMode::SrcColor, sf::BlendMode::Add
+            sf::BlendMode::Zero, sf::BlendMode::SrcAlpha, sf::BlendMode::Add
         ));
     }
     //Post masking
@@ -513,7 +514,7 @@ void GuiRadarView::drawMissileTubes(sf::RenderTarget& window)
             sf::Vector2f fire_draw_position = radar_screen_center + (view_position - fire_position) * scale;
 
             float fire_angle = my_spaceship->getRotation() + my_spaceship->weapon_tube[n].getDirection();
-            
+
             a[n * 2].position = fire_draw_position;
             a[n * 2 + 1].position = fire_draw_position + (sf::vector2FromAngle(fire_angle) * 1000.0f) * scale;
             a[n * 2].color = sf::Color(128, 128, 128, 128);

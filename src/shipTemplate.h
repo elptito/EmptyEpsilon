@@ -90,7 +90,7 @@ public:
     void setOSName(string os_name) { this->os_name = os_name; }
     void setHackDiff(int hack_diff) { this->hack_diff = hack_diff; }
     string getOSName() { return os_name; }
-    string getHackDiff() { return hack_diff; }
+    int getHackDiff() { return hack_diff; }
 
     P<ModelData> model_data;
 
