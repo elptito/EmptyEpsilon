@@ -141,10 +141,9 @@ bool PhilipsHueDevice::configure(std::unordered_map<string, string> settings)
             light_count = 0;
             for ( unsigned int i = 0; i < body.size(); i++ )
             {
-                if ( int_builder != 0 )
+                if ( int_builder != -1 )
                 {
                     //The int builder process consumes digits after a " until a non-numeric char is found.
-                    if ( int_builder == -1 ) { int_builder = 0; }
                     if ( std::isdigit(body[i]) )
                     {
                         int this_digit = body[i] - '0'; //Char to int
@@ -155,7 +154,7 @@ bool PhilipsHueDevice::configure(std::unordered_map<string, string> settings)
                     {
                         LOG(DEBUG) << "Found light ID " << int_builder << " in Hue response.";
                         if( int_builder > light_count ) { light_count = int_builder; }
-                        int_builder = 0;
+                        int_builder = -1;
                     }
                 }
 
@@ -168,7 +167,7 @@ bool PhilipsHueDevice::configure(std::unordered_map<string, string> settings)
                         bracket_counter--;
                         break;
                     case '"':
-                        if(bracket_counter == 0) { int_builder = -1; }
+                        if(bracket_counter == 0) { int_builder = 0; }
                         break;
                 }
             }
