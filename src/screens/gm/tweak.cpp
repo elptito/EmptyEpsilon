@@ -789,17 +789,6 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
     energy_level_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
     // Right column
-    // Count and list ship positions and whether they're occupied.
-    position_count = new GuiLabel(right_col, "", "Postes occupes: ", 30);
-    position_count->setSize(GuiElement::GuiSizeMax, 50);
-
-    for(int n = 0; n < max_crew_positions; n++)
-    {
-        string position_name = getCrewPositionName(ECrewPosition(n));
-
-        position[n] = new GuiKeyValueDisplay(right_col, "CREW_POSITION_" + position_name, 0.5, position_name, "-");
-        position[n]->setSize(GuiElement::GuiSizeMax, 30);
-    }
 
     // Radar Capabilities
     (new GuiLabel(right_col, "", "Radar Capabilities:", 30))->setSize(GuiElement::GuiSizeMax, 50);
@@ -815,6 +804,18 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
         target->setBiologicalSensor(value);
     });
     biological_toggle->setSize(GuiElement::GuiSizeMax, 40);
+
+    // Count and list ship positions and whether they're occupied.
+    position_count = new GuiLabel(right_col, "", "Postes occupes: ", 30);
+    position_count->setSize(GuiElement::GuiSizeMax, 50);
+
+    for(int n = 0; n < max_crew_positions; n++)
+    {
+        string position_name = getCrewPositionName(ECrewPosition(n));
+
+        position[n] = new GuiKeyValueDisplay(right_col, "CREW_POSITION_" + position_name, 0.5, position_name, "-");
+        position[n]->setSize(GuiElement::GuiSizeMax, 30);
+    }
 }
 
 void GuiShipTweakPlayer::onDraw(sf::RenderTarget& window)

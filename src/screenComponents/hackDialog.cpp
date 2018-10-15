@@ -216,6 +216,7 @@ void GuiHackDialog::commandHack()
             if (hack_text == "intrusion")
             {
                 hack_message  = "\n> Module d'intrusion lance";
+                hack_message  = "\n> Intrusion possible dans un rayon de 50U";
                 hack_message  += "\n> Indiquez l'identifiant de la cible : ";
                 hack_step = 1;
             }
@@ -243,7 +244,7 @@ void GuiHackDialog::commandHack()
                 if (!ship)
                     continue;
 
-                if (sf::length(obj->getPosition() - my_spaceship->getPosition()) > 40000.0)
+                if (sf::length(obj->getPosition() - my_spaceship->getPosition()) > 50000.0)
                     continue;
 
                 hack_test = obj -> getCallSign();

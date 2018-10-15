@@ -170,7 +170,8 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
     {
         glPushMatrix();
         glTranslatef(-camera_position.x,-camera_position.y, -camera_position.z);
-        glTranslatef(obj->getPosition().x, obj->getPosition().y, obj->getTranslateZ());
+        //glTranslatef(obj->getPosition().x, obj->getPosition().y, obj->getTranslateZ());
+        glTranslatef(obj->getPosition().x, obj->getPosition().y, 0);
         glRotatef(obj->getRotation(), 0, 0, 1);
 
         obj->draw3D();
@@ -185,7 +186,8 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
     {
         glPushMatrix();
         glTranslatef(-camera_position.x,-camera_position.y, -camera_position.z);
-        glTranslatef(obj->getPosition().x, obj->getPosition().y, obj->getTranslateZ());
+        //glTranslatef(obj->getPosition().x, obj->getPosition().y, obj->getTranslateZ());
+        glTranslatef(obj->getPosition().x, obj->getPosition().y, 0);
         glRotatef(obj->getRotation(), 0, 0, 1);
 
         obj->draw3DTransparent();

@@ -117,6 +117,7 @@ void fillDefaultDatabaseData()
 
         entry->model_data = ship_template->model_data;
 
+        entry->addKeyValue("Type", ship_template->getPublicName());
         entry->addKeyValue("Classe", ship_template->getClass());
         entry->addKeyValue("Sous-classe", ship_template->getSubClass());
         entry->addKeyValue("OS", ship_template->getOSName());

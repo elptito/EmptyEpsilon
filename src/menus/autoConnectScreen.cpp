@@ -1,30 +1,37 @@
 #include "main.h"
 #include "autoConnectScreen.h"
+#include "screens/mainScreen.h"
 #include "preferenceManager.h"
+#include "screenComponents/noiseOverlay.h"
 #include "epsilonServer.h"
 #include "gameGlobalInfo.h"
 #include "playerInfo.h"
 
 #include "gui/gui2_label.h"
+#include "gui/gui2_overlay.h"
 
-AutoConnectScreen::AutoConnectScreen(ECrewPosition crew_position, bool control_main_screen, string ship_filter)
-: crew_position(crew_position), control_main_screen(control_main_screen)
+AutoConnectScreen::AutoConnectScreen(ECrewPosition crew_position, int auto_mainscreen, bool control_main_screen, string ship_filter)
+: crew_position(crew_position), auto_mainscreen(auto_mainscreen), control_main_screen(control_main_screen)
 {
     if (!game_client)
     {
         scanner = new ServerScanner(VERSION_NUMBER);
         scanner->scanLocalNetwork();
     }
-    
-    status_label = new GuiLabel(this, "STATUS", "Searching for server...", 50);
+
+    new GuiNoiseOverlay(this);
+
+    status_label = new GuiLabel(this, "STATUS", "Coupure de courant", 50);
     status_label->setPosition(0, 300, ATopCenter)->setSize(0, 50);
 
     string position_name = "Ecran principal";
     if (crew_position < max_crew_positions)
         position_name = getCrewPositionName(crew_position);
+    if (auto_mainscreen == 1)
+        position_name = "Ecran principal";
 
-    (new GuiLabel(this, "POSITION", position_name, 50))->setPosition(0, 400, ATopCenter)->setSize(0, 30);
-    
+    (new GuiLabel(this, "POSITION", position_name, 20))->setPosition(0, 10, ATopCenter)->setSize(0, 10);
+
     for(string filter : ship_filter.split(";"))
     {
         std::vector<string> key_value = filter.split("=", 1);
@@ -64,7 +71,7 @@ void AutoConnectScreen::update(float delta)
             new GameClient(VERSION_NUMBER, serverList[0].address);
             scanner->destroy();
         }else{
-            status_label->setText("Searching for server...");
+            status_label->setText("Coupure de courant");
         }
     }else{
         switch(game_client->getStatus())
@@ -72,7 +79,7 @@ void AutoConnectScreen::update(float delta)
         case GameClient::ReadyToConnect:
         case GameClient::Connecting:
         case GameClient::Authenticating:
-            status_label->setText("Connecting: " + connect_to_address.toString());
+            status_label->setText("Connexion: " + connect_to_address.toString());
             break;
         case GameClient::WaitingForPassword: //For now, just disconnect when we found a password protected server.
         case GameClient::Disconnected:
@@ -88,7 +95,7 @@ void AutoConnectScreen::update(float delta)
                         my_player_info = i;
                 if (my_player_info && gameGlobalInfo)
                 {
-                    status_label->setText("Waiting for ship...");
+                    status_label->setText("Retablissement du systeme...");
                     if (!my_spaceship)
                     {
                         for(int n=0; n<GameGlobalInfo::max_player_ships; n++)
@@ -100,14 +107,19 @@ void AutoConnectScreen::update(float delta)
                             }
                         }
                     }else{
-                        if (my_spaceship->getMultiplayerId() == my_player_info->ship_id && (crew_position == max_crew_positions || my_player_info->crew_position[crew_position]))
+                        if (my_spaceship->getMultiplayerId() == my_player_info->ship_id && (auto_mainscreen == 1 || crew_position == max_crew_positions || my_player_info->crew_position[crew_position]))
                         {
+                            if (auto_mainscreen == 1)
+                            {
+                                for(int n=0; n<max_crew_positions; n++)
+                                    my_player_info->commandSetCrewPosition(crew_position, false);
+                            }
                             destroy();
                             my_player_info->spawnUI();
                         }
                     }
                 }else{
-                    status_label->setText("Connected, waiting for game data...");
+                    status_label->setText("Connexion en cours...");
                 }
             }
             break;
@@ -165,7 +177,7 @@ void AutoConnectScreen::connectToShip(int index)
 {
     P<PlayerSpaceship> ship = gameGlobalInfo->getPlayerShip(index);
 
-    if (crew_position != max_crew_positions)    //If we are not the main screen, setup the right crew position.
+    if (auto_mainscreen != 1 && crew_position != max_crew_positions)    //If we are not the main screen, setup the right crew position.
     {
         my_player_info->commandSetCrewPosition(crew_position, true);
         my_player_info->commandSetMainScreenControl(control_main_screen);
