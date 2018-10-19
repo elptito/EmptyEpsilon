@@ -88,7 +88,7 @@ ShipTemplate::ShipTemplate()
     class_name = "Sans classe";
     class_name = "Sans sous-classe";
     secret = false;
-    hack_diff = 0;
+    hack_diff = 2;
 
     int os_name_counter = irandom(30, 65);
     int os_name_letter = irandom(0, 9);

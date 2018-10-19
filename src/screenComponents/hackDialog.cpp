@@ -328,8 +328,40 @@ void GuiHackDialog::commandHack()
         }
         else if (hack_step == 5)
         {
-            target_system = hack_text;
-            hack_step = 9;
+            if (hack_text == "spay")
+            {
+                hack_message  = "\n> Acces au service S-PAY";
+                hack_message += "\n> Indiquez le Code d'acces du S-PAY :";
+                hack_message += "\n> (Le code est en 8 bits)";
+                defineHackCode(8);
+                hack_step = 6;
+            }else{
+                target_system = hack_text;
+                hack_step = 9;
+            }
+        }
+        else if (hack_step == 6)
+        {
+            if (hack_text == hack_code)
+            {
+                hack_message  = "\n> Acces complet au S-PAY";
+                hack_message  += "\n> Retrait de 200 Q obtenu";
+                hack_message  += "\n> Somme verse sur votre compte S-PAY";
+                my_spaceship -> addToShipLog("Obtention de 200Q par hack du S-PAY",colorConfig.log_receive_enemy,"extern");
+                P<PlayerSpaceship> player_target = hack_target;
+                if (player_target)
+                    player_target -> addToShipLog("Perte de 200Q par hack du S-PAY",colorConfig.log_receive_enemy,"intern");
+                hack_step = 99;
+            }
+            else if (hack_text.length() != 8)
+            {
+                hack_message  += "\n> Nombre de bits incorrect";
+            }
+            else
+            {
+                hack_message  += "\n> Code " + hack_text + " incorrect";
+                hack_message  += "\n> " + string(verifHackCode(8, hack_text, hack_code)) + "bits corrects";
+            }
         }
         // Protection
         else if (hack_step == 10)
