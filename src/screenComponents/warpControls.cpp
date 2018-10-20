@@ -83,18 +83,14 @@ void GuiWarpControls::onHotkey(const HotkeyResult& key)
         }
         else if (key.hotkey == "WARP_ADD1")
         {
-            if (my_spaceship->warp_request == 4)
-                return;
             my_spaceship->commandWarp(my_spaceship->warp_request + 1);
-            slider->setValue(my_spaceship->warp_request + 1);
+            slider->setValue(my_spaceship->warp_request);
         }
         else if (key.hotkey == "WARP_MIN1")
         {
-            if (my_spaceship->warp_request == 0)
-                return;
             my_spaceship->commandWarp(my_spaceship->warp_request - 1);
-            slider->setValue(my_spaceship->warp_request - 1);
+            slider->setValue(my_spaceship->warp_request);
         }
-		
+
     }
 }

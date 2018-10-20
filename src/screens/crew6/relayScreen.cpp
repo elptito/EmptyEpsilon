@@ -24,7 +24,7 @@ RelayScreen::RelayScreen(GuiContainer* owner)
 : GuiOverlay(owner, "RELAY_SCREEN", colorConfig.background), mode(TargetSelection)
 {
     targets.setAllowWaypointSelection();
-    radar = new GuiRadarView(this, "RELAY_RADAR", 100000.0f, &targets);
+    radar = new GuiRadarView(this, "RELAY_RADAR", 50000.0f, &targets);
     radar->longRange()->enableWaypoints()->enableCallsigns()->setStyle(GuiRadarView::Rectangular)->setFogOfWarStyle(GuiRadarView::FriendlysShortRangeFogOfWar);
     radar->setAutoCentering(false);
     radar->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
@@ -84,7 +84,7 @@ RelayScreen::RelayScreen(GuiContainer* owner)
     info_faction = new GuiKeyValueDisplay(sidebar, "SCIENCE_FACTION", 0.4, "Federation", "");
     info_faction->setSize(GuiElement::GuiSizeMax, 30);
 
-    zoom_slider = new GuiSlider(this, "ZOOM_SLIDER", 100000.0f, 6250.0f, 100000.0f, [this](float value) {
+    zoom_slider = new GuiSlider(this, "ZOOM_SLIDER", 100000.0f, 6250.0f, 50000.0f, [this](float value) {
         zoom_label->setText("Zoom: " + string(100000.0f / value, 1.0f) + "x");
         radar->setDistance(value);
     });
@@ -151,7 +151,7 @@ RelayScreen::RelayScreen(GuiContainer* owner)
     launch_probe_button->setIcon("gui/icons/probe");
 
     // Rechargement probe
-    progress_probe = new GuiProgressbar(launch_probe_button,"PROBE_PROGRESS", 0, PlayerSpaceship::scan_probe_charge_time * 10.0f, 0.0);
+    progress_probe = new GuiProgressbar(launch_probe_button,"PROBE_PROGRESS", 0, PlayerSpaceship::scan_probe_charge_time * 20.0f, 0.0);
     progress_probe->setDrawBackground(false);
     progress_probe->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
@@ -165,11 +165,14 @@ RelayScreen::RelayScreen(GuiContainer* owner)
 
     // Ship selector
     station_selector = new GuiSelector(option_buttons, "SPACE_STATION_SELECTOR", [this](int index, string value) {
-        P<SpaceObject> station = space_object_list[value.toInt()];
+        P<SpaceObject> obj = space_object_list[value.toInt()];
+        P<SpaceStation> station = obj;
         if (station)
+        {
             target = station;
-        radar->setViewPosition(station->getPosition());
-        targets.set(station);
+            radar->setViewPosition(station->getPosition());
+            targets.set(station);
+        }
     });
     station_selector->setSize(GuiElement::GuiSizeMax, 50);
 
@@ -328,7 +331,8 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
             if (station && my_spaceship->isFriendly(station) && station->isFriendly(my_spaceship) && station->getPosition() - my_spaceship->getPosition() < 1000000.0f)
             {
                 if (station_selector->indexByValue(string(n)) == -1)
-                    station_selector->addEntry(station->getTypeName() + " " + station->getCallSign(), string(n));
+//                    station_selector->addEntry(station->getTypeName() + " " + station->getCallSign(), string(n));
+                    station_selector->addEntry(station->getCallSign(), string(n));
             }else{
                 if (station_selector->indexByValue(string(n)) != -1)
                     station_selector->removeEntry(station_selector->indexByValue(string(n)));
@@ -491,26 +495,26 @@ void RelayScreen::onHotkey(const HotkeyResult& key)
         if (key.hotkey == "INCREASE_ZOOM")
         {
 			float view_distance = radar->getDistance() + 1500.0f;
-			if (view_distance > 50000.0f)
-				view_distance = 50000.0f;
+			if (view_distance > 100000.0f)
+				view_distance = 100000.0f;
 			if (view_distance < 6250.0f)
 				view_distance = 6250.0f;
 			radar->setDistance(view_distance);
 			// Keep the zoom slider in sync.
 			zoom_slider->setValue(view_distance);
-			zoom_label->setText("Zoom: " + string(50000.0f / view_distance, 1.0f) + "x");
+			zoom_label->setText("Zoom: " + string(100000.0f / view_distance, 1.0f) + "x");
 		}
 		if (key.hotkey == "DECREASE_ZOOM")
 		{
 			float view_distance = radar->getDistance() - 1500.0f;
-			if (view_distance > 50000.0f)
-				view_distance = 50000.0f;
+			if (view_distance > 100000.0f)
+				view_distance = 100000.0f;
 			if (view_distance < 6250.0f)
 				view_distance = 6250.0f;
 			radar->setDistance(view_distance);
 			// Keep the zoom slider in sync.
 			zoom_slider->setValue(view_distance);
-			zoom_label->setText("Zoom: " + string(50000.0f / view_distance, 1.0f) + "x");
+			zoom_label->setText("Zoom: " + string(100000.0f / view_distance, 1.0f) + "x");
 		}
         if (key.hotkey == "ALERTE_NORMAL")
         {

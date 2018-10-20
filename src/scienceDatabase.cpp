@@ -117,6 +117,7 @@ void fillDefaultDatabaseData()
 
         entry->model_data = ship_template->model_data;
 
+        entry->addKeyValue("Type", ship_template->getPublicName());
         entry->addKeyValue("Classe", ship_template->getClass());
         entry->addKeyValue("Sous-classe", ship_template->getSubClass());
         entry->addKeyValue("OS", ship_template->getOSName());
@@ -134,12 +135,12 @@ void fillDefaultDatabaseData()
         entry->addKeyValue("Rotation", string(int(ship_template->turn_speed)));
         if (ship_template->warp_speed > 0.0)
         {
-            entry->addKeyValue("Moteur WARP", "True");
+            entry->addKeyValue("Moteur WARP", "OUI");
             entry->addKeyValue("Vitesse WARP", string(int(ship_template->warp_speed)));
         }
         if (ship_template->has_jump_drive)
         {
-            entry->addKeyValue("Moteur JUMP", "True");
+            entry->addKeyValue("Moteur JUMP", "OUI");
         }
         for(int n=0; n<max_beam_weapons; n++)
         {

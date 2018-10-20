@@ -30,6 +30,7 @@ private:
     GuiPanel* closed_box;
 
     GuiElement* chat_comms_title;
+    GuiLabel* chat_label;
     GuiPanel* chat_comms_box;
     GuiTextEntry* chat_comms_message_entry;
     GuiScrollText* chat_comms_text;

@@ -130,7 +130,7 @@ public:
 
     float translate_z;
     float getTranslateZ() { return translate_z; }
-    void setTranslateZ(float translate_z) { translate_z = translate_z; }
+    void setTranslateZ(float z) { translate_z = z; }
 
     SpaceObject(float collisionRange, string multiplayerName, float multiplayer_significant_range=-1);
 

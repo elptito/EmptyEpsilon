@@ -22,8 +22,12 @@ GuiHackDialog::GuiHackDialog(GuiContainer* owner, string id)
     hide();
 
     // Panel de titre
-    hack_title = new GuiElement(this, "HACK_TITLE_BOX");
-    hack_title->setSize(800, 50)->setPosition(0, -700, ABottomCenter);
+    hack_title = new GuiPanel(this, "HACK_TITLE_BOX");
+    hack_title->setSize(600, 50)->setPosition(0, -720, ABottomCenter);
+
+    hack_label = new GuiLabel(hack_title, "", "", 30);
+    hack_label->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+    hack_label->setText("Invite de commande");
 
     // Button to close chat comms.
     hack_close_button = new GuiButton(hack_title, "CLOSE_BUTTON", "Fin", [this]() {
@@ -32,13 +36,13 @@ GuiHackDialog::GuiHackDialog(GuiContainer* owner, string id)
             my_spaceship -> hack_protect = false;
         hide();
     });
-    hack_close_button->setTextSize(20)->setPosition(-10, 0, ATopRight)->setSize(60, 30);
+    hack_close_button->setTextSize(20)->setPosition(-10, 10, ATopRight)->setSize(60, 30);
 
     hack_minimize_button = new GuiToggleButton(hack_title, "", "_", [this](bool value)
     {
         minimize(value);
     });
-    hack_minimize_button->setPosition(-70, 0, ATopRight)->setSize(60, 30);
+    hack_minimize_button->setPosition(-70, 10, ATopRight)->setSize(60, 30);
 
     minimized = false;
 
@@ -212,6 +216,7 @@ void GuiHackDialog::commandHack()
             if (hack_text == "intrusion")
             {
                 hack_message  = "\n> Module d'intrusion lance";
+                hack_message  = "\n> Intrusion possible dans un rayon de 50U";
                 hack_message  += "\n> Indiquez l'identifiant de la cible : ";
                 hack_step = 1;
             }
@@ -239,7 +244,7 @@ void GuiHackDialog::commandHack()
                 if (!ship)
                     continue;
 
-                if (sf::length(obj->getPosition() - my_spaceship->getPosition()) > 40000.0)
+                if (sf::length(obj->getPosition() - my_spaceship->getPosition()) > 50000.0)
                     continue;
 
                 hack_test = obj -> getCallSign();
@@ -323,8 +328,40 @@ void GuiHackDialog::commandHack()
         }
         else if (hack_step == 5)
         {
-            target_system = hack_text;
-            hack_step = 9;
+            if (hack_text == "spay")
+            {
+                hack_message  = "\n> Acces au service S-PAY";
+                hack_message += "\n> Indiquez le Code d'acces du S-PAY :";
+                hack_message += "\n> (Le code est en 8 bits)";
+                defineHackCode(8);
+                hack_step = 6;
+            }else{
+                target_system = hack_text;
+                hack_step = 9;
+            }
+        }
+        else if (hack_step == 6)
+        {
+            if (hack_text == hack_code)
+            {
+                hack_message  = "\n> Acces complet au S-PAY";
+                hack_message  += "\n> Retrait de 200 Q obtenu";
+                hack_message  += "\n> Somme verse sur votre compte S-PAY";
+                my_spaceship -> addToShipLog("Obtention de 200Q par hack du S-PAY",colorConfig.log_receive_enemy,"extern");
+                P<PlayerSpaceship> player_target = hack_target;
+                if (player_target)
+                    player_target -> addToShipLog("Perte de 200Q par hack du S-PAY",colorConfig.log_receive_enemy,"intern");
+                hack_step = 99;
+            }
+            else if (hack_text.length() != 8)
+            {
+                hack_message  += "\n> Nombre de bits incorrect";
+            }
+            else
+            {
+                hack_message  += "\n> Code " + hack_text + " incorrect";
+                hack_message  += "\n> " + string(verifHackCode(8, hack_text, hack_code)) + "bits corrects";
+            }
         }
         // Protection
         else if (hack_step == 10)

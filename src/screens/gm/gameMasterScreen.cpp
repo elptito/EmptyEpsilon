@@ -234,8 +234,8 @@ void GameMasterScreen::update(float delta)
         float view_distance = main_radar->getDistance() * (1.0 - (mouse_wheel_delta * 0.1f));
         if (view_distance > 200000)
             view_distance = 200000;
-        if (view_distance < 10000)
-            view_distance = 10000;
+        if (view_distance < 5000)
+            view_distance = 5000;
         main_radar->setDistance(view_distance);
         if (view_distance < 10000)
             main_radar->shortRange();

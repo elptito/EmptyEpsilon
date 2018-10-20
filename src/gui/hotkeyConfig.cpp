@@ -117,7 +117,6 @@ HotkeyConfig::HotkeyConfig()
     }
 
     newCategory("SCIENCE", "Science");
-    newKey("NEXT_ENEMY_SCAN", std::make_tuple("Selectionner ennemi suivant", ""));
     newKey("NEXT_SCAN", std::make_tuple("Selectionner cible suivant", ""));
     newKey("SCAN_START", std::make_tuple("Lancer scan", ""));
     newKey("ABORD_SCAN", std::make_tuple("Stopper scan", ""));

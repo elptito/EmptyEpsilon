@@ -39,14 +39,18 @@ void MissileWeapon::update(float delta)
     else
         target = game_client->getObjectById(target_id);
 
-    if (translate_z < target->translate_z)
-        translate_z += delta;
-    if (translate_z > target->translate_z)
-        translate_z -= delta;
+    if (target)
+    {
+        if (translate_z < target->translate_z)
+            translate_z += delta;
+        if (translate_z > target->translate_z)
+            translate_z -= delta;
+    }
 
     if (!launch_sound_played)
     {
-        soundManager->playSound("missile_launch.wav", getPosition(), 200.0, 1.0);
+        //soundManager->playSound("missile_launch.wav", getPosition(), 200.0, 1.0);
+        soundManager->playSound("missile_launch.wav");
         launch_sound_played = true;
     }
     lifetime -= delta;

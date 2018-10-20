@@ -32,7 +32,7 @@ GuiMainScreenControls::GuiMainScreenControls(GuiContainer* owner)
     open_button->setSize(GuiElement::GuiSizeMax, 50);
 
     // Front, back, left, and right view buttons.
-    buttons.push_back(new GuiButton(this, "MAIN_SCREEN_FRONT_BUTTON", "Avant", [this]()
+    buttons.push_back(new GuiButton(this, "MAIN_SCREEN_FRONT_BUTTON", "Fenetre", [this]()
     {
         if (my_spaceship)
         {
@@ -40,45 +40,45 @@ GuiMainScreenControls::GuiMainScreenControls(GuiContainer* owner)
         }
         closePopup();
     }));
-    buttons.push_back(new GuiButton(this, "MAIN_SCREEN_BACK_BUTTON", "Arriere", [this]()
-    {
-        if (my_spaceship)
-        {
-            my_spaceship->commandMainScreenSetting(MSS_Back);
-        }
-        closePopup();
-    }));
-    buttons.push_back(new GuiButton(this, "MAIN_SCREEN_LEFT_BUTTON", "Gauche", [this]()
-    {
-        if (my_spaceship)
-        {
-            my_spaceship->commandMainScreenSetting(MSS_Left);
-        }
-        closePopup();
-    }));
-    buttons.push_back(new GuiButton(this, "MAIN_SCREEN_RIGHT_BUTTON", "Droite", [this]()
-    {
-        if (my_spaceship)
-        {
-            my_spaceship->commandMainScreenSetting(MSS_Right);
-        }
-        closePopup();
-    }));
+//    buttons.push_back(new GuiButton(this, "MAIN_SCREEN_BACK_BUTTON", "Arriere", [this]()
+//    {
+//        if (my_spaceship)
+//        {
+//            my_spaceship->commandMainScreenSetting(MSS_Back);
+//        }
+//        closePopup();
+//    }));
+//    buttons.push_back(new GuiButton(this, "MAIN_SCREEN_LEFT_BUTTON", "Gauche", [this]()
+//    {
+//        if (my_spaceship)
+//        {
+//            my_spaceship->commandMainScreenSetting(MSS_Left);
+//        }
+//        closePopup();
+//    }));
+//    buttons.push_back(new GuiButton(this, "MAIN_SCREEN_RIGHT_BUTTON", "Droite", [this]()
+//    {
+//        if (my_spaceship)
+//        {
+//            my_spaceship->commandMainScreenSetting(MSS_Right);
+//        }
+//        closePopup();
+//    }));
 
     // If the player has control over weapons targeting, enable the target view
     // option in the main screen controls.
-    if (my_player_info->crew_position[weaponsOfficer] || my_player_info->crew_position[tacticalOfficer] || my_player_info->crew_position[singlePilot])
-    {
-        buttons.push_back(new GuiButton(this, "MAIN_SCREEN_TARGET_BUTTON", "Target lock", [this]()
-        {
-            if (my_spaceship)
-            {
-                my_spaceship->commandMainScreenSetting(MSS_Target);
-            }
-            closePopup();
-        }));
-        target_lock_button = buttons.back();
-    }
+//    if (my_player_info->crew_position[weaponsOfficer] || my_player_info->crew_position[tacticalOfficer] || my_player_info->crew_position[singlePilot])
+//    {
+//        buttons.push_back(new GuiButton(this, "MAIN_SCREEN_TARGET_BUTTON", "Target lock", [this]()
+//        {
+//            if (my_spaceship)
+//            {
+//                my_spaceship->commandMainScreenSetting(MSS_Target);
+//            }
+//            closePopup();
+//        }));
+//        target_lock_button = buttons.back();
+//    }
 
     // Tactical radar button.
     buttons.push_back(new GuiButton(this, "MAIN_SCREEN_TACTICAL_BUTTON", "Tactique", [this]()
@@ -130,8 +130,8 @@ GuiMainScreenControls::GuiMainScreenControls(GuiContainer* owner)
 
     // If the player has control over comms, they can toggle the comms overlay
     // on the main screen.
-    if (my_player_info->crew_position[relayOfficer] || my_player_info->crew_position[operationsOfficer] || my_player_info->crew_position[singlePilot])
-    {
+//    if (my_player_info->crew_position[relayOfficer] || my_player_info->crew_position[operationsOfficer] || my_player_info->crew_position[singlePilot])
+//    {
         buttons.push_back(new GuiButton(this, "MAIN_SCREEN_SHOW_COMMS_BUTTON", "Afficher Comms", [this]()
         {
             if (my_spaceship)
@@ -143,7 +143,7 @@ GuiMainScreenControls::GuiMainScreenControls(GuiContainer* owner)
         }));
         show_comms_button = buttons.back();
 
-        buttons.push_back(new GuiButton(this, "MAIN_SCREEN_HIDE_COMMS_BUTTON", "Hide comms", [this]()
+        buttons.push_back(new GuiButton(this, "MAIN_SCREEN_HIDE_COMMS_BUTTON", "Cacher comms", [this]()
         {
             if (my_spaceship)
             {
@@ -153,7 +153,7 @@ GuiMainScreenControls::GuiMainScreenControls(GuiContainer* owner)
             closePopup();
         }));
         hide_comms_button = buttons.back();
-    }
+//    }
 
     for(GuiButton* button : buttons)
         button->setSize(GuiElement::GuiSizeMax, 50)->setVisible(false);

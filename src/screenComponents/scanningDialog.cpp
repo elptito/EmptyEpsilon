@@ -24,7 +24,7 @@ GuiScanningDialog::GuiScanningDialog(GuiContainer* owner, string id)
     signal_quality = new GuiSignalQualityIndicator(box, id + "_SIGNAL");
     signal_quality->setPosition(0, 80, ATopCenter)->setSize(450, 100);
 
-    locked_label = new GuiLabel(signal_quality, id + "_LOCK_LABEL", "LOCKED", 50);
+    locked_label = new GuiLabel(signal_quality, id + "_LOCK_LABEL", "VERROUILLE", 50);
     locked_label->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
     for(int n=0; n<max_sliders; n++)

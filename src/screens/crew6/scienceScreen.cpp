@@ -23,7 +23,7 @@
 #include "gui/gui2_listbox.h"
 #include "gui/gui2_slider.h"
 
-ScienceScreen::ScienceScreen(GuiContainer* owner)
+ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
 : GuiOverlay(owner, "SCIENCE_SCREEN", colorConfig.background)
 {
     targets.setAllowWaypointSelection();
@@ -83,7 +83,7 @@ ScienceScreen::ScienceScreen(GuiContainer* owner)
     info_sidebar = new GuiAutoLayout(radar_view, "SIDEBAR", GuiAutoLayout::LayoutVerticalTopToBottom);
     info_sidebar->setPosition(-20, 100, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
 
-    custom_function_sidebar = new GuiCustomShipFunctions(radar_view, scienceOfficer, "");
+    custom_function_sidebar = new GuiCustomShipFunctions(radar_view, crew_position, "");
     custom_function_sidebar->setPosition(-20, 100, ATopRight)->setSize(250, GuiElement::GuiSizeMax)->hide();
 
     // Scan button.
@@ -524,93 +524,48 @@ void ScienceScreen::onHotkey(const HotkeyResult& key)
 {
     if (key.category == "SCIENCE" && my_spaceship)
     {
-        if (key.hotkey == "NEXT_ENEMY_SCAN")
-        {
-            bool current_found = false;
-            foreach(SpaceObject, obj, space_object_list)
-            {
-                if (obj == targets.get())
-                {
-                    current_found = true;
-                    continue;
-                }
-                if (current_found && sf::length(obj->getPosition() - my_spaceship->getPosition()) < gameGlobalInfo->long_range_radar_range && my_spaceship->isEnemy(obj) && my_spaceship->getScannedStateFor(obj) >= SS_FriendOrFoeIdentified && obj->canBeSelectedBy(my_spaceship))
-                {
-                    targets.set(obj);
-//                    my_spaceship->commandSetTarget(targets.get());
-                    return;
-                }
-            }
-            foreach(SpaceObject, obj, space_object_list)
-            {
-                if (obj == targets.get())
-                {
-                    continue;
-                }
-                if (my_spaceship->isEnemy(obj) && sf::length(obj->getPosition() - my_spaceship->getPosition()) < gameGlobalInfo->long_range_radar_range && my_spaceship->getScannedStateFor(obj) >= SS_FriendOrFoeIdentified && obj->canBeSelectedBy(my_spaceship))
-                {
-                    targets.set(obj);
-//                    my_spaceship->commandSetTarget(targets.get());
-                    return;
-                }
-            }
-        }
         if (key.hotkey == "NEXT_SCAN")
         {
             bool current_found = false;
+            float distance_max = science_radar->getDistance();
+
+            if (probe_radar->isActive())
+                distance_max = 5000.0;
+            if (Nebula::inNebula(my_spaceship->getPosition()))
+                distance_max = 5000.0;
+
             foreach(SpaceObject, obj, space_object_list)
             {
+                P<Nebula> nebula = obj;
                 if (obj == targets.get())
                 {
                     current_found = true;
                     continue;
                 }
-                if (obj == my_spaceship)
+                if (obj == my_spaceship || nebula)
                     continue;
-                if (current_found && sf::length(obj->getPosition() - my_spaceship->getPosition()) < gameGlobalInfo->long_range_radar_range && obj->canBeSelectedBy(my_spaceship))
+                if (obj->canHideInNebula() && my_spaceship && Nebula::blockedByNebula(my_spaceship->getPosition(), obj->getPosition()))
+                    continue;
+                if (current_found && sf::length(obj->getPosition() - my_spaceship->getPosition()) < distance_max)
                 {
                     targets.set(obj);
-//                    my_spaceship->commandSetTarget(targets.get());
                     return;
                 }
             }
             foreach(SpaceObject, obj, space_object_list)
             {
-                if (obj == targets.get() || obj == my_spaceship)
+                P<Nebula> nebula = obj;
+                if (obj == targets.get() || obj == my_spaceship || nebula)
                     continue;
-                if (sf::length(obj->getPosition() - my_spaceship->getPosition()) < gameGlobalInfo->long_range_radar_range && obj->canBeSelectedBy(my_spaceship))
+                if (obj->canHideInNebula() && my_spaceship && Nebula::blockedByNebula(my_spaceship->getPosition(), obj->getPosition()))
+                    continue;
+                if (sf::length(obj->getPosition() - my_spaceship->getPosition()) < distance_max)
                 {
                     targets.set(obj);
-//                    my_spaceship->commandSetTarget(targets.get());
                     return;
                 }
             }
         }
-		if (targets.get())
-		{
-			P<SpaceObject> obj = targets.get();
-			P<SpaceShip> ship = obj;
-			P<SpaceStation> station = obj;
-			if (ship)
-			{
-				if (ship->getScannedStateFor(my_spaceship) >= SS_FullScan)
-				{
-					if (key.hotkey == "SELECT_TACTICAL" && sidebar_pager->indexByValue("Tactical"))
-						sidebar_pager->setSelectionIndex(sidebar_pager->indexByValue("Tactical"));
-					if (key.hotkey == "SELECT_SYSTEMS" && sidebar_pager->indexByValue("Systems"))
-						sidebar_pager->setSelectionIndex(sidebar_pager->indexByValue("Systems"));
-					if (key.hotkey == "SELECT_DESCRIPTION" && sidebar_pager->indexByValue("Description"))
-						sidebar_pager->setSelectionIndex(sidebar_pager->indexByValue("Description"));
- 					if (key.hotkey == "NEXT_INFO_TARGET")
-					{
-						if (sidebar_pager->getSelectionIndex() >= sidebar_pager->entryCount() - 1)
-							sidebar_pager->setSelectionIndex(0);
-						else
-							sidebar_pager->setSelectionIndex(sidebar_pager->getSelectionIndex() + 1);
-					}
-				}
-			}
-		}
  		if (key.hotkey == "SHOW_PROBE")
         {
             P<ScanProbe> probe;
@@ -633,8 +588,12 @@ void ScienceScreen::onHotkey(const HotkeyResult& key)
 		}
 		if (key.hotkey == "SHOW_DATABASE")
 		{
-			view_mode_selection->setSelectionIndex(1);
-			radar_view->hide();
+		    P<SpaceShip> ship = targets.get();
+		    if (ship && ship->getScannedStateFor(my_spaceship) >= SS_SimpleScan)
+                database_view->findAndDisplayEntry(ship->getPublicName());
+
+		    view_mode_selection->setSelectionIndex(1);
+		    radar_view->hide();
 			background_gradient->hide();
 			database_view->show();
 		}
@@ -645,7 +604,7 @@ void ScienceScreen::onHotkey(const HotkeyResult& key)
 			background_gradient->show();
 			database_view->hide();
 		}
-		if (key.hotkey == "INCREASE_ZOOM")
+		if (key.hotkey == "DECREASE_ZOOM")
 		{
 			float view_distance = science_radar->getDistance() + 1500.0f;
 			if (view_distance > gameGlobalInfo->long_range_radar_range)
@@ -657,7 +616,7 @@ void ScienceScreen::onHotkey(const HotkeyResult& key)
 			zoom_slider->setValue(view_distance);
 			zoom_label->setText("Zoom: " + string(gameGlobalInfo->long_range_radar_range / view_distance, 1) + "x");
 		}
-		if (key.hotkey == "DECREASE_ZOOM")
+		if (key.hotkey == "INCREASE_ZOOM")
 		{
 			float view_distance = science_radar->getDistance() - 1500.0f;
 			if (view_distance > gameGlobalInfo->long_range_radar_range)

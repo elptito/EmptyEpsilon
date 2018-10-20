@@ -33,10 +33,12 @@ ScreenMainScreen::ScreenMainScreen()
     tactical_radar = new GuiRadarView(this, "TACTICAL", 5000.0f, nullptr);
     tactical_radar->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
     tactical_radar->setRangeIndicatorStepSize(1000.0f)->shortRange()->enableCallsigns()->hide();
+    tactical_radar->setAlpha(0.2);
     long_range_radar = new GuiRadarView(this, "TACTICAL", gameGlobalInfo->long_range_radar_range, nullptr);
     long_range_radar->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
     long_range_radar->setRangeIndicatorStepSize(5000.0f)->longRange()->enableCallsigns()->hide();
     long_range_radar->setFogOfWarStyle(GuiRadarView::NebulaFogOfWar);
+    long_range_radar->setAlpha(0.2);
     global_range_radar = new GuiRadarView(this, "GLOBAL", 50000.0f, nullptr);
     global_range_radar->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
     global_range_radar->setAutoCentering(true);
@@ -152,14 +154,14 @@ void ScreenMainScreen::update(float delta)
             ship_state->hide();
             break;
         case MSS_Tactical:
-            viewport->hide();
+            viewport->show();
             tactical_radar->show();
             long_range_radar->hide();
             global_range_radar->hide();
             ship_state->hide();
             break;
         case MSS_LongRange:
-            viewport->hide();
+            viewport->show();
             tactical_radar->hide();
             long_range_radar->show();
             global_range_radar->hide();
@@ -173,7 +175,7 @@ void ScreenMainScreen::update(float delta)
             ship_state->hide();
             break;
         case MSS_ShipState:
-            viewport->hide();
+            viewport->show();
             tactical_radar->hide();
             long_range_radar->hide();
             global_range_radar->hide();
@@ -181,27 +183,29 @@ void ScreenMainScreen::update(float delta)
             break;
         }
 
-        if (my_spaceship->docking_state != DS_NotDocking)
-        {
-            viewport->hide();
-            tactical_radar->hide();
-            long_range_radar->hide();
-            global_range_radar->hide();
-            ship_state->show();
-            dock_comms->show();
-        }else{
-            dock_comms->hide();
-        }
+        // if (my_spaceship->docking_state != DS_NotDocking)
+        // {
+            // viewport->hide();
+            // tactical_radar->hide();
+            // long_range_radar->hide();
+            // global_range_radar->hide();
+            // ship_state->show();
+            // dock_comms->show();
+        // }else{
+            // dock_comms->hide();
+        // }
 
         switch(my_spaceship->main_screen_overlay)
         {
         case MSO_ShowComms:
             onscreen_comms->clearElements();
             onscreen_comms->show();
+            viewport->hide();
             break;
         case MSO_HideComms:
             onscreen_comms->clearElements();
             onscreen_comms->hide();
+            viewport->show();
             break;
         }
 

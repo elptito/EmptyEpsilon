@@ -17,6 +17,7 @@ class GuiHackDialog : public GuiOverlay
 {
 private:
     GuiElement* hack_title;
+    GuiLabel* hack_label;
     GuiPanel* hack_box;
     GuiTextEntry* hack_message_entry;
     GuiScrollText* hack_comms_text;

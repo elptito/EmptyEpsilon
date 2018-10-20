@@ -7,10 +7,10 @@ enum EMissileWeapons
 {
     MW_None = -1,
     MW_Homing = 0,
+    MW_HVLI,
+    MW_EMP,
     MW_Nuke,
     MW_Mine,
-    MW_EMP,
-    MW_HVLI,
     MW_Count
 };
 /* Define script conversion function for the EMissileWeapons enum. */

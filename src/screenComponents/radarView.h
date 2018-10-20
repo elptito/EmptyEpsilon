@@ -2,11 +2,12 @@
 #define RADAR_VIEW_H
 
 #include "gui/gui2_element.h"
+#include "gui/gui2_overlay.h"
 
 class GuiMissileTubeControls;
 class TargetsContainer;
 
-class GuiRadarView : public GuiElement
+class GuiRadarView : public GuiOverlay
 {
 public:
     enum ERadarStyle

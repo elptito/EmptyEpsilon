@@ -40,6 +40,8 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setSystemPower);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getSystemCoolant);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setSystemCoolant);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getSystemHack);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setSystemHack);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getImpulseMaxSpeed);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setImpulseMaxSpeed);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getRotationMaxSpeed);
@@ -182,7 +184,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
 
     scanning_complexity_value = -1;
     scanning_depth_value = -1;
-	
+
 	registerMemberReplication(&scanning_complexity_value);
 	registerMemberReplication(&scanning_depth_value);
 

@@ -18,7 +18,7 @@
 #include "gui/gui2_image.h"
 #include "gui/gui2_panel.h"
 
-EngineeringScreen::EngineeringScreen(GuiContainer* owner)
+EngineeringScreen::EngineeringScreen(GuiContainer* owner, ECrewPosition crew_position)
 : GuiOverlay(owner, "ENGINEERING_SCREEN", colorConfig.background), selected_system(SYS_None)
 {
     // Render the background decorations.
@@ -77,6 +77,13 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner)
         info.power_bar->setColor(sf::Color(192, 192, 32, 128))->setSize(100, GuiElement::GuiSizeMax);
         info.coolant_bar = new GuiProgressbar(info.layout, id + "_COOLANT", 0.0, 10.0, 0.0);
         info.coolant_bar->setColor(sf::Color(32, 128, 128, 128))->setSize(100, GuiElement::GuiSizeMax);
+        if (!gameGlobalInfo->use_system_damage)
+        {
+            info.damage_bar->hide();
+            info.heat_bar->setSize(150, GuiElement::GuiSizeMax);
+            info.power_bar->setSize(150, GuiElement::GuiSizeMax);
+            info.coolant_bar->setSize(150, GuiElement::GuiSizeMax);
+        }
 
         info.layout->moveToBack();
         system_rows.push_back(info);
@@ -85,10 +92,22 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner)
     GuiAutoLayout* icon_layout = new GuiAutoLayout(system_row_layouts, "", GuiAutoLayout::LayoutHorizontalLeftToRight);
     icon_layout->setSize(GuiElement::GuiSizeMax, 48);
     (new GuiElement(icon_layout, "FILLER"))->setSize(300, GuiElement::GuiSizeMax);
-    (new GuiImage(icon_layout, "SYSTEM_HEALTH_ICON", "gui/icons/system_health"))->setSize(150, GuiElement::GuiSizeMax);
-    (new GuiImage(icon_layout, "HEAT_ICON", "gui/icons/status_overheat"))->setSize(100, GuiElement::GuiSizeMax);
-    (new GuiImage(icon_layout, "POWER_ICON", "gui/icons/energy"))->setSize(100, GuiElement::GuiSizeMax);
-    (new GuiImage(icon_layout, "COOLANT_ICON", "gui/icons/coolant"))->setSize(100, GuiElement::GuiSizeMax);
+    if (gameGlobalInfo->use_system_damage)
+    {
+        (new GuiImage(icon_layout, "SYSTEM_HEALTH_ICON", "gui/icons/system_health"))->setSize(150, GuiElement::GuiSizeMax);
+        (new GuiImage(icon_layout, "HEAT_ICON", "gui/icons/status_overheat"))->setSize(100, GuiElement::GuiSizeMax);
+        (new GuiImage(icon_layout, "POWER_ICON", "gui/icons/energy"))->setSize(100, GuiElement::GuiSizeMax);
+        (new GuiImage(icon_layout, "COOLANT_ICON", "gui/icons/coolant"))->setSize(100, GuiElement::GuiSizeMax);
+    } else {
+        (new GuiImage(icon_layout, "HEAT_ICON", "gui/icons/status_overheat"))->setSize(150, GuiElement::GuiSizeMax);
+        (new GuiImage(icon_layout, "POWER_ICON", "gui/icons/energy"))->setSize(150, GuiElement::GuiSizeMax);
+        (new GuiImage(icon_layout, "COOLANT_ICON", "gui/icons/coolant"))->setSize(150, GuiElement::GuiSizeMax);
+    }
+
+//    (new GuiImage(icon_layout, "SYSTEM_HEALTH_ICON", "gui/icons/system_health"))->setSize(150, GuiElement::GuiSizeMax);
+//    (new GuiImage(icon_layout, "HEAT_ICON", "gui/icons/status_overheat"))->setSize(100, GuiElement::GuiSizeMax);
+//    (new GuiImage(icon_layout, "POWER_ICON", "gui/icons/energy"))->setSize(100, GuiElement::GuiSizeMax);
+//    (new GuiImage(icon_layout, "COOLANT_ICON", "gui/icons/coolant"))->setSize(100, GuiElement::GuiSizeMax);
 
     system_rows[SYS_Reactor].button->setIcon("gui/icons/system_reactor");
     system_rows[SYS_BeamWeapons].button->setIcon("gui/icons/system_beam");
@@ -130,7 +149,7 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner)
 
     (new GuiShipInternalView(system_row_layouts, "SHIP_INTERNAL_VIEW", 48.0f))->setShip(my_spaceship)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
-    (new GuiCustomShipFunctions(this, engineering, ""))->setPosition(-20, 120, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
+    (new GuiCustomShipFunctions(this, crew_position, ""))->setPosition(-20, 120, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
 
     previous_energy_level = 0.0;
     average_energy_delta = 0.0;
@@ -334,7 +353,7 @@ void EngineeringScreen::onHotkey(const HotkeyResult& key)
             }
 			if (key.hotkey == "POWER_MAX")
             {
-                power_slider->setValue(1.0f);
+                power_slider->setValue(3.0f);
                 my_spaceship->commandSetSystemPowerRequest(selected_system, power_slider->getValue());
             }
             if (key.hotkey == "POWER_MIN")
@@ -354,7 +373,7 @@ void EngineeringScreen::onHotkey(const HotkeyResult& key)
             }
             if (key.hotkey == "COOLANT_MAX")
             {
-                coolant_slider->setValue(1.0f);
+                coolant_slider->setValue(10.0f);
                 my_spaceship->commandSetSystemCoolantRequest(selected_system, coolant_slider->getValue());
             }
             if (key.hotkey == "COOLANT_MIN")
