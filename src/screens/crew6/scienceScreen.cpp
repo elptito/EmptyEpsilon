@@ -107,7 +107,8 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
         P<SpaceShip> ship = targets.get();
         if (ship)
         {
-            if (database_view->findAndDisplayEntry(ship->getPublicName()))
+            P<ShipTemplate> st = ship->ship_template;
+            if (database_view->findAndDisplayEntry(st->getPublicName()))
             {
                 view_mode_selection->setSelectionIndex(1);
                 radar_view->hide();
@@ -401,12 +402,13 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
             if (ship)
             {
                 info_faction->setValue(factionInfo[ship->getFactionId()]->getName());
+                P<ShipTemplate> st = ship->ship_template;
 //                if (factionInfo[ship->getFactionId()]->getIcon() != "")
 //                    info_faction->setIcon("gui/icons/" + factionInfo[ship->getFactionId()]->getIcon());
 //                else
 //                    info_faction->setIcon("");
                 info_type_button->show();
-                info_type->setValue(ship->getPublicName());
+                info_type->setValue(st->getPublicName());
                 info_shields->setValue(ship->getShieldDataString());
                 info_hull->setValue(int(ship->getHull()));
             }

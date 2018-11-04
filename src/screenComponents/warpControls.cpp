@@ -48,7 +48,11 @@ void GuiWarpControls::onDraw(sf::RenderTarget& window)
 {
     // Update the label with the current warp factor.
     if (my_spaceship)
+    {
         label->setValue(string(my_spaceship->current_warp, 1));
+        if (my_spaceship->current_warp > 0)
+            soundManager->setMusicVolume(int(my_spaceship->current_warp * 25));
+    }
 }
 
 void GuiWarpControls::onHotkey(const HotkeyResult& key)
