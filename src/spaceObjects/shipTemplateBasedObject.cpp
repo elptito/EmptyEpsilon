@@ -10,8 +10,6 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(ShipTemplateBasedObject, SpaceObject)
     /// Set the class name of this object. Normally the class name is copied from the template name (Ex "Cruiser") but you can override it with this function.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, setTypeName);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, getTypeName);
-    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, setOSName);
-    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, getOSName);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, getHackDiff);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, setHackDiff);
     /// Get the current amount of hull
@@ -100,7 +98,6 @@ ShipTemplateBasedObject::ShipTemplateBasedObject(float collision_range, string m
     hack_protect = false;
 
     registerMemberReplication(&hack_diff);
-    registerMemberReplication(&os_name);
     registerMemberReplication(&hack_protect);
 
     can_be_destroyed = true;
@@ -314,7 +311,6 @@ void ShipTemplateBasedObject::setTemplate(string template_name)
     radar_trace = ship_template->radar_trace;
 
     hack_diff = ship_template->getHackDiff();
-    os_name = ship_template->getOSName();
 
     shares_energy_with_docked = ship_template->shares_energy_with_docked;
     repair_docked = ship_template->repair_docked;

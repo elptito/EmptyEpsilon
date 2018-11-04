@@ -18,7 +18,6 @@ public:
     string template_name;
     string type_name;
     string public_name;
-    string os_name;
     int hack_diff;
     bool hack_protect;
     string radar_trace;
@@ -65,9 +64,7 @@ public:
     string getTypeName() { return type_name; }
     string getPublicName() { return public_name; }
 
-    void setOSName(string os_name) { this->os_name = os_name; }
     void setHackDiff(int hack_diff) { this->hack_diff = hack_diff; }
-    string getOSName() { return os_name; }
     int getHackDiff() { return hack_diff; }
 
     float getHull() { return hull_strength; }

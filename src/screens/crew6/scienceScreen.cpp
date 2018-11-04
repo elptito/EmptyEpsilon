@@ -401,8 +401,8 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
 
             if (ship)
             {
+				P<ShipTemplate> st = ship->ship_template;
                 info_faction->setValue(factionInfo[ship->getFactionId()]->getName());
-                P<ShipTemplate> st = ship->ship_template;
 //                if (factionInfo[ship->getFactionId()]->getIcon() != "")
 //                    info_faction->setIcon("gui/icons/" + factionInfo[ship->getFactionId()]->getIcon());
 //                else

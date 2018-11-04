@@ -254,14 +254,17 @@ void GuiHackDialog::commandHack()
                 if (hack_text == hack_test)
                 {
                     hack_message  = "\n> Connexion vers " + obj -> getCallSign() + " reussie";
-                    hack_message  += "\n> Indiquez le systeme informatique de la cible : ";
 
                     hack_target = obj;
+
+                    hack_message += "\n> Code d'acces du systeme informatique :";
+                    hack_message += "\n> (Le code est en " + string(hack_target -> getHackDiff()) + " bits)";
+
+                    defineHackCode(hack_target -> getHackDiff());
 
                     P<PlayerSpaceship> player_target = obj;
                     if (player_target)
                         player_target -> addToShipLog("Intruision informatique en cours",colorConfig.log_receive_enemy,"intern");
-                        //player_target -> ships_log.emplace_back(string(engine->getElapsedTime(), 1) + string(": "), "Intruision informatique en cours", colorConfig.log_receive_enemy);
                     hack_step = 2;
                     break;
                 }
@@ -273,41 +276,8 @@ void GuiHackDialog::commandHack()
                 hack_step = 99;
             }
         }
-        // Select OS version
-        else if (hack_step == 2)
-        {
-            hack_test = hack_target -> getOSName();
-            hack_test = hack_test.lower();
-            if (hack_text.startswith(hack_test))
-            {
-                hack_message  = "\n> Acces au software " + hack_target -> getOSName();
-
-                //Test hack code
-                if (hack_target -> getHackDiff() != 0)
-                {
-                    hack_message += "\n> Indiquez le Code d'acces de la cible :";
-                    hack_message += "\n> (Le code est en " + string(hack_target -> getHackDiff()) + " bits)";
-
-                    defineHackCode(hack_target -> getHackDiff());
-
-                    hack_step = 3;
-                }
-                else
-                {
-                    hack_message += "\n> Acces complet a l'interface";
-                    hack_message += "\n> Choisissez le systeme a hacker";
-                    hack_message += "\n> reacteur | laser | missile | manoeuvre | impulsion | warp | jump | boulierAv | boulierAr";
-                    hack_step = 5;
-                }
-            }
-            else
-            {
-                hack_message  += "\n> hack rate";
-                hack_step = 99;
-            }
-        }
         // Give ship hack code
-        else if (hack_step == 3)
+        else if (hack_step == 2)
         {
             if (hack_text == hack_code)
             {
