@@ -62,6 +62,8 @@ void ShipsLog::onDraw(sf::RenderTarget& window)
             log_text->addEntry(logs[n].prefix, logs[n].text, logs[n].color);
         }
     }else{
+
+        const std::vector<PlayerSpaceship::ShipLogEntry>& logs = my_spaceship->getShipsLog(station);
         if (log_text->getEntryCount() > 0 && logs.size() == 0)
             log_text->clearEntries();
         if (log_text->getEntryCount() > 0 && logs.size() > 0)

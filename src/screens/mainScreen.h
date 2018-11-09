@@ -27,6 +27,7 @@ private:
     bool first_person;
     GuiCommsOverlay* onscreen_comms;
     int impulse_sound = -1;
+    int warp_sound = -1;
 public:
     ScreenMainScreen();
 

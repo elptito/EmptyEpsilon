@@ -42,6 +42,8 @@ GuiWarpControls::GuiWarpControls(GuiContainer* owner, string id)
 
     // Prep the alert overlay.
     (new GuiPowerDamageIndicator(this, id + "_DPI", SYS_Warp, ATopCenter))->setSize(50, GuiElement::GuiSizeMax);
+
+    launch_sound_played = false;
 }
 
 void GuiWarpControls::onDraw(sf::RenderTarget& window)
@@ -51,7 +53,16 @@ void GuiWarpControls::onDraw(sf::RenderTarget& window)
     {
         label->setValue(string(my_spaceship->current_warp, 1));
         if (my_spaceship->current_warp > 0)
-            soundManager->setMusicVolume(int(my_spaceship->current_warp * 25));
+        {
+            if (!launch_sound_played)
+            {
+                soundManager->playSound("warp.wav", my_spaceship->getPosition(), 200.0, 1.0);
+                launch_sound_played = true;
+            }
+        }else{
+            launch_sound_played = false;
+        }
+            //soundManager->setMusicVolume(int(my_spaceship->current_warp * 25));
     }
 }
 

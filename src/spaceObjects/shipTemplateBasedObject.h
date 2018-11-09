@@ -22,6 +22,7 @@ public:
     bool hack_protect;
     string radar_trace;
     string impulse_sound_file = "engine.wav";
+    string warp_sound_file = "warp.wav";
     P<ShipTemplate> ship_template;
 
     int shield_count;

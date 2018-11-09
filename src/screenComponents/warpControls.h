@@ -11,9 +11,10 @@ class GuiWarpControls : public GuiElement
 private:
     GuiKeyValueDisplay* label;
     GuiSlider* slider;
+    bool launch_sound_played;
 public:
     GuiWarpControls(GuiContainer* owner, string id);
-    
+
     virtual void onDraw(sf::RenderTarget& window) override;
     virtual void onHotkey(const HotkeyResult& key) override;
 };

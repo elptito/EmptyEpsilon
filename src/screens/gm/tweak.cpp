@@ -57,6 +57,8 @@ GuiObjectTweak::GuiObjectTweak(GuiContainer* owner, ETweakType tweak_type)
     {
         pages.push_back(new GuiShipTweakPlayer(this));
         list->addEntry("Joueur", "");
+        pages.push_back(new GuiShipTweakMessages(this));
+        list->addEntry("Messages", "");
     }
 
     for(GuiTweakPage* page : pages)
@@ -865,5 +867,133 @@ void GuiShipTweakPlayer::open(P<SpaceObject> target)
         gravity_toggle->setValue(player->has_gravity_sensor);
         electrical_toggle->setValue(player->has_electrical_sensor);
         biological_toggle->setValue(player->has_biological_sensor);
+    }
+}
+
+GuiShipTweakMessages::GuiShipTweakMessages(GuiContainer* owner)
+: GuiTweakPage(owner)
+{
+    color_message = sf::Color::White;
+    type_log = "extern";
+    message = "";
+
+    (new GuiLabel(this, "", "Message :", 30))->setPosition(0, 30, ATopCenter);
+    message_entry = new GuiTextEntry(this, "", "");
+    message_entry->setSize(650, 50);
+    message_entry->setPosition(0, 50, ATopCenter);
+    message_entry->callback([this](string text) {
+        message = text;
+    });
+
+    (new GuiButton(this, "", "Effacer message", [this]() {
+        message_entry -> setText("");
+    }))->setPosition(0, 100, ATopCenter)->setSize(300, 50);
+
+    // Add two columns.
+    GuiAutoLayout* left_col = new GuiAutoLayout(this, "LEFT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    left_col->setPosition(50, 150, ATopLeft)->setSize(300, GuiElement::GuiSizeMax);
+
+    GuiAutoLayout* right_col = new GuiAutoLayout(this, "RIGHT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    right_col->setPosition(-25, 150, ATopRight)->setSize(300, GuiElement::GuiSizeMax);
+
+    // Left column
+
+    (new GuiLabel(left_col, "", "Dans le log", 30))->setSize(GuiElement::GuiSizeMax, 100);
+
+    // Choose the color
+    (new GuiLabel(left_col, "", "Couleur :", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    GuiSelector* color_selector = new GuiSelector(left_col, "", [this](int index, string value)
+    {
+        color_message = sf::Color::White;
+        if (value == "white")
+            color_message = sf::Color::White;
+        if (value == "black")
+            color_message = sf::Color::Black;
+        if (value == "red")
+            color_message = sf::Color::Red;
+        if (value == "green")
+            color_message = sf::Color::Green;
+        if (value == "blue")
+            color_message = sf::Color::Blue;
+        if (value == "yellow")
+            color_message = sf::Color::Yellow;
+        if (value == "magenta")
+            color_message = sf::Color::Magenta;
+        if (value == "cyan")
+            color_message = sf::Color::Cyan;
+    });
+    color_selector->setSize(GuiElement::GuiSizeMax, 40);
+    color_selector->addEntry("white", "white");
+    color_selector->addEntry("black", "black");
+    color_selector->addEntry("red", "red");
+    color_selector->addEntry("green", "green");
+    color_selector->addEntry("blue", "blue");
+    color_selector->addEntry("yellow", "yellow");
+    color_selector->addEntry("magenta", "magenta");
+    color_selector->addEntry("cyan", "cyan");
+    color_selector->setSelectionIndex(0);
+
+    // Choose the color
+    (new GuiLabel(left_col, "", "Log:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    GuiSelector* log_selector = new GuiSelector(left_col, "", [this](int index, string value)
+    {
+        type_log = value;
+    });
+    log_selector->setSize(GuiElement::GuiSizeMax, 40);
+    log_selector->addEntry("extern", "extern");
+    log_selector->addEntry("intern", "intern");
+    log_selector->setSelectionIndex(0);
+
+    // Send the message
+    send_message_log = new GuiButton(left_col, "", "Envoyer message", [this]() {
+       target -> addToShipLog(message,color_message,type_log);
+    });
+    send_message_log->setSize(GuiElement::GuiSizeMax, 40);
+
+    // Right column
+
+    (new GuiLabel(right_col, "", "Sur un ecran", 30))->setSize(GuiElement::GuiSizeMax, 100);
+
+    (new GuiButton(right_col, "", "Pilote", [this]() {
+        target->addCustomMessage(helmsOfficer,"helms_message", message);
+    }))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiButton(right_col, "", "Artilleur", [this]() {
+        target->addCustomMessage(weaponsOfficer,"weapons_message", message);
+    }))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiButton(right_col, "", "Ingenieur", [this]() {
+        target->addCustomMessage(engineering,"engineering_message", message);
+    }))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiButton(right_col, "", "Analyste", [this]() {
+        target->addCustomMessage(scienceOfficer,"science_message", message);
+    }))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiButton(right_col, "", "Relai", [this]() {
+        target->addCustomMessage(relayOfficer,"relay_message", message);
+    }))->setSize(GuiElement::GuiSizeMax, 50);
+
+    (new GuiButton(right_col, "", "Retirer message ecran", [this]() {
+        target->removeCustom("helms_message");
+        target->removeCustom("weapons_message");
+        target->removeCustom("engineering_message");
+        target->removeCustom("science_message");
+        target->removeCustom("relay_message");
+
+        message_entry -> setText("");
+    }))->setSize(GuiElement::GuiSizeMax, 50);
+
+}
+
+void GuiShipTweakMessages::onDraw(sf::RenderTarget& window)
+{
+
+}
+
+void GuiShipTweakMessages::open(P<SpaceObject> target)
+{
+    P<PlayerSpaceship> player = target;
+    this->target = player;
+
+    if (player)
+    {
+
     }
 }

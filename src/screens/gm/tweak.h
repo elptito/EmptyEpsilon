@@ -14,6 +14,7 @@ class GuiTextEntry;
 class GuiSlider;
 class GuiSelector;
 class GuiToggleButton;
+class GuiButton;
 
 enum ETweakType
 {
@@ -210,6 +211,28 @@ private:
     GuiKeyValueDisplay* position[max_crew_positions];
 public:
     GuiShipTweakPlayer(GuiContainer* owner);
+
+    virtual void open(P<SpaceObject> target);
+
+    virtual void onDraw(sf::RenderTarget& window) override;
+};
+
+class GuiShipTweakMessages : public GuiTweakPage
+{
+private:
+    P<PlayerSpaceship> target;
+
+    sf::Color color_message;
+    string type_log;
+    string message;
+
+    GuiSelector* color_selector;
+    GuiSelector* log_selector;
+    GuiTextEntry* message_entry;
+    GuiButton* send_message_log;
+
+public:
+    GuiShipTweakMessages(GuiContainer* owner);
 
     virtual void open(P<SpaceObject> target);
 
