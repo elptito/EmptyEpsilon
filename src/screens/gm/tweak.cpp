@@ -887,6 +887,7 @@ GuiShipTweakMessages::GuiShipTweakMessages(GuiContainer* owner)
 
     (new GuiButton(this, "", "Effacer message", [this]() {
         message_entry -> setText("");
+        message = "";
     }))->setPosition(0, 100, ATopCenter)->setSize(300, 50);
 
     // Add two columns.
