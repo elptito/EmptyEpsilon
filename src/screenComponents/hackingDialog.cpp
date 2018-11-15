@@ -46,7 +46,7 @@ GuiHackingDialog::GuiHackingDialog(GuiContainer* owner, string id)
     });
     close_button->setSize(200, 50);
     close_button->setPosition(-25, 75 + hacking_field_size * 50, ATopRight);
-    
+
     progress_bar = new GuiProgressbar(minigame_box, "", 0, 1, 0.0);
     progress_bar->setPosition(-25, 75, ATopRight);
     progress_bar->setSize(50, hacking_field_size * 50);
@@ -56,7 +56,7 @@ GuiHackingDialog::GuiHackingDialog(GuiContainer* owner, string id)
 
     GuiLabel* target_selection_label = new GuiLabel(target_selection_box, "", "Systeme cible:", 25);
     target_selection_label->setSize(GuiElement::GuiSizeMax, 50)->setPosition(0, 15);
-    
+
     target_list = new GuiListbox(target_selection_box, "", [this](int index, string value)
     {
         target_system = value;
@@ -102,7 +102,7 @@ void GuiHackingDialog::onDraw(sf::RenderTarget& window)
         {
             if (my_spaceship)
             {
-                my_spaceship->commandHackingFinished(target, target_system);
+                my_spaceship->commandHackingFinished(target, target_system, "");
             }
             resetMinigame();
         }else{
@@ -145,7 +145,7 @@ void GuiHackingDialog::resetMinigame()
     {
         int x = irandom(0, hacking_field_size - 1);
         int y = irandom(0, hacking_field_size - 1);
-        
+
         if (field_item[x][y].bomb)
         {
             n--;
@@ -155,7 +155,7 @@ void GuiHackingDialog::resetMinigame()
     }
     error_count = 0;
     correct_count = 0;
-    
+
     progress_bar->setValue(0.0f);
     status_label->setText("Hack en cours: 0%");
     reset_button->enable();
@@ -164,7 +164,7 @@ void GuiHackingDialog::resetMinigame()
 void GuiHackingDialog::disableMinigame()
 {
     status_label->setText("Selectionner cible du hack...");
-    
+
     for(int x=0; x<hacking_field_size; x++)
     {
         for(int y=0; y<hacking_field_size; y++)
@@ -205,12 +205,12 @@ void GuiHackingDialog::onFieldClick(int x, int y)
         if (x < hacking_field_size - 1 && y > 0 && field_item[x+1][y-1].bomb) bomb_count++;
         if (x < hacking_field_size - 1 && field_item[x+1][y].bomb) bomb_count++;
         if (x < hacking_field_size - 1 && y < hacking_field_size - 1 && field_item[x+1][y+1].bomb) bomb_count++;
-        
+
         if (bomb_count < 1)
             item.button->setText("");
         else
             item.button->setText(string(bomb_count));
-        
+
         if (bomb_count < 1)
         {
             if (x > 0 && y > 0) onFieldClick(x - 1, y - 1);
@@ -225,7 +225,7 @@ void GuiHackingDialog::onFieldClick(int x, int y)
             if (x < hacking_field_size - 1 && y < hacking_field_size - 1)  onFieldClick(x + 1, y + 1);
         }
     }
-    
+
     if (error_count > 1)
     {
         status_label->setText("Hack rate");

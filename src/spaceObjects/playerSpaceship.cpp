@@ -1532,10 +1532,16 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
         {
             uint32_t id;
             string target_system;
-            packet >> id >> target_system;
+            string target_faction;
+            packet >> id >> target_system >> target_faction;
             P<SpaceObject> obj = game_server->getObjectById(id);
             if (obj)
-                obj->hackFinished(this, target_system);
+            {
+                if (target_system != "")
+                    obj->hackFinished(this, target_system);
+                if (target_faction != "")
+                    obj->setFactionId(FactionInfo::findFactionId(target_faction));
+            }
         }
         break;
     case CMD_CUSTOM_FUNCTION:
@@ -1834,12 +1840,13 @@ void PlayerSpaceship::commandSetAlertLevel(EAlertLevel level)
     sendClientCommand(packet);
 }
 
-void PlayerSpaceship::commandHackingFinished(P<SpaceObject> target, string target_system)
+void PlayerSpaceship::commandHackingFinished(P<SpaceObject> target, string target_system, string target_faction)
 {
     sf::Packet packet;
     packet << CMD_HACKING_FINISHED;
     packet << target->getMultiplayerId();
     packet << target_system;
+    packet << target_faction;
     sendClientCommand(packet);
 }
 

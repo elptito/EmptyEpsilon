@@ -257,7 +257,7 @@ public:
     void commandScanDone();
     void commandScanCancel();
     void commandSetAlertLevel(EAlertLevel level);
-    void commandHackingFinished(P<SpaceObject> target, string target_system);
+    void commandHackingFinished(P<SpaceObject> target, string target_system, string target_faction);
     void commandCustomFunction(string name);
 
     virtual void onReceiveServerCommand(sf::Packet& packet) override;

@@ -170,25 +170,42 @@ void GuiHackDialog::onDraw(sf::RenderTarget& window)
         hack_step = 99;
 
         if (target_system == "reacteur")
-            my_spaceship->commandHackingFinished(hack_target, "Reacteur");
+            my_spaceship->commandHackingFinished(hack_target, "Reacteur","");
         else if (target_system == "laser")
-            my_spaceship->commandHackingFinished(hack_target, "Faisceau laser");
+            my_spaceship->commandHackingFinished(hack_target, "Faisceau laser","");
         else if (target_system == "missile")
-            my_spaceship->commandHackingFinished(hack_target, "Systeme de missiles");
+            my_spaceship->commandHackingFinished(hack_target, "Systeme de missiles","");
         else if (target_system == "manoeuvre")
-            my_spaceship->commandHackingFinished(hack_target, "Manoeuvres");
+            my_spaceship->commandHackingFinished(hack_target, "Manoeuvres","");
         else if (target_system == "impulsion")
-            my_spaceship->commandHackingFinished(hack_target, "Moteur subluminique");
+            my_spaceship->commandHackingFinished(hack_target, "Moteur subluminique","");
         else if (target_system == "warp")
-            my_spaceship->commandHackingFinished(hack_target, "Moteur WARP");
+            my_spaceship->commandHackingFinished(hack_target, "Moteur WARP","");
         else if (target_system == "jump")
-            my_spaceship->commandHackingFinished(hack_target, "Moteur JUMP");
+            my_spaceship->commandHackingFinished(hack_target, "Moteur JUMP","");
         else if (target_system == "boulierAv")
-            my_spaceship->commandHackingFinished(hack_target, "Generateur Bouclier Av.");
+            my_spaceship->commandHackingFinished(hack_target, "Generateur Bouclier Av.","");
         else if (target_system == "boulierAr")
-            my_spaceship->commandHackingFinished(hack_target, "Generateur Bouclier Ar.");
+            my_spaceship->commandHackingFinished(hack_target, "Generateur Bouclier Ar.","");
         else
             hack_message  += "\n> Systeme cible inconnu";
+    }
+    // Si fini (federation)
+    if (hack_step == 91 && my_spaceship && hack_target)
+    {
+        hack_step = 99;
+
+        my_spaceship->commandHackingFinished(hack_target, "",target_system);
+
+        P<PlayerSpaceship> player_target = hack_target;
+        if (player_target)
+        {
+            player_target -> addToShipLog("Tentative de Piratage de la signature de federation",colorConfig.log_receive_enemy,"extern");
+            player_target -> addToShipLog("Tentative de Piratage de la signature de federation",colorConfig.log_receive_enemy,"intern");
+        }
+
+        hack_message  += "\n> Hack reussi vers " + hack_target -> getCallSign();
+        hack_message  += "\n> Tentative de transformation vers " + target_system;
     }
 }
 
@@ -302,10 +319,18 @@ void GuiHackDialog::commandHack()
             {
                 hack_message  = "\n> Acces au service S-PAY";
                 hack_message += "\n> Indiquez le Code d'acces du S-PAY :";
-                hack_message += "\n> (Le code est en 8 bits)";
-                defineHackCode(8);
+                hack_message += "\n> (Le code est en 6 bits)";
+                defineHackCode(6);
                 hack_step = 6;
-            }else{
+            }else if (hack_text == "signature")
+            {
+                hack_message  = "\n> Acces au service de perturbation de signature";
+                hack_message += "\n> Indiquez le Code d'acces pour modifier la signature :";
+                hack_message += "\n> (Le code est en 6 bits)";
+                defineHackCode(6);
+                hack_step = 7;
+            }else
+            {
                 target_system = hack_text;
                 hack_step = 9;
             }
@@ -323,15 +348,39 @@ void GuiHackDialog::commandHack()
                     player_target -> addToShipLog("Perte de 200Q par hack du S-PAY",colorConfig.log_receive_enemy,"intern");
                 hack_step = 99;
             }
-            else if (hack_text.length() != 8)
+            else if (hack_text.length() != 6)
             {
                 hack_message  += "\n> Nombre de bits incorrect";
             }
             else
             {
                 hack_message  += "\n> Code " + hack_text + " incorrect";
-                hack_message  += "\n> " + string(verifHackCode(8, hack_text, hack_code)) + "bits corrects";
+                hack_message  += "\n> " + string(verifHackCode(6, hack_text, hack_code)) + "bits corrects";
             }
+        }
+        else if (hack_step == 7)
+        {
+            if (hack_text == hack_code)
+            {
+                hack_message  = "\n> Acces complet au piratage signature";
+                hack_message  += "\n> quelle est la signature a attribuer";
+                hack_message  += "\n> luxa | arroya | trente nebuleuses | gcg | gusm | systemes souverains | ganima";
+                hack_step = 8;
+            }
+            else if (hack_text.length() != 6)
+            {
+                hack_message  += "\n> Nombre de bits incorrect";
+            }
+            else
+            {
+                hack_message  += "\n> Code " + hack_text + " incorrect";
+                hack_message  += "\n> " + string(verifHackCode(6, hack_text, hack_code)) + "bits corrects";
+            }
+        }
+        else if (hack_step == 8)
+        {
+            target_system = hack_text;
+            hack_step = 91;
         }
         // Protection
         else if (hack_step == 10)

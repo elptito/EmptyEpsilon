@@ -551,7 +551,6 @@ void GameMasterScreen::onKey(sf::Event::KeyEvent key, int unicode)
         Clipboard::setClipboard(getScriptExport(false));
         break;
 
-    //TODO: This is more generic code and is duplicated.
     case sf::Keyboard::Escape:
     case sf::Keyboard::Home:
         destroy();
@@ -675,14 +674,14 @@ GuiObjectCreationScreen::GuiObjectCreationScreen(GameMasterScreen* gm_screen)
     }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
     y += 30;
     (new GuiButton(box, "CREATE_PLANET", "Planet", [this]() {
-        setCreateScript("Planet()");
+        setCreateScript("Planet():setPlanetSurfaceTexture('planets/moon-1.png'):setPlanetIcon('planets/icons/Lava-PLanet.png'):setPlanetRadius(15000):setDistanceFromMovementPlane(-20000)");
     }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
     y += 30;
     y = 20;
 
     GuiListbox* listbox = new GuiListbox(box, "CREATE_SHIPS", [this](int index, string value)
     {
-        setCreateScript("CpuShip():setRotation(random(0, 360)):setFactionId(" + string(faction_selector->getSelectionIndex()) + "):setTemplate(\"" + value + "\"):orderRoaming()");
+        setCreateScript("CpuShip():setTranslateZ(random(-100,100)):setRotation(random(0, 360)):setFactionId(" + string(faction_selector->getSelectionIndex()) + "):setTemplate(\"" + value + "\"):orderRoaming()");
     });
     listbox->setTextSize(20)->setButtonHeight(30)->setPosition(-20, 20, ATopRight)->setSize(300, 460);
 

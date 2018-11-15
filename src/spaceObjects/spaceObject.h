@@ -98,7 +98,6 @@ extern PVector<SpaceObject> space_object_list;
 class SpaceObject : public Collisionable, public MultiplayerObject
 {
     float object_radius;
-    uint8_t faction_id;
 
     /*!
      * Scan state per faction. Implementation wise, this vector is resized when
@@ -110,6 +109,7 @@ class SpaceObject : public Collisionable, public MultiplayerObject
     std::vector<EScannedState> scanned_by_faction;
 
 public:
+    uint8_t faction_id;
     string comms_script_name;
     ScriptSimpleCallback comms_script_callback;
 
