@@ -336,6 +336,16 @@ void GameMasterScreen::update(float delta)
     if (targets.getTargets().size() == 1)
     {
         selection_info["Position"] = string(targets.getTargets()[0]->getPosition().x, 0) + "," + string(targets.getTargets()[0]->getPosition().y, 0);
+
+        for(int n=0; n<GameGlobalInfo::max_player_ships; n++)
+        {
+            P<PlayerSpaceship> ship = gameGlobalInfo->getPlayerShip(n);
+            if (ship)
+            {
+                float distance = sf::length(targets.getTargets()[0]->getPosition() - ship->getPosition());
+                selection_info["Distance PJ " + string(n+1)] = string(distance / 1000.0f,0) + " U";
+            }
+        }
     }
 
     unsigned int cnt = 0;

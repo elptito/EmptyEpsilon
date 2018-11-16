@@ -63,6 +63,10 @@ REGISTER_SCRIPT_CLASS_NO_CREATE(SpaceObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, takeReputationPoints);
     /// Add a certain amount of reputation points.
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, addReputationPoints);
+     /// Sets the oxygen max to a value.
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setOxygenMax);
+    /// Return the max amount of oxygen points.
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getOxygenMax);
      /// Sets the oxygen to a value.
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setOxygenPoints);
     /// Return the current amount of oxygen points.
@@ -127,6 +131,7 @@ SpaceObject::SpaceObject(float collision_range, string multiplayer_name, float m
     personality_id = 0;
     hull = 0;
     oxygen_points = 100;
+    oxygen_max = 100;
     translate_z = 0;
 
     scanning_complexity_value = 0;
@@ -138,6 +143,7 @@ SpaceObject::SpaceObject(float collision_range, string multiplayer_name, float m
     registerMemberReplication(&faction_id);
     registerMemberReplication(&personality_id);
     registerMemberReplication(&oxygen_points);
+    registerMemberReplication(&oxygen_max);
     registerMemberReplication(&scanned_by_faction);
     registerMemberReplication(&object_description.not_scanned);
     registerMemberReplication(&object_description.friend_of_foe_identified);
@@ -454,29 +460,36 @@ void SpaceObject::setOxygenPoints(float amount)
 {
     oxygen_points = amount;
 }
- int SpaceObject::getOxygenPoints()
+void SpaceObject::setOxygenMax(float amount)
+{
+    oxygen_max = amount;
+}
+int SpaceObject::getOxygenPoints()
 {
     return oxygen_points;
 }
- bool SpaceObject::takeOxygenPoints(float amount)
+int SpaceObject::getOxygenMax()
+{
+    return oxygen_max;
+}
+bool SpaceObject::takeOxygenPoints(float amount)
 {
 	if (oxygen_points < amount)
 		return false;
 	oxygen_points -= amount;
     	return true;
 }
- void SpaceObject::removeOxygenPoints(float amount)
+void SpaceObject::removeOxygenPoints(float amount)
 {
     addOxygenPoints(-amount);
 }
- void SpaceObject::addOxygenPoints(float amount)
+void SpaceObject::addOxygenPoints(float amount)
 {
     oxygen_points += amount;
     if (oxygen_points < 0.0)
     	oxygen_points = 0.0;
-
-	if (oxygen_points > 100.0)
-    	oxygen_points = 100.0;
+    if (oxygen_points > oxygen_max)
+    	oxygen_points = oxygen_max;
 }
 
 string SpaceObject::getSectorName()

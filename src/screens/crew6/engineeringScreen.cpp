@@ -191,7 +191,7 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
         front_shield_display->setValue(string(my_spaceship->getShieldPercentage(0)) + "%");
         rear_shield_display->setValue(string(my_spaceship->getShieldPercentage(1)) + "%");
 
-        oxygen_display->setValue(string(my_spaceship->getOxygenPoints()) + "%");
+        oxygen_display->setValue(string(int(100.0f * my_spaceship->getOxygenPoints() / my_spaceship->getOxygenMax())) + "%");
         if (my_spaceship->getOxygenPoints() < 20)
             oxygen_display->setColor(sf::Color::Red);
         else
@@ -252,7 +252,7 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
                 if (effectiveness > 0.8f)
                     addSystemEffect("Production d'oxygene", string((effectiveness - 0.8f) * 60.0, 1) + "/m");
                 else
-                    addSystemEffect("Perte d'oxygene", string((0.8f - effectiveness) * 60.0, 1) + "/m");
+                    addSystemEffect("Perte d'oxygene", string((0.8f - effectiveness) * 60.0 / 3.0, 1) + "/m");
                 break;
             case SYS_BeamWeapons:
                 addSystemEffect("Vitesse de tirs", string(int(effectiveness * 100)) + "%");

@@ -37,12 +37,12 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
 
         // If the object is more than twice as far away as the maximum radar
         // range, disregard it.
-        if (dist > distance * 10.0)
+        if (dist > distance * 10000.0)
             continue;
 
         // The further away the object is, the less its effect on radar data.
         if (dist > distance)
-            scale = scale - (dist - distance) / (distance * 5.0 - distance);
+            scale = scale - (dist - distance) / (distance * 10000.0 - distance);
 
         // If we're adjacent to the object ...
         if (dist <= obj->getRadius())

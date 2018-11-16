@@ -490,7 +490,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
                 float system_health = ship->systems[n].health;
                 info_system[n]->setValue(string(int(system_health * 100.0f)) + "%")->setColor(sf::Color(255, 127.5 * (system_health + 1), 127.5 * (system_health + 1), 255));
             }
-            info_oxygen->setValue(string(obj->oxygen_points) + "%");
+            info_oxygen->setValue(string(int(100.0f * obj->oxygen_points/obj->oxygen_max)) + "%");
             if (obj->oxygen_points < 20)
                 info_oxygen->setColor(sf::Color::Red);
             else

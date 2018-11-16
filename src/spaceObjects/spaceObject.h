@@ -125,6 +125,7 @@ public:
     int scanning_depth_value;
     string callsign;
     float oxygen_points;
+    float oxygen_max;
     float hull;
     uint8_t personality_id;
 
@@ -246,7 +247,9 @@ public:
     bool takeReputationPoints(float amount);
     void removeReputationPoints(float amount);
     void addReputationPoints(float amount);
+    void setOxygenMax(float amount);
     void setOxygenPoints(float amount);
+    int getOxygenMax();
     int getOxygenPoints();
     bool takeOxygenPoints(float amount);
     void removeOxygenPoints(float amount);

@@ -643,12 +643,12 @@ void SpaceShip::update(float delta)
 
     // Diminution de l'oxygene si Hull trop base
     if (hull_strength / hull_max < 1)
-        removeOxygenPoints((1 - hull_strength / hull_max) * delta);
+        removeOxygenPoints((1 - hull_strength / hull_max) * delta / 2.0f);
 
     // Modifs selon Reacteur
     float reactor_effectiveness = getSystemEffectiveness(SYS_Reactor);
     if (reactor_effectiveness < 0.8f)
-        removeOxygenPoints((0.8f - reactor_effectiveness) * delta);
+        removeOxygenPoints((0.8f - std::max(0.0f,reactor_effectiveness)) * delta / 3.0f);
     else
         addOxygenPoints(delta * (reactor_effectiveness - 0.8f));
 }

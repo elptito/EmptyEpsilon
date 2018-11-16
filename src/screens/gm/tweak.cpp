@@ -769,10 +769,19 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
 
     // Edit oxygen.
     (new GuiLabel(left_col, "", "Oxygen:", 30))->setSize(GuiElement::GuiSizeMax, 50);
-     oxygen_point_slider = new GuiSlider(left_col, "", 0.0, 100.0, 0.0, [this](float value) {
-        target->setOxygenPoints(value);
+     oxygen_point_slider = new GuiSlider(left_col, "", 0.0, 500.0, 0.0, [this](float value) {
+//        target->setOxygenPoints(value);
+        target->oxygen_points = std::min(value, target->oxygen_max);
     });
     oxygen_point_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
+    // Edit oxygen.
+    (new GuiLabel(left_col, "", "Oxygen Max:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+     max_oxygen_point_slider = new GuiSlider(left_col, "", 0.0, 500.0, 0.0, [this](float value) {
+        target->setOxygenMax(value);
+        target->oxygen_points = std::min(target->oxygen_points, target->oxygen_max);
+    });
+    max_oxygen_point_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
     // Edit energy level.
     (new GuiLabel(left_col, "", "Energie max:", 30))->setSize(GuiElement::GuiSizeMax, 50);
@@ -852,6 +861,7 @@ void GuiShipTweakPlayer::onDraw(sf::RenderTarget& window)
 
     // Update oxygen points.
     oxygen_point_slider->setValue(target->getOxygenPoints());
+    max_oxygen_point_slider->setValue(target->getOxygenMax());
 }
 
 void GuiShipTweakPlayer::open(P<SpaceObject> target)
