@@ -543,18 +543,18 @@ void SpaceShip::update(float delta)
             impulse_request = 1.0;
         if (impulse_request < -1.0)
             impulse_request = -1.0;
-        if (current_impulse < impulse_request)
+        if (impulse_request > 0.0)
         {
             if (impulse_max_speed > 0)
                 current_impulse += delta * (impulse_acceleration / impulse_max_speed);
-            if (current_impulse > impulse_request)
-                current_impulse = impulse_request;
-        }else if (current_impulse > impulse_request)
+//            if (current_impulse > impulse_request)
+//                current_impulse = impulse_request;
+        }else if (impulse_request < 0.0)
         {
             if (impulse_max_speed > 0)
                 current_impulse -= delta * (impulse_acceleration / impulse_max_speed);
-            if (current_impulse < impulse_request)
-                current_impulse = impulse_request;
+//            if (current_impulse < impulse_request)
+//                current_impulse = impulse_request;
         }
     }
 
