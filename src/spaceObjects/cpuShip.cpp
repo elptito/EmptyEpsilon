@@ -38,6 +38,12 @@ REGISTER_SCRIPT_SUBCLASS(CpuShip, SpaceShip)
     REGISTER_SCRIPT_CLASS_FUNCTION(CpuShip, orderAttack);
     /// Order this ship to dock at a specific object (station or otherwise)
     REGISTER_SCRIPT_CLASS_FUNCTION(CpuShip, orderDock);
+    /// Get the order this ship is executing
+    REGISTER_SCRIPT_CLASS_FUNCTION(CpuShip, getOrder);
+    /// Get the target location of the currently executed order
+    REGISTER_SCRIPT_CLASS_FUNCTION(CpuShip, getOrderTargetLocation);
+    /// Get the target SpaceObject of the currently executed order
+    REGISTER_SCRIPT_CLASS_FUNCTION(CpuShip, getOrderTarget);
 }
 
 REGISTER_MULTIPLAYER_CLASS(CpuShip, "CpuShip");
@@ -131,33 +137,41 @@ void CpuShip::setAI(string new_ai)
 void CpuShip::orderIdle()
 {
     orders = AI_Idle;
+    order_target = NULL;
+    order_target_location = sf::Vector2f();
 }
 
 void CpuShip::orderRoaming()
 {
     target_rotation = getRotation();
     orders = AI_Roaming;
-    this->addBroadcast(FVF_Friendly,"Searching for targets.");
+    order_target = NULL;
+    order_target_location = sf::Vector2f();
+    this->addBroadcast(FVF_Friendly,"En patrouille.");
 }
 
 void CpuShip::orderRoamingAt(sf::Vector2f position)
 {
     target_rotation = getRotation();
     orders = AI_Roaming;
+    order_target = NULL;
     order_target_location = position;
-    this->addBroadcast(FVF_Friendly, "Searching for hostiles around " + string(position.x) + "," + string(position.y) + ".");
+    this->addBroadcast(FVF_Friendly, "En patrouille dans la zone " + string(position.x) + "," + string(position.y) + ".");
 }
 
 void CpuShip::orderStandGround()
 {
     target_rotation = getRotation();
     orders = AI_StandGround;
-    this->addBroadcast(FVF_Friendly, "Standing ground for now.");
+    order_target = NULL;
+    order_target_location = sf::Vector2f();
+    this->addBroadcast(FVF_Friendly, "Attente de nouveaux ordres.");
 }
 
 void CpuShip::orderDefendLocation(sf::Vector2f position)
 {
     orders = AI_DefendLocation;
+    order_target = NULL;
     order_target_location = position;
     this->addBroadcast(FVF_Friendly, "Defense " + string(position.x) + "," + string(position.y) + ".");
 }
@@ -168,6 +182,7 @@ void CpuShip::orderDefendTarget(P<SpaceObject> object)
         return;
     orders = AI_DefendTarget;
     order_target = object;
+    order_target_location = sf::Vector2f();
     this->addBroadcast(FVF_Friendly, "Defense " + object->getCallSign() + ".");
 }
 
@@ -178,21 +193,23 @@ void CpuShip::orderFlyFormation(P<SpaceObject> object, sf::Vector2f offset)
     orders = AI_FlyFormation;
     order_target = object;
     order_target_location = offset;
-    this->addBroadcast(FVF_Friendly, "Following " + object->getCallSign() + ".");
+    this->addBroadcast(FVF_Friendly, "Suit " + object->getCallSign() + ".");
 }
 
 void CpuShip::orderFlyTowards(sf::Vector2f target)
 {
     orders = AI_FlyTowards;
+    order_target = NULL;
     order_target_location = target;
-    this->addBroadcast(FVF_Friendly, "Moving to " + string(target.x) + "," + string(target.y) + ".");
+    this->addBroadcast(FVF_Friendly, "Se deplace vers " + string(target.x) + "," + string(target.y) + ".");
 }
 
 void CpuShip::orderFlyTowardsBlind(sf::Vector2f target)
 {
     orders = AI_FlyTowardsBlind;
+    order_target = NULL;
     order_target_location = target;
-    this->addBroadcast(FVF_Friendly,"Moving to " + string(target.x) + "," + string(target.y) + ".");
+    this->addBroadcast(FVF_Friendly,"Se deplace vers " + string(target.x) + "," + string(target.y) + ".");
 }
 
 void CpuShip::orderAttack(P<SpaceObject> object)
@@ -201,7 +218,8 @@ void CpuShip::orderAttack(P<SpaceObject> object)
         return;
     orders = AI_Attack;
     order_target = object;
-    this->addBroadcast(FVF_Friendly, "Moving to attack " + object->getCallSign() + "!");
+    order_target_location = sf::Vector2f();
+    this->addBroadcast(FVF_Friendly, "Attaque " + object->getCallSign() + "!");
 }
 
 void CpuShip::orderDock(P<SpaceObject> object)
@@ -210,7 +228,8 @@ void CpuShip::orderDock(P<SpaceObject> object)
         return;
     orders = AI_Dock;
     order_target = object;
-    this->addBroadcast(FVF_Friendly, "Docking to " + object->getCallSign() + ".");
+    order_target_location = sf::Vector2f();
+    this->addBroadcast(FVF_Friendly, "Se docke a " + object->getCallSign() + ".");
 }
 
 void CpuShip::drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range)
@@ -261,4 +280,10 @@ string getAIOrderString(EAIOrder order)
     case AI_Dock: return "Se docke";
     }
     return "Unknown";
+}
+
+template<> int convert<EAIOrder>::returnType(lua_State* L, EAIOrder o)
+{
+    lua_pushstring(L, getAIOrderString(o).c_str());
+    return 1;
 }

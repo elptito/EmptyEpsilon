@@ -8,8 +8,10 @@
 #include "particleEffect.h"
 #include "spaceObjects/warpJammer.h"
 #include "gameGlobalInfo.h"
+#include "shipCargo.h"
 
 #include "scriptInterface.h"
+
 REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
 {
     //[DEPRICATED]
@@ -182,6 +184,11 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
         registerMemberReplication(&weapon_storage_max[n]);
     }
 
+    for(int n = 0; n < max_docks_count; n++)
+    {
+        docks[n].setParent(this);
+        docks[n].setIndex(n);
+    }
     scanning_complexity_value = -1;
     scanning_depth_value = -1;
 
@@ -242,6 +249,34 @@ void SpaceShip::applyTemplateValues()
 
     ship_template->setCollisionData(this);
     model_info.setData(ship_template->model_data);
+
+
+    for(int n = 0; n < max_docks_count; n++)
+    {
+        if (n < ship_template->launcher_dock_count){
+            docks[n].setDockType(Launcher);
+        } else if (n < ship_template->launcher_dock_count + ship_template->energy_dock_count){
+            docks[n].setDockType(Energy);
+        } else {
+            docks[n].setDockType(Disabled);
+        }
+    }
+    int maxActiveDockIndex = ship_template->launcher_dock_count + ship_template->energy_dock_count;
+    for (auto &droneTemplate : ship_template->drones) // access by reference to avoid copying
+    {  
+        P<ShipTemplate> drone_ship_template = ShipTemplate::getTemplate(droneTemplate.template_name);
+        // add drones one by one, assuming all drones are empty, and template is of drone type
+        for (int i = 0; i < droneTemplate.count; i++)
+        {
+            Dock *dock = Dock::findOpenForDocking(docks, maxActiveDockIndex);
+            if (!dock) { // no more available docks
+                LOG(ERROR) << "Too many drones: " << template_name;
+                break; 
+            }
+            P<ShipCargo> cargo = new ShipCargo(drone_ship_template);
+            dock->dock(cargo);
+        }
+    }
 }
 
 #if FEATURE_3D_RENDERING
@@ -629,6 +664,11 @@ void SpaceShip::update(float delta)
     {
         weapon_tube[n].update(delta);
     }
+    
+    for(int n = 0; n < max_docks_count; n++)
+    {
+        docks[n].update(delta);
+    }
 
     for(int n=0; n<SYS_COUNT; n++)
     {
@@ -743,10 +783,12 @@ void SpaceShip::requestDock(P<SpaceObject> target)
 
 void SpaceShip::requestUndock()
 {
-    if (docking_state == DS_Docked && getSystemEffectiveness(SYS_Impulse) > 0.1)
+    if (docking_state == DS_Docked)
     {
         docking_state = DS_NotDocking;
-        impulse_request = 0.5;
+        if (getSystemEffectiveness(SYS_Impulse) > 0.1){
+            impulse_request = 0.5;
+        }
     }
 }
 
@@ -1004,13 +1046,16 @@ bool SpaceShip::hasSystem(ESystem system)
     case SYS_RearShield:
         return shield_count > 1;
     case SYS_Reactor:
-        return true;
+        return ship_template->has_reactor;
     case SYS_BeamWeapons:
         return true;
     case SYS_Maneuver:
         return turn_speed > 0.0;
     case SYS_Impulse:
         return impulse_max_speed > 0.0;
+    case SYS_Docks:
+    case SYS_Drones:
+        return docks[0].dock_type != Disabled;
     }
     return true;
 }
@@ -1249,6 +1294,18 @@ string SpaceShip::getScriptExportModificationsOnTemplate()
     }
 
     return ret;
+}
+
+bool SpaceShip::tryDockDrone(SpaceShip* other){
+    if(other->ship_template->getType() == ShipTemplate::TemplateType::Drone){
+        Dock* dock = Dock::findOpenForDocking(docks, max_docks_count);
+        if (dock){
+            P<ShipCargo> cargo = new ShipCargo(other);
+            dock->dock(cargo);
+            return true;
+        }
+    }
+    return false;
 }
 
 string getMissileWeaponName(EMissileWeapons missile)

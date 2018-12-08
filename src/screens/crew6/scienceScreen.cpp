@@ -43,7 +43,7 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
     radar_view->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
     // Draw the science radar.
-    science_radar = new GuiRadarView(radar_view, "SCIENCE_RADAR", gameGlobalInfo->long_range_radar_range, &targets);
+    science_radar = new GuiRadarView(radar_view, "SCIENCE_RADAR", gameGlobalInfo->long_range_radar_range, &targets, my_spaceship);
     science_radar->setPosition(-270, 0, ACenterRight)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
     science_radar->setRangeIndicatorStepSize(5000.0)->longRange()->enableWaypoints()->enableCallsigns()->enableHeadingIndicators()->setStyle(GuiRadarView::Circular)->setFogOfWarStyle(GuiRadarView::NebulaFogOfWar);
     science_radar->setCallbacks(
@@ -57,7 +57,7 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
     new RawScannerDataRadarOverlay(science_radar, "", gameGlobalInfo->long_range_radar_range);
 
     // Draw and hide the probe radar.
-    probe_radar = new GuiRadarView(radar_view, "PROBE_RADAR", 5000, &targets);
+    probe_radar = new GuiRadarView(radar_view, "PROBE_RADAR", 5000, &targets, my_spaceship);
     probe_radar->setPosition(-270, 0, ACenterRight)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax)->hide();
     probe_radar->setAutoCentering(false)->longRange()->enableWaypoints()->enableCallsigns()->enableHeadingIndicators()->setStyle(GuiRadarView::Circular)->setFogOfWarStyle(GuiRadarView::NoFogOfWar);
     probe_radar->setCallbacks(
@@ -83,8 +83,8 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
     info_sidebar = new GuiAutoLayout(radar_view, "SIDEBAR", GuiAutoLayout::LayoutVerticalTopToBottom);
     info_sidebar->setPosition(-20, 100, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
 
-    custom_function_sidebar = new GuiCustomShipFunctions(radar_view, crew_position, "");
-    custom_function_sidebar->setPosition(-20, 100, ATopRight)->setSize(250, GuiElement::GuiSizeMax)->hide();
+    custom_function_sidebar = new GuiCustomShipFunctions(radar_view, crew_position, "", my_spaceship);
+    custom_function_sidebar->setPosition(-20, 170, ATopRight)->setSize(250, GuiElement::GuiSizeMax)->hide();
 
     // Scan button.
     scan_button = new GuiScanTargetButton(info_sidebar, "SCAN_BUTTON", &targets);
@@ -304,7 +304,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
         P<Asteroid> asteroid = obj;
         P<Mine> mine = obj;
 
-        // Info latérale
+        // Info latï¿½rale
 
         // Toujours :
             // ID
@@ -312,17 +312,17 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
             // Rel. Speed
             // Description de base
 
-        // Si Scan simple ou allié :
+        // Si Scan simple ou alliï¿½ :
             // Faction
             // Type
             // Boucliers
             // Carlingue
             // Description scan simple
 
-        // Si scan amélioré
-            // Description amélioré
-            // Fréquences
-            // Systèmes
+        // Si scan amï¿½liorï¿½
+            // Description amï¿½liorï¿½
+            // Frï¿½quences
+            // Systï¿½mes
 
         sf::Vector2f position_diff = obj->getPosition() - my_spaceship->getPosition();
         float distance = sf::length(position_diff);
@@ -359,7 +359,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
         info_heading->setValue(string(int(heading)));
         info_relspeed->setValue(string(rel_velocity / 1000.0f * 60.0f, 1) + DISTANCE_UNIT_1K + "/min" + duration);
 
-        // En un coup, récupération de toute les descriptions possibles
+        // En un coup, rï¿½cupï¿½ration de toute les descriptions possibles
         string description = obj->getDescriptionFor(my_spaceship);
         string sidebar_pager_selection = sidebar_pager->getSelectionValue();
 

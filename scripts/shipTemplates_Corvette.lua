@@ -13,6 +13,7 @@ They come in 3 different subclasses:
 
 template = ShipTemplate():setName("Atlantis X23"):setClass("Corvette", "Destroyer"):setModel("battleship_destroyer_1_upgraded")
 template:setDescription([[The Atlantis X23 is the smallest model of destroyer, and its combination of frigate-like size and corvette-like power makes it an excellent escort ship when defending larger ships against multiple smaller enemies. Because the Atlantis X23 is fitted with a jump drive, it can also serve as an intersystem patrol craft.]])
+template:setDockClasses("Drone")
 template:setRadarTrace("radar_dread.png")
 template:setHull(100)
 template:setShields(200, 200, 200, 200)
@@ -29,9 +30,13 @@ template:setTubeDirection(0, -90)
 template:setTubeDirection(1, -90)
 template:setTubeDirection(2,  90)
 template:setTubeDirection(3,  90)
+template:setDocks(10, 2)
+template:addDrones("L3 Mouse", 6)
+template:addDrones("L3 Cat", 1)
 
 variation = template:copy("Atlantis"):setType("playership")
 variation:setDescription([[A refitted Atlantis X23 for more general tasks. The large shield system has been replaced with an advanced combat maneuvering systems and improved impulse engines. Its missile loadout is also more diverse. Mistaking the modified Atlantis for an Atlantis X23 would be a deadly mistake.]])
+template:setDockClasses("Drone")
 variation:setShields(200, 200)
 variation:setHull(250)
 variation:setSpeed(90, 10, 20)
@@ -48,14 +53,14 @@ variation:setTubeDirection(4, 180):setWeaponTubeExclusiveFor(4, "Mine")
 
 variation:addRoomSystem(1, 0, 2, 1, "Maneuver");
 variation:addRoomSystem(1, 1, 2, 1, "BeamWeapons");
-variation:addRoom(2, 2, 2, 1);
+variation:addRoomSystem(2, 2, 2, 1, "Drones");
 
 variation:addRoomSystem(0, 3, 1, 2, "RearShield");
 variation:addRoomSystem(1, 3, 2, 2, "Reactor");
 variation:addRoomSystem(3, 3, 2, 2, "Warp");
 variation:addRoomSystem(5, 3, 1, 2, "JumpDrive");
 variation:addRoom(6, 3, 2, 1);
-variation:addRoom(6, 4, 2, 1);
+variation:addRoomSystem(6, 4, 2, 1, "Docks");
 variation:addRoomSystem(8, 3, 1, 2, "FrontShield");
 
 variation:addRoom(2, 5, 2, 1);
@@ -108,7 +113,7 @@ template:setRadarTrace("radartrace_smallstation.png")
 template:setHull(150)
 template:setShields(120, 120, 120, 120, 120, 120)
 template:setSpeed(0, 0.5, 0)
-template:setDockClasses("Starfighter", "Frigate")
+template:setDockClasses("Starfighter", "Frigate", "Drone")
 --                  Arc, Dir, Range, CycleTime, Dmg
 template:setBeam(0, 30,   0, 4000.0, 1.5, 20)
 template:setBeam(1, 30,  60, 4000.0, 1.5, 20)
@@ -182,7 +187,7 @@ for cnt=1,5 do
 end
 
 template = ShipTemplate():setName("Jump Carrier"):setClass("Corvette", "Freighter"):setModel("transport_4_2")
-template:setDescription([[The Jump Carrier is a specialized Freigher. It does not carry any cargo, as it's cargo bay is taken up by a specialized jump drive and the energy storage required to run this jump drive.
+template:setDescription([[The Jump Carrier is a specialized Freighter. It does not carry any cargo, as it's cargo bay is taken up by a specialized jump drive and the energy storage required to run this jump drive.
 It is designed to carry other ships deep into space. So it has special docking parameters, allowing other ships to attach themselves to this ship.]])
 template:setHull(100)
 template:setShields(50, 50)
@@ -190,4 +195,50 @@ template:setSpeed(50, 6, 10)
 template:setRadarTrace("radar_transport.png")
 template:setJumpDrive(true)
 template:setJumpDriveRange(5000, 100 * 50000) --The jump carrier can jump a 100x longer distance then normal jump drives.
-template:setDockClasses("Starfighter", "Frigates", "Corvette")
+template:setDockClasses("Starfighter", "Frigate", "Corvette")
+--template:setSharesEnergyWithDocked(true)
+
+variation = template:copy("Benedict"):setType("playership"):setClass("Corvette","Freighter/Carrier")
+variation:setDescription("Benedict is an improved version of the Jump Carrier")
+variation:setShields(70, 70)
+variation:setHull(200)
+variation:setSpeed(60, 6, 8)
+--                  Arc, Dir, Range, CycleTime, Dmg
+variation:setBeam(0, 10,   0, 1500.0, 6.0, 4)
+variation:setBeam(1, 10, 180, 1500.0, 6.0, 4)
+--								 Arc, Dir, Rotate speed
+variation:setBeamWeaponTurret( 0, 90,   0, 6)
+variation:setBeamWeaponTurret( 1, 90, 180, 6)
+variation:setCombatManeuver(400, 250)
+variation:setJumpDriveRange(5000, 90000) 
+
+variation:setRepairCrewCount(6)
+variation:addRoomSystem(3,0,2,3, "Reactor")
+variation:addRoomSystem(3,3,2,3, "Warp")
+variation:addRoomSystem(6,0,2,3, "JumpDrive")
+variation:addRoomSystem(6,3,2,3, "MissileSystem")
+variation:addRoomSystem(5,2,1,2, "Maneuver")
+variation:addRoomSystem(2,2,1,2, "RearShield")
+variation:addRoomSystem(0,1,2,4, "Beamweapons")
+variation:addRoomSystem(8,2,1,2, "FrontShield")
+variation:addRoomSystem(9,1,2,4, "Impulse")
+
+variation:addDoor(3, 3, true)
+variation:addDoor(6, 3, true)
+variation:addDoor(5, 2, false)
+variation:addDoor(6, 3, false)
+variation:addDoor(3, 2, false)
+variation:addDoor(2, 3, false)
+variation:addDoor(8, 2, false)
+variation:addDoor(9, 3, false)
+
+var2 = variation:copy("Kiriya")
+var2:setDescription("Kiriya is an improved warp drive version of the Jump Carrier")
+--                  Arc, Dir, Range, CycleTime, Dmg
+var2:setBeam(0, 10,   0, 1500.0, 6.0, 4)
+var2:setBeam(1, 10, 180, 1500.0, 6.0, 4)
+--								 Arc, Dir, Rotate speed
+var2:setBeamWeaponTurret( 0, 90,   0, 6)
+var2:setBeamWeaponTurret( 1, 90, 180, 6)
+var2:setJumpDrive(false)
+var2:setWarpSpeed(750)

@@ -6,8 +6,8 @@
 
 class GuiMissileTubeControls;
 class TargetsContainer;
-
-class GuiRadarView : public GuiOverlay
+class PlayerSpaceship;
+class GuiRadarView : public GuiElement
 {
 public:
     enum ERadarStyle
@@ -48,6 +48,7 @@ private:
 
     float distance;
     sf::Vector2f view_position;
+    P<PlayerSpaceship>& target_spaceship;
     bool long_range;
     bool show_ghost_dots;
     bool show_waypoints;
@@ -68,7 +69,7 @@ private:
     ffunc_t joystick_z_func;
     ffunc_t joystick_r_func;
 public:
-    GuiRadarView(GuiContainer* owner, string id, float distance, TargetsContainer* targets);
+    GuiRadarView(GuiContainer* owner, string id, float distance, TargetsContainer* targets, P<PlayerSpaceship>& targetSpaceship);
 
     virtual void onDraw(sf::RenderTarget& window);
 

@@ -21,12 +21,13 @@ enum ECrewPosition
     damageControl,
     powerManagement,
     databaseView,
-	tacticalRadar,
+	  tacticalRadar,
     scienceRadar,
     relayRadar,
-	logView,
-	internLogView,
-
+	  logView,
+	  internLogView,
+    dronePilot,
+    dockMaster,
     max_crew_positions
 };
 

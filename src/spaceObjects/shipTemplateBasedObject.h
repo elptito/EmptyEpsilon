@@ -5,6 +5,8 @@
 #include "spaceObject.h"
 #include "shipTemplate.h"
 
+class SpaceShip;
+
 /**
     An object which is based on a ship template. Contains generic behaviour for:
     * Hull damage
