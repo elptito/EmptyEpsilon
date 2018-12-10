@@ -58,8 +58,11 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner, ECrewPosition crew_pos
         });
         info.button->setSize(300, GuiElement::GuiSizeMax);
 
-        info.state = new GuiPowerDamageIndicator(info.button, id + "_INDICATOR", ESystem(n), ACenterLeft);
-        info.state ->setPosition(0, 0, ABottomLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+        if (my_spaceship)
+        {
+            info.state = new GuiPowerDamageIndicator(info.button, id + "_INDICATOR", ESystem(n), ACenterLeft, my_spaceship);
+            info.state ->setPosition(0, 0, ABottomLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+        }
 
         info.damage_bar = new GuiProgressbar(info.layout, id + "_DAMAGE", 0.0, 1.0, 0.0);
         info.damage_bar->setSize(150, GuiElement::GuiSizeMax);
@@ -311,8 +314,8 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
                 }
                 break;
             case SYS_Docks:
-                addSystemEffect("Cargo move speed", string(int(effectiveness * 100)) + "%");
-                addSystemEffect("Energy transfer speed", string(effectiveness * PlayerSpaceship::energy_transfer_per_second) + "/s");
+                addSystemEffect("Vitesse de transfert drones", string(int(effectiveness * 100)) + "%");
+                addSystemEffect("Vitesse de transfert energie", string(effectiveness * PlayerSpaceship::energy_transfer_per_second) + "/s");
                 break;
             default:
                 break;

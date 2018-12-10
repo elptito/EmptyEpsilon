@@ -102,10 +102,10 @@ GameMasterScreen::GameMasterScreen()
     });
     space_station_selector->setPosition(270, -120, ABottomLeft)->setSize(250, 50);
 
-    create_button = new GuiButton(this, "CREATE_OBJECT_BUTTON", "Creer...", [this]() {
-        object_creation_screen->show();
-    });
-    create_button->setPosition(20, -70, ABottomLeft)->setSize(250, 50);
+    //create_button = new GuiButton(this, "CREATE_OBJECT_BUTTON", "Creer...", [this]() {
+    //    object_creation_screen->show();
+    //});
+    //create_button->setPosition(20, -70, ABottomLeft)->setSize(250, 50);
 
     copy_scenario_button = new GuiButton(this, "COPY_SCENARIO_BUTTON", "Copier scenario", [this]() {
         Clipboard::setClipboard(getScriptExport(false));

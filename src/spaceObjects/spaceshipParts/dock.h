@@ -10,6 +10,7 @@ enum EDockType
 {
     Launcher,
     Energy,
+	Stock,
     Disabled
 };
 string getDockTypeName(EDockType dockType);

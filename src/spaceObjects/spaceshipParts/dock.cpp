@@ -168,15 +168,15 @@ string getDockStateName(EDockState state)
     switch (state)
     {
     case Empty:
-        return "Empty";
+        return "Vide";
     case Docked:
-        return "Docked";
+        return "Occupe";
     case MovingIn:
-        return "Moving in";
+        return "Transfert en cours";
     case MovingOut:
-        return "Moving out";
+        return "Transfert en cours";
     default:
-        return "Unknown";
+        return "Inconnu";
     }
 }
 
@@ -185,9 +185,11 @@ string getDockTypeName(EDockType dockType)
     switch (dockType)
     {
     case Launcher:
-        return "Launcher";
+        return "Lanceur";
     case Energy:
-        return "Energy";
+        return "Energie";
+    case Stock:
+        return "Stock";
     default:
         return "Unknown";
     }

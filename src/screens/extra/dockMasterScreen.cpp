@@ -66,20 +66,20 @@ DockMasterScreen::DockMasterScreen(GuiContainer *owner)
     sideBar = new GuiAutoLayout(rightSide, "SIDE_BAR", GuiAutoLayout::LayoutVerticalTopToBottom);
     sideBar->setSize(COLUMN_WIDTH, GuiElement::GuiSizeMax)->setPosition(0, 100, ATopRight);
 
-    GuiElement *move_dest = new GuiAutoLayout(dockPanel, "", GuiAutoLayout::LayoutVerticalColumns);
-    (new GuiLabel(move_dest, "MOVE_DEST_LABEL", "Destination:", 30))->setAlignment(ACenterRight);
+    move_dest = new GuiAutoLayout(dockPanel, "", GuiAutoLayout::LayoutVerticalColumns);
+    (new GuiLabel(move_dest, "MOVE_DEST_LABEL", "Transfert vers:", 30))->setAlignment(ACenterRight);
     move_dest_selector = new GuiSelector(move_dest, "MOVE_DEST_SELECTOR", [this](int _idx, string value) {
         if (my_spaceship)
             my_spaceship->commandSetDockMoveTarget(index, value.toInt());
     });
 
-    GuiButton *moveButton = new GuiButton(dockPanel, "MOVE_BUTTON", "Deliver", [this]() {
+    move_button = new GuiButton(dockPanel, "MOVE_BUTTON", "Transferer", [this]() {
         if (my_spaceship)
             my_spaceship->commandMoveCargo(index);
     });
-    moveButton->setSize(COLUMN_WIDTH, 40);
+    move_button->setSize(COLUMN_WIDTH, 40);
 
-    launch_button = new GuiButton(sideBar, "LAUNCH_DRONE_BUTTON", "Launch", [this]() {
+    launch_button = new GuiButton(sideBar, "LAUNCH_DRONE_BUTTON", "Lancer drone", [this]() {
         if (my_spaceship)
             my_spaceship->commandLaunchCargo(index);
     });
@@ -95,7 +95,7 @@ DockMasterScreen::DockMasterScreen(GuiContainer *owner)
     energy_slider->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
     energy_bar = new GuiProgressbar(energyControl, "ENERGY_BAR", 0.0, 10.0, 0.0);
-    energy_bar->setColor(sf::Color(192, 192, 32, 128))->setText("Energy")->setDrawBackground(false)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax)->setMargins(10, 0, 10, 0);
+    energy_bar->setColor(sf::Color(192, 192, 32, 128))->setText("Energie")->setDrawBackground(false)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax)->setMargins(10, 0, 10, 0);
 
     cargoInfo = new GuiAutoLayout(sideBar, "CARGO_INFO", GuiAutoLayout::LayoutVerticalTopToBottom);
     cargoInfo->setSize(COLUMN_WIDTH, GuiElement::GuiSizeMax);
@@ -110,7 +110,7 @@ DockMasterScreen::DockMasterScreen(GuiContainer *owner)
     distance_bar->setPosition(0, 50, ACenter)->setSize(COLUMN_WIDTH, 50);
     (new GuiPowerDamageIndicator(distance_bar, "DOCKS_DPI", SYS_Docks, ATopCenter, my_spaceship))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
-    cancel_move_button = new GuiButton(overlay, "CANCEL_MOVE_BUTTON", "pull cargo back", [this]() {
+    cancel_move_button = new GuiButton(overlay, "CANCEL_MOVE_BUTTON", "Annuler transfert", [this]() {
         my_spaceship->commandCancelMoveCargo(index);
     });
     cancel_move_button->setPosition(0, 100, ACenter)->setSize(COLUMN_WIDTH, 50);
@@ -143,7 +143,8 @@ void DockMasterScreen::onDraw(sf::RenderTarget &window)
             if (dockData.dock_type != Disabled)
             {
                 string state = " (" + getDockStateName(dockData.state) + ")";
-                string dockName = "d" + std::to_string(n + 1) + "-" + getDockTypeName(dockData.dock_type)[0];
+                //string dockName = "d" + std::to_string(n + 1) + "-" + getDockTypeName(dockData.dock_type)[0];
+                string dockName = getDockTypeName(dockData.dock_type) + " - " + std::to_string(n + 1);
                 docks->setEntryName(n, dockName + state);
                 if (n != index)
                     move_dest_selector->addEntry(dockName, string(n));
@@ -159,29 +160,37 @@ void DockMasterScreen::onDraw(sf::RenderTarget &window)
             sideBar->setVisible(false);
             model->setModel(nullptr);
             overlay->setVisible(true);
-            overlay_label->setText("Empty");
+            overlay_label->setText("Vide");
             distance_bar->setVisible(false);
             cancel_move_button->setVisible(false);
+            move_button->setVisible(false);
+            move_dest->setVisible(false);
             break;
         case MovingIn:
             displayDroneDetails(dockData);
             overlay->setVisible(true);
-            overlay_label->setText("Incoming cargo");
+            overlay_label->setText("Transfert en cours");
             distance_bar->setVisible(true);
             distance_bar->setValue(dockData.current_distance);
             cancel_move_button->setVisible(false);
+            move_button->setVisible(false);
+            move_dest->setVisible(false);
             break;
         case Docked:
             displayDroneDetails(dockData);
+            move_button->setVisible(true);
+            move_dest->setVisible(true);
             overlay->setVisible(false);
             break;
         case MovingOut:
             displayDroneDetails(dockData);
             overlay->setVisible(true);
-            overlay_label->setText("Outgoing cargo");
+            overlay_label->setText("Transfert en cours");
             distance_bar->setVisible(true);
             distance_bar->setValue(dockData.current_distance);
             cancel_move_button->setVisible(true);
+            move_button->setVisible(false);
+            move_dest->setVisible(false);
             break;
         }
     }

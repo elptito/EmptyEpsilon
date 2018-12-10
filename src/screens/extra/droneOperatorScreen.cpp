@@ -47,14 +47,14 @@ DroneOperatorScreen::DroneOperatorScreen(GuiContainer *owner)
     single_pilot_view = new SinglePilotView(this, selected_drone);
     single_pilot_view->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
-    disconnect_button = new GuiButton(this, "DISCONNECT_BUTTON", "Disconnect", [this]() {
+    disconnect_button = new GuiButton(this, "DISCONNECT_BUTTON", "Se deconnecter", [this]() {
         mode = DroneSelection;
         selected_drone = NULL;
     });
     disconnect_button->setPosition(0, 0, ABottomCenter)->setSize(400, 50);
     disconnect_button->moveToFront();
     // label for when there are no drones
-    no_drones_label = new GuiLabel(this, "SHIP_SELECTION_NO_SHIPS_LABEL", "No active drones in range", 30);
+    no_drones_label = new GuiLabel(this, "SHIP_SELECTION_NO_SHIPS_LABEL", "Aucun drone actif dans la zone", 30);
     no_drones_label->setPosition(0, 100, ATopCenter)->setSize(460, 50);
     // Prep the alert overlay.
     (new GuiPowerDamageIndicator(this, "DOCKS_DPI", SYS_Drones, ATopCenter, my_spaceship))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
@@ -103,7 +103,7 @@ void DroneOperatorScreen::onDraw(sf::RenderTarget &window)
             no_drones_label->hide();
             droneSelection->hide();
             single_pilot_view->show();
-            disconnect_button->setText("Disconnect " + selected_drone->callsign);
+            disconnect_button->setText("Se deconnecter de " + selected_drone->callsign);
             disconnect_button->show();
             break;
         case NoDrones:

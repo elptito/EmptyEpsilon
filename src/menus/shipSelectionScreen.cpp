@@ -43,7 +43,7 @@ ShipSelectionScreen::ShipSelectionScreen()
     crew_type_selector = new GuiSelector(stations_layout, "CREW_TYPE_SELECTION", [this](int index, string value) {
         updateCrewTypeOptions();
     });
-    crew_type_selector->setOptions({"Equipage 6/5 joueurs", "Equipage 4/3 joueurs", "Equipage 1 joueur / Extras", "Poste alternatif"})->setSize(GuiElement::GuiSizeMax, 50);
+    crew_type_selector->setOptions({"Equipage 6/5 joueurs", "Equipage 4/3 joueurs", "Postes extra", "Fenetres extra", "Poste alternatif"})->setSize(GuiElement::GuiSizeMax, 50);
 
     // Main screen button
     main_screen_button = new GuiToggleButton(stations_layout, "MAIN_SCREEN_BUTTON", "Ecran principal", [this](bool value) {
@@ -405,7 +405,7 @@ void ShipSelectionScreen::updateCrewTypeOptions()
     cinematic_view_button->hide();
     main_screen_button->setVisible(canDoMainScreen());
     main_screen_button->setValue(false);
-    main_screen_controls_button->setVisible(crew_type_selector->getSelectionIndex() != 3);
+    main_screen_controls_button->setVisible(crew_type_selector->getSelectionIndex() != 4);
     game_master_button->setValue(false);
     window_button->setValue(false);
     topdown_button->setValue(false);
@@ -432,6 +432,10 @@ void ShipSelectionScreen::updateCrewTypeOptions()
         break;
     case 2:
         crew_position_button[singlePilot]->show();
+        crew_position_button[dronePilot]->show();
+        crew_position_button[dockMaster]->show();
+        break;
+    case 3:
         crew_position_button[damageControl]->show();
         crew_position_button[powerManagement]->show();
         crew_position_button[databaseView]->show();
@@ -440,10 +444,8 @@ void ShipSelectionScreen::updateCrewTypeOptions()
         crew_position_button[relayRadar]->show();
         crew_position_button[logView]->show();
         crew_position_button[internLogView]->show();
-        crew_position_button[dronePilot]->show();
-        crew_position_button[dockMaster]->show();
         break;
-    case 3:
+    case 4:
         main_screen_button->hide();
         game_master_button->setVisible(bool(game_server));
         window_button->setVisible(canDoMainScreen());

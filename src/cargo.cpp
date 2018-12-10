@@ -9,7 +9,7 @@ Cargo::Cargo(string multiplayerClassIdentifier) : MultiplayerObject(multiplayerC
 Cargo::Entries Cargo::getEntries()
 {
     Cargo::Entries result;
-    result.push_back(std::make_tuple("gui/icons/energy", "energy", int(energy_level)));
-    result.push_back(std::make_tuple("gui/icons/heat", "heat", string(heat, 2)));
+    result.push_back(std::make_tuple("gui/icons/energy", "energie", int(energy_level)));
+    result.push_back(std::make_tuple("gui/icons/heat", "surchauffe", string(heat, 2)));
     return result;
 }

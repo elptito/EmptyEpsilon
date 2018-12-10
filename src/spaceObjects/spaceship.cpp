@@ -257,11 +257,13 @@ void SpaceShip::applyTemplateValues()
             docks[n].setDockType(Launcher);
         } else if (n < ship_template->launcher_dock_count + ship_template->energy_dock_count){
             docks[n].setDockType(Energy);
+        } else if (n < ship_template->launcher_dock_count + ship_template->energy_dock_count + ship_template->stock_dock_count){
+            docks[n].setDockType(Stock);
         } else {
             docks[n].setDockType(Disabled);
         }
     }
-    int maxActiveDockIndex = ship_template->launcher_dock_count + ship_template->energy_dock_count;
+    int maxActiveDockIndex = ship_template->launcher_dock_count + ship_template->energy_dock_count + ship_template->stock_dock_count;
     for (auto &droneTemplate : ship_template->drones) // access by reference to avoid copying
     {  
         P<ShipTemplate> drone_ship_template = ShipTemplate::getTemplate(droneTemplate.template_name);

@@ -16,6 +16,7 @@ class GuiKeyValueDisplay;
 class GuiListbox;
 class GuiRotatingModelView;
 class GuiOverlay;
+class GuiElement;
 class Dock;
 class DockMasterScreen : public GuiOverlay
 {
@@ -32,6 +33,8 @@ class DockMasterScreen : public GuiOverlay
     GuiProgressbar *energy_bar;
     GuiSlider *energy_slider;
     GuiButton* launch_button;
+    GuiButton* move_button;
+    GuiElement* move_dest;
 
     GuiSelector* move_dest_selector;
     GuiOverlay* overlay;

@@ -30,11 +30,11 @@ Artifact::Artifact()
     registerMemberReplication(&model_data_name);
 
     setRotation(random(0, 360));
-    
+
     current_model_data_name = "artifact" + string(irandom(1, 8));
     model_data_name = current_model_data_name;
     model_info.setData(current_model_data_name);
-    
+
     allow_pickup = false;
 }
 
@@ -71,7 +71,7 @@ void Artifact::collide(Collisionable* target, float force)
     {
         if (on_pickup_callback.isSet())
         {
-            on_pickup_callback.call(player, P<Artifact>(this));
+            //on_pickup_callback.call(player, P<Artifact>(this));
         }
         destroy();
     }

@@ -70,9 +70,9 @@ Cargo::Entries ShipCargo::getEntries()
     P<ShipTemplate> ship_template = ShipTemplate::getTemplate(template_name);
     if (ship_template)
     {
-        result.push_back(std::make_tuple("gui/icons/hull", "Hull", string(int(100 * hull_strength / ship_template->hull)) + "%"));
+        result.push_back(std::make_tuple("gui/icons/hull", "Carlingue", string(int(100 * hull_strength / ship_template->hull)) + "%"));
     }
-    result.push_back(std::make_tuple("", "callsign", callsign));
+    result.push_back(std::make_tuple("", "ID", callsign));
     result.push_back(std::make_tuple("", "type", template_name));
     return result;
 }
