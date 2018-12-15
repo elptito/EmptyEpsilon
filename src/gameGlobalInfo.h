@@ -33,6 +33,12 @@ enum EScanningComplexity
     SC_Normal,
     SC_Advanced
 };
+enum ECommsGmInterception
+{
+    CGI_None = 0,
+    CGI_Temp,
+    CGI_Always
+};
 
 class GameGlobalInfo : public MultiplayerObject, public Updatable
 {
@@ -46,6 +52,10 @@ public:
      * \brief Maximum number of visual background nebulas.
      */
     static const int max_nebulas = 32;
+     /*!
+     * \size of a sector.
+     */
+    static const int sector_size = 20000;
 private:
     int victory_faction;
     int32_t playerShipId[max_player_ships];
@@ -70,6 +80,7 @@ public:
     float long_range_radar_range;
     bool use_beam_shield_frequencies;
     bool use_system_damage;
+    bool use_repair_crew;
     bool allow_main_screen_tactical_radar;
     bool allow_main_screen_long_range_radar;
     bool allow_main_screen_global_range_radar;
@@ -78,8 +89,10 @@ public:
 
     //List of script functions that can be called from the GM interface (Server only!)
     std::list<GMScriptCallback> gm_callback_functions;
+    //List of names of gm_callback_functions scripts (replicated to clients)
+    std::vector<string> gm_callback_names;
     //When active, all comms request goto the GM as chat, and normal scripted converstations are disabled. This does not disallow player<->player ship comms.
-    bool intercept_all_comms_to_gm;
+    ECommsGmInterception intercept_all_comms_to_gm;
 
     GameGlobalInfo();
 
@@ -112,6 +125,11 @@ public:
 
 string playerWarpJumpDriveToString(EPlayerWarpJumpDrive player_warp_jump_drive);
 string getSectorName(sf::Vector2f position);
+sf::Vector2f getSectorPosition(string sectorName);
+bool isValidSectorName(string sectorName);
+sf::Vector2f getPositionFromSring(string sectorName);
+string getStringFromPosition(sf::Vector2f position);
+bool isValidPositionString(string sectorName);
 
 REGISTER_MULTIPLAYER_ENUM(EScanningComplexity);
 

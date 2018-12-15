@@ -5,6 +5,7 @@
 #include "playerInfo.h"
 #include "gameGlobalInfo.h"
 #include "screens/windowScreen.h"
+#include "screens/extra/probeScreen.h"
 #include "screens/topDownScreen.h"
 #include "screens/cinematicViewScreen.h"
 #include "screens/gm/gameMasterScreen.h"
@@ -75,6 +76,7 @@ ShipSelectionScreen::ShipSelectionScreen()
     // Game master button
     game_master_button = new GuiToggleButton(stations_layout, "GAME_MASTER_BUTTON", "Maitre de jeu", [this](bool value) {
         window_button->setValue(false);
+        probe_button->setValue(false);
         topdown_button->setValue(false);
         cinematic_view_button->setValue(false);
     });
@@ -84,6 +86,7 @@ ShipSelectionScreen::ShipSelectionScreen()
     window_button_row = new GuiAutoLayout(stations_layout, "", GuiAutoLayout::LayoutHorizontalLeftToRight);
     window_button_row->setSize(GuiElement::GuiSizeMax, 50);
     window_button = new GuiToggleButton(window_button_row, "WINDOW_BUTTON", "Fenetre", [this](bool value) {
+        probe_button->setValue(false);
         game_master_button->setValue(false);
         topdown_button->setValue(false);
         cinematic_view_button->setValue(false);
@@ -97,9 +100,19 @@ ShipSelectionScreen::ShipSelectionScreen()
     window_angle_label = new GuiLabel(window_angle, "WINDOW_ANGLE_LABEL", "0 degre", 30);
     window_angle_label->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
+    // Probe view button
+    probe_button = new GuiToggleButton(stations_layout, "PROBE_BUTTON", "Probe view", [this](bool value) {
+        game_master_button->setValue(false);
+        window_button->setValue(false);
+		topdown_button->setValue(false);
+        cinematic_view_button->setValue(false);
+    });
+    probe_button->setSize(GuiElement::GuiSizeMax, 50);
+
     // Top-down view button
     topdown_button = new GuiToggleButton(stations_layout, "TOP_DOWN_3D_BUTTON", "Vue de haut (3D)", [this](bool value) {
         game_master_button->setValue(false);
+        probe_button->setValue(false);
         window_button->setValue(false);
         cinematic_view_button->setValue(false);
     });
@@ -108,6 +121,7 @@ ShipSelectionScreen::ShipSelectionScreen()
     // Cinematic view button
     cinematic_view_button = new GuiToggleButton(stations_layout, "CINEMATIC_VIEW_BUTTON", "Vue cinematique", [this](bool value) {
         game_master_button->setValue(false);
+        probe_button->setValue(false);
         window_button->setValue(false);
         topdown_button->setValue(false);
     });
@@ -381,6 +395,9 @@ void ShipSelectionScreen::updateReadyButton()
         // button.
         else if (my_spaceship && window_button->getValue())
             ready_button->enable();
+        // If a player ship and the probe view are selected, enable the Ready button.
+        else if (my_spaceship && probe_button->getValue())
+            ready_button->enable();
         // Otherwise, disable the Ready button.
         else
             ready_button->disable();
@@ -400,6 +417,7 @@ void ShipSelectionScreen::updateCrewTypeOptions()
     // Hide and unselect alternative and view screens.
     game_master_button->hide();
     window_button->hide();
+    probe_button->hide();
     window_angle->hide();
     topdown_button->hide();
     cinematic_view_button->hide();
@@ -408,6 +426,7 @@ void ShipSelectionScreen::updateCrewTypeOptions()
     main_screen_controls_button->setVisible(crew_type_selector->getSelectionIndex() != 4);
     game_master_button->setValue(false);
     window_button->setValue(false);
+    probe_button->setValue(false);
     topdown_button->setValue(false);
     cinematic_view_button->setValue(false);
 
@@ -442,6 +461,7 @@ void ShipSelectionScreen::updateCrewTypeOptions()
         crew_position_button[tacticalRadar]->show();
         crew_position_button[scienceRadar]->show();
         crew_position_button[relayRadar]->show();
+        crew_position_button[navigation]->show();
         crew_position_button[logView]->show();
         crew_position_button[internLogView]->show();
         break;
@@ -485,6 +505,10 @@ void ShipSelectionScreen::onReadyClick()
     {
         destroy();
         new WindowScreen(int(window_angle->getValue()));
+    }else if (probe_button->getValue())
+    {
+        destroy();
+        new ProbeScreen();
     }else if(topdown_button->getValue())
     {
         my_player_info->commandSetShipId(-1);

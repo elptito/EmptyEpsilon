@@ -109,6 +109,7 @@ REGISTER_SCRIPT_SUBCLASS(PlayerSpaceship, SpaceShip)
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandConfirmDestructCode);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandCombatManeuverBoost);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetScienceLink);
+    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetProbe3DLink);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetAlertLevel);
 
     // Return the number of Engineering repair crews on the ship.
@@ -177,15 +178,17 @@ static const int16_t CMD_COMBAT_MANEUVER_STRAFE = 0x0022;
 static const int16_t CMD_LAUNCH_PROBE = 0x0023;
 static const int16_t CMD_SET_ALERT_LEVEL = 0x0024;
 static const int16_t CMD_SET_SCIENCE_LINK = 0x0025;
-static const int16_t CMD_ABORT_DOCK = 0x0026;
-static const int16_t CMD_SET_MAIN_SCREEN_OVERLAY = 0x0027;
-static const int16_t CMD_HACKING_FINISHED = 0x0028;
-static const int16_t CMD_CUSTOM_FUNCTION = 0x0029;
-static const int16_t CMD_LAUNCH_CARGO = 0x0030;
-static const int16_t CMD_MOVE_CARGO = 0x0031;
-static const int16_t CMD_CANCEL_MOVE_CARGO = 0x0032;
-static const int16_t CMD_SET_DOCK_MOVE_TARGET = 0x0033;
-static const int16_t CMD_SET_DOCK_ENERGY_REQUEST = 0x0034;
+static const int16_t CMD_SET_PROBE_3D_LINK = 0x0026;
+static const int16_t CMD_ABORT_DOCK = 0x0027;
+static const int16_t CMD_SET_MAIN_SCREEN_OVERLAY = 0x0028;
+static const int16_t CMD_HACKING_FINISHED = 0x0029;
+static const int16_t CMD_CUSTOM_FUNCTION = 0x0030;
+static const int16_t CMD_LAUNCH_CARGO = 0x0031;
+static const int16_t CMD_MOVE_CARGO = 0x0032;
+static const int16_t CMD_CANCEL_MOVE_CARGO = 0x0033;
+static const int16_t CMD_SET_DOCK_MOVE_TARGET = 0x0034;
+static const int16_t CMD_SET_DOCK_ENERGY_REQUEST = 0x0035;
+static const int16_t CMD_SET_AUTO_REPAIR_SYSTEM_TARGET = 0x0036;
 
 string alertLevelToString(EAlertLevel level)
 {
@@ -230,6 +233,7 @@ PlayerSpaceship::PlayerSpaceship()
     alert_level = AL_Normal;
     shields_active = false;
     warp_indicator = 0;
+    auto_repairing_system = SYS_None;
     control_code = "";
     has_gravity_sensor = false;
 	has_electrical_sensor = false;
@@ -269,11 +273,13 @@ PlayerSpaceship::PlayerSpaceship()
     registerMemberReplication(&self_destruct_countdown, 0.2);
     registerMemberReplication(&alert_level);
     registerMemberReplication(&linked_science_probe_id);
+    registerMemberReplication(&linked_probe_3D_id);
     registerMemberReplication(&control_code);
     registerMemberReplication(&has_gravity_sensor);
     registerMemberReplication(&has_electrical_sensor);
     registerMemberReplication(&has_biological_sensor);
     registerMemberReplication(&custom_functions);
+    registerMemberReplication(&auto_repairing_system);
 
     // Determine which stations must provide self-destruct confirmation codes.
     for(int n = 0; n < max_self_destruct_codes; n++)
@@ -524,12 +530,31 @@ void PlayerSpaceship::update(float delta)
             shields_active = false;
         }
 
+        // auto-repair
+        if (!gameGlobalInfo->use_repair_crew){
+            ESystem system = ESystem(auto_repairing_system);
+            if (system > SYS_None && system < SYS_COUNT && hasSystem(system))
+            {
+                systems[system].health += repair_per_second * delta;
+                if (systems[system].health > 1.0)
+                    systems[system].health = 1.0;
+            }
+            if (auto_repair_enabled && (system == SYS_None || !hasSystem(system) || systems[system].health == 1.0))
+            {
+                int n=irandom(0, SYS_COUNT - 1);
+                 if (hasSystem(ESystem(n)) && systems[n].health < 1.0)
+                {
+                    auto_repairing_system = ESystem(n);
+                }
+            }
+        }
+
         // If a ship is jumping or warping, consume additional energy.
         if (has_warp_drive && warp_request > 0 && !(has_jump_drive && jump_delay > 0))
         {
             // If warping, consume energy at a rate of 120% the warp request.
             // If shields are up, that rate is increased by an additional 50%.
-            if (!useEnergy(energy_warp_per_second * delta * powf(warp_request, 1.2f) * (shields_active ? 1.5 : 1.0)))
+            if (!useEnergy(energy_warp_per_second * delta * warp_request * 1.2 * (shields_active ? 1.5 : 1.0)))
                 // If there's not enough energy, fall out of warp.
                 warp_request = 0;
 
@@ -655,9 +680,10 @@ void PlayerSpaceship::applyTemplateValues()
         break;
     }
 
-    // Set the ship's number of repair crews in Engineering from the ship's
-    // template.
-    setRepairCrewCount(ship_template->repair_crew_count);
+    if (gameGlobalInfo->use_repair_crew){
+        // Set the ship's number of repair crews in Engineering from the ship's template.
+        setRepairCrewCount(ship_template->repair_crew_count);
+    }
 }
 
 void PlayerSpaceship::executeJump(float distance)
@@ -675,13 +701,12 @@ void PlayerSpaceship::takeHullDamage(float damage_amount, DamageInfo& info)
         hull_damage_indicator = 1.5;
     }
 
+    // Take hull damage like any other ship.
     float systems_diff[SYS_COUNT];
     for(int n=0; n<SYS_COUNT; n++)
     {
         systems_diff[n] = systems[n].health;
     }
-
-    // Take hull damage like any other ship.
     SpaceShip::takeHullDamage(damage_amount, info);
 
     // Infos for log intern
@@ -848,12 +873,14 @@ void PlayerSpaceship::addToShipLog(string message, sf::Color color, string stati
     {
         if (ships_log_extern.size() > 100)
             ships_log_extern.erase(ships_log_extern.begin());
+        // Timestamp a log entry, color it, and add it to the end of the log.
         ships_log_extern.emplace_back(string(engine->getElapsedTime(), 1) + string(": "), message, color, station);
     }
     else if (station == "intern")
     {
         if (ships_log_intern.size() > 100)
             ships_log_intern.erase(ships_log_intern.begin());
+        // Timestamp a log entry, color it, and add it to the end of the log.
         ships_log_intern.emplace_back(string(engine->getElapsedTime(), 1) + string(": "), message, color, station);
     }
 }
@@ -1588,6 +1615,11 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
             packet >> linked_science_probe_id;
         }
         break;
+    case CMD_SET_PROBE_3D_LINK:
+        {
+            packet >> linked_probe_3D_id;
+        }
+        break;
     case CMD_HACKING_FINISHED:
         {
             uint32_t id;
@@ -1623,6 +1655,14 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
                     }
                 }
             }
+        }
+        break;
+    case CMD_SET_AUTO_REPAIR_SYSTEM_TARGET:
+        {
+            ESystem system;
+            packet >> system;
+            if (system < SYS_COUNT)
+                auto_repairing_system = system;
         }
         break;
     }
@@ -1960,6 +2000,18 @@ void PlayerSpaceship::commandCustomFunction(string name)
 void PlayerSpaceship::commandSetScienceLink(int32_t id){
     sf::Packet packet;
     packet << CMD_SET_SCIENCE_LINK << id;
+    sendClientCommand(packet);
+}
+
+void PlayerSpaceship::commandSetProbe3DLink(int32_t id){
+    sf::Packet packet;
+    packet << CMD_SET_PROBE_3D_LINK << id;
+    sendClientCommand(packet);
+}
+ void PlayerSpaceship::commandSetAutoRepairSystemTarget(ESystem system)
+{
+    sf::Packet packet;
+    packet << CMD_SET_AUTO_REPAIR_SYSTEM_TARGET << system;
     sendClientCommand(packet);
 }
 

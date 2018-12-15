@@ -33,18 +33,19 @@ private:
     GuiButton* password_entry_ok;
     GuiButton* password_cancel;
     GuiButton* password_confirmation;
-    
+
     GuiToggleButton* main_screen_button;
     GuiToggleButton* crew_position_button[max_crew_positions];
     GuiToggleButton* main_screen_controls_button;
     GuiToggleButton* game_master_button;
     GuiAutoLayout* window_button_row;
     GuiToggleButton* window_button;
+    GuiToggleButton* probe_button;
     GuiSlider* window_angle;
     GuiLabel* window_angle_label;
     GuiToggleButton* topdown_button;
     GuiToggleButton* cinematic_view_button;
-    
+
 public:
     ShipSelectionScreen();
 
@@ -56,10 +57,10 @@ private:
      */
     //bool canDoMainScreen() { return PostProcessor::isEnabled() && sf::Shader::isAvailable(); }
     bool canDoMainScreen() { return true; }
-    
+
     void updateReadyButton();
     void updateCrewTypeOptions();
-    
+
     void onReadyClick();
 };
 

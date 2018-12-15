@@ -39,6 +39,7 @@ public:
     constexpr static float system_power_level_change_per_second = 0.3;
     constexpr static float energy_transfer_per_second = 5;
     constexpr static float heat_transfer_per_second = 0.1;
+    constexpr static float repair_per_second = 0.007;
 
     // Coolant change rate
     constexpr static float system_coolant_level_change_per_second = 1.2;
@@ -135,6 +136,7 @@ private:
 
 
 public:
+    ESystem auto_repairing_system;
     std::vector<CustomShipFunction> custom_functions;
 
     std::vector<sf::Vector2f> waypoints;
@@ -167,6 +169,7 @@ public:
     EAlertLevel alert_level;
 
     int32_t linked_science_probe_id;
+    int32_t linked_probe_3D_id;
     PlayerSpaceship();
 
     // Comms functions
@@ -227,6 +230,7 @@ public:
     void commandJump(float distance);
     void commandSetTarget(P<SpaceObject> target);
     void commandSetScienceLink(int32_t id);
+    void commandSetProbe3DLink(int32_t id);
     void commandLoadTube(int8_t tubeNumber, EMissileWeapons missileType);
     void commandUnloadTube(int8_t tubeNumber);
     void commandFireTube(int8_t tubeNumber, float missile_target_angle);
@@ -267,6 +271,7 @@ public:
     void commandSetAlertLevel(EAlertLevel level);
     void commandHackingFinished(P<SpaceObject> target, string target_system, string target_faction);
     void commandCustomFunction(string name);
+    void commandSetAutoRepairSystemTarget(ESystem system);
 
     virtual void onReceiveServerCommand(sf::Packet& packet) override;
 

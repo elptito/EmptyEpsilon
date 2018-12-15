@@ -132,6 +132,9 @@ set(SOURCES
 	src/screens/extra/databaseScreen.cpp
 	src/screens/extra/shipLogScreen.cpp
 	src/screens/extra/radarScreen.cpp
+	src/screens/extra/navigationScreen.cpp
+	src/screens/extra/commsScreen.cpp
+	src/screens/extra/probeScreen.cpp
 	src/screens/gm/gameMasterScreen.cpp
 	src/screens/gm/objectCreationView.cpp
 	src/screens/gm/globalMessageEntryView.cpp
@@ -150,6 +153,8 @@ set(SOURCES
 	src/screenComponents/shieldsEnableButton.cpp
 	src/screenComponents/selfDestructButton.cpp
 	src/screenComponents/shieldFreqencySelect.cpp
+	src/screenComponents/sectorsView.cpp
+	src/screenComponents/navigationView.cpp
 	src/screenComponents/jumpControls.cpp
 	src/screenComponents/impulseControls.cpp
 	src/screenComponents/frequencyCurve.cpp

@@ -2,12 +2,13 @@
 #define RADAR_VIEW_H
 
 #include "gui/gui2_element.h"
+#include "sectorsView.h"
+#include "spaceObjects/playerSpaceship.h"
 #include "gui/gui2_overlay.h"
 
 class GuiMissileTubeControls;
-class TargetsContainer;
 class PlayerSpaceship;
-class GuiRadarView : public GuiElement
+class GuiRadarView : public SectorsView
 {
 public:
     enum ERadarStyle
@@ -20,7 +21,8 @@ public:
     {
         NoFogOfWar,
         NebulaFogOfWar,
-        FriendlysShortRangeFogOfWar
+        FriendlysShortRangeFogOfWar,
+        NoObjects
     };
 
     typedef std::function<void(sf::Vector2f position)> func_t;
@@ -43,11 +45,8 @@ private:
     std::vector<GhostDot> ghost_dots;
     float next_ghost_dot_update;
 
-    TargetsContainer* targets;
     GuiMissileTubeControls* missile_tube_controls;
 
-    float distance;
-    sf::Vector2f view_position;
     P<PlayerSpaceship>& target_spaceship;
     bool long_range;
     bool show_ghost_dots;
@@ -73,8 +72,7 @@ public:
 
     virtual void onDraw(sf::RenderTarget& window);
 
-    GuiRadarView* setDistance(float distance) { this->distance = distance; return this; }
-    float getDistance() { return distance; }
+    virtual GuiRadarView* setDistance(float distance) { SectorsView::setDistance(distance); return this; }
     GuiRadarView* setRangeIndicatorStepSize(float step) { range_indicator_step_size = step; return this; }
     GuiRadarView* longRange() { long_range = true; return this; }
     GuiRadarView* shortRange() { long_range = false; return this; }
@@ -95,26 +93,15 @@ public:
     GuiRadarView* setFogOfWarStyle(EFogOfWarStyle style) { this->fog_style = style; return this; }
     bool getAutoCentering() { return auto_center_on_my_ship; }
     GuiRadarView* setAutoCentering(bool value) { this->auto_center_on_my_ship = value; return this; }
-    GuiRadarView* setCallbacks(func_t mouse_down_func, func_t mouse_drag_func, func_t mouse_up_func) { this->mouse_down_func = mouse_down_func; this->mouse_drag_func = mouse_drag_func; this->mouse_up_func = mouse_up_func; return this; }
-    GuiRadarView* setJoystickCallbacks(ffunc_t joystick_x_func, ffunc_t joystick_y_func, ffunc_t joystick_z_func, ffunc_t joystick_r_func)
-                  { this->joystick_x_func = joystick_x_func; this->joystick_y_func = joystick_y_func; this->joystick_z_func = joystick_z_func; this->joystick_r_func = joystick_r_func; return this; }
-    GuiRadarView* setViewPosition(sf::Vector2f view_position) { this->view_position = view_position; return this; }
-    sf::Vector2f getViewPosition() { return view_position; }
-
-    sf::Vector2f worldToScreen(sf::Vector2f world_position);
-    sf::Vector2f screenToWorld(sf::Vector2f screen_position);
+    virtual GuiRadarView* setCallbacks(func_t mouse_down_func, func_t mouse_drag_func, func_t mouse_up_func) { SectorsView::setCallbacks(mouse_down_func, mouse_drag_func, mouse_up_func); return this; }
+    virtual GuiRadarView* setJoystickCallbacks(ffunc_t joystick_x_func, ffunc_t joystick_y_func, ffunc_t joystick_z_func, ffunc_t joystick_r_func)
+        { SectorsView::setJoystickCallbacks(joystick_x_func, joystick_y_func, joystick_z_func, joystick_r_func); return this; }
+    virtual GuiRadarView* setViewPosition(sf::Vector2f view_position) { SectorsView::setViewPosition(view_position); return this; }
 
     virtual bool onMouseDown(sf::Vector2f position);
-    virtual void onMouseDrag(sf::Vector2f position);
-    virtual void onMouseUp(sf::Vector2f position);
-    virtual bool onJoystickXYMove(sf::Vector2f position);
-    virtual bool onJoystickZMove(float position);
-    virtual bool onJoystickRMove(float position);
 private:
     void updateGhostDots();
-
     void drawBackground(sf::RenderTarget& window);
-    void drawSectorGrid(sf::RenderTarget& window);
     void drawNebulaBlockedAreas(sf::RenderTarget& window);
     void drawNoneFriendlyBlockedAreas(sf::RenderTarget& window);
     void drawFriendlyNotVisibleAreas(sf::RenderTarget& window);
@@ -125,7 +112,6 @@ private:
     void drawMissileTubes(sf::RenderTarget& window);
     void drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget& window_alpha);
     void drawObjectsGM(sf::RenderTarget& window);
-    void drawTargets(sf::RenderTarget& window);
     void drawHeadingIndicators(sf::RenderTarget& window);
     void drawRadarCutoff(sf::RenderTarget& window);
 };

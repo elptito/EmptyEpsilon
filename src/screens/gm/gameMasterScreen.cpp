@@ -1,5 +1,6 @@
 #include "main.h"
 #include "gameGlobalInfo.h"
+#include "GMActions.h"
 #include "gameMasterScreen.h"
 #include "objectCreationView.h"
 #include "globalMessageEntryView.h"
@@ -7,7 +8,6 @@
 #include "chatDialog.h"
 #include "spaceObjects/cpuShip.h"
 #include "spaceObjects/spaceStation.h"
-#include "spaceObjects/wormHole.h"
 #include "spaceObjects/explosionEffect.h"
 #include "spaceObjects/zone.h"
 
@@ -37,22 +37,21 @@ GameMasterScreen::GameMasterScreen()
 
     pause_button = new GuiToggleButton(this, "PAUSE_BUTTON", "Pause", [this](bool value) {
         if (!value)
-            engine->setGameSpeed(1.0f);
+            gameMasterActions->commandSetGameSpeed(1.0f);
         else
-            engine->setGameSpeed(0.0f);
+            gameMasterActions->commandSetGameSpeed(0.0f);
     });
     pause_button->setValue(engine->getGameSpeed() == 0.0f)->setPosition(20, 20, ATopLeft)->setSize(250, 50);
 
-    intercept_comms_button = new GuiToggleButton(this, "INTERCEPT_COMMS_BUTTON", "Capter les comms", [this](bool value) {
-        gameGlobalInfo->intercept_all_comms_to_gm = value;
-    });
-    intercept_comms_button->setValue(gameGlobalInfo->intercept_all_comms_to_gm)->setTextSize(20)->setPosition(300, 20, ATopLeft)->setSize(200, 25);
+    if (gameGlobalInfo->intercept_all_comms_to_gm < CGI_Always){
+        intercept_comms_button = new GuiToggleButton(this, "INTERCEPT_COMMS_BUTTON", "Intercept all comms", [this](bool value) {
+            gameMasterActions->commandInterceptAllCommsToGm(value);
+        });
+        intercept_comms_button->setValue((int)gameGlobalInfo->intercept_all_comms_to_gm)->setTextSize(20)->setPosition(300, 20, ATopLeft)->setSize(200, 25);
+    }
 
     faction_selector = new GuiSelector(this, "FACTION_SELECTOR", [this](int index, string value) {
-        for(P<SpaceObject> obj : targets.getTargets())
-        {
-            obj->setFactionId(index);
-        }
+        gameMasterActions->commandSetFactionId(index, targets.getTargets());
     });
     for(P<FactionInfo> info : factionInfo)
         faction_selector->addEntry(info->getName(), info->getName());
@@ -80,9 +79,28 @@ GameMasterScreen::GameMasterScreen()
         if (ship)
             target = ship;
         main_radar->setViewPosition(ship->getPosition());
+        if(!position_text_custom)
+            position_text->setText(getStringFromPosition(ship->getPosition()));
         targets.set(ship);
     });
     player_ship_selector->setPosition(270, -20, ABottomLeft)->setSize(250, 50);
+
+    position_text_custom = false;
+    position_text = new GuiTextEntry(this, "SECTOR_NAME_TEXT", "");
+    position_text->setPosition(620, -20, ABottomLeft)->setSize(250, 50);
+    position_text->callback([this](string text){
+        position_text_custom = true;
+    });
+    position_text->validator(isValidPositionString);
+    position_text->enterCallback([this](string text){
+        position_text_custom = false;
+        if (position_text->isValid())
+        {
+            sf::Vector2f pos = getPositionFromSring(text);
+            main_radar->setViewPosition(pos);
+        }
+    });
+    position_text->setText(getStringFromPosition(main_radar->getViewPosition()));
 
     CPU_ship_selector = new GuiSelector(this, "CPU_SHIP_SELECTOR", [this](int index, string value) {
         P<SpaceShip> ship = space_object_list[value.toInt()];
@@ -148,7 +166,8 @@ GameMasterScreen::GameMasterScreen()
             }
         }
     });
-    tweak_button->setPosition(20, -120, ABottomLeft)->setSize(250, 50)->hide();
+    // tweaks only work on the server
+    tweak_button->setPosition(20, -120, ABottomLeft)->setSize(250, 50)->setEnable(bool(game_server))->hide();
 
     player_comms_hail = new GuiButton(this, "HAIL_PLAYER", "Contacter vaisseau", [this]() {
         for(P<SpaceObject> obj : targets.getTargets())
@@ -168,16 +187,7 @@ GameMasterScreen::GameMasterScreen()
     gm_script_options = new GuiListbox(this, "GM_SCRIPT_OPTIONS", [this](int index, string value)
     {
         gm_script_options->setSelectionIndex(-1);
-        int n = 0;
-        for(GMScriptCallback& callback : gameGlobalInfo->gm_callback_functions)
-        {
-            if (n == index)
-            {
-                callback.callback.call();
-                return;
-            }
-            n++;
-        }
+        gameMasterActions->commandCallGmScript(index, getSelection());
     });
     gm_script_options->setPosition(20, 200, ATopLeft)->setSize(250, 500);
 
@@ -186,24 +196,16 @@ GameMasterScreen::GameMasterScreen()
 
     (new GuiLabel(order_layout, "ORDERS_LABEL", "Ordres:", 20))->addBackground()->setSize(GuiElement::GuiSizeMax, 30);
     (new GuiButton(order_layout, "ORDER_IDLE", "Repos", [this]() {
-        for(P<SpaceObject> obj : targets.getTargets())
-            if (P<CpuShip>(obj))
-                P<CpuShip>(obj)->orderIdle();
+        gameMasterActions->commandOrderShip(SO_Idle, getSelection());
     }))->setTextSize(20)->setSize(GuiElement::GuiSizeMax, 30);
     (new GuiButton(order_layout, "ORDER_ROAMING", "Errant", [this]() {
-        for(P<SpaceObject> obj : targets.getTargets())
-            if (P<CpuShip>(obj))
-                P<CpuShip>(obj)->orderRoaming();
+        gameMasterActions->commandOrderShip(SO_Roaming, getSelection());
     }))->setTextSize(20)->setSize(GuiElement::GuiSizeMax, 30);
     (new GuiButton(order_layout, "ORDER_STAND_GROUND", "En place", [this]() {
-        for(P<SpaceObject> obj : targets.getTargets())
-            if (P<CpuShip>(obj))
-                P<CpuShip>(obj)->orderStandGround();
+        gameMasterActions->commandOrderShip(SO_StandGround, getSelection());
     }))->setTextSize(20)->setSize(GuiElement::GuiSizeMax, 30);
     (new GuiButton(order_layout, "ORDER_DEFEND_LOCATION", "Defendre localisation", [this]() {
-        for(P<SpaceObject> obj : targets.getTargets())
-            if (P<CpuShip>(obj))
-                P<CpuShip>(obj)->orderDefendLocation(obj->getPosition());
+        gameMasterActions->commandOrderShip(SO_DefendLocation, getSelection());
     }))->setTextSize(20)->setSize(GuiElement::GuiSizeMax, 30);
 
     chat_layer = new GuiElement(this, "");
@@ -239,10 +241,10 @@ void GameMasterScreen::update(float delta)
     if (mouse_wheel_delta != 0.0)
     {
         float view_distance = main_radar->getDistance() * (1.0 - (mouse_wheel_delta * 0.1f));
-        if (view_distance > 200000)
-            view_distance = 200000;
-        if (view_distance < 5000)
-            view_distance = 5000;
+        if (view_distance > max_distance)
+            view_distance = max_distance;
+        if (view_distance < min_distance)
+            view_distance = min_distance;
         main_radar->setDistance(view_distance);
         if (view_distance < 10000)
             main_radar->shortRange();
@@ -342,7 +344,12 @@ void GameMasterScreen::update(float delta)
 
     if (targets.getTargets().size() == 1)
     {
-        selection_info["Position"] = string(targets.getTargets()[0]->getPosition().x, 0) + "," + string(targets.getTargets()[0]->getPosition().y, 0);
+        P<SpaceObject> target = targets.getTargets()[0];
+        selection_info["Position"] = string(target->getPosition().x, 0) + "," + string(target->getPosition().y, 0);
+        P<SpaceShip> targetSpaceship = P<SpaceShip>(target);
+        if (targetSpaceship){
+            selection_info["Max Warp"] = string(targetSpaceship->max_warp, 2);
+        }
 
         for(int n=0; n<GameGlobalInfo::max_player_ships; n++)
         {
@@ -374,8 +381,8 @@ void GameMasterScreen::update(float delta)
         cnt++;
     }
 
-    bool gm_functions_changed = gm_script_options->entryCount() != int(gameGlobalInfo->gm_callback_functions.size());
-    auto it = gameGlobalInfo->gm_callback_functions.begin();
+    bool gm_functions_changed = gm_script_options->entryCount() != int(gameGlobalInfo->gm_callback_names.size());
+    auto it = gameGlobalInfo->gm_callback_names.begin();
     for(int n=0; !gm_functions_changed && n<gm_script_options->entryCount(); n++)
     {
         if (gm_script_options->getEntryName(n) != it->name)
@@ -385,11 +392,13 @@ void GameMasterScreen::update(float delta)
     if (gm_functions_changed)
     {
         gm_script_options->setOptions({});
-        for(const GMScriptCallback& callback : gameGlobalInfo->gm_callback_functions)
+        for(const string& callbackName : gameGlobalInfo->gm_callback_names)
         {
-            gm_script_options->addEntry(callback.name, callback.name);
+            gm_script_options->addEntry(callbackName, callbackName);
         }
     }
+    pause_button->setValue(engine->getGameSpeed() == 0.0f);
+    intercept_comms_button->setValue(gameGlobalInfo->intercept_all_comms_to_gm);
 }
 
 void GameMasterScreen::onMouseDown(sf::Vector2f position)
@@ -429,13 +438,12 @@ void GameMasterScreen::onMouseDrag(sf::Vector2f position)
     case CD_DragView:
         click_and_drag_state = CD_DragView;
         main_radar->setViewPosition(main_radar->getViewPosition() - (position - drag_previous_position));
+        if(!position_text_custom)
+            position_text->setText(getStringFromPosition(main_radar->getViewPosition()));
         position -= (position - drag_previous_position);
         break;
     case CD_DragObjects:
-        for(P<SpaceObject> obj : targets.getTargets())
-        {
-            obj->setPosition(obj->getPosition() + (position - drag_previous_position));
-        }
+        gameMasterActions->commandMoveObjects(position - drag_previous_position, targets.getTargets());
         break;
     case CD_BoxSelect:
         box_selection_overlay->show();
@@ -456,64 +464,7 @@ void GameMasterScreen::onMouseUp(sf::Vector2f position)
         {
             //Right click
             bool shift_down = InputHandler::keyboardIsDown(sf::Keyboard::LShift) || InputHandler::keyboardIsDown(sf::Keyboard::RShift);
-            P<SpaceObject> target;
-            PVector<Collisionable> list = CollisionManager::queryArea(position, position);
-            foreach(Collisionable, collisionable, list)
-            {
-                P<SpaceObject> space_object = collisionable;
-                if (space_object)
-                {
-                    if (!target || sf::length(position - space_object->getPosition()) < sf::length(position - target->getPosition()))
-                        target = space_object;
-                }
-            }
-
-            sf::Vector2f upper_bound(-std::numeric_limits<float>::max(), -std::numeric_limits<float>::max());
-            sf::Vector2f lower_bound(std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
-            for(P<SpaceObject> obj : targets.getTargets())
-            {
-                P<CpuShip> cpu_ship = obj;
-                if (!cpu_ship)
-                    continue;
-
-                lower_bound.x = std::min(lower_bound.x, obj->getPosition().x);
-                lower_bound.y = std::min(lower_bound.y, obj->getPosition().y);
-                upper_bound.x = std::max(upper_bound.x, obj->getPosition().x);
-                upper_bound.y = std::max(upper_bound.y, obj->getPosition().y);
-            }
-            sf::Vector2f objects_center = (upper_bound + lower_bound) / 2.0f;
-
-            for(P<SpaceObject> obj : targets.getTargets())
-            {
-                P<CpuShip> cpu_ship = obj;
-                P<WormHole> wormhole = obj;
-                if (cpu_ship)
-                {
-                    if (target && target != obj && target->canBeTargetedBy(obj))
-                    {
-                        if (obj->isEnemy(target))
-                        {
-                            cpu_ship->orderAttack(target);
-                        }else{
-                            if (!shift_down && target->canBeDockedBy(cpu_ship))
-                                cpu_ship->orderDock(target);
-                            else
-                                cpu_ship->orderDefendTarget(target);
-                        }
-                    }else{
-                        if (shift_down)
-                            cpu_ship->orderFlyTowardsBlind(position + (obj->getPosition() - objects_center));
-                        else
-                            cpu_ship->orderFlyTowards(position + (obj->getPosition() - objects_center));
-                    }
-                }
-                else if (wormhole)
-                {
-                    wormhole->setTargetPosition(position);
-                }
-
-
-            }
+            gameMasterActions->commandContextualGoTo(position, shift_down, targets.getTargets());
         }
         break;
     case CD_BoxSelect:
@@ -545,25 +496,7 @@ void GameMasterScreen::onKey(sf::Event::KeyEvent key, int unicode)
     switch(key.code)
     {
     case sf::Keyboard::Delete:
-        for(P<SpaceObject> obj : targets.getTargets())
-        {
-            if (obj)
-            {
-                P<ExplosionEffect> e = new ExplosionEffect();
-                e->setSize(obj->getRadius());
-                e->setPosition(obj->getPosition());
-                obj->destroy();
-            }
-        }
-        break;
-    case sf::Keyboard::S:
-        for(P<SpaceObject> obj : targets.getTargets())
-        {
-            if (obj)
-            {
-                obj->destroy();
-            }
-        }
+        gameMasterActions->commandDestroy(targets.getTargets());
         break;
     case sf::Keyboard::F5:
         Clipboard::setClipboard(getScriptExport(false));
@@ -575,8 +508,10 @@ void GameMasterScreen::onKey(sf::Event::KeyEvent key, int unicode)
         returnToShipSelection();
         break;
     case sf::Keyboard::P:
-        if (game_server)
-            engine->setGameSpeed(0.0);
+        if (engine->getGameSpeed() == 0.0f)
+            gameMasterActions->commandSetGameSpeed(1.0f);
+        else
+            gameMasterActions->commandSetGameSpeed(0.0f);
         break;
     default:
         break;

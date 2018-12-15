@@ -2,6 +2,8 @@
 #include "screens/mainScreen.h"
 #include "screens/crewStationScreen.h"
 
+#include "screens/extra/navigationScreen.h"
+
 #include "screens/crew6/helmsScreen.h"
 #include "screens/crew6/weaponsScreen.h"
 #include "screens/crew6/engineeringScreen.h"
@@ -159,6 +161,8 @@ void PlayerInfo::spawnUI()
             screen->addStationTab(new RadarScreen(screen,"science"), scienceRadar, getCrewPositionName(scienceRadar), getCrewPositionIcon(scienceRadar));
         if (crew_position[relayRadar])
             screen->addStationTab(new RadarScreen(screen,"relay"), relayRadar, getCrewPositionName(relayRadar), getCrewPositionIcon(relayRadar));
+        if (crew_position[navigation])
+            screen->addStationTab(new NavigationScreen(screen), navigation, getCrewPositionName(navigation), getCrewPositionIcon(navigation));
         if (crew_position[logView])
             screen->addStationTab(new ShipLogScreen(screen,"extern"), logView, getCrewPositionName(logView), getCrewPositionIcon(logView));
         if (crew_position[internLogView])
@@ -217,10 +221,12 @@ string getCrewPositionName(ECrewPosition position)
     case damageControl: return "Controle des dommages";
     case powerManagement: return "Gestion energie";
     case databaseView: return "Base de donnees";
+    case commsView: return "Comms View";
     case tacticalRadar: return "Radar Tactique";
     case scienceRadar: return "Radar Science";
     case relayRadar: return "Radar Relai";
-	  case logView: return "Log View";
+    case navigation: return "Navigation";
+    case logView: return "Log View";
     case internLogView: return "Intern Log View";
     case dronePilot: return "Drone Pilot";
     case dockMaster: return "Dock Master";
@@ -244,10 +250,12 @@ string getCrewPositionIcon(ECrewPosition position)
     case damageControl: return "";
     case powerManagement: return "";
     case databaseView: return "";
+    case commsView: return "";
     case tacticalRadar: return "";
     case scienceRadar: return "";
     case relayRadar: return "";
-	  case logView: return "";
+    case navigation: return "";
+    case logView: return "";
     case internLogView: return "";
     case dronePilot: return "";
     case dockMaster: return "";
@@ -291,12 +299,16 @@ template<> void convert<ECrewPosition>::param(lua_State* L, int& idx, ECrewPosit
         cp = powerManagement;
     else if (str == "database" || str == "databaseview")
         cp = databaseView;
+    else if (str == "comms" || str == "commsview")
+        cp = commsView;
     else if (str == "tacticalradar" || str == "tacticalradarview")
         cp = tacticalRadar;
     else if (str == "scienceradar" || str == "scienceradarview")
         cp = scienceRadar;
     else if (str == "relayradar" || str == "relayradarview")
         cp = relayRadar;
+    else if (str == "navigation" || str == "navigationview")
+        cp = navigation;
     else if (str == "log" || str == "logview")
         cp = logView;
     else if (str == "internlog" || str == "internlogview")

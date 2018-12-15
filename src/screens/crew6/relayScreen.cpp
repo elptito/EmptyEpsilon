@@ -3,6 +3,7 @@
 #include "spaceObjects/playerSpaceship.h"
 #include "spaceObjects/scanProbe.h"
 #include "scriptInterface.h"
+#include "gameGlobalInfo.h"
 
 #include "screenComponents/radarView.h"
 #include "screenComponents/openCommsButton.h"
@@ -19,9 +20,10 @@
 #include "gui/gui2_label.h"
 #include "gui/gui2_togglebutton.h"
 #include "gui/gui2_progressbar.h"
+#include "gui/gui2_textentry.h"
 
-RelayScreen::RelayScreen(GuiContainer* owner)
-: GuiOverlay(owner, "RELAY_SCREEN", colorConfig.background), mode(TargetSelection)
+RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
+: GuiOverlay(owner, "RELAY_SCREEN", colorConfig.background), has_comms(has_comms), mode(TargetSelection)
 {
     targets.setAllowWaypointSelection();
     radar = new GuiRadarView(this, "RELAY_RADAR", 50000.0f, &targets, my_spaceship);
@@ -42,7 +44,13 @@ RelayScreen::RelayScreen(GuiContainer* owner)
         },
         [this](sf::Vector2f position) { //drag
             if (mode == TargetSelection)
-                radar->setViewPosition(radar->getViewPosition() - (position - mouse_down_position));
+                {
+                    position_text_custom = false;
+                    sf::Vector2f newPosition = radar->getViewPosition() - (position - mouse_down_position);
+                    radar->setViewPosition(newPosition);
+                    if(!position_text_custom)
+                        position_text->setText(getStringFromPosition(newPosition));
+                }
             if (mode == MoveWaypoint && my_spaceship)
                 my_spaceship->commandMoveWaypoint(drag_waypoint_index, position);
         },
@@ -84,13 +92,34 @@ RelayScreen::RelayScreen(GuiContainer* owner)
     info_faction = new GuiKeyValueDisplay(sidebar, "SCIENCE_FACTION", 0.4, "Federation", "");
     info_faction->setSize(GuiElement::GuiSizeMax, 30);
 
-    zoom_slider = new GuiSlider(this, "ZOOM_SLIDER", 100000.0f, 6250.0f, 50000.0f, [this](float value) {
-        zoom_label->setText("Zoom: " + string(100000.0f / value, 1.0f) + "x");
+    // Controls for the radar view
+    view_controls = new GuiAutoLayout(this, "VIEW_CONTROLS", GuiAutoLayout::LayoutVerticalBottomToTop);
+    view_controls->setPosition(20, -70, ABottomLeft)->setSize(250, GuiElement::GuiSizeMax);
+    zoom_slider = new GuiSlider(view_controls, "ZOOM_SLIDER", max_distance, min_distance, radar->getDistance(), [this](float value) {
+        zoom_label->setText("Zoom: " + string(max_distance / value, 1.0f) + "x");
         radar->setDistance(value);
     });
-    zoom_slider->setPosition(20, -70, ABottomLeft)->setSize(250, 50);
-    zoom_label = new GuiLabel(zoom_slider, "", "Zoom: 1.0x", 30);
+    zoom_slider->setPosition(20, -70, ABottomLeft)->setSize(GuiElement::GuiSizeMax, 50);
+    zoom_slider->setVisible(false);
+    zoom_label = new GuiLabel(zoom_slider, "", "Zoom: " + string(max_distance / radar->getDistance(), 1.0f) + "x", 30);
     zoom_label->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+
+    position_text_custom = false;
+    position_text = new GuiTextEntry(view_controls, "SECTOR_NAME_TEXT", "");
+    position_text->setSize(GuiElement::GuiSizeMax, 50);
+    position_text->callback([this](string text){
+        position_text_custom = true;
+    });
+    position_text->validator(isValidPositionString);
+    position_text->enterCallback([this](string text){
+        position_text_custom = false;
+        if (position_text->isValid())
+        {
+            sf::Vector2f pos = getPositionFromSring(text);
+            radar->setViewPosition(pos);
+        }
+    });
+    position_text->setText(getStringFromPosition(radar->getViewPosition()));
 
     // Option buttons for comms, waypoints, and probes.
     option_buttons = new GuiAutoLayout(this, "BUTTONS", GuiAutoLayout::LayoutVerticalTopToBottom);
@@ -125,6 +154,15 @@ RelayScreen::RelayScreen(GuiContainer* owner)
     });
     link_to_science_button->setSize(GuiElement::GuiSizeMax, 50);
     link_to_science_button->setIcon("gui/icons/station-science");
+
+    // Link probe to 3D port button.
+    link_to_3D_port_button = new GuiToggleButton(option_buttons, "LINK_TO_3D_PORT", "Camera Probe", [this](bool value){
+        if (value)
+            my_spaceship->commandSetProbe3DLink(targets.get()->getMultiplayerId());
+        else
+            my_spaceship->commandSetProbe3DLink(-1);
+    });
+    link_to_3D_port_button->setSize(GuiElement::GuiSizeMax, 50);
 
     // Manage waypoints.
     add_waypoint_button = new GuiButton(option_buttons, "WAYPOINT_PLACE_BUTTON", "Placer Marqueur", [this]() {
@@ -215,7 +253,8 @@ RelayScreen::RelayScreen(GuiContainer* owner)
 
     new ShipsLog(this,"extern");
 
-    (new GuiCommsOverlay(this))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+    if (has_comms)
+        (new GuiCommsOverlay(this))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 }
 
 void RelayScreen::onDraw(sf::RenderTarget& window)
@@ -225,14 +264,10 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
     if (mouse_wheel_delta != 0.0)
     {
         float view_distance = radar->getDistance() * (1.0 - (mouse_wheel_delta * 0.1f));
-        if (view_distance > 100000.0f)
-            view_distance = 100000.0f;
-        if (view_distance < 6250.0f)
-            view_distance = 6250.0f;
-        radar->setDistance(view_distance);
-        // Keep the zoom slider in sync.
         zoom_slider->setValue(view_distance);
-        zoom_label->setText("Zoom: " + string(100000.0f / view_distance, 1.0f) + "x");
+        view_distance = zoom_slider->getValue();
+        radar->setDistance(view_distance);
+        zoom_label->setText("Zoom: " + string(max_distance / view_distance, 1.0f) + "x");
     }
     ///!
 
@@ -300,11 +335,17 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
         {
             link_to_science_button->setValue(my_spaceship->linked_science_probe_id == probe->getMultiplayerId());
             link_to_science_button->enable();
+
+            link_to_3D_port_button->setValue(my_spaceship->linked_probe_3D_id == probe->getMultiplayerId());
+            link_to_3D_port_button->enable();
         }
         else
         {
             link_to_science_button->setValue(false);
             link_to_science_button->disable();
+
+            link_to_3D_port_button->setValue(false);
+            link_to_3D_port_button->disable();
         }
 //        if (my_spaceship && obj->canBeHackedBy(my_spaceship))
 //        {
@@ -316,6 +357,8 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
 //        hack_target_button->disable();
         link_to_science_button->disable();
         link_to_science_button->setValue(false);
+        link_to_3D_port_button->disable();
+		link_to_3D_port_button->setValue(false);
         info_callsign->setValue("-");
     }
     if (my_spaceship)

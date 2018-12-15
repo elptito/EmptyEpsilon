@@ -34,6 +34,7 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setMaxEnergy);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getEnergy);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setEnergy);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getBeamsFrequency);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getSystemHealth);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setSystemHealth);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getSystemHeat);
@@ -265,7 +266,7 @@ void SpaceShip::applyTemplateValues()
     }
     int maxActiveDockIndex = ship_template->launcher_dock_count + ship_template->energy_dock_count + ship_template->stock_dock_count;
     for (auto &droneTemplate : ship_template->drones) // access by reference to avoid copying
-    {  
+    {
         P<ShipTemplate> drone_ship_template = ShipTemplate::getTemplate(droneTemplate.template_name);
         // add drones one by one, assuming all drones are empty, and template is of drone type
         for (int i = 0; i < droneTemplate.count; i++)
@@ -273,7 +274,7 @@ void SpaceShip::applyTemplateValues()
             Dock *dock = Dock::findOpenForDocking(docks, maxActiveDockIndex);
             if (!dock) { // no more available docks
                 LOG(ERROR) << "Too many drones: " << template_name;
-                break; 
+                break;
             }
             P<ShipCargo> cargo = new ShipCargo(drone_ship_template);
             dock->dock(cargo);
@@ -666,7 +667,7 @@ void SpaceShip::update(float delta)
     {
         weapon_tube[n].update(delta);
     }
-    
+
     for(int n = 0; n < max_docks_count; n++)
     {
         docks[n].update(delta);
