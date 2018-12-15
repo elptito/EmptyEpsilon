@@ -606,8 +606,6 @@
 		<Unit filename="src/scienceDatabase.h" />
 		<Unit filename="src/GMActions.cpp" />
 		<Unit filename="src/GMActions.h" />
-		<Unit filename="src/GMScriptCallback.cpp" />
-		<Unit filename="src/GMScriptCallback.h" />
 		<Unit filename="src/cargo.cpp" />
 		<Unit filename="src/cargo.h" />
 		<Unit filename="src/shipCargo.cpp" />
