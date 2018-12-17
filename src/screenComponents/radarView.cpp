@@ -173,7 +173,6 @@ void GuiRadarView::drawNoneFriendlyBlockedAreas(sf::RenderTarget& window)
     if (my_spaceship)
     {
         sf::Vector2f radar_screen_center(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f);
-        float scale = std::min(rect.width, rect.height) / 2.0f / distance;
 
         float r = 5000.0 * getScale();
         sf::CircleShape circle(r, 50);
@@ -266,7 +265,6 @@ void GuiRadarView::drawNebulaBlockedAreas(sf::RenderTarget& window)
 void GuiRadarView::drawGhostDots(sf::RenderTarget& window)
 {
     sf::Vector2f radar_screen_center(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f);
-    float scale = std::min(rect.width, rect.height) / 2.0f / distance;
 
     sf::VertexArray ghost_points(sf::Points, ghost_dots.size());
     for(unsigned int n=0; n<ghost_dots.size(); n++)
@@ -283,7 +281,6 @@ void GuiRadarView::drawWaypoints(sf::RenderTarget& window)
         return;
 
     sf::Vector2f radar_screen_center(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f);
-    float scale = std::min(rect.width, rect.height) / 2.0f / distance;
 
     for(unsigned int n=0; n<my_spaceship->waypoints.size(); n++)
     {
@@ -336,7 +333,6 @@ void GuiRadarView::drawTargetProjections(sf::RenderTarget& window)
 {
     const float seconds_per_distance_tick = 5.0f;
     sf::Vector2f radar_screen_center(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f);
-    float scale = std::min(rect.width, rect.height) / 2.0f / distance;
 
     if (target_spaceship && missile_tube_controls)
     {

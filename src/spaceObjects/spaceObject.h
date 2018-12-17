@@ -259,6 +259,7 @@ public:
     bool areEnemiesInRange(float range);
     PVector<SpaceObject> getObjectsInRange(float range);
     string getSectorName();
+    string getSectorNameLevel(int level);
     bool openCommsTo(P<PlayerSpaceship> target);
     bool sendCommsMessage(P<PlayerSpaceship> target, string message);
 

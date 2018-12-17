@@ -59,7 +59,7 @@ void SectorsView::drawSectorGrid(sf::RenderTarget &window)
     const int scale_magnitude = 2 - std::min(2.f, factor);
     const float sector_size_scaled = GameGlobalInfo::sector_size * std::pow(sub_sectors_count, scale_magnitude);
     const float sub_sector_size = sector_size_scaled / sub_sectors_count;
-    
+
     int sector_x_min = floor((view_position.x - (radar_screen_center.x - rect.left) / scale) / sector_size_scaled) + 1;
     int sector_x_max = floor((view_position.x + (rect.left + rect.width - radar_screen_center.x) / scale) / sector_size_scaled);
     int sector_y_min = floor((view_position.y - (radar_screen_center.y - rect.top) / scale) / sector_size_scaled) + 1;
@@ -97,7 +97,7 @@ void SectorsView::drawSectorGrid(sf::RenderTarget &window)
     }
     window.draw(lines_x);
     window.draw(lines_y);
-    
+
     sf::Color color = sf::Color(64, 64, 128, 255);
     int sub_sector_x_min = floor((view_position.x - (radar_screen_center.x - rect.left) / scale) / sub_sector_size) + 1;
     int sub_sector_x_max = floor((view_position.x + (rect.left + rect.width - radar_screen_center.x) / scale) / sub_sector_size);
@@ -121,12 +121,12 @@ void SectorsView::drawTargets(sf::RenderTarget& window)
 {
     if (!targets)
         return;
-    
+
     sf::Vector2f radar_screen_center(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f);
 
     sf::Sprite target_sprite;
     textureManager.setTexture(target_sprite, "redicule.png");
-   
+
     for(P<SpaceObject> obj : targets->getTargets())
     {
         sf::Vector2f object_position_on_screen = radar_screen_center + (obj->getPosition() - getViewPosition()) * getScale();
@@ -138,25 +138,13 @@ void SectorsView::drawTargets(sf::RenderTarget& window)
             window.draw(target_sprite);
         }
     }
-    
+
     if (my_spaceship && targets->getWaypointIndex() > -1 && targets->getWaypointIndex() < my_spaceship->getWaypointCount())
     {
         sf::Vector2f object_position_on_screen = radar_screen_center + (my_spaceship->waypoints[targets->getWaypointIndex()] - getViewPosition()) * getScale();
-        
+
         target_sprite.setPosition(object_position_on_screen - sf::Vector2f(0, 10));
         window.draw(target_sprite);
-    }
-}
-
-void SectorsView::drawTerrain(sf::RenderTarget &window){
-    if (gameGlobalInfo->terrain.defined){
-        sf::Sprite terrainMap;
-        textureManager.getTexture(gameGlobalInfo->terrain.textureName)->setSmooth(true);
-        textureManager.setTexture(terrainMap, gameGlobalInfo->terrain.textureName);
-        terrainMap.setPosition(worldToScreen(gameGlobalInfo->terrain.coordinates));
-        terrainMap.setScale(getScale() * gameGlobalInfo->terrain.scale, getScale()* gameGlobalInfo->terrain.scale);
-        terrainMap.setColor(sf::Color(255, 255, 255, 128)); // half transparent
-        window.draw(terrainMap);
     }
 }
 

@@ -70,6 +70,8 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     /// Set if this ship has a jump drive. Example: template:setJumpDrive(true)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setJumpDrive);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setJumpDriveRange);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setJumpDriveChargeTime);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setJumpDriveEnergy);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCloaking);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setWeaponStorage);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, addRoom);
@@ -134,6 +136,9 @@ ShipTemplate::ShipTemplate()
     has_jump_drive = false;
     jump_drive_min_distance = 5000.0;
     jump_drive_max_distance = 50000.0;
+	jump_drive_charge = jump_drive_max_distance;
+    jump_drive_charge_time = 90.0;
+    jump_drive_energy_per_km_charge = 4.0f;
     has_cloaking = false;
     for(int n=0; n<MW_Count; n++)
         weapon_storage[n] = 0;
@@ -490,6 +495,10 @@ P<ShipTemplate> ShipTemplate::copy(string new_name)
     result->shares_energy_with_docked = shares_energy_with_docked;
     result->repair_docked = repair_docked;
     result->has_jump_drive = has_jump_drive;
+    result->jump_drive_min_distance = jump_drive_min_distance;
+    result->jump_drive_max_distance = jump_drive_max_distance;
+    result->jump_drive_charge_time = jump_drive_charge_time;
+    result->jump_drive_energy_per_km_charge = jump_drive_energy_per_km_charge;
     result->has_cloaking = has_cloaking;
     for(int n=0; n<MW_Count; n++)
         result->weapon_storage[n] = weapon_storage[n];

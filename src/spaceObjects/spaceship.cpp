@@ -53,6 +53,8 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, hasJumpDrive);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setJumpDrive);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setJumpDriveRange);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setJumpDriveChargeTime);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setJumpDriveEnergy);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, hasWarpDrive);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setWarpDrive);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getBeamWeaponArc);
@@ -99,10 +101,13 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     jump_drive_min_distance = 5000.0;
     jump_drive_max_distance = 50000.0;
     jump_drive_charge = jump_drive_max_distance;
+    jump_drive_charge_time = 90.0;
+    jump_drive_energy_per_km_charge = 4.0f;
     jump_distance = 0.0;
     jump_delay = 0.0;
     wormhole_alpha = 0.0;
     weapon_tube_count = 0;
+    beam_weapons_count = 0;
     turn_speed = 10.0;
     impulse_max_speed = 600.0;
     warp_speed_per_warp_level = 1000.0;
@@ -133,8 +138,11 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     registerMemberReplication(&jump_delay, 0.5);
     registerMemberReplication(&jump_drive_min_distance);
     registerMemberReplication(&jump_drive_max_distance);
+    registerMemberReplication(&jump_drive_charge_time);
+    registerMemberReplication(&jump_drive_energy_per_km_charge);
     registerMemberReplication(&wormhole_alpha, 0.5);
     registerMemberReplication(&weapon_tube_count);
+    registerMemberReplication(&beam_weapons_count);
     registerMemberReplication(&target_id);
     registerMemberReplication(&turn_speed);
     registerMemberReplication(&impulse_max_speed);
@@ -232,6 +240,9 @@ void SpaceShip::applyTemplateValues()
     has_jump_drive = ship_template->has_jump_drive;
     jump_drive_min_distance = ship_template->jump_drive_min_distance;
     jump_drive_max_distance = ship_template->jump_drive_max_distance;
+    jump_drive_charge = ship_template->jump_drive_charge;
+    jump_drive_charge_time = ship_template->jump_drive_charge_time;
+    jump_drive_energy_per_km_charge = ship_template->jump_drive_energy_per_km_charge;
     for(int n=0; n<max_weapon_tubes; n++)
     {
         weapon_tube[n].setLoadTimeConfig(ship_template->weapon_tube[n].load_time);
@@ -563,7 +574,8 @@ void SpaceShip::update(float delta)
                 if (jump_drive_charge < jump_drive_max_distance)
                 {
                     float extra_charge = (delta / jump_drive_charge_time * jump_drive_max_distance) * f;
-                    if (useEnergy(extra_charge * jump_drive_energy_per_km_charge / 1000.0))
+//                    if (useEnergy(extra_charge * jump_drive_energy_per_km_charge / 1000.0))
+                    if (useEnergy(jump_drive_energy_per_km_charge / 1000.0))
                     {
                         jump_drive_charge += extra_charge;
                         if (jump_drive_charge >= jump_drive_max_distance)
@@ -658,9 +670,12 @@ void SpaceShip::update(float delta)
     addHeat(SYS_Impulse, fabs(combat_maneuver_boost_active) * delta * heat_per_combat_maneuver_boost);
     addHeat(SYS_Maneuver, fabs(combat_maneuver_strafe_active) * delta * heat_per_combat_maneuver_strafe);
 
+    beam_weapons_count = 0;
     for(int n = 0; n < max_beam_weapons; n++)
     {
         beam_weapons[n].update(delta);
+        if (beam_weapons[n].getRange() > 0.0)
+            beam_weapons_count += 1;
     }
 
     for(int n=0; n<max_weapon_tubes; n++)
@@ -765,7 +780,7 @@ void SpaceShip::initializeJump(float distance)
     if (jump_delay <= 0.0)
     {
         jump_distance = distance;
-        jump_delay = 10.0;
+        jump_delay = 10 * distance / (1000 * 1000);
         jump_drive_charge -= distance;
     }
 }
@@ -1051,7 +1066,7 @@ bool SpaceShip::hasSystem(ESystem system)
     case SYS_Reactor:
         return ship_template->has_reactor;
     case SYS_BeamWeapons:
-        return true;
+        return beam_weapons_count > 0;
     case SYS_Maneuver:
         return turn_speed > 0.0;
     case SYS_Impulse:

@@ -19,12 +19,13 @@ void NavigationView::onDraw(sf::RenderTarget& window)
     //Setup our textures for rendering
     adjustRenderTexture(background_texture);
     adjustRenderTexture(forground_texture);
-     background_texture.clear(sf::Color(30, 20, 30, 255));
-    
-    drawTerrain(background_texture);
-     drawSectorGrid(background_texture);
-     forground_texture.clear(sf::Color::Transparent);
-    
+
+    background_texture.clear(sf::Color(30, 20, 30, 255));
+
+    drawSectorGrid(background_texture);
+
+    forground_texture.clear(sf::Color::Transparent);
+
     drawObjects(forground_texture, background_texture);
     drawWaypoints(forground_texture);
     drawTargets(forground_texture);

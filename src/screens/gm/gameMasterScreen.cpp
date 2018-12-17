@@ -346,10 +346,6 @@ void GameMasterScreen::update(float delta)
     {
         P<SpaceObject> target = targets.getTargets()[0];
         selection_info["Position"] = string(target->getPosition().x, 0) + "," + string(target->getPosition().y, 0);
-        P<SpaceShip> targetSpaceship = P<SpaceShip>(target);
-        if (targetSpaceship){
-            selection_info["Max Warp"] = string(targetSpaceship->max_warp, 2);
-        }
 
         for(int n=0; n<GameGlobalInfo::max_player_ships; n++)
         {
@@ -385,7 +381,7 @@ void GameMasterScreen::update(float delta)
     auto it = gameGlobalInfo->gm_callback_names.begin();
     for(int n=0; !gm_functions_changed && n<gm_script_options->entryCount(); n++)
     {
-        if (gm_script_options->getEntryName(n) != it->name)
+        if (gm_script_options->getEntryName(n) != *it)
             gm_functions_changed = true;
         it++;
     }

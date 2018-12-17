@@ -79,6 +79,7 @@ REGISTER_SCRIPT_CLASS_NO_CREATE(SpaceObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject,removeOxygenPoints);
     /// Get the name of the sector this object is in (A4 for example)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getSectorName);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getSectorNameLevel);
     /// Hail a player ship from this object. The ship will get a notification and can accept or deny the hail.
     /// Warning/ToFix: If the player refuses the hail, no feedback is given to the script in any way.
     /// Return true when the hail is enabled with succes. Returns false when the target player cannot be hailed right now (because it's already communicating with something else)
@@ -496,6 +497,17 @@ void SpaceObject::addOxygenPoints(float amount)
 string SpaceObject::getSectorName()
 {
     return ::getSectorName(getPosition());
+}
+
+string SpaceObject::getSectorNameLevel(int level)
+{
+    int factor = std::pow(8,level) * GameGlobalInfo::sector_size;
+
+    sf::Vector2f position = getPosition();
+    position.x = floorf(position.x / factor) * factor;
+    position.y = floorf(position.y / factor) * factor;
+
+    return ::getSectorName(position);
 }
 
 bool SpaceObject::openCommsTo(P<PlayerSpaceship> target)

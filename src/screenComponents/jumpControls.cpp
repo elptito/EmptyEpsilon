@@ -35,22 +35,23 @@ void GuiJumpControls::onDraw(sf::RenderTarget& window)
     {
         if (target_spaceship->jump_delay > 0.0)
         {
-            label->setKey("Jump dans");
-            label->setValue(string(int(ceilf(target_spaceship->jump_delay))));
+            label->setKey("Jump dans :");
+            label->setValue(string(int(ceilf(target_spaceship->jump_delay / target_spaceship->getJumpDriveRechargeRate()))) + " S");
             slider->disable();
             button->disable();
             charge_bar->hide();
         }else if (target_spaceship->jump_drive_charge < target_spaceship->jump_drive_max_distance)
         {
-            label->setKey("Chargement");
-            label->setValue("...");
+            float time = target_spaceship->jump_drive_charge_time / target_spaceship->getJumpDriveRechargeRate() * (target_spaceship->jump_drive_max_distance - target_spaceship->jump_drive_charge) / target_spaceship->jump_drive_max_distance;
+            label->setKey("Charge :");
+            label->setValue(string(int(ceilf(time))) + " S");
             slider->hide();
             button->disable();
             charge_bar->setRange(0.0, target_spaceship->jump_drive_max_distance);
             charge_bar->setValue(target_spaceship->jump_drive_charge)->show();
         }else{
             label->setKey("Distance");
-            label->setValue(string(slider->getValue() / 1000.0, 1) + DISTANCE_UNIT_1K);
+            label->setValue(string(slider->getValue() / 1000.0, 0) + " " + DISTANCE_UNIT_1K);
             slider->enable()->show();
             slider->setRange(target_spaceship->jump_drive_max_distance, target_spaceship->jump_drive_min_distance);
             button->enable();

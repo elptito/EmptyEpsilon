@@ -46,7 +46,6 @@ GameGlobalInfo::GameGlobalInfo()
     allow_main_screen_long_range_radar = true;
     allow_main_screen_global_range_radar = true;
     allow_main_screen_ship_state = true;
-    terrain.defined = false;
     intercept_all_comms_to_gm = CGI_None;
 
     registerMemberReplication(&scanning_complexity);
@@ -289,19 +288,19 @@ string getStringFromPosition(sf::Vector2f position)
 string getSectorName(sf::Vector2f position)
 {
     int sector_x = floorf(position.x / GameGlobalInfo::sector_size);
-    int sector_x = floorf(position.x / sector_size) + 5;	    int sector_y = floorf(position.y / GameGlobalInfo::sector_size);
-    int sector_y = floorf(position.y / sector_size) + 5;	    int quadrant = 0;
-    string y;	    string row = "";
-    string x;	    if (sector_y < 0)
-    if (sector_y >= 0)	    {
-        y = string(char('A' + (sector_y)));	        quadrant += 2;
-    else	        sector_y = -1 - sector_y;
-        y = string(char('z' + sector_y / 26)) + string(char('z' + 1 + (sector_y % 26)));	    }
-    if (sector_x >= 0)	    if (sector_x < 0)
-        x = string(sector_x);	    {
-    else	        quadrant += 1;
-        x = string(100 + sector_x);	        sector_x = -1 - sector_x;
-    return y + x;	    }
+    int sector_y = floorf(position.y / GameGlobalInfo::sector_size);
+    int quadrant = 0;
+    string row = "";
+    if (sector_y < 0)
+    {
+        quadrant += 2;
+        sector_y = -1 - sector_y;
+    }
+    if (sector_x < 0)
+    {
+        quadrant += 1;
+        sector_x = -1 - sector_x;
+    }
     while (sector_y > -1)
     {
         row = string(char('A' + (sector_y % 26))) + row;
