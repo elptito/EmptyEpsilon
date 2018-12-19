@@ -113,6 +113,12 @@ private:
     GuiToggleButton* jump_toggle;
     GuiSlider* combat_maneuver_boost_speed_slider;
     GuiSlider* combat_maneuver_strafe_speed_slider;
+    GuiSlider* jump_drive_min_distance_slider;
+    GuiSlider* jump_drive_max_distance_slider;
+    GuiSlider* jump_drive_charge_slider;
+    GuiSlider* jump_drive_charge_time_slider;
+    GuiSlider* jump_drive_energy_slider;
+    GuiSlider* jump_delay_slider;
 
 public:
     GuiShipTweak(GuiContainer* owner);
