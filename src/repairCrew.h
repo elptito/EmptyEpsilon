@@ -21,7 +21,8 @@ enum ERepairCrewDirection
 class RepairCrew : public MultiplayerObject, public Updatable
 {
     static constexpr float move_speed = 2.0;
-    static constexpr float repair_per_second = 0.007;
+//    static constexpr float repair_per_second = 0.007;
+    static constexpr float repair_per_second = 0.002;
 public:
     sf::Vector2f position;
     sf::Vector2i target_position;
@@ -29,7 +30,7 @@ public:
     ERepairCrewDirection direction;
     float action_delay;
     int32_t ship_id;
-    
+
     bool selected; //TODO: This should not be tracked here but in the GUI.
 
     RepairCrew();

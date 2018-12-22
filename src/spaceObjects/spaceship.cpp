@@ -55,6 +55,12 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setJumpDriveRange);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setJumpDriveChargeTime);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setJumpDriveEnergy);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getJumpDelay);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getJumpDriveMaxDistance);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getJumpDriveMinDistance);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getJumpDriveCharge);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getJumpDriveChargeTime);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getJumpDriveEnergy);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, hasWarpDrive);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setWarpDrive);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getBeamWeaponArc);
@@ -568,7 +574,7 @@ void SpaceShip::update(float delta)
     }else{
         if (has_jump_drive)
         {
-            float f = getJumpDriveRechargeRate();
+            float f = getJumpDriveRechargeRate() * getSystemEffectiveness(SYS_JumpDrive);
             if (f > 0)
             {
                 if (jump_drive_charge < jump_drive_max_distance)
