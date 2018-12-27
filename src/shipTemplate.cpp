@@ -136,7 +136,7 @@ ShipTemplate::ShipTemplate()
     has_jump_drive = false;
     jump_drive_min_distance = 5000.0;
     jump_drive_max_distance = 50000.0;
-	jump_drive_charge = jump_drive_max_distance;
+    jump_drive_charge = jump_drive_max_distance;
     jump_drive_charge_time = 90.0;
     jump_drive_energy_per_km_charge = 4.0f;
     has_cloaking = false;
@@ -146,6 +146,8 @@ ShipTemplate::ShipTemplate()
     has_reactor = true;
     launcher_dock_count = 0;
     energy_dock_count = 0;
+    thermic_dock_count = 0;
+    repair_dock_count = 0;
     stock_dock_count = 0;
 }
 
@@ -448,9 +450,11 @@ void ShipTemplate::addDrones(string template_name, int count)
     drones.push_back(DroneTemplate(template_name, count));
 }
 
-void ShipTemplate::setDocks(int launchers, int energy, int stock){
+void ShipTemplate::setDocks(int launchers, int energy, int thermic, int repair, int stock){
     launcher_dock_count = launchers;
     energy_dock_count = energy;
+    thermic_dock_count = thermic;
+    repair_dock_count = repair;
     stock_dock_count = stock;
 }
 
@@ -509,6 +513,8 @@ P<ShipTemplate> ShipTemplate::copy(string new_name)
     result->drones = drones;
     result->launcher_dock_count = launcher_dock_count;
     result->energy_dock_count = energy_dock_count;
+    result->thermic_dock_count = thermic_dock_count;
+    result->repair_dock_count = repair_dock_count;
     result->stock_dock_count = stock_dock_count;
     return result;
 }

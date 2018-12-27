@@ -272,13 +272,17 @@ void SpaceShip::applyTemplateValues()
     for(int n = 0; n < max_docks_count; n++)
     {
         if (n < ship_template->launcher_dock_count){
-            docks[n].setDockType(Launcher);
+            docks[n].setDockType(Dock_Launcher);
         } else if (n < ship_template->launcher_dock_count + ship_template->energy_dock_count){
-            docks[n].setDockType(Energy);
-        } else if (n < ship_template->launcher_dock_count + ship_template->energy_dock_count + ship_template->stock_dock_count){
-            docks[n].setDockType(Stock);
+            docks[n].setDockType(Dock_Energy);
+        } else if (n < ship_template->launcher_dock_count + ship_template->energy_dock_count + ship_template->thermic_dock_count){
+            docks[n].setDockType(Dock_Thermic);
+        } else if (n < ship_template->launcher_dock_count + ship_template->energy_dock_count + ship_template->thermic_dock_count + ship_template->repair_dock_count){
+            docks[n].setDockType(Dock_Repair);
+        } else if (n < ship_template->launcher_dock_count + ship_template->energy_dock_count + ship_template->thermic_dock_count + ship_template->repair_dock_count + ship_template->stock_dock_count){
+              docks[n].setDockType(Stock);
         } else {
-            docks[n].setDockType(Disabled);
+            docks[n].setDockType(Dock_Disabled);
         }
     }
     int maxActiveDockIndex = ship_template->launcher_dock_count + ship_template->energy_dock_count + ship_template->stock_dock_count;
@@ -1079,7 +1083,7 @@ bool SpaceShip::hasSystem(ESystem system)
         return impulse_max_speed > 0.0;
     case SYS_Docks:
     case SYS_Drones:
-        return docks[0].dock_type != Disabled;
+        return docks[0].dock_type != Dock_Disabled;
     }
     return true;
 }
@@ -1093,7 +1097,7 @@ float SpaceShip::getSystemEffectiveness(ESystem system)
     if (system != SYS_Reactor)
     {
         if (energy_level < 10.0 && energy_level > 0.0 && power > 0.0)
-            power = std::min((10.0f * energy_level) / power, power);
+             power = std::min(power * energy_level / 10.0f, power);
         else if (energy_level <= 0.0 || power <= 0.0)
             power = 0.0f;
     }
@@ -1330,6 +1334,10 @@ bool SpaceShip::tryDockDrone(SpaceShip* other){
         }
     }
     return false;
+}
+
+float SpaceShip::getDronesControlRange() {
+    return Tween<float>::easeInQuad(getSystemEffectiveness(SYS_Drones), 0.0, 3.0, 0.001, gameGlobalInfo->long_range_radar_range);
 }
 
 string getMissileWeaponName(EMissileWeapons missile)
