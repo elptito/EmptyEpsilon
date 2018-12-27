@@ -14,6 +14,7 @@
 #include "screenComponents/radarView.h"
 #include "screenComponents/shipDestroyedPopup.h"
 #include "screens/extra/damcon.h"
+#include "screens/extra/probeScreen.h"
 
 #include "gui/gui2_overlay.h"
 #include "gui/gui2_panel.h"
@@ -110,7 +111,8 @@ void ScreenMainScreen::update(float delta)
         camera_pitch = 30.0f;
 
         float camera_ship_distance = 420.0f;
-        float camera_ship_height = 420.0f;
+//        float camera_ship_height = 420.0f;
+        float camera_ship_height = my_spaceship->getRadius();
         if (first_person)
         {
             camera_ship_distance = -my_spaceship->getRadius();

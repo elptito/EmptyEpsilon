@@ -3,6 +3,7 @@
 #include "playerInfo.h"
 #include "spaceObjects/shipTemplateBasedObject.h"
 #include "spaceObjects/playerSpaceship.h"
+#include "screenComponents/shipsLogControl.h"
 #include "screenComponents/customShipFunctions.h"
 
 #include "gui/gui2_listbox.h"
@@ -118,6 +119,8 @@ DockMasterScreen::DockMasterScreen(GuiContainer *owner)
     selectDock(0);
     model->moveToBack();
     background_crosses->moveToBack();
+
+    new ShipsLog(this,"docks");
 }
 
 void DockMasterScreen::selectDock(int index)

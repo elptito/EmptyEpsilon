@@ -58,7 +58,7 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
             switch(mode)
             {
             case TargetSelection:
-                targets.setToClosestTo(position, 1000, TargetsContainer::Targetable);
+                targets.setToClosestTo(position, 1000, TargetsContainer::Targetable, my_spaceship);
                 break;
             case WaypointPlacement:
                 if (my_spaceship)
@@ -156,13 +156,14 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
     link_to_science_button->setIcon("gui/icons/station-science");
 
     // Link probe to 3D port button.
-    link_to_3D_port_button = new GuiToggleButton(option_buttons, "LINK_TO_3D_PORT", "Camera Probe", [this](bool value){
-        if (value)
-            my_spaceship->commandSetProbe3DLink(targets.get()->getMultiplayerId());
-        else
-            my_spaceship->commandSetProbe3DLink(-1);
-    });
-    link_to_3D_port_button->setSize(GuiElement::GuiSizeMax, 50);
+//    link_to_3D_port_button = new GuiToggleButton(option_buttons, "LINK_TO_3D_PORT", "Camera Probe", [this](bool value){
+//        if (value)
+//            my_spaceship->commandSetProbe3DLink(targets.get()->getMultiplayerId());
+//        else
+//            my_spaceship->commandSetProbe3DLink(-1);
+//    });
+//    link_to_3D_port_button->setSize(GuiElement::GuiSizeMax, 50);
+//    link_to_3D_port_button->setIcon("gui/icons/camera");
 
     // Manage waypoints.
     add_waypoint_button = new GuiButton(option_buttons, "WAYPOINT_PLACE_BUTTON", "Placer Marqueur", [this]() {

@@ -36,6 +36,8 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner, ECrewPosition crew_pos
     front_shield_display->setIcon("gui/icons/shields-fore")->setTextSize(20)->setPosition(20, 180, ATopLeft)->setSize(240, 40);
     rear_shield_display = new GuiKeyValueDisplay(this, "SHIELDS_DISPLAY", 0.45, "Arriere", "");
     rear_shield_display->setIcon("gui/icons/shields-aft")->setTextSize(20)->setPosition(20, 220, ATopLeft)->setSize(240, 40);
+    shield_display = new GuiKeyValueDisplay(this, "SHIELDS_DISPLAY", 0.45, "Bouclier", "");
+    shield_display->setIcon("gui/icons/shields-fore")->setTextSize(20)->setPosition(20, 220, ATopLeft)->setSize(240, 40);
     oxygen_display = new GuiKeyValueDisplay(this, "OXYGEN_DISPLAY", 0.45, "Oxygene", "");
     oxygen_display->setIcon("gui/icons/oxygen")->setTextSize(20)->setPosition(20, 260, ATopLeft)->setSize(240, 40);
 
@@ -186,6 +188,27 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
             hull_display->setColor(sf::Color::Red);
         else
             hull_display->setColor(sf::Color::White);
+
+        if (my_spaceship->getShieldCount() == 0)
+        {
+            front_shield_display->hide();
+            rear_shield_display->hide();
+            shield_display->hide();
+        }
+        else if (my_spaceship->getShieldCount() == 1)
+        {
+            front_shield_display->hide();
+            rear_shield_display->hide();
+            shield_display->show();
+        }
+        else
+        {
+            front_shield_display->show();
+            rear_shield_display->show();
+            shield_display->hide();
+        }
+
+        shield_display->setValue(string(my_spaceship->getShieldPercentage(0)) + "%");
         front_shield_display->setValue(string(my_spaceship->getShieldPercentage(0)) + "%");
         rear_shield_display->setValue(string(my_spaceship->getShieldPercentage(1)) + "%");
 

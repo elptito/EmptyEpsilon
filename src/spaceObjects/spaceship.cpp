@@ -432,7 +432,7 @@ void SpaceShip::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, flo
     // Set up the radar sprite for objects.
     sf::Sprite objectSprite;
     float sprite_scale = 0.1;
-    float sprite_max = 2.0;
+    float sprite_max = 10.0;
     float sprite_min = 0.5;
 
     // If the object is a ship that hasn't been scanned, draw the default icon.

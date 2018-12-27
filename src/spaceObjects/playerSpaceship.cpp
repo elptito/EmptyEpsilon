@@ -267,6 +267,7 @@ PlayerSpaceship::PlayerSpaceship()
     registerMemberReplication(&comms_incomming_message);
     registerMemberReplication(&ships_log_extern);
     registerMemberReplication(&ships_log_intern);
+    registerMemberReplication(&ships_log_docks);
     registerMemberReplication(&waypoints);
     registerMemberReplication(&scan_probe_stock);
     registerMemberReplication(&activate_self_destruct);
@@ -883,6 +884,13 @@ void PlayerSpaceship::addToShipLog(string message, sf::Color color, string stati
         // Timestamp a log entry, color it, and add it to the end of the log.
         ships_log_intern.emplace_back(string(engine->getElapsedTime(), 1) + string(": "), message, color, station);
     }
+    else if (station == "docks")
+    {
+        if (ships_log_docks.size() > 100)
+            ships_log_docks.erase(ships_log_docks.begin());
+        // Timestamp a log entry, color it, and add it to the end of the log.
+        ships_log_docks.emplace_back(string(engine->getElapsedTime(), 1) + string(": "), message, color, station);
+    }
 }
 
 void PlayerSpaceship::addToShipLogBy(string message, P<SpaceObject> target)
@@ -906,6 +914,8 @@ const std::vector<PlayerSpaceship::ShipLogEntry>& PlayerSpaceship::getShipsLog(s
         return ships_log_extern;
     if (station == "intern")
         return ships_log_intern;
+    if (station == "docks")
+        return ships_log_docks;
 }
 
 void PlayerSpaceship::transferPlayersToShip(P<PlayerSpaceship> other_ship)

@@ -11,6 +11,7 @@ class GuiCommsOverlay;
 class GuiPanel;
 class GuiLabel;
 class DamageControlScreen;
+class ProbeScreen;
 class RelayScreen;
 
 class ScreenMainScreen : public GuiCanvas, public Updatable
@@ -24,6 +25,7 @@ private:
     GuiPanel* dock_comms;
     GuiLabel* label_dock;
     DamageControlScreen*ship_state;
+    ProbeScreen*probe_view;
     bool first_person;
     GuiCommsOverlay* onscreen_comms;
     int impulse_sound = -1;

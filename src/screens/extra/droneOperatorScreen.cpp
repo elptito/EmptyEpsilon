@@ -4,6 +4,7 @@
 #include "gameGlobalInfo.h"
 
 #include "screenComponents/alertOverlay.h"
+#include "screenComponents/customShipFunctions.h"
 
 #include "gui/gui2_overlay.h"
 #include "gui/gui2_autolayout.h"
@@ -58,6 +59,9 @@ DroneOperatorScreen::DroneOperatorScreen(GuiContainer *owner)
     no_drones_label->setPosition(0, 100, ATopCenter)->setSize(460, 50);
     // Prep the alert overlay.
     (new GuiPowerDamageIndicator(this, "DOCKS_DPI", SYS_Drones, ATopCenter, my_spaceship))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+
+    custom_functions = new GuiCustomShipFunctions(this, dronePilot, "", my_spaceship);
+    custom_functions->setPosition(-20, 120, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
 }
 
 void DroneOperatorScreen::onDraw(sf::RenderTarget &window)
@@ -98,6 +102,7 @@ void DroneOperatorScreen::onDraw(sf::RenderTarget &window)
             droneSelection->show();
             single_pilot_view->hide();
             disconnect_button->hide();
+            custom_functions->hide();
             break;
         case Piloting:
             no_drones_label->hide();
@@ -105,12 +110,14 @@ void DroneOperatorScreen::onDraw(sf::RenderTarget &window)
             single_pilot_view->show();
             disconnect_button->setText("Se deconnecter de " + selected_drone->callsign);
             disconnect_button->show();
+            custom_functions->show();
             break;
         case NoDrones:
             no_drones_label->show();
             droneSelection->hide();
             single_pilot_view->hide();
             disconnect_button->hide();
+            custom_functions->hide();
             break;
         }
     }

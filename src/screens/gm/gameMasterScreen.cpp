@@ -135,6 +135,11 @@ GameMasterScreen::GameMasterScreen()
     });
     copy_selected_button->setTextSize(20)->setPosition(-20, -45, ABottomRight)->setSize(125, 25);
 
+    create_button = new GuiButton(this, "CREATE_OBJECT_BUTTON", "Create...", [this]() {
+        object_creation_view->show();
+    });
+    create_button->setPosition(20, -70, ABottomLeft)->setSize(250, 50);
+
     cancel_create_button = new GuiButton(this, "CANCEL_CREATE_BUTTON", "Annuler", [this]() {
         create_button->show();
         cancel_create_button->hide();

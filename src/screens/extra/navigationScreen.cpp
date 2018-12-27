@@ -54,7 +54,7 @@ NavigationScreen::NavigationScreen(GuiContainer *owner)
             switch (mode)
             {
             case TargetSelection:
-                targets.setToClosestTo(position, 25.0 / radar->getScale(), TargetsContainer::Targetable);
+                targets.setToClosestTo(position, 25.0 / radar->getScale(), TargetsContainer::Targetable, my_spaceship);
                 break;
             case WaypointPlacement:
                 if (my_spaceship)

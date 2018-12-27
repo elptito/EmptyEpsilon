@@ -46,23 +46,24 @@ void TargetsContainer::set(PVector<SpaceObject> objs)
     entries = objs;
 }
 
-void TargetsContainer::setToClosestTo(sf::Vector2f position, float max_range, ESelectionType selection_type)
+void TargetsContainer::setToClosestTo(sf::Vector2f position, float max_range, ESelectionType selection_type, P<PlayerSpaceship> target_spaceship)
 {
     P<SpaceObject> target;
+
     PVector<Collisionable> list = CollisionManager::queryArea(position - sf::Vector2f(max_range, max_range), position + sf::Vector2f(max_range, max_range));
     foreach(Collisionable, obj, list)
     {
         P<SpaceObject> spaceObject = obj;
-        if (spaceObject && spaceObject != my_spaceship)
+        if (spaceObject && spaceObject != target_spaceship)
         {
             switch(selection_type)
             {
             case Selectable:
-                if (!spaceObject->canBeSelectedBy(my_spaceship))
+                if (!spaceObject->canBeSelectedBy(target_spaceship))
                     continue;
                 break;
             case Targetable:
-                if (!spaceObject->canBeTargetedBy(my_spaceship))
+                if (!spaceObject->canBeTargetedBy(target_spaceship))
                     continue;
                 break;
             }

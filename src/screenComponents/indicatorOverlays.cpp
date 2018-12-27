@@ -16,9 +16,9 @@ GuiIndicatorOverlays::GuiIndicatorOverlays(GuiContainer* owner)
     shield_hit_overlay = new GuiOverlay(this, "SHIELD_HIT", sf::Color(64, 64, 128, 0));
     hull_hit_overlay = new GuiOverlay(this, "HULL_HIT", sf::Color(255, 0, 0, 0));
     shield_low_warning_overlay = new GuiOverlay(this, "SHIELD_LOW", sf::Color(255, 0, 0, 0));
-    pause_overlay = new GuiOverlay(this, "PAUSE", sf::Color(0, 0, 0, 128));
+    pause_overlay = new GuiOverlay(this, "PAUSE", sf::Color(0, 0, 0, 255));
     (new GuiPanel(pause_overlay, "PAUSE_BOX"))->setPosition(0, 0, ACenter)->setSize(500, 100);
-    (new GuiLabel(pause_overlay, "PAUSE_LABEL", "Mission en pause", 70))->setPosition(0, 0, ACenter)->setSize(500, 100);
+    (new GuiLabel(pause_overlay, "PAUSE_LABEL", "Coupure de courant", 70))->setPosition(0, 0, ACenter)->setSize(500, 100);
     if (game_server)
     {
         (new GuiButton(pause_overlay, "PAUSE_RESUME", "Reprendre", []() {

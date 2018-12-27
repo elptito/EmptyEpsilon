@@ -41,7 +41,7 @@ SinglePilotView::SinglePilotView(GuiContainer* owner, P<PlayerSpaceship>& target
     radar->setRangeIndicatorStepSize(1000.0)->shortRange()->enableGhostDots()->enableWaypoints()->enableCallsigns()->enableHeadingIndicators()->setStyle(GuiRadarView::Circular);
     radar->setCallbacks(
         [this](sf::Vector2f position) {
-            targets.setToClosestTo(position, 250, TargetsContainer::Targetable);
+            targets.setToClosestTo(position, 250, TargetsContainer::Targetable, target_spaceship);
             if (target_spaceship && targets.get())
                 target_spaceship->commandSetTarget(targets.get());
             else if (target_spaceship)
@@ -129,7 +129,7 @@ SinglePilotView::SinglePilotView(GuiContainer* owner, P<PlayerSpaceship>& target
 
     // Docking, comms, and shields buttons across top.
     (new GuiDockingButton(this, "DOCKING", target_spaceship))->setPosition(20, 20, ATopLeft)->setSize(250, 50);
-    if (target_spaceship == my_spaceship) 
+    if (target_spaceship == my_spaceship)
     {
         (new GuiOpenCommsButton(this, "OPEN_COMMS_BUTTON", &targets))->setPosition(270, 20, ATopLeft)->setSize(250, 50);
         (new GuiCommsOverlay(this))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
@@ -139,7 +139,7 @@ SinglePilotView::SinglePilotView(GuiContainer* owner, P<PlayerSpaceship>& target
     // Missile lock button near top right of left panel.
     lock_aim = new AimLockButton(this, "LOCK_AIM", tube_controls, missile_aim, target_spaceship);
     lock_aim->setPosition(250, 70, ATopCenter)->setSize(130, 50);
-    
+
     (new GuiCustomShipFunctions(this, singlePilot, "", target_spaceship))->setPosition(-20, 120, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
 }
 

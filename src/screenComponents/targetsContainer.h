@@ -3,6 +3,7 @@
 
 #include "spaceObjects/spaceObject.h"
 
+class PlayerSpaceship;
 class TargetsContainer
 {
 private:
@@ -10,6 +11,7 @@ private:
     bool allow_waypoint_selection;
     int waypoint_selection_index;
     sf::Vector2f waypoint_selection_position;
+
 public:
     enum ESelectionType
     {
@@ -18,6 +20,7 @@ public:
     };
 
     TargetsContainer();
+    //P<PlayerSpaceship>& target_spaceship;
 
     void setAllowWaypointSelection() { allow_waypoint_selection = true; }
 
@@ -31,7 +34,7 @@ public:
     void setWaypointIndex(int index);
     sf::Vector2f getWaypointPosition();
 
-    void setToClosestTo(sf::Vector2f position, float max_range, ESelectionType selection_type);
+    void setToClosestTo(sf::Vector2f position, float max_range, ESelectionType selection_type, P<PlayerSpaceship> target_spaceship);
 };
 
 #endif//TARGETS_CONTAINER_H

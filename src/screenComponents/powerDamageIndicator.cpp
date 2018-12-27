@@ -10,28 +10,28 @@ GuiPowerDamageIndicator::GuiPowerDamageIndicator(GuiContainer* owner, string nam
 
 void GuiPowerDamageIndicator::onDraw(sf::RenderTarget& window)
 {
-    if (!my_spaceship)
+    if (!target_spaceship)
         return;
 
     sf::Color color;
     string display_text;
 
-    float power = my_spaceship->systems[system].power_level;
-    float health = my_spaceship->systems[system].health;
-    float heat = my_spaceship->systems[system].heat_level;
-    float hacked_level = my_spaceship->systems[system].hacked_level;
+    float power = target_spaceship->systems[system].power_level;
+    float health = target_spaceship->systems[system].health;
+    float heat = target_spaceship->systems[system].heat_level;
+    float hacked_level = target_spaceship->systems[system].hacked_level;
     if (system == SYS_FrontShield)
     {
-        power = std::max(power, my_spaceship->systems[SYS_RearShield].power_level);
-        health = std::max(health, my_spaceship->systems[SYS_RearShield].health);
-        heat = std::max(heat, my_spaceship->systems[SYS_RearShield].heat_level);
-        hacked_level = std::max(hacked_level, my_spaceship->systems[SYS_RearShield].hacked_level);
+        power = std::max(power, target_spaceship->systems[SYS_RearShield].power_level);
+        health = std::max(health, target_spaceship->systems[SYS_RearShield].health);
+        heat = std::max(heat, target_spaceship->systems[SYS_RearShield].heat_level);
+        hacked_level = std::max(hacked_level, target_spaceship->systems[SYS_RearShield].hacked_level);
     }
     if (health <= 0.0)
     {
         color = colorConfig.overlay_damaged;
         //display_text = "ENDOMMAGE";
-    }else if ((system == SYS_Warp || system == SYS_JumpDrive) && WarpJammer::isWarpJammed(my_spaceship->getPosition()))
+    }else if ((system == SYS_Warp || system == SYS_JumpDrive) && WarpJammer::isWarpJammed(target_spaceship->getPosition()))
     {
         color = colorConfig.overlay_jammed;
         //display_text = "BLOQUE";
@@ -39,7 +39,7 @@ void GuiPowerDamageIndicator::onDraw(sf::RenderTarget& window)
     {
         color = colorConfig.overlay_no_power;
         //display_text = "AUCUNE PUISSANCE";
-    }else if (my_spaceship->energy_level < 10)
+    }else if (target_spaceship->energy_level < 10)
     {
         color = colorConfig.overlay_low_energy;
         //display_text = "ENERGIE FAIBLE";
@@ -110,7 +110,7 @@ void GuiPowerDamageIndicator::onDraw(sf::RenderTarget& window)
     {
         drawIcon(window, "gui/icons/status_damaged", colorConfig.overlay_damaged);
     }
-    if ((system == SYS_Warp || system == SYS_JumpDrive) && WarpJammer::isWarpJammed(my_spaceship->getPosition()))
+    if ((system == SYS_Warp || system == SYS_JumpDrive) && WarpJammer::isWarpJammed(target_spaceship->getPosition()))
     {
         drawIcon(window, "gui/icons/status_jammed", colorConfig.overlay_jammed);
     }
@@ -122,7 +122,7 @@ void GuiPowerDamageIndicator::onDraw(sf::RenderTarget& window)
     {
         drawIcon(window, "gui/icons/status_low_power", colorConfig.overlay_low_power);
     }
-    if (my_spaceship->energy_level < 10)
+    if (target_spaceship->energy_level < 10)
     {
         drawIcon(window, "gui/icons/status_low_energy", colorConfig.overlay_low_energy);
     }

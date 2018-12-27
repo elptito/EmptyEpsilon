@@ -133,6 +133,7 @@ private:
     // Ship's log container
     std::vector<ShipLogEntry> ships_log_extern;
     std::vector<ShipLogEntry> ships_log_intern;
+    std::vector<ShipLogEntry> ships_log_docks;
 
 
 public:

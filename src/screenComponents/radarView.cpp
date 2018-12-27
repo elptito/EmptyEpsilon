@@ -58,6 +58,8 @@ void GuiRadarView::onDraw(sf::RenderTarget& window)
 
     ///Draw the background texture
     drawBackground(background_texture);
+//    if (show_game_master_data)
+//        drawTerrain(background_texture);
     if (fog_style == NebulaFogOfWar || fog_style == FriendlysShortRangeFogOfWar)    //Mask the background color with the nebula blocked areas, but show the rest.
         drawRenderTexture(mask_texture, background_texture, sf::Color::White, sf::BlendMultiply);
     drawSectorGrid(background_texture);
@@ -195,7 +197,6 @@ void GuiRadarView::drawNoneFriendlyBlockedAreas(sf::RenderTarget& window)
         }
     }
 }
-
 void GuiRadarView::drawNebulaBlockedAreas(sf::RenderTarget& window)
 {
     sf::BlendMode blend(
@@ -207,7 +208,6 @@ void GuiRadarView::drawNebulaBlockedAreas(sf::RenderTarget& window)
         return;
     sf::Vector2f scan_center = my_spaceship->getPosition();
     sf::Vector2f radar_screen_center(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f);
-
     PVector<Nebula> nebulas = Nebula::getNebulas();
     foreach(Nebula, n, nebulas)
     {
@@ -556,7 +556,6 @@ void GuiRadarView::drawHeadingIndicators(sf::RenderTarget& window)
 {
     sf::Vector2f radar_screen_center(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f);
     float boundingRadius = std::min(rect.width, rect.height) / 2.0f;
-
     sf::VertexArray tigs(sf::Lines, 360/20*2);
     for(unsigned int n=0; n<360; n+=20)
     {

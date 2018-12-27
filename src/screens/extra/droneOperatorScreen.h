@@ -19,6 +19,7 @@ class GuiSlider;
 class GuiLabel;
 class GuiTextEntry;
 class GuiListbox;
+class GuiCustomShipFunctions;
 
 class DroneOperatorScreen : public GuiOverlay
 {
@@ -34,10 +35,11 @@ private:
 
     SinglePilotView* single_pilot_view;
     GuiOverlay* background_crosses;
-    GuiAutoLayout* droneSelection;    
+    GuiAutoLayout* droneSelection;
     GuiButton* disconnect_button;
     GuiLabel* no_drones_label;
     GuiListbox* drone_list;
+    GuiCustomShipFunctions* custom_functions;
 public:
     DroneOperatorScreen(GuiContainer* owner);
 

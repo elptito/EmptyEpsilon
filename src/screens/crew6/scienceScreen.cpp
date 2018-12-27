@@ -51,7 +51,7 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
             if (!my_spaceship || my_spaceship->scanning_delay > 0.0)
                 return;
 
-            targets.setToClosestTo(position, 1000, TargetsContainer::Selectable);
+            targets.setToClosestTo(position, 1000, TargetsContainer::Selectable, my_spaceship);
         }, nullptr, nullptr
     );
     new RawScannerDataRadarOverlay(science_radar, "", gameGlobalInfo->long_range_radar_range);
@@ -65,7 +65,7 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
             if (!my_spaceship || my_spaceship->scanning_delay > 0.0)
                 return;
 
-            targets.setToClosestTo(position, 1000, TargetsContainer::Selectable);
+            targets.setToClosestTo(position, 1000, TargetsContainer::Selectable, my_spaceship);
         }, nullptr, nullptr
     );
     new RawScannerDataRadarOverlay(probe_radar, "", 5000);

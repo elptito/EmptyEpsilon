@@ -200,7 +200,6 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
             glTranslatef(-camera_position.x,-camera_position.y, -camera_position.z);
             glTranslatef(obj->getPosition().x, obj->getPosition().y, obj->getTranslateZ());
             glRotatef(obj->getRotation(), 0, 0, 1);
-
             obj->draw3D();
             glPopMatrix();
         }

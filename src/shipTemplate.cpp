@@ -348,7 +348,7 @@ string getSystemName(ESystem system)
     case SYS_Impulse: return "Moteur subluminique";
     case SYS_Warp: return "Moteur WARP";
     case SYS_JumpDrive: return "Moteur JUMP";
-    case SYS_FrontShield: return "Generateur Bouclier Av.";
+    case SYS_FrontShield: return "Generateur Bouclier";
     case SYS_RearShield: return "Generateur Bouclier Ar.";
     case SYS_Docks: return "Gestion du Cargo";
     case SYS_Drones: return "Controle des Drones";
