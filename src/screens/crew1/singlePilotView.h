@@ -24,7 +24,7 @@ private:
     GuiKeyValueDisplay* shields_display;
     GuiElement* warp_controls;
     GuiElement* jump_controls;
-    
+
     TargetsContainer targets;
     GuiRadarView* radar;
     GuiRotationDial* missile_aim;
@@ -32,7 +32,7 @@ private:
     GuiToggleButton* lock_aim;
 public:
     SinglePilotView(GuiContainer* owner, P<PlayerSpaceship>& targetSpaceship);
-    
+
     void setTargetSpaceship(P<PlayerSpaceship>& targetSpaceship) { target_spaceship = targetSpaceship;}
     virtual void onDraw(sf::RenderTarget& window);
     virtual void onHotkey(const HotkeyResult& key) override;

@@ -145,11 +145,11 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner, ECrewPosition crew_pos
         coolant_slider->addSnapValue(snap_point, 0.1);
     coolant_slider->disable();
 
-    new ShipsLog(this,"intern");
-
     (new GuiShipInternalView(system_row_layouts, "SHIP_INTERNAL_VIEW", 48.0f))->setShip(my_spaceship)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
     (new GuiCustomShipFunctions(this, crew_position, "", my_spaceship))->setPosition(-20, 120, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
+
+    new ShipsLog(this,"intern");
 
     previous_energy_level = 0.0;
     average_energy_delta = 0.0;
@@ -341,7 +341,7 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
                 addSystemEffect("Vitesse de transfert energie", string(effectiveness * PlayerSpaceship::energy_transfer_per_second) + "/s");
                 break;
             case SYS_Drones:
-                addSystemEffect("Drones control range", string(my_spaceship->getDronesControlRange(),1) + "U");
+                addSystemEffect("Portee de controle des drones", string(my_spaceship->getDronesControlRange() / 1000.0f,1) + "U");
                 break;
             default:
                 break;

@@ -33,6 +33,11 @@ ShipCargo::ShipCargo(P<SpaceShip> ship) : ShipCargo()
     callsign = ship->getCallSign();
     setEnergy(ship->getEnergy());
     hull_strength = ship->getHull();
+    float totalHeat = 0;
+    for(unsigned int n=0; n<SYS_COUNT; n++)
+        totalHeat += ship->getSystemHeat(ESystem(n));
+    setHeat(totalHeat);
+    hull_strength = ship->getHull();
     for(int n=0; n<SYS_COUNT; n++) {
         systems_health[n] = ship->systems[n].health;
     }

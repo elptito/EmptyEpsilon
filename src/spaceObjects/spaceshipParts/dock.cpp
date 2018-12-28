@@ -210,7 +210,7 @@ string getDockTypeName(EDockType dockType)
         return "Thermique";
     case Dock_Repair:
         return "Reparation";
-    case Stock:
+    case Dock_Stock:
         return "Stock";
     default:
         return "Unknown";

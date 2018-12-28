@@ -96,17 +96,17 @@ SinglePilotView::SinglePilotView(GuiContainer* owner, P<PlayerSpaceship>& target
     // Ship stats and combat maneuver at bottom right corner of left panel.
     (new GuiCombatManeuver(this, "COMBAT_MANEUVER", target_spaceship))->setPosition(-20, -260, ABottomRight)->setSize(200, 150);
 
-    heat_display = new GuiKeyValueDisplay(this, "HEAT_DISPLAY", 0.45, "Heat", "");
+    heat_display = new GuiKeyValueDisplay(this, "HEAT_DISPLAY", 0.45, "Surchauffe", "");
     heat_display->setIcon("gui/icons/heat")->setTextSize(20)->setPosition(-20, -220, ABottomRight)->setSize(240, 40);
-    hull_display = new GuiKeyValueDisplay(this, "HULL_DISPLAY", 0.45, "Hull", "");
+    hull_display = new GuiKeyValueDisplay(this, "HULL_DISPLAY", 0.45, "Carlingue", "");
     hull_display->setIcon("gui/icons/hull")->setTextSize(20)->setPosition(-20, -180, ABottomRight)->setSize(240, 40);
-    energy_display = new GuiKeyValueDisplay(this, "ENERGY_DISPLAY", 0.45, "Energy", "");
+    energy_display = new GuiKeyValueDisplay(this, "ENERGY_DISPLAY", 0.45, "Energie", "");
     energy_display->setIcon("gui/icons/energy")->setTextSize(20)->setPosition(-20, -140, ABottomRight)->setSize(240, 40);
-    heading_display = new GuiKeyValueDisplay(this, "HEADING_DISPLAY", 0.45, "Heading", "");
+    heading_display = new GuiKeyValueDisplay(this, "HEADING_DISPLAY", 0.45, "Direction", "");
     heading_display->setIcon("gui/icons/heading")->setTextSize(20)->setPosition(-20, -100, ABottomRight)->setSize(240, 40);
-    velocity_display = new GuiKeyValueDisplay(this, "VELOCITY_DISPLAY", 0.45, "Speed", "");
+    velocity_display = new GuiKeyValueDisplay(this, "VELOCITY_DISPLAY", 0.45, "Vitesse", "");
     velocity_display->setIcon("gui/icons/speed")->setTextSize(20)->setPosition(-20, -60, ABottomRight)->setSize(240, 40);
-    shields_display = new GuiKeyValueDisplay(this, "SHIELDS_DISPLAY", 0.45, "Shields", "");
+    shields_display = new GuiKeyValueDisplay(this, "SHIELDS_DISPLAY", 0.45, "Boucliers", "");
     shields_display->setIcon("gui/icons/shields")->setTextSize(20)->setPosition(-20, -20, ABottomRight)->setSize(240, 40);
 
     // Unlocked missile aim dial and lock controls.
@@ -161,6 +161,10 @@ void SinglePilotView::onDraw(sf::RenderTarget& window)
         jump_controls->setVisible(target_spaceship->has_jump_drive);
 
         shields_display->setValue(string(target_spaceship->getShieldPercentage(0)) + "% " + string(target_spaceship->getShieldPercentage(1)) + "%");
+        if (target_spaceship->getShieldCount() > 0)
+            shields_display->show();
+        else
+            shields_display->hide();
 
         missile_aim->setVisible(tube_controls->getManualAim());
 

@@ -101,7 +101,7 @@ DockMasterScreen::DockMasterScreen(GuiContainer *owner)
     cargoInfo = new GuiAutoLayout(sideBar, "CARGO_INFO", GuiAutoLayout::LayoutVerticalTopToBottom);
     cargoInfo->setSize(COLUMN_WIDTH, GuiElement::GuiSizeMax);
 
-    (new GuiCustomShipFunctions(this, dockMaster, "CUSTOM_FUNCTIONS", my_spaceship))->setPosition(-20, 120, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
+    (new GuiCustomShipFunctions(this, dockMaster, "CUSTOM_FUNCTIONS", my_spaceship))->setPosition(20, 550, ATopLeft)->setSize(360, GuiElement::GuiSizeMax);
 
     overlay = new GuiOverlay(this, "OVERLAY", sf::Color(0, 0, 0, 128));
     overlay->setBlocking(true)->setPosition(COLUMN_WIDTH, 100, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);

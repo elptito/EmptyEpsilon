@@ -337,16 +337,16 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
             link_to_science_button->setValue(my_spaceship->linked_science_probe_id == probe->getMultiplayerId());
             link_to_science_button->enable();
 
-            link_to_3D_port_button->setValue(my_spaceship->linked_probe_3D_id == probe->getMultiplayerId());
-            link_to_3D_port_button->enable();
+//            link_to_3D_port_button->setValue(my_spaceship->linked_probe_3D_id == probe->getMultiplayerId());
+//            link_to_3D_port_button->enable();
         }
         else
         {
             link_to_science_button->setValue(false);
             link_to_science_button->disable();
 
-            link_to_3D_port_button->setValue(false);
-            link_to_3D_port_button->disable();
+//            link_to_3D_port_button->setValue(false);
+//            link_to_3D_port_button->disable();
         }
 //        if (my_spaceship && obj->canBeHackedBy(my_spaceship))
 //        {
@@ -358,8 +358,8 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
 //        hack_target_button->disable();
         link_to_science_button->disable();
         link_to_science_button->setValue(false);
-        link_to_3D_port_button->disable();
-		link_to_3D_port_button->setValue(false);
+//        link_to_3D_port_button->disable();
+//		link_to_3D_port_button->setValue(false);
         info_callsign->setValue("-");
     }
     if (my_spaceship)

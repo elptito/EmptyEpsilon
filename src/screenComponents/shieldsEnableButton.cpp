@@ -27,14 +27,20 @@ void GuiShieldsEnableButton::onDraw(sf::RenderTarget& window)
 {
     if (target_spaceship)
     {
-        if (target_spaceship->shield_calibration_delay > 0.0)
+        if (target_spaceship->getShieldCount() == 0)
         {
+            hide();
+        }
+        else if (target_spaceship->shield_calibration_delay > 0.0)
+        {
+            show();
             button->hide();
             bar->show();
             bar->setValue(target_spaceship->shield_calibration_delay);
         }
         else
         {
+            show();
             button->show();
             button->setValue(target_spaceship->shields_active);
             bar->hide();

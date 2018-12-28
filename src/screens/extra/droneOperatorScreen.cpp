@@ -79,7 +79,8 @@ bool DroneOperatorScreen::isConnectable(P<PlayerSpaceship> ship)
 float DroneOperatorScreen::getConnectionQuality(P<PlayerSpaceship> ship)
 {
     float rangeFactor = 1 - std::min(1.0f, (length(ship->getPosition() - my_spaceship->getPosition()) / my_spaceship->getDronesControlRange()));
-    float droneStateFactor = std::min(1.0f, ship->getSystemEffectiveness(SYS_Drones));
+    //float droneStateFactor = std::min(1.0f, ship->getSystemEffectiveness(SYS_Drones));
+    float droneStateFactor = 1.0f;
     return rangeFactor * droneStateFactor;
 }
 void DroneOperatorScreen::onDraw(sf::RenderTarget &window)
@@ -93,7 +94,7 @@ void DroneOperatorScreen::onDraw(sf::RenderTarget &window)
         {
             P<PlayerSpaceship> ship = gameGlobalInfo->getPlayerShip(n);
             if (isConnectable(ship)) {
-                options.push_back(ship->getTypeName() + " " + ship->getCallSign() + "(" + string(int(getConnectionQuality(ship) * 100)) + "%)");
+                options.push_back(ship->getTypeName() + " " + ship->getCallSign() + " (" + string(int(getConnectionQuality(ship) * 100)) + "%)");
                 values.push_back(ship->getMultiplayerId());
             }
         }

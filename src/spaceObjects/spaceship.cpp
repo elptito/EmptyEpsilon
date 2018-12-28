@@ -280,7 +280,7 @@ void SpaceShip::applyTemplateValues()
         } else if (n < ship_template->launcher_dock_count + ship_template->energy_dock_count + ship_template->thermic_dock_count + ship_template->repair_dock_count){
             docks[n].setDockType(Dock_Repair);
         } else if (n < ship_template->launcher_dock_count + ship_template->energy_dock_count + ship_template->thermic_dock_count + ship_template->repair_dock_count + ship_template->stock_dock_count){
-              docks[n].setDockType(Stock);
+            docks[n].setDockType(Dock_Stock);
         } else {
             docks[n].setDockType(Dock_Disabled);
         }
@@ -481,6 +481,8 @@ void SpaceShip::update(float delta)
     {
         if (docking_state == DS_Docking)
         {
+            if (energy_level == 0)
+                energy_level += 5;
             if (!docking_target)
                 docking_state = DS_NotDocking;
             else
@@ -1325,7 +1327,7 @@ string SpaceShip::getScriptExportModificationsOnTemplate()
 }
 
 bool SpaceShip::tryDockDrone(SpaceShip* other){
-    if(other->ship_template->getType() == ShipTemplate::TemplateType::Drone){
+    if (other->ship_template->getType() == ShipTemplate::TemplateType::Drone){
         Dock* dock = Dock::findOpenForDocking(docks, max_docks_count);
         if (dock){
             P<ShipCargo> cargo = new ShipCargo(other);
@@ -1337,7 +1339,7 @@ bool SpaceShip::tryDockDrone(SpaceShip* other){
 }
 
 float SpaceShip::getDronesControlRange() {
-    return Tween<float>::easeInQuad(getSystemEffectiveness(SYS_Drones), 0.0, 3.0, 0.001, gameGlobalInfo->long_range_radar_range);
+    return Tween<float>::easeInQuad(getSystemEffectiveness(SYS_Drones), 0.0, 1.5, 0.001, gameGlobalInfo->long_range_radar_range);
 }
 
 string getMissileWeaponName(EMissileWeapons missile)
