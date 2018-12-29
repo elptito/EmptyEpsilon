@@ -50,7 +50,7 @@ CrewStationScreen::CrewStationScreen()
     for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("General"))
         keyboard_general += shortcut.second + ":\t" + shortcut.first + "\n";
 
-#ifndef __ANDROID__
+//#ifndef __ANDROID__
     if (PreferencesManager::get("music_enabled") == "1")
     {
         threat_estimate = new ThreatLevelEstimate();
@@ -62,7 +62,7 @@ CrewStationScreen::CrewStationScreen()
             soundManager->playMusicSet(findResources("music/combat/*.ogg"));
         });
     }
-#endif
+//#endif
 }
 
 void CrewStationScreen::addStationTab(GuiElement* element, ECrewPosition position, string name, string icon)
