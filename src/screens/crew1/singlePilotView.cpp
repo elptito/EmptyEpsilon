@@ -160,9 +160,15 @@ void SinglePilotView::onDraw(sf::RenderTarget& window)
         warp_controls->setVisible(target_spaceship->has_warp_drive);
         jump_controls->setVisible(target_spaceship->has_jump_drive);
 
-        shields_display->setValue(string(target_spaceship->getShieldPercentage(0)) + "% " + string(target_spaceship->getShieldPercentage(1)) + "%");
+//        shields_display->setValue(string(target_spaceship->getShieldPercentage(0)) + "% " + string(target_spaceship->getShieldPercentage(1)) + "%");
         if (target_spaceship->getShieldCount() > 0)
+        {
             shields_display->show();
+            string shields_info = "";
+            for(int n=0; n<target_spaceship->getShieldCount(); n++)
+                shields_info += string(target_spaceship->getShieldPercentage(n)) + "% ";
+            shields_display->setValue(shields_info);
+        }
         else
             shields_display->hide();
 

@@ -287,20 +287,15 @@ GuiShipTweakShields::GuiShipTweakShields(GuiContainer* owner)
     {
         (new GuiLabel(left_col, "", "Bouclier " + string(n + 1) + " max:", 20))->setSize(GuiElement::GuiSizeMax, 30);
         shield_max_slider[n] = new GuiSlider(left_col, "", 0.0, 1000, 0.0, [this, n](float value) {
-            P<SpaceShip> ship = target;
-            P<SpaceStation> station = target;
-            if (ship)
-            {
-                this->target = ship;
-                ship->shield_max[n] = roundf(value);
-                ship->shield_level[n] = std::min(ship->shield_level[n], ship->shield_max[n]);
-            }
-            if (station)
-            {
-                this->target = station;
-                station->shield_max[n] = roundf(value);
-                station->shield_level[n] = std::min(station->shield_level[n], station->shield_max[n]);
-            }
+
+            target->shield_max[n] = roundf(value);
+            target->shield_level[n] = std::min(target->shield_level[n], target->shield_max[n]);
+
+            int actual_shield_count = 0;
+            for(int k=0; k<max_shield_count; k++)
+                if (target->shield_max[k] > 0)
+                    actual_shield_count = k+1;
+            target->setShieldCount(actual_shield_count);
         });
         shield_max_slider[n]->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
     }
@@ -309,19 +304,7 @@ GuiShipTweakShields::GuiShipTweakShields(GuiContainer* owner)
     {
         (new GuiLabel(right_col, "", "Bouclier " + string(n + 1) + ":", 20))->setSize(GuiElement::GuiSizeMax, 30);
         shield_slider[n] = new GuiSlider(right_col, "", 0.0, 1000, 0.0, [this, n](float value) {
-            P<SpaceShip> ship = target;
-            P<SpaceStation> station = target;
-            if (ship)
-            {
-                this->target = ship;
-                ship->shield_level[n] = std::min(roundf(value), ship->shield_max[n]);
-            }
-            if (station)
-            {
-                this->target = station;
-                station->shield_level[n] = std::min(roundf(value), station->shield_max[n]);
-            }
-
+            target->shield_level[n] = std::min(roundf(value), target->shield_max[n]);
         });
         shield_slider[n]->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
     }

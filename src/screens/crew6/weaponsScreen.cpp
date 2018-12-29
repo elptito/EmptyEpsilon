@@ -71,12 +71,10 @@ WeaponsScreen::WeaponsScreen(GuiContainer* owner)
 
     energy_display = new GuiKeyValueDisplay(this, "ENERGY_DISPLAY", 0.45, "Energie", "");
     energy_display->setIcon("gui/icons/energy")->setTextSize(20)->setPosition(20, 100, ATopLeft)->setSize(240, 40);
-    front_shield_display = new GuiKeyValueDisplay(this, "FRONT_SHIELD_DISPLAY", 0.45, "Avant", "");
-    front_shield_display->setIcon("gui/icons/shields-fore")->setTextSize(20)->setPosition(20, 140, ATopLeft)->setSize(240, 40);
-    rear_shield_display = new GuiKeyValueDisplay(this, "REAR_SHIELD_DISPLAY", 0.45, "Arriere", "");
-    rear_shield_display->setIcon("gui/icons/shields-aft")->setTextSize(20)->setPosition(20, 180, ATopLeft)->setSize(240, 40);
+    shields_display = new GuiKeyValueDisplay(this, "SHIELDS_DISPLAY", 0.45, "Boucliers", "");
+    shields_display->setIcon("gui/icons/shields")->setTextSize(20)->setPosition(20, 140, ATopLeft)->setSize(240, 40);
     target_display = new GuiKeyValueDisplay(this, "TARGET_DISPLAY", 0.45, "Cible", "");
-    target_display->setIcon("gui/icons/lock")->setTextSize(20)->setPosition(20, 220, ATopLeft)->setSize(240, 40);
+    target_display->setIcon("gui/icons/lock")->setTextSize(20)->setPosition(20, 180, ATopLeft)->setSize(240, 40);
 
     if (gameGlobalInfo->use_beam_shield_frequencies)
     {
@@ -94,8 +92,16 @@ void WeaponsScreen::onDraw(sf::RenderTarget& window)
     if (my_spaceship)
     {
         energy_display->setValue(string(int(my_spaceship->energy_level)));
-        front_shield_display->setValue(string(my_spaceship->getShieldPercentage(0)) + "%");
-        rear_shield_display->setValue(string(my_spaceship->getShieldPercentage(1)) + "%");
+        if (my_spaceship->getShieldCount() > 0)
+        {
+            shields_display->show();
+            string shields_info = "";
+            for(int n=0; n<my_spaceship->getShieldCount(); n++)
+                shields_info += string(my_spaceship->getShieldPercentage(n)) + "% ";
+            shields_display->setValue(shields_info);
+        }
+        else
+            shields_display->hide();
 
         targets.set(my_spaceship->getTarget());
         if (targets.get())

@@ -18,8 +18,7 @@ private:
 
     TargetsContainer targets;
     GuiKeyValueDisplay* energy_display;
-    GuiKeyValueDisplay* front_shield_display;
-    GuiKeyValueDisplay* rear_shield_display;
+    GuiKeyValueDisplay* shields_display;
     GuiKeyValueDisplay* target_display;
     GuiRadarView* radar;
     GuiMissileTubeControls* tube_controls;
