@@ -19,7 +19,7 @@ REGISTER_SCRIPT_SUBCLASS(Artifact, SpaceObject)
     /// Set if this artifact can be picked up or not. When it is picked up, this artifact will be destroyed.
     REGISTER_SCRIPT_CLASS_FUNCTION(Artifact, allowPickup);
     /// Set a function that will be called if a player picks up the artifact.
-    /// First argument given to the function will be the playerSpaceShip, the second the artifact.
+    /// First argument given to the function will be the artifact, the second the player.
     REGISTER_SCRIPT_CLASS_FUNCTION(Artifact, onPickUp);
     REGISTER_SCRIPT_CLASS_FUNCTION(Artifact, setOrbit);
     REGISTER_SCRIPT_CLASS_FUNCTION(Artifact, setOrbitDistance);
@@ -111,7 +111,7 @@ void Artifact::collide(Collisionable* target, float force)
     {
         if (on_pickup_callback.isSet())
         {
-            //on_pickup_callback.call(player, P<Artifact>(this));
+            on_pickup_callback.call(P<Artifact>(this), player);
         }
         destroy();
         player->addToShipLog("Objet recupere en soute",sf::Color::White,"extern");
