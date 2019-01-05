@@ -68,7 +68,13 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(ShipTemplateBasedObject, SpaceObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, setRearShield);
     /// [Depricated]
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, setRearShieldMax);
-
+    /// Set a function that will be called if the object is taking damage.
+    /// First argument given to the function will be the object taking damage, the second the instigator SpaceObject (or nil).
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, onTakingDamage);
+    /// Set a function that will be called if the object is destroyed by taking damage.
+    /// First argument given to the function will be the object taking damage, the second the instigator SpaceObject that gave the final blow (or nil).
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, onDestruction);
+    //Ajouts Tdelc
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, setRotationSpeed);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, getRotationSpeed);
 
@@ -301,6 +307,19 @@ void ShipTemplateBasedObject::takeDamage(float damage_amount, DamageInfo info)
         soundManager->playSound("explosion.wav", getPosition(), 200.0, 1.0, 1.0f + random(-0.1f, 0.1f),damage_amount*100.0);
         takeHullDamage(damage_amount, info);
     }
+
+    if (hull_strength > 0)
+    {
+        if (on_taking_damage.isSet())
+        {
+            if (info.instigator)
+            {
+                on_taking_damage.call(P<ShipTemplateBasedObject>(this), P<SpaceObject>(info.instigator));
+            } else {
+                on_taking_damage.call(P<ShipTemplateBasedObject>(this));
+            }
+        }
+    }
 }
 
 void ShipTemplateBasedObject::takeHullDamage(float damage_amount, DamageInfo& info)
@@ -313,6 +332,15 @@ void ShipTemplateBasedObject::takeHullDamage(float damage_amount, DamageInfo& in
     if (hull_strength <= 0.0)
     {
         destroyedByDamage(info);
+        if (on_destruction.isSet())
+        {
+            if (info.instigator)
+            {
+                on_destruction.call(P<ShipTemplateBasedObject>(this), P<SpaceObject>(info.instigator));
+            } else {
+                on_destruction.call(P<ShipTemplateBasedObject>(this));
+            }
+        }
         destroy();
     }
 }
@@ -386,6 +414,16 @@ ESystem ShipTemplateBasedObject::getShieldSystemForShieldIndex(int index)
     if (std::abs(sf::angleDifference(angle, 0.0f)) < 90)
         return SYS_FrontShield;
     return SYS_RearShield;
+}
+
+void ShipTemplateBasedObject::onTakingDamage(ScriptSimpleCallback callback)
+{
+    this->on_taking_damage = callback;
+}
+
+void ShipTemplateBasedObject::onDestruction(ScriptSimpleCallback callback)
+{
+    this->on_destruction = callback;
 }
 
 string ShipTemplateBasedObject::getShieldDataString()
