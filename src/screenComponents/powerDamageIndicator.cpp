@@ -20,13 +20,13 @@ void GuiPowerDamageIndicator::onDraw(sf::RenderTarget& window)
     float health = target_spaceship->systems[system].health;
     float heat = target_spaceship->systems[system].heat_level;
     float hacked_level = target_spaceship->systems[system].hacked_level;
-    if (system == SYS_FrontShield)
-    {
-        power = std::max(power, target_spaceship->systems[SYS_RearShield].power_level);
-        health = std::max(health, target_spaceship->systems[SYS_RearShield].health);
-        heat = std::max(heat, target_spaceship->systems[SYS_RearShield].heat_level);
-        hacked_level = std::max(hacked_level, target_spaceship->systems[SYS_RearShield].hacked_level);
-    }
+//    if (system == SYS_FrontShield)
+//    {
+//        power = std::max(power, target_spaceship->systems[SYS_RearShield].power_level);
+//        health = std::max(health, target_spaceship->systems[SYS_RearShield].health);
+//        heat = std::max(heat, target_spaceship->systems[SYS_RearShield].heat_level);
+//        hacked_level = std::max(hacked_level, target_spaceship->systems[SYS_RearShield].hacked_level);
+//    }
     if (health <= 0.0)
     {
         color = colorConfig.overlay_damaged;

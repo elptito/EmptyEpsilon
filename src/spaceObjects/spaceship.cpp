@@ -30,6 +30,7 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setWeaponStorageMax);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getShieldsFrequency);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setShieldsFrequency);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getOxygenRechargeRate);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getMaxEnergy);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setMaxEnergy);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getEnergy);
@@ -45,6 +46,7 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setSystemCoolant);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getSystemHack);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setSystemHack);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getSystemEffectiveness);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getImpulseMaxSpeed);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setImpulseMaxSpeed);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getRotationMaxSpeed);
@@ -711,16 +713,23 @@ void SpaceShip::update(float delta)
     else
         model_info.warp_scale = 0.0;
 
+        addOxygenPoints(getOxygenRechargeRate() * delta);
+}
+
+float SpaceShip::getOxygenRechargeRate()
+{
+    float rate = 0.0;
     // Diminution de l'oxygene si Hull trop base
-    if (hull_strength / hull_max < 1)
-        removeOxygenPoints((1 - hull_strength / hull_max) * delta / 2.0f);
+    if (hull_strength / hull_max < 0.6)
+        rate -= (0.6 - hull_strength / hull_max) / 2.0f;
 
     // Modifs selon Reacteur
-    float reactor_effectiveness = getSystemEffectiveness(SYS_Reactor);
-    if (reactor_effectiveness < 0.8f)
-        removeOxygenPoints((0.8f - std::max(0.0f,reactor_effectiveness)) * delta / 3.0f);
+    if (getSystemEffectiveness(SYS_Reactor) < 0.5f)
+        rate -= (0.5f - std::max(0.0f,getSystemEffectiveness(SYS_Reactor)));
     else
-        addOxygenPoints(delta * (reactor_effectiveness - 0.8f));
+        rate += (getSystemEffectiveness(SYS_Reactor) - 0.5f);
+
+    return rate;
 }
 
 float SpaceShip::getShieldRechargeRate(int shield_index)

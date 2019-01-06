@@ -281,7 +281,8 @@ string getStringFromPosition(sf::Vector2f position)
     if (offset_x < 1 && offset_y < 1) {
         return getSectorName(position);
     } else {
-        return getSectorName(position) + ":" + string(offset_x,0) + ':' + string(offset_y,0);
+        //return getSectorName(position) + ":" + string(offset_x,0) + ':' + string(offset_y,0);
+        return getSectorName(position);
     }
 }
 

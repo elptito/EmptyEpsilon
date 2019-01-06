@@ -48,7 +48,10 @@ public:
 
     float getHeatingDelta()
     {
-        return powf(1.7, power_level - 1.0) - (1.01 + coolant_level * 0.1);
+        if (health > -0.5)
+            return powf(1.7, power_level - 1.0) - (1.01 + coolant_level * 0.1);
+        else
+            return - (coolant_level * 0.1);
     }
 };
 
@@ -190,6 +193,7 @@ public:
     virtual void drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range) override;
 
     virtual void update(float delta) override;
+    virtual float getOxygenRechargeRate();
     virtual float getShieldRechargeRate(int shield_index) override;
     virtual float getShieldDamageFactor(DamageInfo& info, int shield_index) override;
     float getJumpDriveRechargeRate() { return Tween<float>::linear(getSystemEffectiveness(SYS_JumpDrive), 0.0, 1.0, -0.25, 1.0); }

@@ -32,16 +32,12 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner, ECrewPosition crew_pos
     energy_display->setIcon("gui/icons/energy")->setTextSize(20)->setPosition(20, 100, ATopLeft)->setSize(240, 40);
     hull_display = new GuiKeyValueDisplay(this, "HULL_DISPLAY", 0.45, "Carlingue", "");
     hull_display->setIcon("gui/icons/hull")->setTextSize(20)->setPosition(20, 140, ATopLeft)->setSize(240, 40);
-    front_shield_display = new GuiKeyValueDisplay(this, "SHIELDS_DISPLAY", 0.45, "Avant", "");
-    front_shield_display->setIcon("gui/icons/shields-fore")->setTextSize(20)->setPosition(20, 180, ATopLeft)->setSize(240, 40);
-    rear_shield_display = new GuiKeyValueDisplay(this, "SHIELDS_DISPLAY", 0.45, "Arriere", "");
-    rear_shield_display->setIcon("gui/icons/shields-aft")->setTextSize(20)->setPosition(20, 220, ATopLeft)->setSize(240, 40);
-    shield_display = new GuiKeyValueDisplay(this, "SHIELDS_DISPLAY", 0.45, "Bouclier", "");
-    shield_display->setIcon("gui/icons/shields-fore")->setTextSize(20)->setPosition(20, 220, ATopLeft)->setSize(240, 40);
+    shields_display = new GuiKeyValueDisplay(this, "SHIELDS_DISPLAY", 0.45, "Boucliers", "");
+    shields_display->setIcon("gui/icons/shields")->setTextSize(20)->setPosition(20, 180, ATopLeft)->setSize(240, 40);
     oxygen_display = new GuiKeyValueDisplay(this, "OXYGEN_DISPLAY", 0.45, "Oxygene", "");
-    oxygen_display->setIcon("gui/icons/oxygen")->setTextSize(20)->setPosition(20, 260, ATopLeft)->setSize(240, 40);
+    oxygen_display->setIcon("gui/icons/oxygen")->setTextSize(20)->setPosition(20, 220, ATopLeft)->setSize(240, 40);
 
-    (new GuiSelfDestructButton(this, "SELF_DESTRUCT"))->setPosition(20, 300, ATopLeft)->setSize(240, 100);
+    (new GuiSelfDestructButton(this, "SELF_DESTRUCT"))->setPosition(20, 260, ATopLeft)->setSize(240, 100);
 
     GuiElement* system_config_container = new GuiElement(this, "");
     system_config_container->setPosition(0, -50, ABottomCenter)->setSize(750 + 300, GuiElement::GuiSizeMax);
@@ -189,28 +185,16 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
         else
             hull_display->setColor(sf::Color::White);
 
-        if (my_spaceship->getShieldCount() == 0)
+        if (my_spaceship->getShieldCount() > 0)
         {
-            front_shield_display->hide();
-            rear_shield_display->hide();
-            shield_display->hide();
-        }
-        else if (my_spaceship->getShieldCount() == 1)
-        {
-            front_shield_display->hide();
-            rear_shield_display->hide();
-            shield_display->show();
+            shields_display->show();
+            string shields_info = "";
+            for(int n=0; n<my_spaceship->getShieldCount(); n++)
+                shields_info += string(my_spaceship->getShieldPercentage(n)) + "% ";
+            shields_display->setValue(shields_info);
         }
         else
-        {
-            front_shield_display->show();
-            rear_shield_display->show();
-            shield_display->hide();
-        }
-
-        shield_display->setValue(string(my_spaceship->getShieldPercentage(0)) + "%");
-        front_shield_display->setValue(string(my_spaceship->getShieldPercentage(0)) + "%");
-        rear_shield_display->setValue(string(my_spaceship->getShieldPercentage(1)) + "%");
+            shields_display->hide();
 
         oxygen_display->setValue(string(int(100.0f * my_spaceship->getOxygenPoints() / my_spaceship->getOxygenMax())) + "%");
         if (my_spaceship->getOxygenPoints() < 20)
@@ -270,10 +254,11 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
                 if (effectiveness > 1.0f)
                     effectiveness = (1.0f + effectiveness) / 2.0f;
                 addSystemEffect("Production d'energie", string(effectiveness * -PlayerSpaceship::system_power_user_factor[SYS_Reactor] * 60.0, 1) + "/m");
-                if (effectiveness > 0.8f)
-                    addSystemEffect("Production d'oxygene", string((effectiveness - 0.8f) * 60.0, 1) + "/m");
+                // Oxygene
+                if (my_spaceship->getOxygenRechargeRate() > 0)
+                    addSystemEffect("Production d'oxygene", string(my_spaceship->getOxygenRechargeRate() * 60.0, 1) + "/m");
                 else
-                    addSystemEffect("Perte d'oxygene", string((0.8f - effectiveness) * 60.0 / 3.0, 1) + "/m");
+                    addSystemEffect("Perte d'oxygene", string(my_spaceship->getOxygenRechargeRate() * 60.0, 1) + "/m");
                 break;
             case SYS_BeamWeapons:
                 addSystemEffect("Vitesse de tirs", string(int(effectiveness * 100)) + "%");

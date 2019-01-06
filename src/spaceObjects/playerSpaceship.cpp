@@ -518,7 +518,7 @@ void PlayerSpaceship::update(float delta)
                     systems[n].coolant_level = systems[n].coolant_request;
             }
 
-            // Add heat to overpowered subsystems.
+            // Add heat to overpowered subsystems
             addHeat(ESystem(n), delta * systems[n].getHeatingDelta() * system_heatup_per_second);
         }
 
@@ -777,10 +777,10 @@ void PlayerSpaceship::addHeat(ESystem system, float amount)
 
     systems[system].heat_level += amount;
 
-    if (systems[system].heat_level > 1.0)
+    if (systems[system].heat_level > 0.95)
     {
-        float overheat = systems[system].heat_level - 1.0;
-        systems[system].heat_level = 1.0;
+        float overheat = systems[system].heat_level - 0.95;
+        systems[system].heat_level = 0.95;
 
         if (gameGlobalInfo->use_system_damage)
         {
@@ -816,6 +816,7 @@ float PlayerSpaceship::getNetSystemEnergyUsage()
     for(int n = 0; n < SYS_COUNT; n++)
     {
         if (!hasSystem(ESystem(n))) continue;
+        if (systems[n].health < 0.0) continue;
         // Factor the subsystem's health into energy generation.
         if (system_power_user_factor[n] < 0)
         {
