@@ -76,15 +76,23 @@ DockMasterScreen::DockMasterScreen(GuiContainer *owner)
 
     move_button = new GuiButton(dockPanel, "MOVE_BUTTON", "Transferer", [this]() {
         if (my_spaceship)
-            my_spaceship->commandMoveCargo(index);
+        {
+            if (my_spaceship->getSystemEffectiveness(SYS_Docks) > 0)
+                my_spaceship->commandMoveCargo(index);
+        }
     });
     move_button->setSize(COLUMN_WIDTH, 40);
+    (new GuiPowerDamageIndicator(move_button, "DOCKS_DPI", SYS_Docks, ATopCenter, my_spaceship))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
     launch_button = new GuiButton(sideBar, "LAUNCH_DRONE_BUTTON", "Lancer drone", [this]() {
         if (my_spaceship)
-            my_spaceship->commandLaunchCargo(index);
+        {
+            if (my_spaceship->getSystemEffectiveness(SYS_Docks) > 0)
+                my_spaceship->commandLaunchCargo(index);
+        }
     });
     launch_button->setSize(COLUMN_WIDTH, 40);
+    (new GuiPowerDamageIndicator(launch_button, "DOCKS_DPI", SYS_Docks, ABottomCenter, my_spaceship))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
     GuiElement *energyControl = new GuiElement(sideBar, "ENERGY_CONTROL");
     energyControl->setSize(COLUMN_WIDTH, 40);
@@ -94,6 +102,7 @@ DockMasterScreen::DockMasterScreen(GuiContainer *owner)
             my_spaceship->commandSetDockEnergyRequest(index, value);
     });
     energy_slider->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+    (new GuiPowerDamageIndicator(energy_slider, "DOCKS_DPI", SYS_Docks, ACenterLeft, my_spaceship))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
     energy_bar = new GuiProgressbar(energyControl, "ENERGY_BAR", 0.0, 10.0, 0.0);
     energy_bar->setColor(sf::Color(192, 192, 32, 128))->setText("Energie")->setDrawBackground(false)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax)->setMargins(10, 0, 10, 0);
