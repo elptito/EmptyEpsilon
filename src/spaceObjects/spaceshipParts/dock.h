@@ -1,10 +1,13 @@
-#ifndef DRONE_H
-#define DRONE_H
+#ifndef DOCK_H
+#define DOCK_H
 
 #include "P.h"
 #include "shipTemplate.h"
 #include "cargo.h"
 #include "SFML/System/NonCopyable.hpp"
+
+class Dock;
+class Cargo;
 
 enum EDockType
 {
@@ -68,6 +71,9 @@ class Dock : public sf::NonCopyable
     {
         move_target_index = index;
     }
+    sf::Vector2f getLaunchPosition(float cargoRadius);
+    float getLaunchRotation();
+    unsigned int getFactionId();
 
     float getLoadTimeConfig();
     void setLoadTimeConfig(float load_time);
@@ -75,4 +81,4 @@ class Dock : public sf::NonCopyable
     bool operator==(const Dock &other);
 };
 
-#endif //DRONE_H
+#endif //DOCK_H

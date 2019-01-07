@@ -3,7 +3,10 @@
 
 #include "P.h"
 #include "engine.h"
+#include "spaceObjects/spaceshipParts/dock.h"
 
+class Cargo;
+class Dock;
 class ModelData;
 
 class Cargo : public MultiplayerObject
@@ -17,7 +20,7 @@ private:
 
 public:
   Cargo(string multiplayerClassIdentifier);
-  
+
   virtual Entries getEntries();
   virtual float getEnergy() { return energy_level; }
   virtual void setEnergy(float amount) { this->energy_level = amount; }
@@ -30,6 +33,6 @@ public:
   virtual float getMaxEnergy() = 0;
   virtual float getMaxHealth() = 0;
   virtual P<ModelData> getModel() = 0;
-  virtual bool onLaunch(sf::Vector2f position, float rotationAngle) = 0;
+  virtual bool onLaunch(Dock &source) = 0;
 };
 #endif //CARGO_H

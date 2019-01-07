@@ -37,7 +37,7 @@ P<Cargo> Dock::getCargo()
 
 void Dock::startMoveCargo()
 {
-    if (move_target_index >= 0 && move_target_index < max_docks_count)
+    if (state == Docked && move_target_index >= 0 && move_target_index < max_docks_count)
     {
         Dock &dest = parent->docks[move_target_index];
         if (dest.isOpenForDocking())
@@ -100,6 +100,18 @@ void Dock::setParent(SpaceShip *parent)
     parent->registerMemberReplication(&energy_request);
     parent->registerMemberReplication(&move_target_index);
     parent->registerMemberReplication(&current_distance);
+}
+
+sf::Vector2f Dock::getLaunchPosition(float cargoRadius) {
+    return parent->getPosition() - sf::vector2FromAngle(parent->getRotation()) * (cargoRadius + parent->getRadius());
+}
+
+ float Dock::getLaunchRotation(){
+    return parent->getRotation();
+}
+
+ unsigned int Dock::getFactionId(){
+    return parent->getFactionId();
 }
 
 bool Dock::operator==(const Dock &other)
