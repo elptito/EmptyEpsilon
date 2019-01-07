@@ -100,7 +100,7 @@ void GuiMissileTubeControls::onDraw(sf::RenderTarget& window){
         if (tube.canOnlyLoad(MW_Mine))
             rows[n].fire_button->setIcon("gui/icons/weapon-mine", ACenterLeft);
         else
-            rows[n].fire_button->setIcon("gui/icons/missile", ACenterLeft, tube.getDirection());
+            rows[n].fire_button->setIcon("gui/icons/missile", ACenterLeft, target_spaceship->getRotation() + tube.getDirection() + 90);
         if(tube.isEmpty())
         {
             rows[n].load_button->setEnable(tube.canLoad(load_type));
