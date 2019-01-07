@@ -415,7 +415,7 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
     jump_drive_charge_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
     (new GuiLabel(right_col, "", "Jump charge complete :", 30))->setSize(GuiElement::GuiSizeMax, 50);
-    jump_drive_charge_time_slider = new GuiSlider(right_col, "", 0.0, 60*60, 0.0, [this](float value) {
+    jump_drive_charge_time_slider = new GuiSlider(right_col, "", 0.0, 90*60, 0.0, [this](float value) {
         target->jump_drive_charge_time = value;
     });
     jump_drive_charge_time_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
@@ -710,6 +710,7 @@ GuiShipTweakSystems::GuiShipTweakSystems(GuiContainer* owner)
     for(int n=0; n<SYS_COUNT; n++)
     {
         ESystem system = ESystem(n);
+
         (new GuiLabel(left_col, "", getSystemName(system) + " : etat", 20))->setSize(GuiElement::GuiSizeMax, 30);
         system_damage[n] = new GuiSlider(left_col, "", -1.0, 1.0, 0.0, [this, n](float value) {
             target->systems[n].health = value;
@@ -744,6 +745,19 @@ void GuiShipTweakSystems::onDraw(sf::RenderTarget& window)
         system_damage[n]->setValue(target->systems[n].health);
         system_heat[n]->setValue(target->systems[n].heat_level);
         system_hack[n]->setValue(target->systems[n].hacked_level);
+
+        if (!target->hasSystem(ESystem(n)))
+        {
+            system_damage[n]->hide();
+            system_heat[n]->hide();
+            system_hack[n]->hide();
+        }
+        else
+        {
+            system_damage[n]->show();
+            system_heat[n]->show();
+            system_hack[n]->show();
+        }
     }
 }
 
