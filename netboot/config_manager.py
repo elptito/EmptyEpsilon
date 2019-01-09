@@ -11,7 +11,8 @@ class Client:
         "tactical", "engineering+", "operations",
         "single",
         "damageControl", "powerManagement", "databaseView", 
-        "logview","internlogview"
+        "logview","internlogview",
+        "dronePilot", "dockMaster"
     ]
 
     def __init__(self, mac, ip):
