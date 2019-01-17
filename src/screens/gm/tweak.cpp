@@ -700,36 +700,61 @@ void GuiShipTweakBeamweapons::open(P<SpaceObject> target)
 GuiShipTweakSystems::GuiShipTweakSystems(GuiContainer* owner)
 : GuiTweakPage(owner)
 {
-    GuiAutoLayout* left_col = new GuiAutoLayout(this, "LEFT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
-    left_col->setPosition(50, 25, ATopLeft)->setSize(200, GuiElement::GuiSizeMax);
-    GuiAutoLayout* center_col = new GuiAutoLayout(this, "CENTER_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
-    center_col->setPosition(0, 25, ATopCenter)->setSize(200, GuiElement::GuiSizeMax);
-    GuiAutoLayout* right_col = new GuiAutoLayout(this, "RIGHT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
-    right_col->setPosition(-25, 25, ATopRight)->setSize(200, GuiElement::GuiSizeMax);
+    GuiAutoLayout* col_1 = new GuiAutoLayout(this, "LAYOUT_1", GuiAutoLayout::LayoutVerticalTopToBottom);
+    col_1->setPosition(50, 25, ATopLeft)->setSize(150, GuiElement::GuiSizeMax);
+    GuiAutoLayout* col_2 = new GuiAutoLayout(this, "LAYOUT_2", GuiAutoLayout::LayoutVerticalTopToBottom);
+    col_2->setPosition(-75, 25, ATopCenter)->setSize(150, GuiElement::GuiSizeMax);
+    GuiAutoLayout* col_3 = new GuiAutoLayout(this, "LAYOUT_3", GuiAutoLayout::LayoutVerticalTopToBottom);
+    col_3->setPosition(100, 25, ATopCenter)->setSize(150, GuiElement::GuiSizeMax);
+    GuiAutoLayout* col_4 = new GuiAutoLayout(this, "LAYOUT_4", GuiAutoLayout::LayoutVerticalTopToBottom);
+    col_4->setPosition(-25, 25, ATopRight)->setSize(150, GuiElement::GuiSizeMax);
+
+    (new GuiLabel(col_1, "", "etat", 20))->setSize(GuiElement::GuiSizeMax, 30);
+    (new GuiLabel(col_2, "", "max", 20))->setSize(GuiElement::GuiSizeMax, 30);
+    (new GuiLabel(col_3, "", "chaleur", 20))->setSize(GuiElement::GuiSizeMax, 30);
+    (new GuiLabel(col_4, "", "Hack", 20))->setSize(GuiElement::GuiSizeMax, 30);
 
     for(int n=0; n<SYS_COUNT; n++)
     {
         ESystem system = ESystem(n);
 
-        (new GuiLabel(left_col, "", getSystemName(system) + " : etat", 20))->setSize(GuiElement::GuiSizeMax, 30);
-        system_damage[n] = new GuiSlider(left_col, "", -1.0, 1.0, 0.0, [this, n](float value) {
-            target->systems[n].health = value;
+        system_name[n] = new GuiLabel(col_1, "", getSystemName(system), 20);
+        system_name[n]->setSize(GuiElement::GuiSizeMax, 30);
+
+        temp_1[n] = new GuiLabel(col_2, "", " ", 20);
+        temp_1[n]->setSize(GuiElement::GuiSizeMax, 30);
+
+        temp_2[n] = new GuiLabel(col_3, "", " ", 20);
+        temp_2[n]->setSize(GuiElement::GuiSizeMax, 30);
+
+        temp_3[n] = new GuiLabel(col_4, "", " ", 20);
+        temp_3[n]->setSize(GuiElement::GuiSizeMax, 30);
+
+        system_damage[n] = new GuiSlider(col_1, "", -1.0, 1.0, 0.0, [this, n](float value) {
+            target->systems[n].health = std::min(value,target->systems[n].health_max);
         });
         system_damage[n]->setSize(GuiElement::GuiSizeMax, 30);
         system_damage[n]->addSnapValue(-1.0, 0.01);
         system_damage[n]->addSnapValue( 0.0, 0.01);
         system_damage[n]->addSnapValue( 1.0, 0.01);
 
-        (new GuiLabel(right_col, "", getSystemName(system) + " : chaleur", 20))->setSize(GuiElement::GuiSizeMax, 30);
-        system_heat[n] = new GuiSlider(right_col, "", 0.0, 1.0, 0.0, [this, n](float value) {
+        system_health[n] = new GuiSlider(col_2, "", 0.0, 1.0, 0.0, [this, n](float value) {
+            target->systems[n].health_max = value;
+            target->systems[n].health = std::min(value,target->systems[n].health);
+        });
+        system_health[n]->setSize(GuiElement::GuiSizeMax, 30);
+        system_health[n]->setPosition(0,30);
+        system_health[n]->addSnapValue( 0.0, 0.01);
+        system_health[n]->addSnapValue( 1.0, 0.01);
+
+        system_heat[n] = new GuiSlider(col_3, "", 0.0, 1.0, 0.0, [this, n](float value) {
             target->systems[n].heat_level = value;
         });
         system_heat[n]->setSize(GuiElement::GuiSizeMax, 30);
         system_heat[n]->addSnapValue( 0.0, 0.01);
         system_heat[n]->addSnapValue( 1.0, 0.01);
 
-        (new GuiLabel(center_col, "", getSystemName(system) + " : Hack", 20))->setSize(GuiElement::GuiSizeMax, 30);
-        system_hack[n] = new GuiSlider(center_col, "", 0.0, 1.0, 0.0, [this, n](float value) {
+        system_hack[n] = new GuiSlider(col_4, "", 0.0, 1.0, 0.0, [this, n](float value) {
             target->systems[n].hacked_level = value;
         });
         system_hack[n]->setSize(GuiElement::GuiSizeMax, 30);
@@ -743,18 +768,29 @@ void GuiShipTweakSystems::onDraw(sf::RenderTarget& window)
     for(int n=0; n<SYS_COUNT; n++)
     {
         system_damage[n]->setValue(target->systems[n].health);
+        system_health[n]->setValue(target->systems[n].health_max);
         system_heat[n]->setValue(target->systems[n].heat_level);
         system_hack[n]->setValue(target->systems[n].hacked_level);
 
         if (!target->hasSystem(ESystem(n)))
         {
+            system_name[n]->hide();
+            temp_1[n]->hide();
+            temp_2[n]->hide();
+            temp_3[n]->hide();
             system_damage[n]->hide();
+            system_health[n]->hide();
             system_heat[n]->hide();
             system_hack[n]->hide();
         }
         else
         {
+            system_name[n]->show();
+            temp_1[n]->show();
+            temp_2[n]->show();
+            temp_3[n]->show();
             system_damage[n]->show();
+            system_health[n]->show();
             system_heat[n]->show();
             system_hack[n]->show();
         }

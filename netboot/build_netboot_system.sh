@@ -173,7 +173,7 @@ WorkingDirectory=/root/EmptyEpsilon
 ExecStartPre=/root/setup_option_file.sh
 ExecStart=/usr/bin/startx /root/EmptyEpsilon/EmptyEpsilon -- -logfile /tmp/x.log
 
-[Install]
+[Install] 
 WantedBy=multi-user.target
 EOT
 chroot ${TARGET_NFS_DIR} systemctl enable emptyepsilon.service

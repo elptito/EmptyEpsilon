@@ -538,27 +538,27 @@ void RelayScreen::onHotkey(const HotkeyResult& key)
 		}
         if (key.hotkey == "INCREASE_ZOOM")
         {
-			float view_distance = radar->getDistance() + 1500.0f;
-			if (view_distance > 100000.0f)
-				view_distance = 100000.0f;
-			if (view_distance < 6250.0f)
-				view_distance = 6250.0f;
+			float view_distance = radar->getDistance() * 1.1f;
+			if (view_distance > max_distance)
+				view_distance = max_distance;
+			if (view_distance < min_distance)
+				view_distance = min_distance;
 			radar->setDistance(view_distance);
 			// Keep the zoom slider in sync.
 			zoom_slider->setValue(view_distance);
-			zoom_label->setText("Zoom: " + string(100000.0f / view_distance, 1.0f) + "x");
+			zoom_label->setText("Zoom: " + string(max_distance / view_distance, 1.0f) + "x");
 		}
 		if (key.hotkey == "DECREASE_ZOOM")
 		{
-			float view_distance = radar->getDistance() - 1500.0f;
-			if (view_distance > 100000.0f)
-				view_distance = 100000.0f;
-			if (view_distance < 6250.0f)
-				view_distance = 6250.0f;
+			float view_distance = radar->getDistance() * 0.9f;
+			if (view_distance > max_distance)
+				view_distance = max_distance;
+			if (view_distance < min_distance)
+				view_distance = min_distance;
 			radar->setDistance(view_distance);
 			// Keep the zoom slider in sync.
 			zoom_slider->setValue(view_distance);
-			zoom_label->setText("Zoom: " + string(100000.0f / view_distance, 1.0f) + "x");
+			zoom_label->setText("Zoom: " + string(max_distance / view_distance, 1.0f) + "x");
 		}
         if (key.hotkey == "ALERTE_NORMAL")
         {

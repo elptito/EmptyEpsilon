@@ -188,7 +188,12 @@ class GuiShipTweakSystems : public GuiTweakPage
 private:
     P<SpaceShip> target;
 
+    GuiLabel* system_name[SYS_COUNT];
+    GuiLabel* temp_1[SYS_COUNT];
+    GuiLabel* temp_2[SYS_COUNT];
+    GuiLabel* temp_3[SYS_COUNT];
     GuiSlider* system_damage[SYS_COUNT];
+    GuiSlider* system_health[SYS_COUNT];
     GuiSlider* system_heat[SYS_COUNT];
     GuiSlider* system_hack[SYS_COUNT];
 
