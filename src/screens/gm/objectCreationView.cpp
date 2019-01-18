@@ -18,7 +18,7 @@ GuiObjectCreationView::GuiObjectCreationView(GuiContainer* owner, func_t enterCr
         faction_selector->addEntry(info->getName(), info->getName());
     faction_selector->setSelectionIndex(0);
     faction_selector->setPosition(20, 20, ATopLeft)->setSize(300, 50);
-    
+
     float y = 20;
     std::vector<string> template_names = ShipTemplate::getTemplateNameList(ShipTemplate::Station);
     std::sort(template_names.begin(), template_names.end());
@@ -29,7 +29,7 @@ GuiObjectCreationView::GuiObjectCreationView(GuiContainer* owner, func_t enterCr
         }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
         y += 30;
     }
-    
+
     (new GuiButton(box, "CREATE_WARP_JAMMER", "Warp Jammer", [this]() {
         setCreateScript("WarpJammer():setRotation(random(0, 360)):setFactionId(" + string(faction_selector->getSelectionIndex()) + ")");
     }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
@@ -44,7 +44,7 @@ GuiObjectCreationView::GuiObjectCreationView(GuiContainer* owner, func_t enterCr
     }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
     y += 30;
     (new GuiButton(box, "CREATE_ASTEROID", "Asteroid", [this]() {
-        setCreateScript("Asteroid()");
+        setCreateScript("Asteroid():setSize(random(50, 200))");
     }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
     y += 30;
     (new GuiButton(box, "CREATE_BLACKHOLE", "BlackHole", [this]() {
@@ -71,7 +71,7 @@ GuiObjectCreationView::GuiObjectCreationView(GuiContainer* owner, func_t enterCr
     {
         listbox->addEntry(template_name, template_name);
     }
-    
+
     (new GuiButton(box, "CLOSE_BUTTON", "Cancel", [this]() {
         create_script = "";
         this->hide();

@@ -332,7 +332,8 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
                 addSystemEffect("Vitesse de transfert energie", string(effectiveness * PlayerSpaceship::energy_transfer_per_second) + "/s");
                 break;
             case SYS_Drones:
-                addSystemEffect("Portee de controle des drones", string(my_spaceship->getDronesControlRange() / 1000.0f,1) + "U");
+                addSystemEffect("Portee controle des drones", string(my_spaceship->getDronesControlRange() / 1000.0f,1) + "U");
+                addSystemEffect("Portee radar relai et sondes", string(5000.0 * my_spaceship->getSystemEffectiveness(SYS_Drones)  / 1000.0f,1) + "U");
                 break;
             default:
                 break;

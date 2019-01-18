@@ -176,7 +176,7 @@ void GuiRadarView::drawNoneFriendlyBlockedAreas(sf::RenderTarget& window)
     {
         sf::Vector2f radar_screen_center(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f);
 
-        float r = 5000.0 * getScale();
+        float r = 5000.0 * getScale() * my_spaceship->getSystemEffectiveness(SYS_Drones);
         sf::CircleShape circle(r, 50);
         circle.setOrigin(r, r);
         circle.setFillColor(sf::Color(255, 255, 255, 255));
@@ -458,6 +458,7 @@ void GuiRadarView::drawMissileTubes(sf::RenderTarget& window)
 void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget& window_alpha)
 {
     sf::Vector2f radar_screen_center(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f);
+    float radar_range;
 
     std::set<SpaceObject*> visible_objects;
     switch(fog_style)
@@ -471,6 +472,9 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
     case FriendlysShortRangeFogOfWar:
         if (!my_spaceship)
             return;
+
+        radar_range = 5000.0 * my_spaceship->getSystemEffectiveness(SYS_Drones);
+
         foreach(SpaceObject, obj, space_object_list)
         {
             if (!obj->canHideInNebula())
@@ -486,11 +490,11 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
             }
 
             sf::Vector2f position = obj->getPosition();
-            PVector<Collisionable> obj_list = CollisionManager::queryArea(position - sf::Vector2f(5000, 5000), position + sf::Vector2f(5000, 5000));
+            PVector<Collisionable> obj_list = CollisionManager::queryArea(position - sf::Vector2f(radar_range, radar_range), position + sf::Vector2f(radar_range, radar_range));
             foreach(Collisionable, c_obj, obj_list)
             {
                 P<SpaceObject> obj2 = c_obj;
-                if (obj2 && (obj->getPosition() - obj2->getPosition()) < 5000.0f + obj2->getRadius())
+                if (obj2 && (obj->getPosition() - obj2->getPosition()) < radar_range + obj2->getRadius())
                 {
                     visible_objects.insert(*obj2);
                 }

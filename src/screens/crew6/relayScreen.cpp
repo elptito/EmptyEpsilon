@@ -86,6 +86,9 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
     GuiAutoLayout* sidebar = new GuiAutoLayout(this, "SIDE_BAR", GuiAutoLayout::LayoutVerticalTopToBottom);
     sidebar->setPosition(-20, 150, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
 
+    info_radar_range = new GuiKeyValueDisplay(sidebar, "RADAR_RANGE", 0.4, "Portee radar", "");
+    info_radar_range->setSize(GuiElement::GuiSizeMax, 30);
+
     info_callsign = new GuiKeyValueDisplay(sidebar, "SCIENCE_CALLSIGN", 0.4, "ID", "");
     info_callsign->setSize(GuiElement::GuiSizeMax, 30);
 
@@ -274,6 +277,11 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
 
     GuiOverlay::onDraw(window);
 
+    // Info range radar
+    float radar_range = 5000.0 * my_spaceship->getSystemEffectiveness(SYS_Drones);
+    if (my_spaceship)
+        info_radar_range -> setValue(string(radar_range / 1000.0f, 1.0f) + " U");
+
     // Info progress probe
     if (my_spaceship)
     {
@@ -303,7 +311,7 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
                     continue;
                 }
             }
-            if (obj->getPosition() - target->getPosition() < 5000.0f)
+            if (obj->getPosition() - target->getPosition() < radar_range)
             {
                 near_friendly = true;
                 break;
@@ -395,6 +403,8 @@ void RelayScreen::onHotkey(const HotkeyResult& key)
 {
     if (key.category == "RELAY" && my_spaceship)
     {
+        float radar_range = 5000.0 * my_spaceship->getSystemEffectiveness(SYS_Drones);
+
         if (key.hotkey == "NEXT_ENEMY_RELAY")
         {
 			bool current_found = false;
@@ -432,7 +442,7 @@ void RelayScreen::onHotkey(const HotkeyResult& key)
 			PVector<SpaceObject> list_range;
 			PVector<SpaceObject> list_range_obj_relai;
 
-			list_range = my_spaceship->getObjectsInRange(5000.0f);
+			list_range = my_spaceship->getObjectsInRange(radar_range);
             foreach(SpaceObject, obj, list_range)
 			{
 				if (obj == targets.get())
@@ -453,7 +463,7 @@ void RelayScreen::onHotkey(const HotkeyResult& key)
 				// P<ScanProbe> test = obj_relai;
 				if(obj_relai->isFriendly(my_spaceship))
 				{
-					list_range_obj_relai = obj_relai->getObjectsInRange(5000.0f);
+					list_range_obj_relai = obj_relai->getObjectsInRange(radar_range);
 					foreach(SpaceObject, obj, list_range_obj_relai)
 					{
 						if (obj == targets.get())
@@ -472,7 +482,7 @@ void RelayScreen::onHotkey(const HotkeyResult& key)
 				}
             }
 
-			list_range = my_spaceship->getObjectsInRange(5000.0f);
+			list_range = my_spaceship->getObjectsInRange(radar_range);
             foreach(SpaceObject, obj, list_range)
 			{
 				if (obj == targets.get()  || obj == my_spaceship)
@@ -488,7 +498,7 @@ void RelayScreen::onHotkey(const HotkeyResult& key)
 				// P<ScanProbe> test = probe;
 				if(obj_relai->isFriendly(my_spaceship))
 				{
-					list_range_obj_relai = obj_relai->getObjectsInRange(5000.0f);
+					list_range_obj_relai = obj_relai->getObjectsInRange(radar_range);
 					foreach(SpaceObject, obj, list_range_obj_relai)
 					{
 						if (obj == targets.get() || obj == my_spaceship)
