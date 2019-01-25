@@ -394,6 +394,11 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
     });
     jump_toggle->setSize(GuiElement::GuiSizeMax, 40);
 
+    reactor_toggle = new GuiToggleButton(left_col, "", "Reacteur", [this](bool value) {
+        target->setHasReactor(value);
+    });
+    reactor_toggle->setSize(GuiElement::GuiSizeMax, 40);
+
     (new GuiLabel(right_col, "", "JUMP, distance Min :", 30))->setSize(GuiElement::GuiSizeMax, 50);
     jump_drive_min_distance_slider = new GuiSlider(right_col, "", 0.0, 50000, 0.0, [this](float value) {
         target->jump_drive_min_distance = round(value / 1000) * 1000000;
@@ -449,6 +454,7 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
 
     warp_toggle->setValue(ship->has_warp_drive);
     jump_toggle->setValue(ship->hasJumpDrive());
+    reactor_toggle->setValue(ship->HasReactor());
     impulse_speed_slider->setValue(ship->impulse_max_speed);
     impulse_speed_slider->clearSnapValues()->addSnapValue(ship->ship_template->impulse_speed, 5.0f);
     turn_speed_slider->setValue(ship->turn_speed);

@@ -154,6 +154,8 @@ public:
     float jump_drive_energy_per_km_charge;
     float jump_drive_charge_time;
 
+    bool has_reactor;
+
     float wormhole_alpha;    //Used for displaying the Warp-postprocessor
 
     int weapon_storage[MW_Count];
@@ -342,6 +344,9 @@ public:
 	float getJumpDriveCharge() { return jump_drive_charge; }
 	float getJumpDriveChargeTime() { return jump_drive_charge_time; }
 	float getJumpDriveEnergy() { return jump_drive_energy_per_km_charge; }
+
+	void setHasReactor(bool hasReactor) { has_reactor = hasReactor; }
+	bool HasReactor() { return has_reactor; }
 
     bool hasWarpDrive() { return has_warp_drive; }
     void setWarpDrive(bool has_warp)

@@ -108,6 +108,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     warp_request = 0.0;
     current_warp = 0.0;
     has_jump_drive = true;
+    has_reactor = true;
     jump_drive_min_distance = 5000.0;
     jump_drive_max_distance = 50000.0;
     jump_drive_charge = jump_drive_max_distance;
@@ -150,6 +151,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     registerMemberReplication(&jump_drive_max_distance);
     registerMemberReplication(&jump_drive_charge_time);
     registerMemberReplication(&jump_drive_energy_per_km_charge);
+    registerMemberReplication(&has_reactor);
     registerMemberReplication(&wormhole_alpha, 0.5);
     registerMemberReplication(&weapon_tube_count);
     registerMemberReplication(&beam_weapons_count);
@@ -250,6 +252,7 @@ void SpaceShip::applyTemplateValues()
     has_warp_drive = ship_template->warp_speed > 0.0;
     warp_speed_per_warp_level = ship_template->warp_speed;
     has_jump_drive = ship_template->has_jump_drive;
+    has_reactor = ship_template->has_reactor;
     jump_drive_min_distance = ship_template->jump_drive_min_distance;
     jump_drive_max_distance = ship_template->jump_drive_max_distance;
     jump_drive_charge = ship_template->jump_drive_charge;
@@ -1087,7 +1090,7 @@ bool SpaceShip::hasSystem(ESystem system)
     case SYS_RearShield:
         return shield_count > 1;
     case SYS_Reactor:
-        return ship_template->has_reactor;
+        return has_reactor;
     case SYS_BeamWeapons:
         return beam_weapons_count > 0;
     case SYS_Maneuver:

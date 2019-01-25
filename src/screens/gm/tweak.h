@@ -111,6 +111,7 @@ private:
     GuiSlider* turn_speed_slider;
     GuiToggleButton* warp_toggle;
     GuiToggleButton* jump_toggle;
+    GuiToggleButton* reactor_toggle;
     GuiSlider* combat_maneuver_boost_speed_slider;
     GuiSlider* combat_maneuver_strafe_speed_slider;
     GuiSlider* jump_drive_min_distance_slider;
