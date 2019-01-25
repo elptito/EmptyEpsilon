@@ -55,7 +55,7 @@ private:
     float previous_energy_level;
     float average_energy_delta;
 
-    void addSystemEffect(string key, string value);
+    void addSystemEffect(string key, string value, sf::Color color = sf::Color::White);
     void selectSystem(ESystem system);
 public:
     EngineeringScreen(GuiContainer* owner, ECrewPosition crew_position=engineering);

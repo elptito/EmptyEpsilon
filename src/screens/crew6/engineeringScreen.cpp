@@ -254,6 +254,9 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
 
             system_effects_index = 0;
             float effectiveness = my_spaceship->getSystemEffectiveness(selected_system);
+            float health_max = my_spaceship->getSystemHealthMax(selected_system);
+            if (health_max < 1.0)
+                addSystemEffect("Intervention necessaire", "voir log",sf::Color::Red);
             switch(selected_system)
             {
             case SYS_Reactor:
@@ -430,7 +433,7 @@ void EngineeringScreen::selectSystem(ESystem system)
     }
 }
 
-void EngineeringScreen::addSystemEffect(string key, string value)
+void EngineeringScreen::addSystemEffect(string key, string value, sf::Color color)
 {
     if (system_effects_index == system_effects.size())
     {
@@ -440,6 +443,7 @@ void EngineeringScreen::addSystemEffect(string key, string value)
     }else{
         system_effects[system_effects_index]->setKey(key);
         system_effects[system_effects_index]->setValue(value);
+        system_effects[system_effects_index]->setColor(color);
         system_effects[system_effects_index]->show();
     }
     system_effects_index++;

@@ -13,7 +13,7 @@ REGISTER_MULTIPLAYER_CLASS(ScanProbe, "ScanProbe");
 ScanProbe::ScanProbe()
 : SpaceObject(100, "ScanProbe")
 {
-    lifetime = 60 * 20;
+    lifetime = 60 * 60;
     hull = 2;
 
     registerMemberReplication(&owner_id);
