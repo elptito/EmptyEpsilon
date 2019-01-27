@@ -51,6 +51,8 @@ GuiObjectTweak::GuiObjectTweak(GuiContainer* owner, ETweakType tweak_type)
         list->addEntry("Lasers", "");
         pages.push_back(new GuiShipTweakSystems(this));
         list->addEntry("Systemes", "");
+        pages.push_back(new GuiShipTweakOxygen(this));
+        list->addEntry("Oxygene", "");
     }
 
     if (tweak_type == TW_Player)
@@ -841,20 +843,20 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
     repair_team_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
     // Edit oxygen.
-    (new GuiLabel(left_col, "", "Oxygen:", 30))->setSize(GuiElement::GuiSizeMax, 50);
-     oxygen_point_slider = new GuiSlider(left_col, "", 0.0, 500.0, 0.0, [this](float value) {
-//        target->setOxygenPoints(value);
-        target->oxygen_points = std::min(value, target->oxygen_max);
-    });
-    oxygen_point_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+//    (new GuiLabel(left_col, "", "Oxygen:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+//     oxygen_point_slider = new GuiSlider(left_col, "", 0.0, 500.0, 0.0, [this](float value) {
+////        target->setOxygenPoints(value);
+//        target->oxygen_points = std::min(value, target->oxygen_max);
+//    });
+//    oxygen_point_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
     // Edit oxygen.
-    (new GuiLabel(left_col, "", "Oxygen Max:", 30))->setSize(GuiElement::GuiSizeMax, 50);
-     max_oxygen_point_slider = new GuiSlider(left_col, "", 0.0, 500.0, 0.0, [this](float value) {
-        target->setOxygenMax(value);
-        target->oxygen_points = std::min(target->oxygen_points, target->oxygen_max);
-    });
-    max_oxygen_point_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+//    (new GuiLabel(left_col, "", "Oxygen Max:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+//     max_oxygen_point_slider = new GuiSlider(left_col, "", 0.0, 500.0, 0.0, [this](float value) {
+//        target->setOxygenMax(value);
+//        target->oxygen_points = std::min(target->oxygen_points, target->oxygen_max);
+//    });
+//    max_oxygen_point_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
     // Edit energy level.
     (new GuiLabel(left_col, "", "Energie max:", 30))->setSize(GuiElement::GuiSizeMax, 50);
@@ -933,8 +935,8 @@ void GuiShipTweakPlayer::onDraw(sf::RenderTarget& window)
     repair_team_slider->setValue(target->getRepairCrewCount());
 
     // Update oxygen points.
-    oxygen_point_slider->setValue(target->getOxygenPoints());
-    max_oxygen_point_slider->setValue(target->getOxygenMax());
+//    oxygen_point_slider->setValue(target->getOxygenPoints());
+//    max_oxygen_point_slider->setValue(target->getOxygenMax());
 }
 
 void GuiShipTweakPlayer::open(P<SpaceObject> target)
@@ -951,6 +953,72 @@ void GuiShipTweakPlayer::open(P<SpaceObject> target)
         electrical_toggle->setValue(player->has_electrical_sensor);
         biological_toggle->setValue(player->has_biological_sensor);
     }
+}
+
+GuiShipTweakOxygen::GuiShipTweakOxygen(GuiContainer* owner)
+: GuiTweakPage(owner)
+{
+    GuiAutoLayout* left_col = new GuiAutoLayout(this, "LEFT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    left_col->setPosition(50, 25, ATopLeft)->setSize(200, GuiElement::GuiSizeMax);
+
+    GuiAutoLayout* center_col = new GuiAutoLayout(this, "CENTER_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    center_col->setPosition(0, 25, ATopCenter)->setSize(200, GuiElement::GuiSizeMax);
+
+    GuiAutoLayout* right_col = new GuiAutoLayout(this, "RIGHT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    right_col->setPosition(-25, 25, ATopRight)->setSize(200, GuiElement::GuiSizeMax);
+
+    (new GuiLabel(left_col, "", "Oxygen Max zone", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(center_col, "", "Oxygen zone", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(right_col, "", "Rechargement", 30))->setSize(GuiElement::GuiSizeMax, 50);
+
+    for(int n = 0; n < max_oxygen_zones; n++)
+    {
+        // (new GuiLabel(left_col, "", "Zone : " + string(n + 1), 30))->setSize(GuiElement::GuiSizeMax, 50);
+
+        // Edit oxygen max
+        oxygen_max_slider[n] = new GuiSlider(left_col, "", 0.0, 5000.0, 0.0, [this, n](float value) {
+            target->oxygen_max[n] = value;
+            target->oxygen_points[n] = std::min(target->oxygen_points[n], target->oxygen_max[n]);
+            int actual_zones_count = 0;
+            for(int k=0; k<max_oxygen_zones; k++)
+                if (target->oxygen_max[k] > 0)
+                    actual_zones_count = k+1;
+            target->oxygen_zones = actual_zones_count;
+        });
+        oxygen_max_slider[n]->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
+        // Edit oxygen.
+         oxygen_point_slider[n] = new GuiSlider(center_col, "", 0.0, 5000.0, 0.0, [this, n](float value) {
+            target->oxygen_points[n] = std::min(value, target->oxygen_max[n]);
+        });
+        oxygen_point_slider[n]->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
+        // Edit oxygen rate.
+         oxygen_rate_slider[n] = new GuiSlider(right_col, "", -100.0, 0.0, 0.0, [this, n](float value) {
+            target->oxygen_rate[n] = value;
+        });
+        oxygen_rate_slider[n]->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+        oxygen_rate_slider[n]->addSnapValue(-80.0, 0.01);
+        oxygen_rate_slider[n]->addSnapValue(-60.0, 0.01);
+        oxygen_rate_slider[n]->addSnapValue(-40.0, 0.01);
+        oxygen_rate_slider[n]->addSnapValue(-20.0, 0.01);
+    }
+}
+
+void GuiShipTweakOxygen::onDraw(sf::RenderTarget& window)
+{
+    // Update oxygen points.
+    for(int n = 0; n < max_oxygen_zones; n++)
+    {
+        oxygen_point_slider[n]->setValue(target->getOxygenPoints(n));
+        oxygen_max_slider[n]->setValue(target->getOxygenMax(n));
+        oxygen_rate_slider[n] ->setValue(target->getOxygenRate(n));
+    }
+}
+
+void GuiShipTweakOxygen::open(P<SpaceObject> target)
+{
+    this->target = target;
 }
 
 GuiShipTweakMessages::GuiShipTweakMessages(GuiContainer* owner)

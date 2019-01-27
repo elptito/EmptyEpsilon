@@ -67,10 +67,14 @@ REGISTER_SCRIPT_CLASS_NO_CREATE(SpaceObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setOxygenMax);
     /// Return the max amount of oxygen points.
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getOxygenMax);
+    /// Set the rate of oxygen points.
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setOxygenRate);
      /// Sets the oxygen to a value.
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setOxygenPoints);
     /// Return the current amount of oxygen points.
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getOxygenPoints);
+    /// Return the current total of oxygen points.
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getOxygenTotal);
     /// Take a certain amount of oxygen points, returns true when there are enough points to take. Returns false when there are not enough points and does not lower the points.
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, takeOxygenPoints);
     /// Add a certain amount of Oxygen points.
@@ -132,8 +136,6 @@ SpaceObject::SpaceObject(float collision_range, string multiplayer_name, float m
     faction_id = 0;
     personality_id = 0;
     hull = 0;
-    oxygen_points = 100;
-    oxygen_max = 100;
     translate_z = 0;
 
     scanning_complexity_value = 0;
@@ -144,8 +146,6 @@ SpaceObject::SpaceObject(float collision_range, string multiplayer_name, float m
     registerMemberReplication(&hull);
     registerMemberReplication(&faction_id);
     registerMemberReplication(&personality_id);
-    registerMemberReplication(&oxygen_points);
-    registerMemberReplication(&oxygen_max);
     registerMemberReplication(&scanned_by_faction);
     registerMemberReplication(&object_description.not_scanned);
     registerMemberReplication(&object_description.friend_of_foe_identified);
@@ -157,6 +157,18 @@ SpaceObject::SpaceObject(float collision_range, string multiplayer_name, float m
     registerMemberReplication(&scanning_complexity_value);
     registerMemberReplication(&scanning_depth_value);
     registerCollisionableReplication(multiplayer_significant_range);
+
+    oxygen_zones = 0;
+    registerMemberReplication(&oxygen_zones);
+    for(int n=0; n<max_oxygen_zones; n++)
+    {
+        oxygen_points[n] = 0.0;
+        oxygen_max[n] = 0.0;
+        oxygen_rate[n] = 0.0;
+        registerMemberReplication(&oxygen_points[n]);
+        registerMemberReplication(&oxygen_max[n]);
+        registerMemberReplication(&oxygen_rate[n]);
+    }
 }
 
 #if FEATURE_3D_RENDERING
@@ -458,40 +470,66 @@ void SpaceObject::addReputationPoints(float amount)
         gameGlobalInfo->reputation_points[faction_id] = 0.0;
 }
 
-void SpaceObject::setOxygenPoints(float amount)
+void SpaceObject::setOxygenMax(std::vector<float> values)
 {
-    oxygen_points = amount;
+    oxygen_zones = int(values.size());
+    for(int n=0; n<oxygen_zones; n++)
+    {
+        oxygen_max[n] = values[n];
+    }
 }
-void SpaceObject::setOxygenMax(float amount)
+void SpaceObject::setOxygenPoints(std::vector<float> values)
 {
-    oxygen_max = amount;
+    for(int n=0; n<oxygen_zones; n++)
+    {
+        oxygen_points[n] = std::min(values[n],oxygen_max[n]);
+    }
 }
-int SpaceObject::getOxygenPoints()
+void SpaceObject::setOxygenRate(std::vector<float> values)
 {
-    return oxygen_points;
+    for(int n=0; n<oxygen_zones; n++)
+    {
+        oxygen_rate[n] = values[n];
+    }
 }
-int SpaceObject::getOxygenMax()
+float SpaceObject::getOxygenPoints(int index)
 {
-    return oxygen_max;
+    return oxygen_points[index];
 }
-bool SpaceObject::takeOxygenPoints(float amount)
+float SpaceObject::getOxygenMax(int index)
 {
-	if (oxygen_points < amount)
+    return oxygen_max[index];
+}
+float SpaceObject::getOxygenRate(int index)
+{
+    return oxygen_rate[index];
+}
+float SpaceObject::getOxygenTotal()
+{
+    float oxygen_total = 0.0;
+    for(int n=0; n<oxygen_zones; n++)
+        oxygen_total += (oxygen_points[n] / oxygen_max[n]) / oxygen_zones;
+    return oxygen_total;
+}
+
+bool SpaceObject::takeOxygenPoints(float amount,int index)
+{
+	if (oxygen_points[index] < amount)
 		return false;
-	oxygen_points -= amount;
+	oxygen_points[index] -= amount;
     	return true;
 }
-void SpaceObject::removeOxygenPoints(float amount)
+void SpaceObject::removeOxygenPoints(float amount,int index)
 {
-    addOxygenPoints(-amount);
+    addOxygenPoints(-amount, index);
 }
-void SpaceObject::addOxygenPoints(float amount)
+void SpaceObject::addOxygenPoints(float amount,int index)
 {
-    oxygen_points += amount;
-    if (oxygen_points < 0.0)
-    	oxygen_points = 0.0;
-    if (oxygen_points > oxygen_max)
-    	oxygen_points = oxygen_max;
+    oxygen_points[index] += amount;
+    if (oxygen_points[index] < 0.0)
+    	oxygen_points[index] = 0.0;
+    if (oxygen_points[index] > oxygen_max[index])
+    	oxygen_points[index] = oxygen_max[index];
 }
 
 string SpaceObject::getSectorName()

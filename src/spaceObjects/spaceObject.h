@@ -7,15 +7,7 @@
 #include "factionInfo.h"
 #include "shipTemplate.h"
 
-//PVector<Personality> personality;
-
-//Personality::Personality()
-//{
-//    personality.push_back(P_normal);
-//    personality.push_back(P_peaceful);
-//    personality.push_back(P_hostile);
-//    personality.push_back(P_solo);
-//}
+constexpr static int max_oxygen_zones = 10;
 
 enum EDamageType
 {
@@ -23,14 +15,6 @@ enum EDamageType
     DT_Kinetic,
     DT_EMP
 };
-
-//enum EPersonality
-//{
-//    P_normal = 1,
-//    P_peaceful = 2,
-//    P_hostile = 3,
-//    P_solo = 4
-//};
 
 class DamageInfo
 {
@@ -124,8 +108,10 @@ public:
     int scanning_complexity_value;
     int scanning_depth_value;
     string callsign;
-    float oxygen_points;
-    float oxygen_max;
+    int oxygen_zones;
+    float oxygen_points[max_oxygen_zones];
+    float oxygen_max[max_oxygen_zones];
+    float oxygen_rate[max_oxygen_zones];
     float hull;
     uint8_t personality_id;
 
@@ -247,13 +233,16 @@ public:
     bool takeReputationPoints(float amount);
     void removeReputationPoints(float amount);
     void addReputationPoints(float amount);
-    void setOxygenMax(float amount);
-    void setOxygenPoints(float amount);
-    int getOxygenMax();
-    int getOxygenPoints();
-    bool takeOxygenPoints(float amount);
-    void removeOxygenPoints(float amount);
-    void addOxygenPoints(float amount);
+    void setOxygenMax(std::vector<float> values);
+    void setOxygenPoints(std::vector<float> values);
+    void setOxygenRate(std::vector<float> values);
+    float getOxygenMax(int index = 0);
+    float getOxygenPoints(int index = 0);
+    float getOxygenRate(int index = 0);
+    float getOxygenTotal();
+    bool takeOxygenPoints(float amount, int index = 0);
+    void removeOxygenPoints(float amount, int index = 0);
+    void addOxygenPoints(float amount, int index = 0);
     void setCommsScript(string script_name) { this->comms_script_name = script_name; this->comms_script_callback.clear(); }
     void setCommsFunction(ScriptSimpleCallback callback) { this->comms_script_name = ""; this->comms_script_callback = callback; }
     bool areEnemiesInRange(float range);

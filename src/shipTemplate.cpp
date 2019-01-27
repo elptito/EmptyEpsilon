@@ -311,7 +311,6 @@ void ShipTemplate::setShields(std::vector<float> values)
     }
 }
 
-
 P<ShipTemplate> ShipTemplate::getTemplate(string name)
 {
     if (templateMap.find(name) == templateMap.end())

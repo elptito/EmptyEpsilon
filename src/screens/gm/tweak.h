@@ -213,8 +213,8 @@ private:
 
     GuiTextEntry* control_code;
     GuiSlider* repair_team_slider;;
-    GuiSlider* oxygen_point_slider;
-    GuiSlider* max_oxygen_point_slider;
+//    GuiSlider* oxygen_point_slider;
+//    GuiSlider* max_oxygen_point_slider;
     GuiSlider* energy_level_slider;
     GuiSlider* max_energy_level_slider;
     GuiToggleButton* gravity_toggle;
@@ -224,6 +224,23 @@ private:
     GuiKeyValueDisplay* position[max_crew_positions];
 public:
     GuiShipTweakPlayer(GuiContainer* owner);
+
+    virtual void open(P<SpaceObject> target);
+
+    virtual void onDraw(sf::RenderTarget& window) override;
+};
+
+class GuiShipTweakOxygen : public GuiTweakPage
+{
+private:
+    P<SpaceObject> target;
+
+    GuiSlider* oxygen_point_slider[max_oxygen_zones];
+    GuiSlider* oxygen_max_slider[max_oxygen_zones];
+    GuiSlider* oxygen_rate_slider[max_oxygen_zones];
+
+public:
+    GuiShipTweakOxygen(GuiContainer* owner);
 
     virtual void open(P<SpaceObject> target);
 

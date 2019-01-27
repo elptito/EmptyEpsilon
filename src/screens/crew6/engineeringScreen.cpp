@@ -199,8 +199,11 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
         else
             shields_display->hide();
 
-        oxygen_display->setValue(string(int(100.0f * my_spaceship->getOxygenPoints() / my_spaceship->getOxygenMax())) + "%");
-        if (my_spaceship->getOxygenPoints() < 20)
+        string text_oxygen = "";
+        for(int n = 0; n < my_spaceship->oxygen_zones; n++)
+            text_oxygen += string(int(100.0f * my_spaceship->getOxygenPoints(n) / my_spaceship->getOxygenMax(n))) + "% ";
+        oxygen_display->setValue(text_oxygen);
+        if (my_spaceship->getOxygenTotal() < 0.20)
             oxygen_display->setColor(sf::Color::Red);
         else
             oxygen_display->setColor(sf::Color::White);
@@ -264,10 +267,8 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
                     effectiveness = (1.0f + effectiveness) / 2.0f;
                 addSystemEffect("Production d'energie", string(effectiveness * -PlayerSpaceship::system_power_user_factor[SYS_Reactor] * 60.0, 1) + "/m");
                 // Oxygene
-                if (my_spaceship->getOxygenRechargeRate() > 0)
-                    addSystemEffect("Production d'oxygene", string(my_spaceship->getOxygenRechargeRate() * 60.0, 1) + "/m");
-                else
-                    addSystemEffect("Perte d'oxygene", string(my_spaceship->getOxygenRechargeRate() * 60.0, 1) + "/m");
+                for(int n = 0; n < my_spaceship->oxygen_zones; n++)
+                    addSystemEffect("Zone " + string(n+1) + ", oxygene : ", string(my_spaceship->getOxygenRechargeRate(n) * 60.0, 1) + "/m");
                 break;
             case SYS_BeamWeapons:
                 addSystemEffect("Vitesse de tirs", string(int(effectiveness * 100)) + "%");

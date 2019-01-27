@@ -718,12 +718,13 @@ void SpaceShip::update(float delta)
     else
         model_info.warp_scale = 0.0;
 
-        addOxygenPoints(getOxygenRechargeRate() * delta);
+    for(int n = 0; n < oxygen_zones; n++)
+        addOxygenPoints(getOxygenRechargeRate(n) * delta, n);
 }
 
-float SpaceShip::getOxygenRechargeRate()
+float SpaceShip::getOxygenRechargeRate(int index)
 {
-    float rate = 0.0;
+    float rate = (oxygen_rate[index] / 100.0 * oxygen_max[index]) / 100.0;
     // Diminution de l'oxygene si Hull trop base
     if (hull_strength / hull_max < 0.6)
         rate -= (0.6 - hull_strength / hull_max) / 2.0f;
