@@ -69,6 +69,8 @@ REGISTER_SCRIPT_CLASS_NO_CREATE(SpaceObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getOxygenMax);
     /// Set the rate of oxygen points.
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setOxygenRate);
+    /// return the rate of oxygen points.
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getOxygenRate);
      /// Sets the oxygen to a value.
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setOxygenPoints);
     /// Return the current amount of oxygen points.
