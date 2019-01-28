@@ -1,6 +1,7 @@
 #include "relayScreen.h"
 #include "playerInfo.h"
 #include "spaceObjects/playerSpaceship.h"
+#include "spaceObjects/wormHole.h"
 #include "spaceObjects/scanProbe.h"
 #include "scriptInterface.h"
 #include "gameGlobalInfo.h"
@@ -58,7 +59,7 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
             switch(mode)
             {
             case TargetSelection:
-                targets.setToClosestTo(position, 1000, TargetsContainer::Targetable, my_spaceship);
+                targets.setToClosestTo(position, 1000, TargetsContainer::Selectable, my_spaceship);
                 break;
             case WaypointPlacement:
                 if (my_spaceship)
@@ -303,7 +304,7 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
         bool near_friendly = false;
         foreach(SpaceObject, obj, space_object_list)
         {
-            if ((!P<SpaceShip>(obj) && !P<SpaceStation>(obj)) || !obj->isFriendly(my_spaceship))
+            if ((!P<SpaceShip>(obj) && !P<SpaceStation>(obj) && !P<WormHole>(obj)) || !obj->isFriendly(my_spaceship))
             {
                 P<ScanProbe> sp = obj;
                 if (!sp || sp->owner_id != my_spaceship->getMultiplayerId())

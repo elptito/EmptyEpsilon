@@ -4,6 +4,7 @@
 #include "gameGlobalInfo.h"
 #include "spaceObjects/nebula.h"
 #include "spaceObjects/blackHole.h"
+#include "spaceObjects/wormHole.h"
 #include "spaceObjects/scanProbe.h"
 #include "playerInfo.h"
 #include "radarView.h"
@@ -473,14 +474,10 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
         if (!my_spaceship)
             return;
 
-        radar_range = 5000.0 * my_spaceship->getSystemEffectiveness(SYS_Drones);
-
         foreach(SpaceObject, obj, space_object_list)
         {
-            if (!obj->canHideInNebula())
-                visible_objects.insert(*obj);
-
-            if ((!P<SpaceShip>(obj) && !P<SpaceStation>(obj)) || !obj->isFriendly(my_spaceship))
+//            if ((!P<SpaceShip>(obj) && !P<SpaceStation>(obj) && !P<WormHole>(obj)) || !obj->isFriendly(my_spaceship))
+            if (!obj->isFriendly(my_spaceship))
             {
                 P<ScanProbe> sp = obj;
                 if (!sp || sp->owner_id != my_spaceship->getMultiplayerId())
@@ -490,10 +487,15 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
             }
 
             sf::Vector2f position = obj->getPosition();
-            PVector<Collisionable> obj_list = CollisionManager::queryArea(position - sf::Vector2f(radar_range, radar_range), position + sf::Vector2f(radar_range, radar_range));
+            PVector<Collisionable> obj_list = CollisionManager::queryArea(position - sf::Vector2f(radar_range*100, radar_range*100), position + sf::Vector2f(radar_range*100, radar_range*100));
             foreach(Collisionable, c_obj, obj_list)
             {
                 P<SpaceObject> obj2 = c_obj;
+
+                radar_range = 5000.0 * my_spaceship->getSystemEffectiveness(SYS_Drones);
+                if (!obj2->canHideInNebula())
+                    radar_range *= 100;
+
                 if (obj2 && (obj->getPosition() - obj2->getPosition()) < radar_range + obj2->getRadius())
                 {
                     visible_objects.insert(*obj2);

@@ -3,6 +3,7 @@
 #include "targetsContainer.h"
 #include "playerInfo.h"
 #include "spaceObjects/playerSpaceship.h"
+#include "spaceObjects/wormHole.h"
 
 GuiOpenCommsButton::GuiOpenCommsButton(GuiContainer* owner, string id, TargetsContainer* targets)
 : GuiButton(owner, id, "Ouvrir Comms", [this]() {
@@ -19,7 +20,7 @@ void GuiOpenCommsButton::onDraw(sf::RenderTarget& window)
     disable();
     if (targets->get() && my_spaceship && my_spaceship->isCommsInactive())
     {
-        if (P<SpaceShip>(targets->get()) || P<SpaceStation>(targets->get()))
+        if (P<SpaceShip>(targets->get()) || P<SpaceStation>(targets->get()) || P<WormHole>(targets->get()))
             enable();
     }
     GuiButton::onDraw(window);
