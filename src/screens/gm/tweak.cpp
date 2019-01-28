@@ -2,6 +2,7 @@
 #include "playerInfo.h"
 #include "spaceObjects/spaceship.h"
 #include "spaceObjects/spaceObject.h"
+#include "shipCargo.h"
 
 #include "gui/gui2_listbox.h"
 #include "gui/gui2_autolayout.h"
@@ -892,40 +893,61 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
     biological_toggle->setSize(GuiElement::GuiSizeMax, 40);
 
     // Count and list ship positions and whether they're occupied.
-    position_count = new GuiLabel(right_col, "", "Postes occupes: ", 30);
-    position_count->setSize(GuiElement::GuiSizeMax, 50);
+//    position_count = new GuiLabel(right_col, "", "Postes occupes: ", 30);
+//    position_count->setSize(GuiElement::GuiSizeMax, 50);
+//
+//    for(int n = 0; n < max_crew_positions; n++)
+//    {
+//        string position_name = getCrewPositionName(ECrewPosition(n));
+//
+//        position[n] = new GuiKeyValueDisplay(right_col, "CREW_POSITION_" + position_name, 0.5, position_name, "-");
+//        position[n]->setSize(GuiElement::GuiSizeMax, 30);
+//    }
 
-    for(int n = 0; n < max_crew_positions; n++)
+    (new GuiLabel(right_col, "", "Ajouter un drone:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+
+    std::vector<string> drones_names = ShipTemplate::getTemplateNameList(ShipTemplate::Drone);
+    std::sort(drones_names.begin(), drones_names.end());
+    GuiListbox* listDronesBox = new GuiListbox(right_col, "CREATE_SHIPS", [this](int index, string value)
     {
-        string position_name = getCrewPositionName(ECrewPosition(n));
-
-        position[n] = new GuiKeyValueDisplay(right_col, "CREW_POSITION_" + position_name, 0.5, position_name, "-");
-        position[n]->setSize(GuiElement::GuiSizeMax, 30);
+        P<ShipTemplate> drone_ship_template = ShipTemplate::getTemplate(value);
+        P<SpaceShip> ship = target;
+        Dock* dock = Dock::findOpenForDocking(ship->docks, max_docks_count);
+        if (dock)
+        {
+            P<ShipCargo> cargo = new ShipCargo(drone_ship_template);
+            dock->dock(cargo);
+        }
+    });
+    listDronesBox->setTextSize(20)->setButtonHeight(30)->setPosition(-20, 20, ATopRight)->setSize(300, 200);
+    for(string drones_name : drones_names)
+    {
+        listDronesBox->addEntry(drones_name, drones_name);
     }
 }
 
 void GuiShipTweakPlayer::onDraw(sf::RenderTarget& window)
 {
     // Update position list.
-    int position_counter = 0;
+//    int position_counter = 0;
 
     // Update the status of each crew position.
-    for(int n = 0; n < max_crew_positions; n++)
-    {
-        string position_name = getCrewPositionName(ECrewPosition(n));
-        string position_state = "-";
-
-        if (target->hasPlayerAtPosition(ECrewPosition(n)))
-        {
-            position_state = "Occupe";
-            position_counter += 1;
-        }
-
-        position[n]->setValue(position_state);
-    }
+//    for(int n = 0; n < max_crew_positions; n++)
+//    {
+//        string position_name = getCrewPositionName(ECrewPosition(n));
+//        string position_state = "-";
+//
+//        if (target->hasPlayerAtPosition(ECrewPosition(n)))
+//        {
+//            position_state = "Occupe";
+//            position_counter += 1;
+//        }
+//
+//        position[n]->setValue(position_state);
+//    }
 
     // Update the total occupied position count.
-    position_count->setText("Postes occupes: " + string(position_counter));
+//    position_count->setText("Postes occupes: " + string(position_counter));
 
     // Update the ship's energy level.
     energy_level_slider->setValue(target->energy_level);

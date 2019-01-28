@@ -176,6 +176,7 @@ void Dock::update(float delta)
     }
     if (game_server && (state == MovingOut || state == Docked)){
         auto cargo = getCargo();
+
         if (cargo && cargo->getHeat() > 0)
         {
             if (dock_type == Dock_Thermic){
