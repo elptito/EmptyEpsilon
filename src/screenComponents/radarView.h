@@ -7,7 +7,7 @@
 #include "gui/gui2_overlay.h"
 
 class GuiMissileTubeControls;
-class PlayerSpaceship;
+
 class GuiRadarView : public SectorsView
 {
 public:
@@ -47,7 +47,7 @@ private:
 
     GuiMissileTubeControls* missile_tube_controls;
 
-    P<PlayerSpaceship>& target_spaceship;
+    P<PlayerSpaceship> target_spaceship;
     bool long_range;
     bool show_ghost_dots;
     bool show_waypoints;
@@ -68,7 +68,7 @@ private:
     ffunc_t joystick_z_func;
     ffunc_t joystick_r_func;
 public:
-    GuiRadarView(GuiContainer* owner, string id, float distance, TargetsContainer* targets, P<PlayerSpaceship>& targetSpaceship);
+    GuiRadarView(GuiContainer* owner, string id, float distance, TargetsContainer* targets, P<PlayerSpaceship> targetSpaceship);
 
     virtual void onDraw(sf::RenderTarget& window);
 
@@ -99,6 +99,8 @@ public:
     virtual GuiRadarView* setViewPosition(sf::Vector2f view_position) { SectorsView::setViewPosition(view_position); return this; }
 
     virtual bool onMouseDown(sf::Vector2f position);
+    void setTargetSpaceship(P<PlayerSpaceship> targetSpaceship){target_spaceship = targetSpaceship;}
+
 private:
     void updateGhostDots();
     void drawBackground(sf::RenderTarget& window);

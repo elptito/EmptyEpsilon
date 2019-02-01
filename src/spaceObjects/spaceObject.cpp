@@ -364,26 +364,34 @@ string SpaceObject::getPersonality()
 
 bool SpaceObject::isEnemy(P<SpaceObject> obj)
 {
-    if (personality_id == 1)
+    if (obj)
+    {
+        if (personality_id == 1)
+            return false;
+        if (personality_id == 2)
+            return faction_id != obj->faction_id;
+        if (personality_id == 3)
+            return true;
+        return factionInfo[faction_id]->states[obj->faction_id] == FVF_Enemy;
+    } else {
         return false;
-    if (personality_id == 2)
-        return faction_id != obj->faction_id;
-    if (personality_id == 3)
-        return true;
-
-    return factionInfo[faction_id]->states[obj->faction_id] == FVF_Enemy;
+    }
 }
 
 bool SpaceObject::isFriendly(P<SpaceObject> obj)
 {
-    if (personality_id == 1)
-        return true;
-    if (personality_id == 2)
-        return faction_id == obj->faction_id;
-    if (personality_id == 3)
+    if (obj)
+    {
+        if (personality_id == 1)
+            return true;
+        if (personality_id == 2)
+            return faction_id == obj->faction_id;
+        if (personality_id == 3)
+            return false;
+        return factionInfo[faction_id]->states[obj->faction_id] == FVF_Friendly;
+    } else {
         return false;
-
-    return factionInfo[faction_id]->states[obj->faction_id] == FVF_Friendly;
+    }
 }
 
 void SpaceObject::damageArea(sf::Vector2f position, float blast_range, float min_damage, float max_damage, DamageInfo info, float min_range)

@@ -1662,8 +1662,8 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
                     if (csf.type == CustomShipFunction::Type::Message)
                     {
                         removeCustom(name);
-                        break;
                     }
+                    break;
                 }
             }
         }
