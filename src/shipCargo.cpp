@@ -112,5 +112,14 @@ Cargo::Entries ShipCargo::getEntries()
     }
     result.push_back(std::make_tuple("", "ID", callsign));
     result.push_back(std::make_tuple("", "type", template_name));
+
+    if (ship_template->has_reactor)
+        result.push_back(std::make_tuple("", "Reacteur ?", "Oui"));
+    else
+        result.push_back(std::make_tuple("", "Reacteur ?", "Non"));
+
+    if (ship_template->weapon_tube_count > 0)
+        result.push_back(std::make_tuple("", "Tubes a missiles", ship_template->weapon_tube_count));
+
     return result;
 }
