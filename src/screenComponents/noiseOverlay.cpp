@@ -10,7 +10,7 @@ GuiNoiseOverlay::GuiNoiseOverlay(GuiContainer* owner)
 
 void GuiNoiseOverlay::onDraw(sf::RenderTarget& window)
 {
-    if (my_spaceship)
+    if ((my_spaceship && engine->getGameSpeed() == 1.0f) || game_server)
         return;
 
     sf::Sprite staticDisplay;
