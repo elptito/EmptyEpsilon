@@ -56,7 +56,7 @@ void Nebula::draw3DTransparent()
         if (alpha < 0.0)
             continue;
 
-        ShaderManager::getShader("billboardShader")->setParameter("textureMap", *textureManager.getTexture("Nebula" + string(cloud.texture) + ".png"));
+        ShaderManager::getShader("billboardShader")->setUniform("textureMap", *textureManager.getTexture("Nebula" + string(cloud.texture) + ".png"));
         sf::Shader::bind(ShaderManager::getShader("billboardShader"));
         glTranslatef(0,0,cloud.z);
         glBegin(GL_QUADS);
