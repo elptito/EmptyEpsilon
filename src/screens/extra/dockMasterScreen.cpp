@@ -107,27 +107,64 @@ DockMasterScreen::DockMasterScreen(GuiContainer *owner)
     energy_bar = new GuiProgressbar(energyControl, "ENERGY_BAR", 0.0, 10.0, 0.0);
     energy_bar->setColor(sf::Color(192, 192, 32, 128))->setText("Energie")->setDrawBackground(false)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax)->setMargins(10, 0, 10, 0);
 
-//    GuiElement *weaponsControl = new GuiElement(sideBar, "WEAPONS_CONTROL");
-//    weaponsControl->setSize(COLUMN_WIDTH, 40);
-
     weaponsControl = new GuiAutoLayout(sideBar, "WEAPONS_BAR", GuiAutoLayout::LayoutVerticalTopToBottom);
-    weaponsControl->setSize(COLUMN_WIDTH, GuiElement::GuiSizeMax)->setPosition(0, 100, ATopRight);
+    weaponsControl->setSize(COLUMN_WIDTH, GuiElement::GuiSizeMax)->setPosition(0, 100, ABottomRight);
+
+    weapons_layout_label = new GuiElement(weaponsControl, "WEAPONS_LAYOUT_LABEL");
+    weapons_layout_label -> setSize(COLUMN_WIDTH, 40);
+    (new GuiLabel(weapons_layout_label, "", "Missile", 20))->setSize(75, 50);
+    (new GuiLabel(weapons_layout_label, "", "Station", 20))->setPosition(75,0)->setSize(75, 50);
+    (new GuiLabel(weapons_layout_label, "", "Drone", 20))->setPosition(150,0)->setSize(75, 50);
 
     for(int n=0; n<MW_Count; n++)
     {
-        (new GuiLabel(weaponsControl, "", getMissileWeaponName(EMissileWeapons(n)) + ":", 20))->setSize(GuiElement::GuiSizeMax, 30);
-        weapons_slider[n] = new GuiSlider(weaponsControl, "", 0.0, 50, 0.0, [this, n](float value) {
-            if (my_spaceship && my_spaceship->weapon_storage[n] >= value)
-            {
-                my_spaceship->weapon_storage[n] -= value;
+        weapons_layout[n] = new GuiElement(weaponsControl, "WEAPONS_LAYOUT");
+        weapons_layout[n]->setSize(COLUMN_WIDTH, 40);
 
+        (new GuiLabel(weapons_layout[n], "", getMissileWeaponName(EMissileWeapons(n)) + " :", 20))->setSize(75, 30);
+        //(new GuiLabel(weaponsControl, "", getMissileWeaponName(EMissileWeapons(n)) + " :", 20))->setSize(GuiElement::GuiSizeMax, 30);
+
+        weapons_stock_ship[n] = new GuiLabel(weapons_layout[n],"","0/20",20);
+        weapons_stock_ship[n]->setPosition(75,0)->setSize(75, 30);
+        weapons_stock_cargo[n] = new GuiLabel(weapons_layout[n],"","0/20",20);
+        weapons_stock_cargo[n]->setPosition(150,0)->setSize(75, 30);
+
+        weapons_stock_p1[n] = new GuiButton(weapons_layout[n],"","+ 1", [this,n]() {
+            if (my_spaceship)
+            {
                 Dock &dockData = my_spaceship->docks[index];
                 P<Cargo> cargo = dockData.getCargo();
-                cargo->setWeaponStorage(EMissileWeapons(n),value);
-//                cargo->getWeaponStorageMax();
+
+                if (my_spaceship->weapon_storage[n] <= 0)
+                    return;
+
+                if (cargo->getWeaponStorageMax(EMissileWeapons(n)) == cargo->getWeaponStorage(EMissileWeapons(n)))
+                    return;
+
+                my_spaceship->weapon_storage[n] -= 1;
+                cargo->setWeaponStorage(EMissileWeapons(n), cargo->getWeaponStorage(EMissileWeapons(n)) + 1);
             }
         });
-        weapons_slider[n]->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
+        weapons_stock_p1[n]->setPosition(225,0)->setSize(75, 40);
+
+        weapons_stock_m1[n] = new GuiButton(weapons_layout[n],"","- 1", [this,n]() {
+            if (my_spaceship)
+            {
+                Dock &dockData = my_spaceship->docks[index];
+                P<Cargo> cargo = dockData.getCargo();
+
+                if (cargo->getWeaponStorage(EMissileWeapons(n)) <= 0)
+                    return;
+
+                if (my_spaceship->weapon_storage[n] == my_spaceship->weapon_storage_max[n])
+                    return;
+
+                my_spaceship->weapon_storage[n] += 1;
+                cargo->setWeaponStorage(EMissileWeapons(n), cargo->getWeaponStorage(EMissileWeapons(n)) - 1);
+            }
+        });
+        weapons_stock_m1[n]->setPosition(300,0)->setSize(75, 40);
     }
 
 
@@ -165,8 +202,7 @@ void DockMasterScreen::selectDock(int index)
     launch_button->setVisible(dockData.dock_type == Dock_Launcher);
     energy_bar->setVisible(dockData.dock_type == Dock_Energy);
     energy_slider->setVisible(dockData.dock_type == Dock_Energy);
-    for(int n=0; n<MW_Count; n++)
-        weapons_slider[n]->setVisible(dockData.dock_type == Dock_Energy);
+    weaponsControl->setVisible(dockData.dock_type == Dock_Energy);
 }
 
 void DockMasterScreen::onDraw(sf::RenderTarget &window)
@@ -264,8 +300,9 @@ void DockMasterScreen::displayDroneDetails(Dock &dockData)
     energy_slider->setValue(dockData.energy_request);
     for(int n = 0; n < MW_Count; n++)
     {
-        weapons_slider[n]->setRange(0, cargo->getWeaponStorageMax(EMissileWeapons(n)));
-        weapons_slider[n]->setValue(cargo->getWeaponStorage(EMissileWeapons(n)));
+        weapons_stock_ship[n]->setText(string(cargo->getWeaponStorage(EMissileWeapons(n))) + " / " + string(cargo->getWeaponStorageMax(EMissileWeapons(n))));
+        if (my_spaceship)
+            weapons_stock_cargo[n]->setText(string(my_spaceship->getWeaponStorage(EMissileWeapons(n))) + " / " + string(my_spaceship->getWeaponStorageMax(EMissileWeapons(n))));
     }
     model->setModel(cargo->getModel());
 }

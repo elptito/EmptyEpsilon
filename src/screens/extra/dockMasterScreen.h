@@ -26,14 +26,20 @@ class DockMasterScreen : public GuiOverlay
     int index = 0;
     GuiLabel *title;
     GuiAutoLayout *sideBar;
-    GuiAutoLayout *weaponsControl;
     GuiAutoLayout* cargoInfo;
     std::vector<GuiKeyValueDisplay*> cargoInfoItems;
     GuiRotatingModelView* model;
-
     GuiProgressbar *energy_bar;
     GuiSlider *energy_slider;
-    GuiSlider *weapons_slider[MW_Count];
+
+    GuiAutoLayout *weaponsControl;
+    GuiElement *weapons_layout_label;
+    GuiElement *weapons_layout[MW_Count];
+    GuiLabel* weapons_stock_ship[MW_Count];
+    GuiLabel* weapons_stock_cargo[MW_Count];
+    GuiButton* weapons_stock_p1[MW_Count];
+    GuiButton* weapons_stock_m1[MW_Count];
+
     GuiButton* launch_button;
     GuiButton* move_button;
     GuiElement* move_dest;
