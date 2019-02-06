@@ -4,6 +4,11 @@ Cargo::Cargo(string multiplayerClassIdentifier) : MultiplayerObject(multiplayerC
 {
     registerMemberReplication(&heat);
     registerMemberReplication(&energy_level);
+    for(int n = 0; n < MW_Count; n++)
+    {
+        registerMemberReplication(&weapon_storage[n]);
+        registerMemberReplication(&weapon_storage_max[n]);
+    }
 }
 
 Cargo::Entries Cargo::getEntries()
@@ -12,6 +17,44 @@ Cargo::Entries Cargo::getEntries()
     result.push_back(std::make_tuple("gui/icons/energy", "energie", int(energy_level)));
     result.push_back(std::make_tuple("gui/icons/heat", "surchauffe", string(heat, 2)));
     //result.push_back(std::make_tuple("gui/icons/hull", "carlingue", string(int(100 * getHealth() / getMaxHealth())) + "%"));
+
+    for(int n = 0; n < MW_Count; n++)
+        if (weapon_storage[n] > 0)
+        {
+            string label = " ";
+            string icon = " ";
+            switch(EMissileWeapons(n))
+            {
+            case MW_None:
+                label = "-";
+                break;
+            case MW_Homing:
+                label = "TCC";
+                icon = "gui/icons/weapon-homing.png";
+                break;
+            case MW_Nuke:
+                label = "TCN";
+                icon = "gui/icons/weapon-nuke.png";
+                break;
+            case MW_Mine:
+                label = "Mine";
+                icon = "gui/icons/weapon-mine.png";
+                break;
+            case MW_EMP:
+                label = "TCI";
+                icon = "gui/icons/weapon-emp.png";
+                break;
+            case MW_HVLI:
+                label = "TBHV";
+                icon = "gui/icons/weapon-hvli.png";
+                break;
+            default:
+                label = "UNK: " + string(n);
+                icon = " ";
+                break;
+            }
+            result.push_back(std::make_tuple(icon, label, weapon_storage[n]));
+        }
 
     return result;
 }
