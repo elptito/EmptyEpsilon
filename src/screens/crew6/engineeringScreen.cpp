@@ -337,7 +337,7 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
                 break;
             case SYS_Drones:
                 addSystemEffect("Portee controle des drones", string(my_spaceship->getDronesControlRange() / 1000.0f,1) + "U");
-                addSystemEffect("Portee radar relai et sondes", string(5000.0 * my_spaceship->getSystemEffectiveness(SYS_Drones)  / 1000.0f,1) + "U");
+                addSystemEffect("Rayon radar relai et sondes", string(5000.0 * my_spaceship->getSystemEffectiveness(SYS_Drones)  / 1000.0f,1) + "U");
                 break;
             default:
                 break;

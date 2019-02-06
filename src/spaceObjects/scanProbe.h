@@ -22,6 +22,8 @@ public:
     void setTarget(sf::Vector2f target) { target_position = target; }
     sf::Vector2f getTarget() { return target_position; }
     void setOwner(P<SpaceObject> owner);
+
+    float getProbeSpeed() {return probe_speed; }
 };
 
 #endif//SCAN_PROBE_H

@@ -40,6 +40,7 @@ private:
     GuiKeyValueDisplay* info_radar_range;
     GuiKeyValueDisplay* info_callsign;
     GuiKeyValueDisplay* info_faction;
+    GuiKeyValueDisplay* info_probe;
 
     //GuiKeyValueDisplay* info_reputation;
     GuiButton* center_screen_button;

@@ -73,6 +73,14 @@ void ScanProbe::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, flo
     float size = 0.3;
     object_sprite.setScale(size, size);
     window.draw(object_sprite);
+
+    sf::VertexArray a(sf::Lines, 2);
+    a[0].position = position;
+    a[1].position = position + (target_position - getPosition()) * scale;
+    a[0].color = sf::Color(255, 255, 255, 32);
+    float distance = sf::length(position - target_position);
+    if (distance > 1000.0)
+        window.draw(a);
 }
 
 void ScanProbe::setOwner(P<SpaceObject> owner)

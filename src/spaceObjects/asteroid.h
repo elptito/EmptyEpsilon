@@ -22,7 +22,7 @@ public:
     void setSize(float new_size);
     void setModel(int model_number);
 
-    virtual string getExportLine() { return "Asteroid():setPosition(" + string(getPosition().x, 0) + ", " + string(getPosition().y, 0) + ")"; }
+    virtual string getExportLine() { return "Asteroid():setPosition(" + string(getPosition().x, 0) + ", " + string(getPosition().y, 0) + "):setCallSign(" + getCallSign() + ")"; }
 };
 
 class VisualAsteroid : public SpaceObject
