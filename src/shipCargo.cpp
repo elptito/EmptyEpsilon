@@ -25,6 +25,11 @@ ShipCargo::ShipCargo(P<ShipTemplate> ship_template) : ShipCargo()
     for(int n=0; n<SYS_COUNT; n++) {
         systems_health[n] = 1;
     }
+    for(int n=0; n < MW_Count; n++)
+    {
+        setWeaponStorage(EMissileWeapons(n), ship_template->weapon_storage[n]);
+        setWeaponStorageMax(EMissileWeapons(n), ship_template->weapon_storage[n]);
+    }
 }
 
 ShipCargo::ShipCargo(P<SpaceShip> ship) : ShipCargo()
@@ -40,6 +45,11 @@ ShipCargo::ShipCargo(P<SpaceShip> ship) : ShipCargo()
     hull_strength = ship->getHull();
     for(int n=0; n<SYS_COUNT; n++) {
         systems_health[n] = ship->systems[n].health;
+    }
+    for(int n=0; n < MW_Count; n++)
+    {
+        setWeaponStorage(EMissileWeapons(n), ship->weapon_storage[n]);
+        setWeaponStorageMax(EMissileWeapons(n), ship->weapon_storage_max[n]);
     }
 }
 
@@ -96,6 +106,11 @@ bool ShipCargo::onLaunch(Dock &source)
             for (unsigned int n = 0; n < SYS_COUNT; n++)
                 if (ship->hasSystem(ESystem(n)))
                     ship->addHeat(ESystem(n), getHeat() / systemsCount);
+            for(int n = 0; n < MW_Count; n++)
+            {
+                ship->weapon_storage[n] = getWeaponStorage(EMissileWeapons(n));
+                ship->weapon_storage_max[n] = getWeaponStorageMax(EMissileWeapons(n));
+            }
             return true;
         }
     }
