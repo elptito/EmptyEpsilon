@@ -152,11 +152,11 @@ DockMasterScreen::DockMasterScreen(GuiContainer *owner)
 
     weapons_layout_label = new GuiAutoLayout(table_weapons, "WEAPONS_LAYOUT_LABEL", GuiAutoLayout::LayoutVerticalColumns);
     weapons_layout_label -> setSize(GuiElement::GuiSizeMax, 40);
-    (new GuiLabel(weapons_layout_label, "", "Missile", 30));
-    (new GuiLabel(weapons_layout_label, "", "Station", 30));
-    (new GuiLabel(weapons_layout_label, "", "Drone", 30));
-    (new GuiLabel(weapons_layout_label, "", " ", 30));
-    (new GuiLabel(weapons_layout_label, "", " ", 30));
+    (new GuiLabel(weapons_layout_label, "", "Missile", 20));
+    (new GuiLabel(weapons_layout_label, "", "Station", 20));
+    (new GuiLabel(weapons_layout_label, "", "Drone", 20));
+    (new GuiLabel(weapons_layout_label, "", " ", 20));
+    (new GuiLabel(weapons_layout_label, "", " ", 20));
 
     for(int n=0; n<MW_Count; n++)
     {
@@ -166,9 +166,9 @@ DockMasterScreen::DockMasterScreen(GuiContainer *owner)
 
         (new GuiLabel(weapons_layout[n], "", getMissileWeaponName(EMissileWeapons(n)), 20))->setSize(75, 30);
 
-        weapons_stock_ship[n] = new GuiLabel(weapons_layout[n],"","0/20",30);
+        weapons_stock_ship[n] = new GuiLabel(weapons_layout[n],"","0/20",20);
         weapons_stock_ship[n]->setPosition(75,0)->setSize(75, 30);
-        weapons_stock_cargo[n] = new GuiLabel(weapons_layout[n],"","0/20",30);
+        weapons_stock_cargo[n] = new GuiLabel(weapons_layout[n],"","0/20",20);
         weapons_stock_cargo[n]->setPosition(150,0)->setSize(75, 30);
 
         weapons_stock_p1[n] = new GuiButton(weapons_layout[n],"","+ 1", [this, n]() {
