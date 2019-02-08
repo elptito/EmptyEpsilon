@@ -219,6 +219,8 @@ string getDockTypeName(EDockType dockType)
         return "Lanceur";
     case Dock_Energy:
         return "Energie";
+    case Dock_Weapons:
+        return "Missiles";
     case Dock_Thermic:
         return "Thermique";
     case Dock_Repair:

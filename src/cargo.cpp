@@ -2,6 +2,7 @@
 
 Cargo::Cargo(string multiplayerClassIdentifier) : MultiplayerObject(multiplayerClassIdentifier), energy_level(0), heat(0)
 {
+    registerMemberReplication(&callsign);
     registerMemberReplication(&heat);
     registerMemberReplication(&energy_level);
     for(int n = 0; n < MW_Count; n++)

@@ -5,6 +5,7 @@
 #include "shipTemplate.h"
 #include "cargo.h"
 
+//class ShipCargo;
 class ShipTemplate;
 class SpaceShip;
 
@@ -21,7 +22,7 @@ public:
   ShipCargo(P<ShipTemplate> ship_template);
   ShipCargo(P<SpaceShip> cargo);
 
-  Cargo::Entries getEntries();
+  ShipCargo::Entries getEntries();
   string getCallSign() { return callsign; }
   P<ShipTemplate> getTemplate() { return ShipTemplate::getTemplate(template_name); }
   float getMaxEnergy() { return getTemplate()->energy_storage_amount; }

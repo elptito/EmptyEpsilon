@@ -1,4 +1,5 @@
 #include "shipCargo.h"
+#include "cargo.h"
 #include "spaceObjects/spaceship.h"
 #include "spaceObjects/playerSpaceship.h"
 #include "gameGlobalInfo.h"
@@ -117,9 +118,10 @@ bool ShipCargo::onLaunch(Dock &source)
     return false;
 }
 
-Cargo::Entries ShipCargo::getEntries()
+ShipCargo::Entries ShipCargo::getEntries()
 {
-    Cargo::Entries result = Cargo::getEntries();
+//    ShipCargo::Entries result = Cargo::getEntries();
+    ShipCargo::Entries result;
     P<ShipTemplate> ship_template = ShipTemplate::getTemplate(template_name);
     if (ship_template)
     {

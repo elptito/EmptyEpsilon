@@ -15,6 +15,7 @@ public:
   typedef std::vector<std::tuple<string, string, string>> Entries;
 
 private:
+  string callsign;
   float heat;
   float energy_level;
   int weapon_storage[MW_Count];
@@ -25,6 +26,7 @@ public:
 
   virtual Entries getEntries();
 
+  virtual string getCallSign() { return callsign; }
   virtual float getEnergy() { return energy_level; }
   virtual void setEnergy(float amount) { this->energy_level = amount; }
   virtual float getHeat() { return heat; }

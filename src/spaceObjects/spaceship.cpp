@@ -282,6 +282,8 @@ void SpaceShip::applyTemplateValues()
         docks[droneIdx].setDockType(Dock_Launcher);
     for (int i = 0; droneIdx < max_docks_count && i < ship_template->energy_dock_count; i++, droneIdx++)
         docks[droneIdx].setDockType(Dock_Energy);
+    for (int i = 0; droneIdx < max_docks_count && i < ship_template->weapons_dock_count; i++, droneIdx++)
+        docks[droneIdx].setDockType(Dock_Weapons);
     for (int i = 0; droneIdx < max_docks_count && i < ship_template->thermic_dock_count; i++, droneIdx++)
         docks[droneIdx].setDockType(Dock_Thermic);
     for (int i = 0; droneIdx < max_docks_count && i < ship_template->repair_dock_count; i++, droneIdx++)

@@ -13,6 +13,7 @@ enum EDockType
 {
     Dock_Launcher,
     Dock_Energy,
+    Dock_Weapons,
     Dock_Thermic,
     Dock_Repair,
     Dock_Stock,
