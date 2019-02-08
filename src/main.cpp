@@ -120,11 +120,13 @@ int main(int argc, char** argv)
         string mod = PreferencesManager::get("mod");
         if (getenv("HOME"))
         {
-            new DirectoryResourceProvider(string(getenv("HOME")) + "/.emptyepsilon/resources/mods/" + mod);
-            PackResourceProvider::addPackResourcesForDirectory(string(getenv("HOME")) + "/.emptyepsilon/resources/mods/" + mod);
+            new DirectoryResourceProvider(string(getenv("HOME")) + "/.emptyepsilon/resources/mods/" + mod + "/resources/");
+            new DirectoryResourceProvider(string(getenv("HOME")) + "/.emptyepsilon/resources/mods/" + mod + "/scripts/");
+            PackResourceProvider::addPackResourcesForDirectory(string(getenv("HOME")) + "/.emptyepsilon/resources/mods/" + mod + "/packs/");
         }
-        new DirectoryResourceProvider("resources/mods/" + mod);
-        PackResourceProvider::addPackResourcesForDirectory("resources/mods/" + mod);
+        new DirectoryResourceProvider("resources/mods/" + mod + "/resources/");
+        new DirectoryResourceProvider("resources/mods/" + mod + "/scripts/");
+        PackResourceProvider::addPackResourcesForDirectory("resources/mods/" + mod + "/packs/");
     }
 
 #ifdef RESOURCE_BASE_DIR
@@ -225,11 +227,13 @@ int main(int argc, char** argv)
     if (PreferencesManager::get("disable_shaders").toInt())
         PostProcessor::setEnable(false);
 
-    P<ResourceStream> main_font_stream = getResourceStream("gui/fonts/BebasNeue Regular.otf");
+//    P<ResourceStream> main_font_stream = getResourceStream("gui/fonts/BebasNeue Regular.otf");
+    P<ResourceStream> main_font_stream = getResourceStream("gui/fonts/" + PreferencesManager::get("font_regular", "BebasNeue Regular.otf"));
     main_font = new sf::Font();
     main_font->loadFromStream(**main_font_stream);
 
-    P<ResourceStream> bold_font_stream = getResourceStream("gui/fonts/BebasNeue Bold.otf");
+//    P<ResourceStream> bold_font_stream = getResourceStream("gui/fonts/BebasNeue Bold.otf");
+    P<ResourceStream> bold_font_stream = getResourceStream("gui/fonts/" + PreferencesManager::get("font_bold", "BebasNeue Bold.otf"));
     bold_font = new sf::Font();
     bold_font->loadFromStream(**bold_font_stream);
 

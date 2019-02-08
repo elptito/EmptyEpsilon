@@ -251,8 +251,8 @@ void Planet::draw3D()
             planet_mesh[level_of_detail] = new Mesh(planet_mesh_generator.vertices);
         }
         sf::Shader* shader = ShaderManager::getShader("planetShader");
-        shader->setParameter("baseMap", *textureManager.getTexture(planet_texture));
-        shader->setParameter("atmosphereColor", atmosphere_color);
+        shader->setUniform("baseMap", *textureManager.getTexture(planet_texture));
+        shader->setUniform("atmosphereColor", (sf::Glsl::Vec4)atmosphere_color);
         sf::Shader::bind(shader);
         planet_mesh[level_of_detail]->render();
     }
@@ -284,15 +284,15 @@ void Planet::draw3DTransparent()
             planet_mesh[level_of_detail] = new Mesh(planet_mesh_generator.vertices);
         }
         sf::Shader* shader = ShaderManager::getShader("planetShader");
-        shader->setParameter("baseMap", *textureManager.getTexture(cloud_texture));
-        shader->setParameter("atmosphereColor", sf::Color(0,0,0));
+        shader->setUniform("baseMap", *textureManager.getTexture(cloud_texture));
+        shader->setUniform("atmosphereColor", (sf::Glsl::Vec4)sf::Color(0,0,0));
         sf::Shader::bind(shader);
         planet_mesh[level_of_detail]->render();
         glPopMatrix();
     }
     if (atmosphere_texture != "" && atmosphere_size > 0)
     {
-        ShaderManager::getShader("billboardShader")->setParameter("textureMap", *textureManager.getTexture(atmosphere_texture));
+        ShaderManager::getShader("billboardShader")->setUniform("textureMap", *textureManager.getTexture(atmosphere_texture));
         sf::Shader::bind(ShaderManager::getShader("billboardShader"));
         glColor4f(atmosphere_color.r / 255.0f, atmosphere_color.g / 255.0f, atmosphere_color.b / 255.0f, atmosphere_size * 2.0f);
         glBegin(GL_QUADS);
