@@ -207,6 +207,7 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
             oxygen_display->setColor(sf::Color::Red);
         else
             oxygen_display->setColor(sf::Color::White);
+        oxygen_display->setVisible(my_spaceship->getOxygenMaxTotal() > 0);
 
         for(int n=0; n<SYS_COUNT; n++)
         {

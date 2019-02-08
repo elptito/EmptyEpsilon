@@ -33,6 +33,8 @@ void GuiImpulseControls::onDraw(sf::RenderTarget& window)
         label->setValue(string(int(target_spaceship->current_impulse * 100)) + "%");
         slider->setValue(target_spaceship->impulse_request);
         soundManager->setMusicVolume(abs(int(target_spaceship->current_impulse * 100)/2+10));
+
+        setVisible(target_spaceship->hasSystem(SYS_Impulse));
     }
 }
 

@@ -130,8 +130,13 @@ void HelmsScreen::onDraw(sf::RenderTarget& window)
 {
     if (my_spaceship)
     {
-        energy_display->setValue(string(int(my_spaceship->energy_level)));
-        heading_display->setValue(string(my_spaceship->getHeading(), 1));
+        energy_display->setValue(string(int(my_spaceship->energy_level/my_spaceship->max_energy_level * 100)) + "%");
+        if (my_spaceship->energy_level < 100)
+            energy_display->setColor(sf::Color::Red);
+        else
+            energy_display->setColor(sf::Color::White);
+
+        heading_display->setValue(string(my_spaceship->getHeading(), 1) + "°");
         float velocity = sf::length(my_spaceship->getVelocity()) / 1000 * 60;
         velocity_display->setValue(string(velocity, 1) + DISTANCE_UNIT_1K + "/min");
 

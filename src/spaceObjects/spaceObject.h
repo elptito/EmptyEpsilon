@@ -240,6 +240,7 @@ public:
     float getOxygenPoints(int index = 0);
     float getOxygenRate(int index = 0);
     float getOxygenTotal();
+    float getOxygenMaxTotal();
     bool takeOxygenPoints(float amount, int index = 0);
     void removeOxygenPoints(float amount, int index = 0);
     void addOxygenPoints(float amount, int index = 0);

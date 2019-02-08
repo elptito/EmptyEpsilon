@@ -77,6 +77,7 @@ REGISTER_SCRIPT_CLASS_NO_CREATE(SpaceObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getOxygenPoints);
     /// Return the current total of oxygen points.
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getOxygenTotal);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getOxygenMaxTotal);
     /// Take a certain amount of oxygen points, returns true when there are enough points to take. Returns false when there are not enough points and does not lower the points.
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, takeOxygenPoints);
     /// Add a certain amount of Oxygen points.
@@ -521,7 +522,13 @@ float SpaceObject::getOxygenTotal()
         oxygen_total += (oxygen_points[n] / oxygen_max[n]) / oxygen_zones;
     return oxygen_total;
 }
-
+float SpaceObject::getOxygenMaxTotal()
+{
+    float oxygen_max_total = 0.0;
+    for(int n=0; n<oxygen_zones; n++)
+        oxygen_max_total += oxygen_max[n];
+    return oxygen_max_total;
+}
 bool SpaceObject::takeOxygenPoints(float amount,int index)
 {
 	if (oxygen_points[index] < amount)

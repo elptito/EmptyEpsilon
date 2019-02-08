@@ -13,14 +13,16 @@
 PowerManagementScreen::PowerManagementScreen(GuiContainer* owner)
 : GuiOverlay(owner, "POWER_MANAGEMENT_SCREEN", colorConfig.background)
 {
-    GuiAutoLayout* layout = new GuiAutoLayout(this, "", GuiAutoLayout::LayoutHorizontalLeftToRight);
+//    GuiAutoLayout* layout = new GuiAutoLayout(this, "", GuiAutoLayout::LayoutHorizontalLeftToRight);
+    GuiAutoLayout* layout = new GuiAutoLayout(this, "", GuiAutoLayout::LayoutVerticalColumns);
     layout->setPosition(20, 50, ATopLeft)->setSize(GuiElement::GuiSizeMax, 400);
     for(int n=0; n<SYS_COUNT; n++)
     {
         if (n == 5)
         {
             //Start the 2nd row after 4 elements.
-            layout = new GuiAutoLayout(this, "", GuiAutoLayout::LayoutHorizontalLeftToRight);
+//            layout = new GuiAutoLayout(this, "", GuiAutoLayout::LayoutHorizontalLeftToRight);
+            layout = new GuiAutoLayout(this, "", GuiAutoLayout::LayoutVerticalColumns);
             layout->setPosition(20, 450, ATopLeft)->setSize(GuiElement::GuiSizeMax, 400);
         }
 
@@ -28,10 +30,11 @@ PowerManagementScreen::PowerManagementScreen(GuiContainer* owner)
         systems[n].box = box;
         box->setSize(290, 400);
 
-        (new GuiLabel(box, "", getSystemName(ESystem(n)), 30))->addBackground()->setAlignment(ACenter)->setPosition(0, 0, ATopLeft)->setSize(290, 50);
+//        (new GuiLabel(box, "", getSystemName(ESystem(n)), 30))->addBackground()->setAlignment(ACenter)->setPosition(0, 0, ATopLeft)->setSize(290, 50);
+        (new GuiLabel(box, "", getSystemName(ESystem(n)), 30))->addBackground()->setAlignment(ACenter)->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, 50);
         (new GuiLabel(box, "", "Puissance", 30))->setVertical()->setAlignment(ACenterLeft)->setPosition(20, 50, ATopLeft)->setSize(30, 340);
         (new GuiLabel(box, "", "Refroidissement", 30))->setVertical()->setAlignment(ACenterLeft)->setPosition(100, 50, ATopLeft)->setSize(30, 340);
-        (new GuiLabel(box, "", "Heat", 30))->setVertical()->setAlignment(ACenterLeft)->setPosition(180, 50, ATopLeft)->setSize(30, 340);
+        (new GuiLabel(box, "", "Chaleur", 30))->setVertical()->setAlignment(ACenterLeft)->setPosition(180, 50, ATopLeft)->setSize(30, 340);
 
         systems[n].power_bar = new GuiProgressbar(box, "", 0.0, 3.0, 1.0);
         systems[n].power_bar->setDrawBackground(false)->setPosition(52.5, 60, ATopLeft)->setSize(50, 320);
