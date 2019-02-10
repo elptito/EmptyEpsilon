@@ -6,7 +6,7 @@
 #include "spaceObjects/wormHole.h"
 
 GuiOpenCommsButton::GuiOpenCommsButton(GuiContainer* owner, string id, TargetsContainer* targets)
-: GuiButton(owner, id, "Ouvrir Comms", [this]() {
+: GuiButton(owner, id, "Communications", [this]() {
     if (my_spaceship && this->targets->get())
         my_spaceship->commandOpenTextComm(this->targets->get());
 }), targets(targets)
