@@ -15,8 +15,8 @@
 				<Compiler>
 					<Add option="-g" />
 					<Add option="-DDEBUG" />
-					<Add directory="../SFML-2.5.1/include" />
-					<Add directory="../drmingw-0.7.6-win32/include" />
+					<Add directory="../SFML/include" />
+					<Add directory="../drmingw/include" />
 				</Compiler>
 				<Linker>
 					<Add library="sfml-window-d" />
@@ -30,8 +30,8 @@
 					<Add library="iphlpapi" />
 					<Add library="wsock32" />
 					<Add library="exchndl" />
-					<Add directory="../SFML-2.5.1/lib" />
-					<Add directory="../drmingw-0.7.6-win32/lib" />
+					<Add directory="../SFML/lib" />
+					<Add directory="../drmingw/lib" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -43,8 +43,8 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-g" />
-					<Add directory="../SFML-2.5.1/include" />
-					<Add directory="../drmingw-0.7.6-win32/include" />
+					<Add directory="../SFML/include" />
+					<Add directory="../drmingw/include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -59,8 +59,8 @@
 					<Add library="iphlpapi" />
 					<Add library="wsock32" />
 					<Add library="exchndl" />
-					<Add directory="../SFML-2.5.1/lib" />
-					<Add directory="../drmingw-0.7.6-win32/lib" />
+					<Add directory="../SFML/lib" />
+					<Add directory="../drmingw/lib" />
 				</Linker>
 			</Target>
 			<Target title="Linux Debug">
@@ -89,8 +89,8 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
-					<Add directory="../SFML-2.5.1/include" />
-					<Add directory="../drmingw-0.7.6-win32/include" />
+					<Add directory="../SFML/include" />
+					<Add directory="../drmingw/include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -101,8 +101,8 @@
 					<Add library="sfml-network" />
 					<Add library="GL" />
 					<Add library="GLU" />
-					<Add directory="../SFML-2.5.1/lib" />
-					<Add directory="../drmingw-0.7.6-win32/lib" />
+					<Add directory="../SFML/lib" />
+					<Add directory="../drmingw/lib" />
 				</Linker>
 			</Target>
 			<Target title="MacOS Release">
@@ -152,7 +152,7 @@
 					<Add option="-O2" />
 					<Add option="-pg" />
 					<Add option="-g" />
-					<Add directory="../SFML-2.5.1/include" />
+					<Add directory="../SFML/include" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg -lgmon" />
@@ -166,7 +166,7 @@
 					<Add library="glu32" />
 					<Add library="iphlpapi" />
 					<Add library="wsock32" />
-					<Add directory="../SFML-2.5.1/lib" />
+					<Add directory="../SFML/lib" />
 				</Linker>
 			</Target>
 		</Build>
@@ -177,16 +177,16 @@
 			<Add option='-DWINDOW_TITLE=\&quot;EmptyEpsilon\&quot;' />
 			<Add directory="../SeriousProton/src" />
 			<Add directory="src" />
-			<Add directory="../SFML-2.5.1/lib" />
-			<Add directory="../SFML-2.5.1/include" />
-			<Add directory="../drmingw-0.9.1-win32/lib" />
-			<Add directory="../drmingw-0.9.1-win32/include" />
+			<Add directory="../SFML/lib" />
+			<Add directory="../SFML/include" />
+			<Add directory="../drmingw/lib" />
+			<Add directory="../drmingw/include" />
 		</Compiler>
 		<Linker>
-			<Add directory="../SFML-2.5.1/lib" />
-			<Add directory="../drmingw-0.9.1-win32/lib" />
-			<Add directory="../SFML-2.5.1/include" />
-			<Add directory="../drmingw-0.9.1-win32/include" />
+			<Add directory="../SFML/lib" />
+			<Add directory="../drmingw32/lib" />
+			<Add directory="../SFML/include" />
+			<Add directory="../drmingw/include" />
 		</Linker>
 		<Unit filename="../SeriousProton/src/Box2D/Box2D.h" />
 		<Unit filename="../SeriousProton/src/Box2D/Collision/Shapes/b2ChainShape.cpp" />

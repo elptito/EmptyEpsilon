@@ -45,11 +45,13 @@ private:
     //GuiKeyValueDisplay* info_reputation;
     GuiButton* center_screen_button;
     GuiSelector* station_selector;
+    GuiSelector* probe_selector;
     GuiAutoLayout* option_buttons;
 //    GuiButton* comm_icon;
     GuiButton* hack_target_button;
     GuiToggleButton* link_to_science_button;
     GuiToggleButton* link_to_3D_port_button;
+    GuiAutoLayout* waypoints_layout;
     GuiButton* add_waypoint_button;
     GuiButton* delete_waypoint_button;
     GuiButton* launch_probe_button;

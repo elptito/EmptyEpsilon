@@ -136,14 +136,32 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
     center_screen_button->setSize(GuiElement::GuiSizeMax, 50);
     center_screen_button->setIcon("gui/icons/lock");;
 
+    // Manage waypoints.
+    waypoints_layout = new GuiAutoLayout(view_controls, "WAYPOINTS_LAYOUT", GuiAutoLayout::LayoutHorizontalLeftToRight);
+    waypoints_layout -> setSize(GuiElement::GuiSizeMax, 50);
+
+    (new GuiLabel(waypoints_layout, "", "Marqueur", 30))->setAlignment(ACenter)->setSize(150, 50);
+
+    add_waypoint_button = new GuiButton(waypoints_layout, "WAYPOINT_PLACE_BUTTON", "+", [this]() {
+        mode = WaypointPlacement;
+        option_buttons->hide();
+    });
+    add_waypoint_button->setSize(50, 50);
+
+    delete_waypoint_button = new GuiButton(waypoints_layout, "WAYPOINT_DELETE_BUTTON", "-", [this]() {
+        if (my_spaceship && targets.getWaypointIndex() >= 0)
+        {
+            my_spaceship->commandRemoveWaypoint(targets.getWaypointIndex());
+        }
+    });
+    delete_waypoint_button->setSize(50, 50);
+
     // Option buttons for comms, waypoints, and probes.
     option_buttons = new GuiAutoLayout(this, "BUTTONS", GuiAutoLayout::LayoutVerticalTopToBottom);
     option_buttons->setPosition(20, 50, ATopLeft)->setSize(250, GuiElement::GuiSizeMax);
 
-    (new GuiLabel(option_buttons, "LABEL_COM", "Communication", 30))->setSize(GuiElement::GuiSizeMax, 50);
-
     // Open comms button.
-    (new GuiOpenCommsButton(option_buttons, "OPEN_COMMS_BUTTON", &targets))->setSize(GuiElement::GuiSizeMax, 40);
+    (new GuiOpenCommsButton(option_buttons, "OPEN_COMMS_BUTTON", &targets))->setSize(GuiElement::GuiSizeMax, 50);
 
     // Hack target
     hack_target_button = new GuiButton(option_buttons, "HACK_TARGET", "Invite de commande", [this](){
@@ -155,36 +173,19 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
             hacking_dialog->open();
         }
     });
-    hack_target_button->setSize(GuiElement::GuiSizeMax, 40);
+    hack_target_button->setSize(GuiElement::GuiSizeMax, 50);
     hack_target_button->enable();
     hack_target_button->setIcon("gui/icons/hack");
 
-    (new GuiLabel(option_buttons, "LABEL_WP", "Waypoints", 30))->setSize(GuiElement::GuiSizeMax, 50);
-
-    // Manage waypoints.
-    add_waypoint_button = new GuiButton(option_buttons, "WAYPOINT_PLACE_BUTTON", "Placer Marqueur", [this]() {
-        mode = WaypointPlacement;
-        option_buttons->hide();
-    });
-    add_waypoint_button->setIcon("gui/icons/waypoint")->setSize(GuiElement::GuiSizeMax, 40);
-
-    delete_waypoint_button = new GuiButton(option_buttons, "WAYPOINT_DELETE_BUTTON", "Supprimer Marqueur", [this]() {
-        if (my_spaceship && targets.getWaypointIndex() >= 0)
-        {
-            my_spaceship->commandRemoveWaypoint(targets.getWaypointIndex());
-        }
-    });
-    delete_waypoint_button->setSize(GuiElement::GuiSizeMax, 40);
-    delete_waypoint_button->setIcon("gui/icons/waypoint");
-
-    (new GuiLabel(option_buttons, "LABEL_PROBES", "Sondes", 30))->setSize(GuiElement::GuiSizeMax, 50);
+//    (new GuiLabel(option_buttons, "LABEL_PROBES", "Sondes", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(option_buttons, "", " ", 30))->setSize(GuiElement::GuiSizeMax, 50);
 
     // Launch probe button.
-    launch_probe_button = new GuiButton(option_buttons, "LAUNCH_PROBE_BUTTON", "Lancer sonde", [this]() {
+    launch_probe_button = new GuiButton(option_buttons, "LAUNCH_PROBE_BUTTON", "sonde", [this]() {
         mode = LaunchProbe;
         option_buttons->hide();
     });
-    launch_probe_button->setSize(GuiElement::GuiSizeMax, 40);
+    launch_probe_button->setSize(GuiElement::GuiSizeMax, 50);
     launch_probe_button->setIcon("gui/icons/probe");
 
     // Rechargement probe
@@ -199,7 +200,7 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
         else
             my_spaceship->commandSetScienceLink(-1);
     });
-    link_to_science_button->setSize(GuiElement::GuiSizeMax, 40);
+    link_to_science_button->setSize(GuiElement::GuiSizeMax, 50);
     link_to_science_button->setIcon("gui/icons/station-science");
 
     // Link probe to 3D port button.
@@ -215,13 +216,18 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
     // Station selector
     station_selector = new GuiSelector(option_buttons, "SPACE_STATION_SELECTOR", [this](int index, string value) {
         P<SpaceObject> obj = space_object_list[value.toInt()];
-//        P<SpaceStation> station = obj;
-//        if (station)
-//        {
-//            target = station;
-//            radar->setViewPosition(station->getPosition());
-//            targets.set(station);
-//        }
+        P<SpaceStation> station = obj;
+        if (station)
+        {
+            target = station;
+            radar->setViewPosition(station->getPosition());
+            targets.set(station);
+        }
+    });
+    station_selector->setSize(GuiElement::GuiSizeMax, 50);
+
+    probe_selector = new GuiSelector(option_buttons, "PROBE_SELECTOR", [this](int index, string value) {
+        P<SpaceObject> obj = space_object_list[value.toInt()];
         P<ScanProbe> probe = obj;
         if (probe)
         {
@@ -230,7 +236,7 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
             targets.set(probe);
         }
     });
-    station_selector->setSize(GuiElement::GuiSizeMax, 40);
+    probe_selector->setSize(GuiElement::GuiSizeMax, 50);
 
     // Reputation display.
     //info_reputation = new GuiKeyValueDisplay(option_buttons, "INFO_REPUTATION", 0.7, "Reputation:", "");
@@ -238,7 +244,7 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
 
     // Bottom layout.
     GuiAutoLayout* layout = new GuiAutoLayout(this, "", GuiAutoLayout::LayoutVerticalBottomToTop);
-    layout->setPosition(-20, -70, ABottomRight)->setSize(300, GuiElement::GuiSizeMax);
+    layout->setPosition(-20, -70, ABottomRight)->setSize(250, GuiElement::GuiSizeMax);
 
     // Alert level buttons.
     alert_level_button = new GuiToggleButton(layout, "", "Niveau Alerte", [this](bool value)
@@ -395,39 +401,36 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
     if (my_spaceship)
     {
         //info_reputation->setValue(string(my_spaceship->getReputationPoints(), 0));
-        launch_probe_button->setText("Lancer sonde (" + string(my_spaceship->scan_probe_stock) + ")");
+        launch_probe_button->setText("Lancer sonde (" + string(my_spaceship->scan_probe_stock) + "/" + string(my_spaceship->max_scan_probes) + ")");
 
         // Add and remove entries from the CPU ship and space station list.
         int n = 0;
-        station_selector->hide();
-//        foreach(SpaceObject, obj, space_object_list)
-//        {
-//            P<SpaceStation> station = obj;
-//            if (station && my_spaceship->isFriendly(station) && station->isFriendly(my_spaceship) && station->getPosition() - my_spaceship->getPosition() < 1000000.0f)
-//            {
-//                station_selector->show();
-//                if (station_selector->indexByValue(string(n)) == -1)
-//                    station_selector->addEntry(station->getCallSign(), string(n));
-//            }else{
-//                if (station_selector->indexByValue(string(n)) != -1)
-//                    station_selector->removeEntry(station_selector->indexByValue(string(n)));
-//            }
-//            n += 1;
-//        }
         foreach(SpaceObject, obj, space_object_list)
         {
             P<ScanProbe> probe = obj;
-            if (probe && probe->owner_id == my_spaceship->getMultiplayerId())
+            P<SpaceStation> station = obj;
+
+            if (station && my_spaceship->isFriendly(station) && station->isFriendly(my_spaceship) && station->getPosition() - my_spaceship->getPosition() < 1000000.0f)
             {
-                station_selector->show();
                 if (station_selector->indexByValue(string(n)) == -1)
-                    station_selector->addEntry(probe->getCallSign(), string(n));
+                    station_selector->addEntry(station->getTypeName() + " " + station->getCallSign(), string(n));
             }else{
+                probe_selector->show();
                 if (station_selector->indexByValue(string(n)) != -1)
                     station_selector->removeEntry(station_selector->indexByValue(string(n)));
             }
-            n += 1;
+            if (probe && probe->owner_id == my_spaceship->getMultiplayerId())
+            {
+                if (probe_selector->indexByValue(string(n)) == -1)
+                    probe_selector->addEntry(probe->getCallSign(), string(n));
+            }else{
+                if (probe_selector->indexByValue(string(n)) != -1)
+                    probe_selector->removeEntry(probe_selector->indexByValue(string(n)));
+            }
+        n += 1;
         }
+        station_selector->setVisible(station_selector->entryCount()>0);
+        probe_selector->setVisible(probe_selector->entryCount()>0);
     }
 
     if (targets.getWaypointIndex() >= 0)
