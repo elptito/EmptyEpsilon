@@ -320,6 +320,7 @@ void DockMasterScreen::onDraw(sf::RenderTarget &window)
         }
 
         Dock &dockData = my_spaceship->docks[index];
+        P<Cargo> cargo = dockData.getCargo();
         action_move_selector->setSelectionIndex(action_move_selector->indexByValue(string(dockData.move_target_index)));
 
         switch (dockData.state)
@@ -414,8 +415,9 @@ void DockMasterScreen::displayDroneDetails(Dock &dockData)
     for(int n = 0; n < MW_Count; n++)
     {
         weapons_stock_cargo[n]->setText(string(cargo->getWeaponStorage(EMissileWeapons(n))) + " / " + string(cargo->getWeaponStorageMax(EMissileWeapons(n))));
-        if (my_spaceship)
-            weapons_stock_ship[n]->setText(string(my_spaceship->getWeaponStorage(EMissileWeapons(n))) + " / " + string(my_spaceship->getWeaponStorageMax(EMissileWeapons(n))));
+        weapons_stock_ship[n]->setText(string(my_spaceship->getWeaponStorage(EMissileWeapons(n))) + " / " + string(my_spaceship->getWeaponStorageMax(EMissileWeapons(n))));
+        weapons_stock_m1[n]->setEnable(cargo->getWeaponStorageMax(EMissileWeapons(n)) > 0 && my_spaceship->getWeaponStorageMax(EMissileWeapons(n)) > 0);
+        weapons_stock_p1[n]->setEnable(cargo->getWeaponStorageMax(EMissileWeapons(n)) > 0 && my_spaceship->getWeaponStorageMax(EMissileWeapons(n)) > 0);
     }
     model->setModel(cargo->getModel());
 }

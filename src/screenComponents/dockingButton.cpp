@@ -88,10 +88,14 @@ P<SpaceObject> GuiDockingButton::findDockingTarget()
 {
     PVector<Collisionable> obj_list = CollisionManager::queryArea(target_spaceship->getPosition() - sf::Vector2f(1000, 1000), target_spaceship->getPosition() + sf::Vector2f(1000, 1000));
     P<SpaceObject> dock_object;
+    P<SpaceShip> dock_ship;
+    P<SpaceStation> dock_station;
     foreach(Collisionable, obj, obj_list)
     {
         dock_object = obj;
-        if (dock_object && dock_object != target_spaceship && dock_object->canBeDockedBy(target_spaceship) && (dock_object->getPosition() - target_spaceship->getPosition()) < 1000.0f + dock_object->getRadius())
+        dock_ship = obj;
+        dock_station = obj;
+        if (dock_object && (!dock_ship || dock_ship->docking_state == DS_NotDocking) && dock_object != target_spaceship && dock_object->canBeDockedBy(target_spaceship) && (dock_object->getPosition() - target_spaceship->getPosition()) < 1000.0f + dock_object->getRadius())
             break;
         dock_object = NULL;
     }
