@@ -86,7 +86,7 @@ DockMasterScreen::DockMasterScreen(GuiContainer *owner)
                 Dock &dockData = my_spaceship->docks[index];
                 P<Cargo> cargo = dockData.getCargo();
 
-                my_spaceship->addToShipLog("Transfert du drone " + cargo->getCallSign() + " vers le " + docks->getEntryValue(index),colorConfig.log_generic,"docks");
+                my_spaceship->addToShipLog("Transfert du drone " + cargo->getCallSign(),colorConfig.log_generic,"docks");
                 my_spaceship->commandMoveCargo(index);
             }
     });

@@ -242,14 +242,14 @@ GuiTemplateTweak::GuiTemplateTweak(GuiContainer* owner)
 
     // Hull max and state sliders
     (new GuiLabel(right_col, "", "Carlingue max:", 30))->setSize(GuiElement::GuiSizeMax, 50);
-    hull_max_slider = new GuiSlider(right_col, "", 0.0, 2000, 0.0, [this](float value) {
+    hull_max_slider = new GuiSlider(right_col, "", 0.0, 4000, 0.0, [this](float value) {
         target->hull_max = round(value);
         target->hull_strength = std::min(target->hull_strength, target->hull_max);
     });
     hull_max_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
     (new GuiLabel(right_col, "", "Carlingue:", 30))->setSize(GuiElement::GuiSizeMax, 50);
-    hull_slider = new GuiSlider(right_col, "", 0.0, 2000, 0.0, [this](float value) {
+    hull_slider = new GuiSlider(right_col, "", 0.0, 4000, 0.0, [this](float value) {
         target->hull_strength = std::min(roundf(value), target->hull_max);
     });
     hull_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
@@ -289,7 +289,7 @@ GuiShipTweakShields::GuiShipTweakShields(GuiContainer* owner)
     for(int n=0; n<max_shield_count; n++)
     {
         (new GuiLabel(left_col, "", "Bouclier " + string(n + 1) + " max:", 20))->setSize(GuiElement::GuiSizeMax, 30);
-        shield_max_slider[n] = new GuiSlider(left_col, "", 0.0, 1000, 0.0, [this, n](float value) {
+        shield_max_slider[n] = new GuiSlider(left_col, "", 0.0, 2000, 0.0, [this, n](float value) {
 
             target->shield_max[n] = roundf(value);
             target->shield_level[n] = std::min(target->shield_level[n], target->shield_max[n]);
@@ -306,7 +306,7 @@ GuiShipTweakShields::GuiShipTweakShields(GuiContainer* owner)
     for(int n=0; n<max_shield_count; n++)
     {
         (new GuiLabel(right_col, "", "Bouclier " + string(n + 1) + ":", 20))->setSize(GuiElement::GuiSizeMax, 30);
-        shield_slider[n] = new GuiSlider(right_col, "", 0.0, 1000, 0.0, [this, n](float value) {
+        shield_slider[n] = new GuiSlider(right_col, "", 0.0, 2000, 0.0, [this, n](float value) {
             target->shield_level[n] = std::min(roundf(value), target->shield_max[n]);
         });
         shield_slider[n]->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);

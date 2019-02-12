@@ -6,6 +6,8 @@
 #include "screenComponents/alertOverlay.h"
 #include "screenComponents/customShipFunctions.h"
 
+#include "spaceObjects/scanProbe.h"
+
 #include "gui/gui2_overlay.h"
 #include "gui/gui2_autolayout.h"
 #include "gui/gui2_panel.h"
@@ -80,7 +82,20 @@ bool DroneOperatorScreen::isConnectable(P<PlayerSpaceship> ship)
 }
 float DroneOperatorScreen::getConnectionQuality(P<PlayerSpaceship> ship)
 {
-    float rangeFactor = 1 - std::min(1.0f, (length(ship->getPosition() - my_spaceship->getPosition()) / my_spaceship->getDronesControlRange()));
+    float distance_min = length(ship->getPosition() - my_spaceship->getPosition());
+
+//    float rangeFactor = 1 - std::min(1.0f, (length(ship->getPosition() - my_spaceship->getPosition()) / my_spaceship->getDronesControlRange()));
+
+    foreach(SpaceObject, obj, space_object_list)
+    {
+        P<ScanProbe> probe = obj;
+        if (probe && my_spaceship-> getMultiplayerId() == probe->owner_id)
+            if (length(ship->getPosition() - obj->getPosition()) < distance_min)
+                distance_min = length(ship->getPosition() - obj->getPosition());
+    }
+
+    float rangeFactor = 1 - std::min(1.0f, (distance_min / my_spaceship->getDronesControlRange()));
+
     //float droneStateFactor = std::min(1.0f, ship->getSystemEffectiveness(SYS_Drones));
     float droneStateFactor = 1.0f;
     return rangeFactor * droneStateFactor;
