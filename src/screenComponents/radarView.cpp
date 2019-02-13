@@ -482,7 +482,8 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
         foreach(SpaceObject, obj, space_object_list)
         {
 //            if ((!P<SpaceShip>(obj) && !P<SpaceStation>(obj) && !P<WormHole>(obj)) || !obj->isFriendly(my_spaceship))
-            if (!obj->isFriendly(my_spaceship))
+//            if (!obj->isFriendly(my_spaceship))
+//            {
 //                P<ScanProbe> sp = obj;
 //                if (!sp || sp->owner_id != my_spaceship->getMultiplayerId())
 //                {
