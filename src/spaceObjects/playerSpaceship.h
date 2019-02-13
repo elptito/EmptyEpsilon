@@ -58,6 +58,7 @@ public:
 
     // Total coolant
     float max_coolant;
+    float max_per_system = 10.0;
 
     bool has_gravity_sensor;
 	bool has_electrical_sensor;

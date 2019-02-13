@@ -728,7 +728,8 @@ void PlayerSpaceship::setSystemCoolantRequest(ESystem system, float request)
 {
     // Set coolant levels on a system.
     float total_coolant = 0;
-    float max_per_system = 10.0;
+    max_per_system = std::min(max_per_system,max_coolant);
+    float min_per_system = 0.0;
     int cnt = 0;
     for(int n = 0; n < SYS_COUNT; n++)
     {
@@ -746,7 +747,7 @@ void PlayerSpaceship::setSystemCoolantRequest(ESystem system, float request)
             if (n == system) continue;
 
             systems[n].coolant_request *= (max_coolant - request) / total_coolant;
-            systems[n].coolant_request = std::min(systems[n].coolant_request, max_per_system);
+            systems[n].coolant_request = std::max(min_per_system, std::min(systems[n].coolant_request, max_per_system));
         }
     }else{
         if (total_coolant > 0)
@@ -757,11 +758,11 @@ void PlayerSpaceship::setSystemCoolantRequest(ESystem system, float request)
                 if (n == system) continue;
 
                 systems[n].coolant_request *= (max_coolant - request) / total_coolant;
-                systems[n].coolant_request = std::min(systems[n].coolant_request, max_per_system);
+                systems[n].coolant_request = std::max(min_per_system, std::min(systems[n].coolant_request, max_per_system));
             }
         }
     }
-    systems[system].coolant_request = std::min(request, max_per_system);
+    systems[system].coolant_request = std::max(min_per_system, std::min(request, max_per_system));
 }
 
 bool PlayerSpaceship::useEnergy(float amount)
