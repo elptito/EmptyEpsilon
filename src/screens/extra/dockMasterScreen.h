@@ -51,7 +51,7 @@ class DockMasterScreen : public GuiOverlay
     GuiAutoLayout *weapons_layout_label;
 
     GuiAutoLayout *weapons_layout_p1;
-    GuiAutoLayout *weapons_layout[MW_Count];
+    GuiAutoLayout* weapons_layout[MW_Count];
     GuiLabel* weapons_stock_ship[MW_Count];
     GuiLabel* weapons_stock_cargo[MW_Count];
     GuiButton* weapons_stock_p1[MW_Count];

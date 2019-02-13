@@ -20,7 +20,7 @@ Cargo::Entries Cargo::getEntries()
     //result.push_back(std::make_tuple("gui/icons/hull", "carlingue", string(int(100 * getHealth() / getMaxHealth())) + "%"));
 
     for(int n = 0; n < MW_Count; n++)
-        if (weapon_storage[n] > 0)
+        if (weapon_storage_max[n] > 0)
         {
             string label = " ";
             string icon = " ";
@@ -54,7 +54,7 @@ Cargo::Entries Cargo::getEntries()
                 icon = " ";
                 break;
             }
-            result.push_back(std::make_tuple(icon, label, weapon_storage[n]));
+            result.push_back(std::make_tuple(icon, label, string(weapon_storage[n]) + "/" + string(weapon_storage_max[n])));
         }
 
     return result;

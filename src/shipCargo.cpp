@@ -28,7 +28,8 @@ ShipCargo::ShipCargo(P<ShipTemplate> ship_template) : ShipCargo()
     }
     for(int n=0; n < MW_Count; n++)
     {
-        setWeaponStorage(EMissileWeapons(n), ship_template->weapon_storage[n]);
+//        setWeaponStorage(EMissileWeapons(n), ship_template->weapon_storage[n]);
+        setWeaponStorage(EMissileWeapons(n), 0);
         setWeaponStorageMax(EMissileWeapons(n), ship_template->weapon_storage[n]);
     }
 }
