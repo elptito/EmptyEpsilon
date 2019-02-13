@@ -44,8 +44,6 @@ public:
 
     // Coolant change rate
     constexpr static float system_coolant_level_change_per_second = 1.2;
-    // Total coolant
-    constexpr static float max_coolant = 10.0;
     // Overheat subsystem damage rate
     constexpr static float damage_per_second_on_overheat = 0.08f;
     // Base time it takes to perform an action
@@ -57,6 +55,9 @@ public:
     constexpr static int max_self_destruct_codes = 3;
     // Subsystem effectiveness base rates
     static float system_power_user_factor[];
+
+    // Total coolant
+    float max_coolant;
 
     bool has_gravity_sensor;
 	bool has_electrical_sensor;
@@ -204,6 +205,9 @@ public:
     void setEnergyLevelMax(float amount) { max_energy_level = std::max(0.0f, amount); energy_level = std::min(energy_level, max_energy_level); }
     float getEnergyLevel() { return energy_level; }
     float getEnergyLevelMax() { return max_energy_level; }
+
+    void setMaxCoolant(float value) { max_coolant = value; }
+    float getMaxCoolant() { return max_coolant; }
 
     void setScanProbeCount(int amount) { scan_probe_stock = std::max(0, std::min(amount, max_scan_probes)); }
     int getScanProbeCount() { return scan_probe_stock; }

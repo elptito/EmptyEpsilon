@@ -875,6 +875,13 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
     });
     energy_level_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
+    (new GuiLabel(left_col, "", "Total de Coolant:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+
+    max_coolant_slider = new GuiSlider(left_col, "", 0.0, 30, 0.0, [this](float value) {
+        target->max_coolant = value;
+    });
+    max_coolant_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
     // Right column
 
     // Radar Capabilities
@@ -928,30 +935,12 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
 
 void GuiShipTweakPlayer::onDraw(sf::RenderTarget& window)
 {
-    // Update position list.
-//    int position_counter = 0;
-
-    // Update the status of each crew position.
-//    for(int n = 0; n < max_crew_positions; n++)
-//    {
-//        string position_name = getCrewPositionName(ECrewPosition(n));
-//        string position_state = "-";
-//
-//        if (target->hasPlayerAtPosition(ECrewPosition(n)))
-//        {
-//            position_state = "Occupe";
-//            position_counter += 1;
-//        }
-//
-//        position[n]->setValue(position_state);
-//    }
-
-    // Update the total occupied position count.
-//    position_count->setText("Postes occupes: " + string(position_counter));
-
     // Update the ship's energy level.
     energy_level_slider->setValue(target->energy_level);
     max_energy_level_slider->setValue(target->max_energy_level);
+
+    // Update Max of coolant level
+    max_coolant_slider->setValue(target->max_coolant);
 
     // Update reputation points.
     repair_team_slider->setValue(target->getRepairCrewCount());

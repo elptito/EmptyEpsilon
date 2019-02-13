@@ -53,6 +53,9 @@ REGISTER_SCRIPT_SUBCLASS(PlayerSpaceship, SpaceShip)
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getEnergyLevel);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getEnergyLevelMax);
 
+    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setMaxCoolant);
+    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getMaxCoolant);
+
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setScanProbeCount);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getScanProbeCount);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setMaxScanProbeCount);
@@ -238,6 +241,7 @@ PlayerSpaceship::PlayerSpaceship()
     has_gravity_sensor = false;
 	has_electrical_sensor = false;
 	has_biological_sensor = false;
+	max_coolant = 10;
 
     setFactionId(1);
 
@@ -724,6 +728,7 @@ void PlayerSpaceship::setSystemCoolantRequest(ESystem system, float request)
 {
     // Set coolant levels on a system.
     float total_coolant = 0;
+    float max_per_system = 10.0;
     int cnt = 0;
     for(int n = 0; n < SYS_COUNT; n++)
     {
@@ -741,6 +746,7 @@ void PlayerSpaceship::setSystemCoolantRequest(ESystem system, float request)
             if (n == system) continue;
 
             systems[n].coolant_request *= (max_coolant - request) / total_coolant;
+            systems[n].coolant_request = std::min(systems[n].coolant_request, max_per_system);
         }
     }else{
         if (total_coolant > 0)
@@ -751,11 +757,11 @@ void PlayerSpaceship::setSystemCoolantRequest(ESystem system, float request)
                 if (n == system) continue;
 
                 systems[n].coolant_request *= (max_coolant - request) / total_coolant;
+                systems[n].coolant_request = std::min(systems[n].coolant_request, max_per_system);
             }
         }
     }
-
-    systems[system].coolant_request = request;
+    systems[system].coolant_request = std::min(request, max_per_system);
 }
 
 bool PlayerSpaceship::useEnergy(float amount)

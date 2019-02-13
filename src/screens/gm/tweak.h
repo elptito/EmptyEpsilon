@@ -217,6 +217,7 @@ private:
 //    GuiSlider* max_oxygen_point_slider;
     GuiSlider* energy_level_slider;
     GuiSlider* max_energy_level_slider;
+    GuiSlider* max_coolant_slider;
     GuiToggleButton* gravity_toggle;
     GuiToggleButton* electrical_toggle;
     GuiToggleButton* biological_toggle;
