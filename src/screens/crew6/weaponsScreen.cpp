@@ -51,7 +51,7 @@ WeaponsScreen::WeaponsScreen(GuiContainer* owner)
     radar->enableTargetProjections(tube_controls);
 
     lock_aim = new AimLockButton(this, "LOCK_AIM", tube_controls, missile_aim, my_spaceship);
-    lock_aim->setPosition(250, 20, ATopCenter)->setSize(130, 50);
+    lock_aim->setPosition(250, 20, ATopCenter)->setSize(200, 50);
 
     if (gameGlobalInfo->use_beam_shield_frequencies || gameGlobalInfo->use_system_damage)
     {
@@ -98,6 +98,8 @@ void WeaponsScreen::onDraw(sf::RenderTarget& window)
     if (my_spaceship)
     {
         energy_display->setValue(string(int(my_spaceship->energy_level)));
+
+        lock_aim->setVisible(my_spaceship->getWeaponTubeCount() > 0);
 
         targets.set(my_spaceship->getTarget());
         if (targets.get())

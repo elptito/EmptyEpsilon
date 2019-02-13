@@ -183,7 +183,13 @@ void GuiRadarView::drawNoneFriendlyBlockedAreas(sf::RenderTarget& window)
 
         foreach(SpaceObject, obj, space_object_list)
         {
-            if ((P<SpaceShip>(obj) || P<SpaceStation>(obj)) && obj->isFriendly(my_spaceship))
+            if (obj == my_spaceship)
+            {
+                circle.setPosition(radar_screen_center + (obj->getPosition() - getViewPosition()) * getScale());
+                window.draw(circle);
+            }
+//            if ((P<SpaceShip>(obj) || P<SpaceStation>(obj)) && obj->isFriendly(my_spaceship))
+            if ((P<SpaceShip>(obj) || P<SpaceStation>(obj)) && obj->faction_id == my_spaceship->faction_id)
             {
                 circle.setPosition(radar_screen_center + (obj->getPosition() - getViewPosition()) * getScale());
                 window.draw(circle);
@@ -477,15 +483,20 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
         {
 //            if ((!P<SpaceShip>(obj) && !P<SpaceStation>(obj) && !P<WormHole>(obj)) || !obj->isFriendly(my_spaceship))
             if (!obj->isFriendly(my_spaceship))
-            {
-                P<ScanProbe> sp = obj;
-                if (!sp || sp->owner_id != my_spaceship->getMultiplayerId())
-                {
-                    continue;
-                }
-            }
+//                P<ScanProbe> sp = obj;
+//                if (!sp || sp->owner_id != my_spaceship->getMultiplayerId())
+//                {
+//                    continue;
+//                }
+//            }
+            if (obj->faction_id != target_spaceship->faction_id)
+                continue;
+
+            if (!P<PlayerSpaceship>(obj) && !P<SpaceShip>(obj) && !P<SpaceStation>(obj) && !P<ScanProbe>(obj) && !P<WormHole>(obj))
+                continue;
 
             sf::Vector2f position = obj->getPosition();
+            radar_range = 5000.0 * my_spaceship->getSystemEffectiveness(SYS_Drones);
             PVector<Collisionable> obj_list = CollisionManager::queryArea(position - sf::Vector2f(radar_range*100, radar_range*100), position + sf::Vector2f(radar_range*100, radar_range*100));
             foreach(Collisionable, c_obj, obj_list)
             {

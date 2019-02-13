@@ -145,7 +145,7 @@ SinglePilotView::SinglePilotView(GuiContainer* owner, P<PlayerSpaceship> targetS
 
     // Missile lock button near top right of left panel.
     lock_aim = new AimLockButton(this, "LOCK_AIM", tube_controls, missile_aim, target_spaceship);
-    lock_aim->setPosition(250, 70, ATopCenter)->setSize(130, 50);
+    lock_aim->setPosition(150, 70, ATopCenter)->setSize(200, 50);
 
     custom_ship_functions = new GuiCustomShipFunctions(this, singlePilot, "", target_spaceship);
     custom_ship_functions->setPosition(-20, 120, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
@@ -178,6 +178,8 @@ void SinglePilotView::onDraw(sf::RenderTarget& window)
         heading_display->setValue(string(fmodf(target_spaceship->getRotation() + 360.0 + 360.0 - 270.0, 360.0), 1));
         float velocity = sf::length(target_spaceship->getVelocity()) / 1000 * 60;
         velocity_display->setValue(string(velocity, 1) + DISTANCE_UNIT_1K + "/min");
+
+        lock_aim->setVisible(target_spaceship->getWeaponTubeCount() > 0);
 
         warp_controls->setVisible(target_spaceship->has_warp_drive);
         jump_controls->setVisible(target_spaceship->has_jump_drive);

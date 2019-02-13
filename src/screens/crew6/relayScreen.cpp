@@ -298,9 +298,12 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
     GuiOverlay::onDraw(window);
 
     // Info range radar
-    float radar_range = 5000.0 * my_spaceship->getSystemEffectiveness(SYS_Drones);
+    float radar_range = 5000.0;
     if (my_spaceship)
+    {
+        radar_range = 5000.0 * my_spaceship->getSystemEffectiveness(SYS_Drones);
         info_radar_range -> setValue(string(radar_range / 1000.0f, 1.0f) + " U");
+    }
 
     // Info progress probe
     if (my_spaceship)
@@ -314,9 +317,7 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
         }
     }
 
-
     info_faction->setValue("-");
-
     if (targets.get() && my_spaceship)
     {
         P<SpaceObject> target = targets.get();

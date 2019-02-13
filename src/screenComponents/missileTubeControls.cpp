@@ -114,21 +114,24 @@ void GuiMissileTubeControls::onDraw(sf::RenderTarget& window){
             rows[n].load_button->setEnable(tube.canLoad(load_type));
             rows[n].load_button->setText("Charger");
             rows[n].fire_button->disable()->show();
-            rows[n].fire_button->setText(tube.getTubeName() + ": Vide");
+//            rows[n].fire_button->setText(tube.getTubeName() + ": Vide");
+            rows[n].fire_button->setText("Vide");
             rows[n].loading_bar->hide();
         }else if(tube.isLoaded())
         {
             rows[n].load_button->enable();
             rows[n].load_button->setText("Decharger");
             rows[n].fire_button->enable()->show();
-            rows[n].fire_button->setText(tube.getTubeName() + ": " + getMissileWeaponName(tube.getLoadType()));
+//            rows[n].fire_button->setText(tube.getTubeName() + ": " + getMissileWeaponName(tube.getLoadType()));
+            rows[n].fire_button->setText("Lancer : " + getMissileWeaponName(tube.getLoadType()));
             rows[n].loading_bar->hide();
         }else if(tube.isLoading())
         {
             rows[n].load_button->disable();
             rows[n].load_button->setText("Charger");
             rows[n].fire_button->hide();
-            rows[n].fire_button->setText(tube.getTubeName() + ": " + getMissileWeaponName(tube.getLoadType()));
+//            rows[n].fire_button->setText(tube.getTubeName() + ": " + getMissileWeaponName(tube.getLoadType()));
+            rows[n].fire_button->setText(getMissileWeaponName(tube.getLoadType()));
             rows[n].loading_bar->show();
             rows[n].loading_bar->setValue(tube.getLoadProgress());
             rows[n].loading_label->setText("Chargement");
