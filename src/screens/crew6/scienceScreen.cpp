@@ -138,7 +138,7 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
     }
 
     // Add sidebar page for systems.
-    sidebar_pager->addEntry("Systems", "Systems");
+    sidebar_pager->addEntry("Systemes", "Systemes");
 
     // Add sidebar page for a description.
     sidebar_pager->addEntry("Description", "Description");
@@ -447,16 +447,15 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
 
                 info_description->hide();
             }
-            else if (sidebar_pager_selection == "Systems")
+            else if (sidebar_pager_selection == "Systemes")
             {
                 info_shield_frequency->hide();
                 info_beam_frequency->hide();
 
                 for(int n = 0; n < SYS_COUNT; n++)
-                {
-                    info_system[n]->show();
-                }
-                info_oxygen->show();
+                    info_system[n]->setVisible(ship->hasSystem(ESystem(n)));
+
+                info_oxygen->setVisible(obj->getOxygenMax() > 0);
 
                 info_description->hide();
             }

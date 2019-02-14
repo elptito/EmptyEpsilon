@@ -9,6 +9,7 @@ class GuiSelector : public GuiEntryList
 {
 protected:
     float text_size;
+    string label;
     EGuiAlign text_alignment;
     GuiArrowButton* left;
     GuiArrowButton* right;
@@ -20,8 +21,9 @@ public:
     virtual void onDraw(sf::RenderTarget& window) override;
     virtual bool onMouseDown(sf::Vector2f position) override;
     virtual void onMouseUp(sf::Vector2f position) override;
-    
+
     GuiSelector* setTextSize(float size);
+    GuiSelector* setLabel(string text);
 };
 
 #endif//GUI2_SELECTOR_H

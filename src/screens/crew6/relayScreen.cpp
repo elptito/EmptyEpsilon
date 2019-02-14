@@ -129,7 +129,7 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
     position_text->setText(getStringFromPosition(radar->getViewPosition()));
 
     // Center screen
-    center_screen_button = new GuiButton(view_controls, "CENTER_SCREEN_BUTTON", "Recentrer ecran", [this]() {
+    center_screen_button = new GuiButton(view_controls, "CENTER_SCREEN_BUTTON", "Recentrer radar", [this]() {
         if (my_spaceship)
             radar->setViewPosition(my_spaceship->getPosition());
     });
@@ -225,6 +225,7 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
         }
     });
     station_selector->setSize(GuiElement::GuiSizeMax, 50);
+    station_selector->setLabel("Choix Station");
 
     probe_selector = new GuiSelector(option_buttons, "PROBE_SELECTOR", [this](int index, string value) {
         P<SpaceObject> obj = space_object_list[value.toInt()];
@@ -237,6 +238,7 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
         }
     });
     probe_selector->setSize(GuiElement::GuiSizeMax, 50);
+    probe_selector->setLabel("Choix Sonde");
 
     // Reputation display.
     //info_reputation = new GuiKeyValueDisplay(option_buttons, "INFO_REPUTATION", 0.7, "Reputation:", "");
