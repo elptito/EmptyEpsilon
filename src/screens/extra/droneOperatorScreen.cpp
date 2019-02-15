@@ -58,7 +58,7 @@ DroneOperatorScreen::DroneOperatorScreen(GuiContainer *owner)
     disconnect_button->setPosition(0, 0, ABottomCenter)->setSize(400, 50);
     disconnect_button->moveToFront();
     // label for when there are no drones
-    no_drones_label = new GuiLabel(this, "SHIP_SELECTION_NO_SHIPS_LABEL", "Aucun drone actif dans la zone", 30);
+    no_drones_label = new GuiLabel(this, "SHIP_SELECTION_NO_SHIPS_LABEL", "Aucun drone actif dans la zone de portee de radar", 30);
     no_drones_label->setPosition(0, 100, ATopCenter)->setSize(460, 50);
     // Prep the alert overlay.
     (new GuiPowerDamageIndicator(this, "DOCKS_DPI", SYS_Drones, ATopCenter, my_spaceship))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
@@ -83,9 +83,6 @@ bool DroneOperatorScreen::isConnectable(P<PlayerSpaceship> ship)
 float DroneOperatorScreen::getConnectionQuality(P<PlayerSpaceship> ship)
 {
     float distance_min = length(ship->getPosition() - my_spaceship->getPosition());
-
-//    float rangeFactor = 1 - std::min(1.0f, (length(ship->getPosition() - my_spaceship->getPosition()) / my_spaceship->getDronesControlRange()));
-
     foreach(SpaceObject, obj, space_object_list)
     {
         P<ScanProbe> probe = obj;
@@ -93,7 +90,6 @@ float DroneOperatorScreen::getConnectionQuality(P<PlayerSpaceship> ship)
             if (length(ship->getPosition() - obj->getPosition()) < distance_min)
                 distance_min = length(ship->getPosition() - obj->getPosition());
     }
-
     float rangeFactor = 1 - std::min(1.0f, (distance_min / my_spaceship->getDronesControlRange()));
 
     //float droneStateFactor = std::min(1.0f, ship->getSystemEffectiveness(SYS_Drones));
@@ -107,6 +103,7 @@ void DroneOperatorScreen::onDraw(sf::RenderTarget &window)
         // Update the player ship list with all player ships.
         std::vector<string> options;
         std::vector<string> values;
+        no_drones_label->setText("Aucun drone actif dans la zone de portee de radar (" + string(my_spaceship->getDronesControlRange() / 1000.0,1) + "U)");
         for (int n = 0; n < GameGlobalInfo::max_player_ships; n++)
         {
             P<PlayerSpaceship> ship = gameGlobalInfo->getPlayerShip(n);
