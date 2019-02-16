@@ -52,6 +52,8 @@ void GuiDockingButton::onDraw(sf::RenderTarget& window)
             enable();
             break;
         }
+
+        setVisible(target_spaceship->hasSystem(SYS_Impulse));
     }
     GuiButton::onDraw(window);
 }

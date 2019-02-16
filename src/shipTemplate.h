@@ -192,6 +192,7 @@ public:
     void addDoor(sf::Vector2i position, bool horizontal);
     void addDrones(string template_name, int count);
     void setDocks(int launchers, int energy, int weapons, int thermic, int repair, int stock);
+    int getDocksCount() {return launcher_dock_count + energy_dock_count + weapons_dock_count + thermic_dock_count + repair_dock_count + stock_dock_count;}
     void setRadarTrace(string trace);
 
     P<ShipTemplate> copy(string new_name);

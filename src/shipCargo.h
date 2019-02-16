@@ -16,6 +16,7 @@ public:
   string template_name;
 private:
   float hull_strength;
+  bool has_reactor;
   float systems_health[SYS_COUNT];
 public:
   ShipCargo();

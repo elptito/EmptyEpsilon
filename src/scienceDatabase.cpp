@@ -141,23 +141,12 @@ void fillDefaultDatabaseData()
         {
             entry->addKeyValue("Moteur JUMP", "OUI");
         }
+        int beam_weapons_count = 0;
         for(int n=0; n<max_beam_weapons; n++)
-        {
             if (ship_template->beams[n].getRange() > 0)
-            {
-                string name = "?";
-                if (std::abs(sf::angleDifference(0.0f, ship_template->beams[n].getDirection())) <= 45)
-                    name = "Avant";
-                if (std::abs(sf::angleDifference(90.0f, ship_template->beams[n].getDirection())) < 45)
-                    name = "Droite";
-                if (std::abs(sf::angleDifference(-90.0f, ship_template->beams[n].getDirection())) < 45)
-                    name = "Gauche";
-                if (std::abs(sf::angleDifference(180.0f, ship_template->beams[n].getDirection())) <= 45)
-                    name = "Arriere";
-
-                entry->addKeyValue(name + " arme laser", string(ship_template->beams[n].getDamage() / ship_template->beams[n].getCycleTime(), 2) + " DPS");
-            }
-        }
+                beam_weapons_count += 1;
+        if (beam_weapons_count > 0)
+            entry->addKeyValue("Canons lasers",string(beam_weapons_count));
         if (ship_template->weapon_tube_count > 0)
         {
             entry->addKeyValue("tubes de missile", string(ship_template->weapon_tube_count));
@@ -172,6 +161,8 @@ void fillDefaultDatabaseData()
         }
         if (ship_template->getDescription().length() > 0)
             entry->setLongDescription(ship_template->getDescription());
+        if (ship_template->getDocksCount() > 0)
+            entry->addKeyValue("Docks", string(ship_template->getDocksCount()));
     }
 #ifdef DEBUG
     P<ScienceDatabase> models_database = new ScienceDatabase();

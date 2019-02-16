@@ -12,6 +12,7 @@ ShipCargo::ShipCargo() : Cargo("ShipCargo")
     registerMemberReplication(&callsign);
     registerMemberReplication(&template_name);
     registerMemberReplication(&hull_strength);
+    registerMemberReplication(&has_reactor);
     for(int n=0; n<SYS_COUNT; n++) {
         registerMemberReplication(&systems_health[n]);
     }
@@ -23,6 +24,7 @@ ShipCargo::ShipCargo(P<ShipTemplate> ship_template) : ShipCargo()
     callsign = "DRN-" + gameGlobalInfo->getNextShipCallsign();
     setEnergy(ship_template->energy_storage_amount);
     hull_strength = ship_template->hull;
+    has_reactor = ship_template->has_reactor;
     for(int n=0; n<SYS_COUNT; n++) {
         systems_health[n] = 1;
     }
@@ -40,6 +42,7 @@ ShipCargo::ShipCargo(P<SpaceShip> ship) : ShipCargo()
     callsign = ship->getCallSign();
     setEnergy(ship->getEnergy());
     hull_strength = ship->getHull();
+    has_reactor = ship->has_reactor;
     float totalHeat = 0;
     for(unsigned int n=0; n<SYS_COUNT; n++)
         totalHeat += ship->getSystemHeat(ESystem(n));
@@ -98,6 +101,7 @@ bool ShipCargo::onLaunch(Dock &source)
             ship->setPosition(source.getLaunchPosition(ship->getRadius()));
             ship->setRotation(source.getLaunchRotation());
             ship->setHull(hull_strength);
+            ship->has_reactor = has_reactor;
             ship->impulse_request = -0.5;
             int systemsCount = 0;
             for (unsigned int n = 0; n < SYS_COUNT; n++){
@@ -131,10 +135,13 @@ ShipCargo::Entries ShipCargo::getEntries()
     result.push_back(std::make_tuple("", "ID", callsign));
     result.push_back(std::make_tuple("", "type", template_name));
 
-    if (ship_template->has_reactor)
+    if (has_reactor)
         result.push_back(std::make_tuple("", "Reacteur ?", "Oui"));
     else
         result.push_back(std::make_tuple("", "Reacteur ?", "Non"));
+
+    float velocity = ship_template->impulse_speed / 1000 * 60;
+    result.push_back(std::make_tuple("", "Vitesse", string(velocity, 1) + DISTANCE_UNIT_1K + "/min"));
 
     if (ship_template->weapon_tube_count > 0)
         result.push_back(std::make_tuple("", "Tubes a missiles", ship_template->weapon_tube_count));
