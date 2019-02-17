@@ -142,6 +142,7 @@ float PlayerSpaceship::system_power_user_factor[] = {
     /*SYS_RearShield*/    5.0 * 0.08,
     /*SYS_Docks*/         1.0 * 0.08,
     /*SYS_Drones*/        3.0 * 0.08,
+    /*SYS_Door*/          1.0 * 0.08,
 };
 
 static const int16_t CMD_TARGET_ROTATION = 0x0001;

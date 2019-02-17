@@ -354,6 +354,7 @@ string getSystemName(ESystem system)
     case SYS_RearShield: return "Generateur Bouclier Ar.";
     case SYS_Docks: return "Gestion du Cargo";
     case SYS_Drones: return "Drones et radar";
+    case SYS_Door: return "Sas exterieur";
     default:
         return "UNKNOWN";
     }

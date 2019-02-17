@@ -27,6 +27,7 @@ enum ESystem
     SYS_RearShield,
     SYS_Docks,
     SYS_Drones,
+    SYS_Door,
     SYS_COUNT
 };
 /* Define script conversion function for the ESystem enum. */

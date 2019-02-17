@@ -117,6 +117,7 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner, ECrewPosition crew_pos
     system_rows[SYS_RearShield].button->setIcon("gui/icons/shields-aft");
     system_rows[SYS_Docks].button->setIcon("gui/icons/docking");
     system_rows[SYS_Drones].button->setIcon("gui/icons/heading");
+    system_rows[SYS_Door].button->setIcon("gui/icons/door");
 
     system_effects_container = new GuiAutoLayout(system_config_container, "", GuiAutoLayout::LayoutVerticalBottomToTop);
     system_effects_container->setPosition(0, -400, ABottomRight)->setSize(270, 400);
@@ -339,6 +340,9 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
             case SYS_Drones:
                 addSystemEffect("Portee controle des drones", string(my_spaceship->getDronesControlRange() / 1000.0f,1) + "U");
                 addSystemEffect("Rayon radar relai et sondes", string(5000.0 * my_spaceship->getSystemEffectiveness(SYS_Drones)  / 1000.0f,1) + "U");
+                break;
+            case SYS_Door:
+                addSystemEffect("Resistance du sas exterieur", string(int(my_spaceship->getSystemEffectiveness(SYS_Door) * 100))+ "%");
                 break;
             default:
                 break;

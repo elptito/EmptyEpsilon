@@ -1102,6 +1102,7 @@ bool SpaceShip::hasSystem(ESystem system)
         return impulse_max_speed > 0.0;
     case SYS_Docks:
     case SYS_Drones:
+    case SYS_Door:
         return docks[0].dock_type != Dock_Disabled;
     }
     return true;
