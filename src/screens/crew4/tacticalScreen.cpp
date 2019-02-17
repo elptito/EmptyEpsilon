@@ -1,4 +1,5 @@
 #include "playerInfo.h"
+#include "gameGlobalInfo.h"
 #include "spaceObjects/playerSpaceship.h"
 #include "tacticalScreen.h"
 
@@ -14,6 +15,7 @@
 #include "screenComponents/missileTubeControls.h"
 #include "screenComponents/aimLock.h"
 #include "screenComponents/shieldsEnableButton.h"
+#include "screenComponents/shieldFreqencySelect.h"
 #include "screenComponents/beamFrequencySelector.h"
 #include "screenComponents/beamTargetSelector.h"
 
@@ -100,8 +102,10 @@ TacticalScreen::TacticalScreen(GuiContainer* owner)
     heading_display->setIcon("gui/icons/heading")->setTextSize(20)->setPosition(20, 140, ATopLeft)->setSize(240, 40);
     velocity_display = new GuiKeyValueDisplay(this, "VELOCITY_DISPLAY", 0.45, "Vitesse", "");
     velocity_display->setIcon("gui/icons/speed")->setTextSize(20)->setPosition(20, 180, ATopLeft)->setSize(240, 40);
+    target_display = new GuiKeyValueDisplay(this, "TARGET_DISPLAY", 0.45, "Cible", "");
+    target_display->setIcon("gui/icons/lock")->setTextSize(20)->setPosition(20, 220, ATopLeft)->setSize(240, 40);
     shields_display = new GuiKeyValueDisplay(this, "SHIELDS_DISPLAY", 0.45, "Boucliers", "");
-    shields_display->setIcon("gui/icons/shields")->setTextSize(20)->setPosition(20, 220, ATopLeft)->setSize(240, 40);
+    shields_display->setIcon("gui/icons/shields")->setTextSize(20)->setPosition(20, 260, ATopLeft)->setSize(240, 40);
 
     // Weapon tube loading controls in the bottom left corner.
     tube_controls = new GuiMissileTubeControls(this, "MISSILE_TUBES", my_spaceship);
@@ -114,7 +118,7 @@ TacticalScreen::TacticalScreen(GuiContainer* owner)
     });
     missile_aim->hide()->setPosition(0, 0, ACenter)->setSize(GuiElement::GuiSizeMatchHeight, 800);
     lock_aim = new AimLockButton(this, "LOCK_AIM", tube_controls, missile_aim, my_spaceship);
-    lock_aim->setPosition(250, 20, ATopCenter)->setSize(110, 50);
+    lock_aim->setPosition(250, 20, ATopCenter)->setSize(200, 50);
 
     // Combat maneuver and propulsion controls in the bottom right corner.
     (new GuiCombatManeuver(this, "COMBAT_MANEUVER", my_spaceship))->setPosition(-20, -390, ABottomRight)->setSize(200, 150);
@@ -125,6 +129,17 @@ TacticalScreen::TacticalScreen(GuiContainer* owner)
     jump_controls = (new GuiJumpControls(engine_layout, "JUMP", my_spaceship))->setSize(100, GuiElement::GuiSizeMax);
     (new GuiDockingButton(this, "DOCKING", my_spaceship))->setPosition(-20, -20, ABottomRight)->setSize(280, 50);
 
+    if (my_spaceship && my_spaceship->getShieldCount() > 0)
+    {
+         if (gameGlobalInfo->use_beam_shield_frequencies)
+        {
+            //The shield frequency selection includes a shield enable button.
+            (new GuiShieldFrequencySelect(this, "SHIELD_FREQ"))->setPosition(-20, -20, ABottomRight)->setSize(280, 100);
+        }else{
+            (new GuiShieldsEnableButton(this, "SHIELDS_ENABLE", my_spaceship))->setPosition(-20, -20, ABottomRight)->setSize(280, 50);
+        }
+    }
+
     (new GuiCustomShipFunctions(this, tacticalOfficer, "", my_spaceship))->setPosition(-20, 120, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
 }
 
@@ -133,7 +148,7 @@ void TacticalScreen::onDraw(sf::RenderTarget& window)
     if (my_spaceship)
     {
         energy_display->setValue(string(int(my_spaceship->energy_level)));
-        heading_display->setValue(string(fmodf(my_spaceship->getRotation() + 360.0 + 360.0 - 270.0, 360.0), 1));
+        heading_display->setValue(string(my_spaceship->getHeading(), 1) + "°");
         float velocity = sf::length(my_spaceship->getVelocity()) / 1000 * 60;
         velocity_display->setValue(string(velocity, 1) + DISTANCE_UNIT_1K + "/min");
 
