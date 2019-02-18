@@ -4,6 +4,7 @@
 #include "engine.h"
 #include "gui/gui2_canvas.h"
 #include "threatLevelEstimate.h"
+#include "spaceObjects/scanProbe.h"
 
 class GuiViewport3D;
 class GuiRadarView;
@@ -27,6 +28,9 @@ private:
     DamageControlScreen*ship_state;
     ProbeScreen*probe_view;
     bool first_person;
+    float angle;
+    float rotatetime;
+    P<ScanProbe> probe;
     GuiCommsOverlay* onscreen_comms;
     int impulse_sound = -1;
     int warp_sound = -1;

@@ -204,14 +204,14 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
     link_to_science_button->setIcon("gui/icons/station-science");
 
     // Link probe to 3D port button.
-//    link_to_3D_port_button = new GuiToggleButton(option_buttons, "LINK_TO_3D_PORT", "Camera Probe", [this](bool value){
-//        if (value)
-//            my_spaceship->commandSetProbe3DLink(targets.get()->getMultiplayerId());
-//        else
-//            my_spaceship->commandSetProbe3DLink(-1);
-//    });
-//    link_to_3D_port_button->setSize(GuiElement::GuiSizeMax, 50);
-//    link_to_3D_port_button->setIcon("gui/icons/camera");
+    link_to_3D_port_button = new GuiToggleButton(option_buttons, "LINK_TO_3D_PORT", "Camera Sonde", [this](bool value){
+        if (value)
+            my_spaceship->commandSetProbe3DLink(targets.get()->getMultiplayerId());
+        else
+            my_spaceship->commandSetProbe3DLink(-1);
+    });
+    link_to_3D_port_button->setSize(GuiElement::GuiSizeMax, 50);
+    link_to_3D_port_button->setIcon("gui/icons/camera");
 
     // Station selector
     station_selector = new GuiSelector(option_buttons, "SPACE_STATION_SELECTOR", [this](int index, string value) {
@@ -374,16 +374,16 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
                 info_probe->setValue(string(int(ceilf(distance / probe->getProbeSpeed()))) + " S");
             else
                 info_probe->hide();
-//            link_to_3D_port_button->setValue(my_spaceship->linked_probe_3D_id == probe->getMultiplayerId());
-//            link_to_3D_port_button->enable();
+            link_to_3D_port_button->setValue(my_spaceship->linked_probe_3D_id == probe->getMultiplayerId());
+            link_to_3D_port_button->enable();
         }
         else
         {
             link_to_science_button->setValue(false);
             link_to_science_button->disable();
 
-//            link_to_3D_port_button->setValue(false);
-//            link_to_3D_port_button->disable();
+            link_to_3D_port_button->setValue(false);
+            link_to_3D_port_button->disable();
         }
 //        if (my_spaceship && obj->canBeHackedBy(my_spaceship))
 //        {
@@ -397,8 +397,8 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
         link_to_science_button->setValue(false);
 
         info_probe->hide();
-//      link_to_3D_port_button->disable();
-//		link_to_3D_port_button->setValue(false);
+        link_to_3D_port_button->disable();
+		link_to_3D_port_button->setValue(false);
         info_callsign->setValue("-");
     }
     if (my_spaceship)

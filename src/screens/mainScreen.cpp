@@ -46,6 +46,7 @@ ScreenMainScreen::ScreenMainScreen()
     ship_state = new DamageControlScreen(this);
     ship_state->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
     ship_state->hide();
+
     onscreen_comms = new GuiCommsOverlay(this);
     onscreen_comms->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax)->setVisible(false);
 
@@ -75,6 +76,8 @@ ScreenMainScreen::ScreenMainScreen()
     }
 
     first_person = true;
+    rotatetime = 0.0007;
+    angle = 0.0f;
 }
 
 void ScreenMainScreen::update(float delta)
@@ -110,17 +113,54 @@ void ScreenMainScreen::update(float delta)
         }
         camera_pitch = 30.0f;
 
-        float camera_ship_distance = 420.0f;
-//        float camera_ship_height = 420.0f;
-        float camera_ship_height = my_spaceship->getRadius();
-        if (first_person)
-        {
-            camera_ship_distance = -my_spaceship->getRadius();
-            camera_ship_height = my_spaceship->getRadius() / 10.f;
-            camera_pitch = 0;
+//      Probe view
+        if (game_server)
+                probe = game_server->getObjectById(my_spaceship->linked_probe_3D_id);
+            else
+                probe = game_client->getObjectById(my_spaceship->linked_probe_3D_id);
+
+        if (my_spaceship->main_screen_setting == MSS_ProbeView && probe){
+            rotatetime -= delta;
+            if (rotatetime <= 0.0)
+            {
+//                rotatetime = 0.0007;
+                rotatetime = 0.1;
+                angle += 0.1f;
+//                angle += 5.0f;
+            }
+
+            camera_yaw = angle;
+            camera_pitch = 0.0f;
+
+            sf::Vector2f position = probe->getPosition() + sf::rotateVector(sf::Vector2f(probe->getRadius(), 0), camera_yaw);
+            camera_position.x = position.x;
+            camera_position.y = position.y;
+            camera_position.z = 0.0;
+        }else{
+            float camera_ship_distance = 420.0f;
+    //        float camera_ship_height = 420.0f;
+            float camera_ship_height = my_spaceship->getRadius();
+            if (first_person)
+            {
+                camera_ship_distance = -my_spaceship->getRadius();
+                camera_ship_height = my_spaceship->getRadius() / 10.f;
+                camera_pitch = 0;
+            }
+            sf::Vector2f cameraPosition2D = my_spaceship->getPosition() + sf::vector2FromAngle(target_camera_yaw) * -camera_ship_distance;
+            sf::Vector3f targetCameraPosition(cameraPosition2D.x, cameraPosition2D.y, camera_ship_height);
+            if (first_person)
+            {
+                camera_position = targetCameraPosition;
+                camera_yaw = target_camera_yaw;
+            }
+            else
+            {
+                camera_position = camera_position * 0.9f + targetCameraPosition * 0.1f;
+                camera_yaw += sf::angleDifference(camera_yaw, target_camera_yaw) * 0.1f;
+            }
+
         }
-        sf::Vector2f cameraPosition2D = my_spaceship->getPosition() + sf::vector2FromAngle(target_camera_yaw) * -camera_ship_distance;
-        sf::Vector3f targetCameraPosition(cameraPosition2D.x, cameraPosition2D.y, camera_ship_height);
+
 #ifdef DEBUG
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
         {
@@ -130,16 +170,6 @@ void ScreenMainScreen::update(float delta)
             camera_pitch = 90.0f;
         }
 #endif
-        if (first_person)
-        {
-            camera_position = targetCameraPosition;
-            camera_yaw = target_camera_yaw;
-        }
-        else
-        {
-            camera_position = camera_position * 0.9f + targetCameraPosition * 0.1f;
-            camera_yaw += sf::angleDifference(camera_yaw, target_camera_yaw) * 0.1f;
-        }
 
         switch(my_spaceship->main_screen_setting)
         {
@@ -155,14 +185,14 @@ void ScreenMainScreen::update(float delta)
             ship_state->hide();
             break;
         case MSS_Tactical:
-            viewport->show();
+            viewport->hide();
             tactical_radar->show();
             long_range_radar->hide();
             global_range_radar->hide();
             ship_state->hide();
             break;
         case MSS_LongRange:
-            viewport->show();
+            viewport->hide();
             tactical_radar->hide();
             long_range_radar->show();
             global_range_radar->hide();
@@ -176,7 +206,7 @@ void ScreenMainScreen::update(float delta)
             ship_state->hide();
             break;
         case MSS_ShipState:
-            viewport->show();
+            viewport->hide();
             tactical_radar->hide();
             long_range_radar->hide();
             global_range_radar->hide();

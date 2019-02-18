@@ -92,7 +92,7 @@ GuiMainScreenControls::GuiMainScreenControls(GuiContainer* owner)
     tactical_button = buttons.back();
 
     // Long-range radar button.
-    buttons.push_back(new GuiButton(this, "MAIN_SCREEN_LONG_RANGE_BUTTON", "Long Range", [this]()
+    buttons.push_back(new GuiButton(this, "MAIN_SCREEN_LONG_RANGE_BUTTON", "Analyste", [this]()
     {
         if (my_spaceship)
         {
@@ -103,7 +103,7 @@ GuiMainScreenControls::GuiMainScreenControls(GuiContainer* owner)
     long_range_button = buttons.back();
 
     // Global-range radar button.
-    buttons.push_back(new GuiButton(this, "MAIN_SCREEN_GLOBAL_RANGE_BUTTON", "Global Range", [this]()
+    buttons.push_back(new GuiButton(this, "MAIN_SCREEN_GLOBAL_RANGE_BUTTON", "Relais", [this]()
     {
         if (my_spaceship)
         {
@@ -116,11 +116,24 @@ GuiMainScreenControls::GuiMainScreenControls(GuiContainer* owner)
     global_range_button = buttons.back();
 
      // Ship State button.
-    buttons.push_back(new GuiButton(this, "MAIN_SCREEN_SHIP_STATE_BUTTON", "Ship State", [this]()
+    buttons.push_back(new GuiButton(this, "MAIN_SCREEN_SHIP_STATE_BUTTON", "Ingenieur", [this]()
     {
         if (my_spaceship)
         {
             my_spaceship->commandMainScreenSetting(MSS_ShipState);
+        }
+        open_button->setValue(false);
+        for(GuiButton* button : buttons)
+            button->setVisible(false);
+    }));
+    ship_state_button = buttons.back();
+
+     // Ship State button.
+    buttons.push_back(new GuiButton(this, "MAIN_SCREEN_PROBE_CAMERA_BUTTON", "Camera Sonde", [this]()
+    {
+        if (my_spaceship)
+        {
+            my_spaceship->commandMainScreenSetting(MSS_ProbeView);
         }
         open_button->setValue(false);
         for(GuiButton* button : buttons)
