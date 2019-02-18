@@ -53,7 +53,7 @@ void WormHole::draw3DTransparent()
         NebulaCloud& cloud = clouds[n];
 
         sf::Vector3f position = sf::Vector3f(getPosition().x, getPosition().y, 0) + sf::Vector3f(cloud.offset.x, cloud.offset.y, 0);
-        float size = cloud.size;
+        float size = cloud.size * getRadarSignatureGravity();
 
         float distance = sf::length(camera_position - position);
         float alpha = 1.0 - (distance / 100000.0f);
