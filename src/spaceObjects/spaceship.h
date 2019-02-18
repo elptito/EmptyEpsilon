@@ -50,7 +50,8 @@ public:
     float getHeatingDelta()
     {
         if (health > -0.5)
-            return powf(1.7, power_level - 1.0) - (1.01 + coolant_level * 0.1);
+//            return powf(1.7, power_level - 1.0) - (1.01 + coolant_level * 0.1);
+            return powf(1.7, power_level - 1.0) - (1.01 + coolant_level * 0.06);
         else
             return - (coolant_level * 0.1);
     }
