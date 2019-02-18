@@ -146,5 +146,12 @@ ShipCargo::Entries ShipCargo::getEntries()
     if (ship_template->weapon_tube_count > 0)
         result.push_back(std::make_tuple("", "Tubes a missiles", ship_template->weapon_tube_count));
 
+    int beam_weapons_count = 0;
+    for(int n=0; n<max_beam_weapons; n++)
+        if (ship_template->beams[n].getRange() > 0)
+            beam_weapons_count += 1;
+    if (beam_weapons_count > 0)
+        result.push_back(std::make_tuple("", "Canons lasers", beam_weapons_count));
+
     return result;
 }

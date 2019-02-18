@@ -486,7 +486,8 @@ P<ShipTemplate> ShipTemplate::copy(string new_name)
     for(int n=0; n<max_beam_weapons; n++)
         result->beams[n] = beams[n];
     result->weapon_tube_count = weapon_tube_count;
-    for(int n=0; n<max_beam_weapons; n++)
+//    for(int n=0; n<max_beam_weapons; n++)
+    for(int n=0; n<weapon_tube_count; n++)
         result->weapon_tube[n] = weapon_tube[n];
     result->hull = hull;
     result->shield_count = shield_count;
@@ -501,6 +502,7 @@ P<ShipTemplate> ShipTemplate::copy(string new_name)
     result->shares_energy_with_docked = shares_energy_with_docked;
     result->repair_docked = repair_docked;
     result->has_jump_drive = has_jump_drive;
+    result->has_reactor = has_reactor;
     result->jump_drive_min_distance = jump_drive_min_distance;
     result->jump_drive_max_distance = jump_drive_max_distance;
     result->jump_drive_charge_time = jump_drive_charge_time;
