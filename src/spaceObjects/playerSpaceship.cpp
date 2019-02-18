@@ -331,6 +331,8 @@ PlayerSpaceship::PlayerSpaceship()
     // Initialize the ship's log.
     addToShipLog("Initialisation du log", colorConfig.log_generic,"extern");
     addToShipLog("Initialisation du log", colorConfig.log_generic,"intern");
+    addToShipLog("Initialisation du log", colorConfig.log_generic,"science");
+    addToShipLog("Initialisation du log", colorConfig.log_generic,"docks");
 }
 
 void PlayerSpaceship::update(float delta)
@@ -900,6 +902,13 @@ void PlayerSpaceship::addToShipLog(string message, sf::Color color, string stati
         // Timestamp a log entry, color it, and add it to the end of the log.
         ships_log_docks.emplace_back(string(engine->getElapsedTime(), 1) + string(": "), message, color, station);
     }
+    else if (station == "science")
+    {
+        if (ships_log_science.size() > 100)
+            ships_log_science.erase(ships_log_science.begin());
+        // Timestamp a log entry, color it, and add it to the end of the log.
+        ships_log_science.emplace_back(string(engine->getElapsedTime(), 1) + string(": "), message, color, station);
+    }
 }
 
 void PlayerSpaceship::addToShipLogBy(string message, P<SpaceObject> target)
@@ -925,6 +934,8 @@ const std::vector<PlayerSpaceship::ShipLogEntry>& PlayerSpaceship::getShipsLog(s
         return ships_log_intern;
     if (station == "docks")
         return ships_log_docks;
+    if (station == "science")
+        return ships_log_science;
 }
 
 void PlayerSpaceship::transferPlayersToShip(P<PlayerSpaceship> other_ship)
@@ -1507,7 +1518,7 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
         break;
     case CMD_ACTIVATE_SELF_DESTRUCT:
         activate_self_destruct = true;
-        addToShipLog("Auto destruction activ�e",sf::Color::Red,"intern");
+        addToShipLog("Auto destruction activee",sf::Color::Red,"intern");
         for(int n=0; n<max_self_destruct_codes; n++)
         {
             self_destruct_code[n] = irandom(0, 99999);
@@ -1624,9 +1635,9 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
         {
             packet >> alert_level;
             if(alertLevelToString(alert_level) == "RED ALERT")
-                addToShipLog("RED ALERT",sf::Color::Red,"intern");
+                addToShipLog("Alerte Rouge",sf::Color::Red,"intern");
             if(alertLevelToString(alert_level) == "YELLOW ALERT")
-                addToShipLog("YELLOW ALERT",sf::Color::Yellow,"intern");
+                addToShipLog("Alerte jaune",sf::Color::Yellow,"intern");
         }
         break;
     case CMD_SET_SCIENCE_LINK:

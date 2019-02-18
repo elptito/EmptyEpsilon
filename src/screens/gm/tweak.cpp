@@ -1105,6 +1105,8 @@ GuiShipTweakMessages::GuiShipTweakMessages(GuiContainer* owner)
     log_selector->setSize(GuiElement::GuiSizeMax, 40);
     log_selector->addEntry("extern", "extern");
     log_selector->addEntry("intern", "intern");
+    log_selector->addEntry("docks", "docks");
+    log_selector->addEntry("science", "science");
     log_selector->setSelectionIndex(0);
 
     // Send the message
@@ -1119,19 +1121,28 @@ GuiShipTweakMessages::GuiShipTweakMessages(GuiContainer* owner)
 
     (new GuiButton(right_col, "", "Pilote", [this]() {
         target->addCustomMessage(helmsOfficer,"helms_message", message);
-    }))->setSize(GuiElement::GuiSizeMax, 50);
+    }))->setSize(GuiElement::GuiSizeMax, 30);
     (new GuiButton(right_col, "", "Artilleur", [this]() {
         target->addCustomMessage(weaponsOfficer,"weapons_message", message);
-    }))->setSize(GuiElement::GuiSizeMax, 50);
+    }))->setSize(GuiElement::GuiSizeMax, 30);
     (new GuiButton(right_col, "", "Ingenieur", [this]() {
         target->addCustomMessage(engineering,"engineering_message", message);
-    }))->setSize(GuiElement::GuiSizeMax, 50);
+    }))->setSize(GuiElement::GuiSizeMax, 30);
     (new GuiButton(right_col, "", "Analyste", [this]() {
         target->addCustomMessage(scienceOfficer,"science_message", message);
-    }))->setSize(GuiElement::GuiSizeMax, 50);
+    }))->setSize(GuiElement::GuiSizeMax, 30);
     (new GuiButton(right_col, "", "Relai", [this]() {
         target->addCustomMessage(relayOfficer,"relay_message", message);
-    }))->setSize(GuiElement::GuiSizeMax, 50);
+    }))->setSize(GuiElement::GuiSizeMax, 30);
+    (new GuiButton(right_col, "", "Docks", [this]() {
+        target->addCustomMessage(dockMaster,"docks_message", message);
+    }))->setSize(GuiElement::GuiSizeMax, 30);
+    (new GuiButton(right_col, "", "Drone", [this]() {
+        target->addCustomMessage(dronePilot,"drone_message", message);
+    }))->setSize(GuiElement::GuiSizeMax, 30);
+        (new GuiButton(right_col, "", "Single", [this]() {
+        target->addCustomMessage(singlePilot,"single_message", message);
+    }))->setSize(GuiElement::GuiSizeMax, 30);
 
     (new GuiButton(right_col, "", "Retirer message ecran", [this]() {
         target->removeCustom("helms_message");
@@ -1139,9 +1150,12 @@ GuiShipTweakMessages::GuiShipTweakMessages(GuiContainer* owner)
         target->removeCustom("engineering_message");
         target->removeCustom("science_message");
         target->removeCustom("relay_message");
+        target->removeCustom("docks_message");
+        target->removeCustom("drone_message");
+        target->removeCustom("single_message");
 
         message_entry -> setText("");
-    }))->setSize(GuiElement::GuiSizeMax, 50);
+    }))->setSize(GuiElement::GuiSizeMax, 30);
 
 }
 

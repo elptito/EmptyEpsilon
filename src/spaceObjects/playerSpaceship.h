@@ -137,6 +137,7 @@ private:
     std::vector<ShipLogEntry> ships_log_extern;
     std::vector<ShipLogEntry> ships_log_intern;
     std::vector<ShipLogEntry> ships_log_docks;
+    std::vector<ShipLogEntry> ships_log_science;
 
 
 public:

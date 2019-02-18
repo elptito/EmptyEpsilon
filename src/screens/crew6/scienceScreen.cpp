@@ -14,6 +14,7 @@
 #include "screenComponents/databaseView.h"
 #include "screenComponents/alertOverlay.h"
 #include "screenComponents/customShipFunctions.h"
+#include "screenComponents/shipsLogControl.h"
 
 #include "gui/gui2_autolayout.h"
 #include "gui/gui2_keyvaluedisplay.h"
@@ -70,25 +71,12 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
     );
     new RawScannerDataRadarOverlay(probe_radar, "", 5000);
 
-    sidebar_selector = new GuiSelector(radar_view, "", [this](int index, string value)
-    {
-        info_sidebar->setVisible(index == 0);
-        custom_function_sidebar->setVisible(index == 1);
-    });
-    sidebar_selector->setOptions({"Scanning", "Other"});
-    sidebar_selector->setSelectionIndex(0);
-    sidebar_selector->setPosition(-20, 120, ATopRight)->setSize(250, 50);
-
-    // Target scan data sidebar.
     info_sidebar = new GuiAutoLayout(radar_view, "SIDEBAR", GuiAutoLayout::LayoutVerticalTopToBottom);
     info_sidebar->setPosition(-20, 100, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
 
-    custom_function_sidebar = new GuiCustomShipFunctions(radar_view, crew_position, "", my_spaceship);
-    custom_function_sidebar->setPosition(-20, 170, ATopRight)->setSize(250, GuiElement::GuiSizeMax)->hide();
-
     // Scan button.
     scan_button = new GuiScanTargetButton(info_sidebar, "SCAN_BUTTON", &targets);
-    scan_button->setSize(GuiElement::GuiSizeMax, 50);
+    scan_button->setPosition(-20, 120, ATopRight)->setSize(250, 50);
 
     // Simple scan data.
     info_callsign = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_CALLSIGN", 0.4, "ID", "");
@@ -200,7 +188,7 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
             probe_radar->hide();
         }
     });
-    probe_view_button->setPosition(20, -120, ABottomLeft)->setSize(200, 50)->disable();
+    probe_view_button->setPosition(20, -160, ABottomLeft)->setSize(200, 50)->disable();
 
     // Draw the zoom slider.
     zoom_slider = new GuiSlider(radar_view, "", gameGlobalInfo->long_range_radar_range, 5000.0, gameGlobalInfo->long_range_radar_range, [this](float value)
@@ -208,7 +196,7 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
         zoom_label->setText("Zoom: " + string(gameGlobalInfo->long_range_radar_range / value, 1) + "x");
         science_radar->setDistance(value);
     });
-    zoom_slider->setPosition(-20, -20, ABottomRight)->setSize(250, 50);
+    zoom_slider->setPosition(-20, -60, ABottomRight)->setSize(250, 50);
     zoom_label = new GuiLabel(zoom_slider, "", "Zoom: 1.0x", 30);
     zoom_label->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
@@ -218,10 +206,15 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
         background_gradient->setVisible(index == 0);
         database_view->setVisible(index == 1);
     });
-    view_mode_selection->setOptions({"Radar", "Base de donnees"})->setSelectionIndex(0)->setPosition(20, -20, ABottomLeft)->setSize(200, 100);
+    view_mode_selection->setOptions({"Radar", "Base de donnees"})->setSelectionIndex(0)->setPosition(20, -60, ABottomLeft)->setSize(200, 100);
+
+    custom_function_sidebar = new GuiCustomShipFunctions(radar_view, crew_position, "", my_spaceship);
+    custom_function_sidebar ->setPosition(20, 20, ATopLeft)->setSize(250, GuiElement::GuiSizeMax);
 
     // Scanning dialog.
     new GuiScanningDialog(this, "SCANNING_DIALOG");
+
+    new ShipsLog(this,"science");
 }
 
 void ScienceScreen::onDraw(sf::RenderTarget& window)
@@ -261,8 +254,6 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
         if (targets.get() && Nebula::blockedByNebula(my_spaceship->getPosition(), targets.get()->getPosition()))
             targets.clear();
     }
-
-    sidebar_selector->setVisible(sidebar_selector->getSelectionIndex() > 0 || custom_function_sidebar->hasEntries());
 
     info_callsign->setValue("-");
     info_distance->setValue("-");
@@ -314,17 +305,17 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
             // Rel. Speed
             // Description de base
 
-        // Si Scan simple ou alli� :
+        // Si Scan simple ou allie :
             // Faction
             // Type
             // Boucliers
             // Carlingue
             // Description scan simple
 
-        // Si scan am�lior�
-            // Description am�lior�
-            // Fr�quences
-            // Syst�mes
+        // Si scan ameliore
+            // Description ameliore
+            // Frequences
+            // Systemes
 
         sf::Vector2f position_diff = obj->getPosition() - my_spaceship->getPosition();
         float distance = sf::length(position_diff);
@@ -361,7 +352,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
         info_heading->setValue(string(int(heading)));
         info_relspeed->setValue(string(rel_velocity / 1000.0f * 60.0f, 1) + DISTANCE_UNIT_1K + "/min" + duration);
 
-        // En un coup, r�cup�ration de toute les descriptions possibles
+        // En un coup, recuperation de toute les descriptions possibles
         string description = obj->getDescriptionFor(my_spaceship);
         string sidebar_pager_selection = sidebar_pager->getSelectionValue();
 
