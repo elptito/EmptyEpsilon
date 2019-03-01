@@ -238,6 +238,7 @@ public:
     void setOxygenRate(std::vector<float> values);
     float getOxygenMax(int index = 0);
     float getOxygenPoints(int index = 0);
+    float getOxygenRatio(int index = 0);
     float getOxygenRate(int index = 0);
     float getOxygenTotal();
     float getOxygenMaxTotal();

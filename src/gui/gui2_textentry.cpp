@@ -135,3 +135,4 @@ GuiTextEntry* GuiTextEntry::validator(Validator v)
     valid = v(text);
     return this;
 }
+

@@ -30,6 +30,7 @@ enum ECrewPosition
     internLogView,
     dronePilot,
     dockMaster,
+    oxygenView,
     max_crew_positions
 };
 

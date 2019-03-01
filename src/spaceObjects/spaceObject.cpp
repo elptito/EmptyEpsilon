@@ -511,6 +511,13 @@ float SpaceObject::getOxygenMax(int index)
 {
     return oxygen_max[index];
 }
+float SpaceObject::getOxygenRatio(int index)
+{
+    if (oxygen_max[index] == 0)
+        return 0;
+    else
+        return oxygen_points[index] / oxygen_max[index];
+}
 float SpaceObject::getOxygenRate(int index)
 {
     return oxygen_rate[index];

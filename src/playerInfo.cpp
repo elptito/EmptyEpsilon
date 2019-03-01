@@ -21,6 +21,7 @@
 #include "screens/extra/databaseScreen.h"
 #include "screens/extra/droneOperatorScreen.h"
 #include "screens/extra/dockMasterScreen.h"
+#include "screens/extra/oxygenScreen.h"
 
 #include "screens/extra/shipLogScreen.h"
 #include "screens/extra/radarScreen.h"
@@ -171,6 +172,8 @@ void PlayerInfo::spawnUI()
             screen->addStationTab(new DroneOperatorScreen(screen), dronePilot, getCrewPositionName(dronePilot), getCrewPositionIcon(dronePilot));
         if (crew_position[dockMaster])
             screen->addStationTab(new DockMasterScreen(screen), dockMaster, getCrewPositionName(dockMaster), getCrewPositionIcon(dockMaster));
+        if (crew_position[oxygenView])
+            screen->addStationTab(new OxygenScreen(screen), oxygenView, getCrewPositionName(oxygenView), getCrewPositionIcon(oxygenView));
 
         //Ship log screen, if you have comms, you have ships log. (note this is mostly replaced by the [at the bottom of the screen openable log]
         if (crew_position[singlePilot])
@@ -230,6 +233,7 @@ string getCrewPositionName(ECrewPosition position)
     case internLogView: return "Intern Log View";
     case dronePilot: return "Drone Pilot";
     case dockMaster: return "Dock Master";
+    case oxygenView: return "Log Oxygen";
     default: return "ErrUnk: " + string(position);
     }
 }
@@ -259,6 +263,7 @@ string getCrewPositionIcon(ECrewPosition position)
     case internLogView: return "";
     case dronePilot: return "";
     case dockMaster: return "";
+    case oxygenView: return "";
     default: return "ErrUnk: " + string(position);
     }
 }
@@ -317,6 +322,8 @@ template<> void convert<ECrewPosition>::param(lua_State* L, int& idx, ECrewPosit
         cp = dronePilot;
     else if (str == "dockmaster" || str == "dockmasterview")
         cp = dockMaster;
+    else if (str == "oxygen" || str == "oxygenview")
+        cp = oxygenView;
     else
         luaL_error(L, "Unknown value for crew position: %s", str.c_str());
 }

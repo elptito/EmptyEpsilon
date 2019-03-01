@@ -70,6 +70,7 @@ public:
     GuiElement* hide();
     GuiElement* show();
     bool isVisible() const;
+    bool isFocus() const;
     GuiElement* setEnable(bool enable);
     GuiElement* enable();
     GuiElement* disable();

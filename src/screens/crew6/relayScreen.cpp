@@ -128,6 +128,21 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
     });
     position_text->setText(getStringFromPosition(radar->getViewPosition()));
 
+    position_entry = new GuiElement(this, id + "_ENTRY_ELEMENT");
+    position_entry->setSize(250, 320)->setPosition(250, -50, ABottomLeft);
+
+    (new GuiButton(position_entry, id + "_BUTTON_7", "7", [this]() {position_text->setText(position_text->getText() + "7");}))->setSize(50, 50)->setPosition(50, 100, ATopLeft);
+    (new GuiButton(position_entry, id + "_BUTTON_8", "8", [this]() {position_text->setText(position_text->getText() + "8");}))->setSize(50, 50)->setPosition(100, 100, ATopLeft);
+    (new GuiButton(position_entry, id + "_BUTTON_9", "9", [this]() {position_text->setText(position_text->getText() + "9");}))->setSize(50, 50)->setPosition(150, 100, ATopLeft);
+    (new GuiButton(position_entry, id + "_BUTTON_4", "4", [this]() {position_text->setText(position_text->getText() + "4");}))->setSize(50, 50)->setPosition(50, 150, ATopLeft);
+    (new GuiButton(position_entry, id + "_BUTTON_5", "5", [this]() {position_text->setText(position_text->getText() + "5");}))->setSize(50, 50)->setPosition(100, 150, ATopLeft);
+    (new GuiButton(position_entry, id + "_BUTTON_6", "6", [this]() {position_text->setText(position_text->getText() + "6");}))->setSize(50, 50)->setPosition(150, 150, ATopLeft);
+    (new GuiButton(position_entry, id + "_BUTTON_1", "1", [this]() {position_text->setText(position_text->getText() + "1");}))->setSize(50, 50)->setPosition(50, 200, ATopLeft);
+    (new GuiButton(position_entry, id + "_BUTTON_2", "2", [this]() {position_text->setText(position_text->getText() + "2");}))->setSize(50, 50)->setPosition(100, 200, ATopLeft);
+    (new GuiButton(position_entry, id + "_BUTTON_3", "3", [this]() {position_text->setText(position_text->getText() + "3");}))->setSize(50, 50)->setPosition(150, 200, ATopLeft);
+    (new GuiButton(position_entry, id + "_BUTTON_Clr", "Clr", [this]() {position_text->setText("");}))->setSize(50, 50)->setPosition(50, 250, ATopLeft);
+    (new GuiButton(position_entry, id + "_BUTTON_0", "0", [this]() {position_text->setText(position_text->getText() + "0");}))->setSize(50, 50)->setPosition(100, 250, ATopLeft);
+
     // Center screen
     center_screen_button = new GuiButton(view_controls, "CENTER_SCREEN_BUTTON", "Recentrer radar", [this]() {
         if (my_spaceship)
@@ -204,14 +219,14 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
     link_to_science_button->setIcon("gui/icons/station-science");
 
     // Link probe to 3D port button.
-    link_to_3D_port_button = new GuiToggleButton(option_buttons, "LINK_TO_3D_PORT", "Camera Sonde", [this](bool value){
-        if (value)
-            my_spaceship->commandSetProbe3DLink(targets.get()->getMultiplayerId());
-        else
-            my_spaceship->commandSetProbe3DLink(-1);
-    });
-    link_to_3D_port_button->setSize(GuiElement::GuiSizeMax, 50);
-    link_to_3D_port_button->setIcon("gui/icons/camera");
+//    link_to_3D_port_button = new GuiToggleButton(option_buttons, "LINK_TO_3D_PORT", "Camera Sonde", [this](bool value){
+//        if (value)
+//            my_spaceship->commandSetProbe3DLink(targets.get()->getMultiplayerId());
+//        else
+//            my_spaceship->commandSetProbe3DLink(-1);
+//    });
+//    link_to_3D_port_button->setSize(GuiElement::GuiSizeMax, 50);
+//    link_to_3D_port_button->setIcon("gui/icons/camera");
 
     // Station selector
     station_selector = new GuiSelector(option_buttons, "SPACE_STATION_SELECTOR", [this](int index, string value) {
@@ -374,16 +389,16 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
                 info_probe->setValue(string(int(ceilf(distance / probe->getProbeSpeed()))) + " S");
             else
                 info_probe->hide();
-            link_to_3D_port_button->setValue(my_spaceship->linked_probe_3D_id == probe->getMultiplayerId());
-            link_to_3D_port_button->enable();
+//            link_to_3D_port_button->setValue(my_spaceship->linked_probe_3D_id == probe->getMultiplayerId());
+//            link_to_3D_port_button->enable();
         }
         else
         {
             link_to_science_button->setValue(false);
             link_to_science_button->disable();
 
-            link_to_3D_port_button->setValue(false);
-            link_to_3D_port_button->disable();
+//            link_to_3D_port_button->setValue(false);
+//            link_to_3D_port_button->disable();
         }
 //        if (my_spaceship && obj->canBeHackedBy(my_spaceship))
 //        {
@@ -397,8 +412,8 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
         link_to_science_button->setValue(false);
 
         info_probe->hide();
-        link_to_3D_port_button->disable();
-		link_to_3D_port_button->setValue(false);
+//        link_to_3D_port_button->disable();
+//		link_to_3D_port_button->setValue(false);
         info_callsign->setValue("-");
     }
     if (my_spaceship)
@@ -440,6 +455,8 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
         delete_waypoint_button->enable();
     else
         delete_waypoint_button->disable();
+
+    position_entry->setVisible(position_text->isFocus());
 }
 
 void RelayScreen::onHotkey(const HotkeyResult& key)

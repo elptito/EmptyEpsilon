@@ -464,6 +464,7 @@ void ShipSelectionScreen::updateCrewTypeOptions()
         crew_position_button[navigation]->show();
         crew_position_button[logView]->show();
         crew_position_button[internLogView]->show();
+        crew_position_button[oxygenView]->show();
         break;
     case 4:
         main_screen_button->hide();

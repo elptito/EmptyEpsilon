@@ -59,6 +59,7 @@ private:
     GuiAutoLayout* view_controls;
     bool position_text_custom;
     GuiTextEntry* position_text;
+    GuiElement* position_entry;
 
     GuiToggleButton* alert_level_button;
     std::vector<GuiButton*> alert_level_buttons;

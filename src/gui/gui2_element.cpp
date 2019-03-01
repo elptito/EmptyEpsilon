@@ -142,6 +142,11 @@ bool GuiElement::isVisible() const
     return visible;
 }
 
+bool GuiElement::isFocus() const
+{
+    return focus;
+}
+
 GuiElement* GuiElement::setEnable(bool enable)
 {
     this->enabled = enable;
