@@ -8,6 +8,7 @@
 class GuiViewport3D;
 class GuiRadarView;
 class GuiCommsOverlay;
+class GuiWaterOverlay;
 class GuiPanel;
 class GuiLabel;
 class DamageControlScreen;

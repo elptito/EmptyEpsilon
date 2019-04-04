@@ -4,6 +4,8 @@
 #include "main.h"
 #include "epsilonServer.h"
 #include "preferenceManager.h"
+#include "screenComponents/waterOverlay.h"
+#include "screenComponents/noiseOverlay.h"
 
 #include "screenComponents/indicatorOverlays.h"
 #include "screenComponents/selfDestructIndicator.h"
@@ -75,6 +77,8 @@ ScreenMainScreen::ScreenMainScreen()
     }
 
     first_person = true;
+
+//    new GuiWaterOverlay(this);
 }
 
 void ScreenMainScreen::update(float delta)

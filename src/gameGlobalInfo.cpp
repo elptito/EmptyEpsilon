@@ -38,6 +38,7 @@ GameGlobalInfo::GameGlobalInfo()
     global_message_timeout = 0.0;
     player_warp_jump_drive_setting = PWJ_ShipDefault;
     scanning_complexity = SC_Normal;
+    scanning_system = SS_Simple;
     long_range_radar_range = 30000;
     use_beam_shield_frequencies = true;
     use_system_damage = true;
@@ -49,11 +50,11 @@ GameGlobalInfo::GameGlobalInfo()
     intercept_all_comms_to_gm = CGI_None;
 
     registerMemberReplication(&scanning_complexity);
+    registerMemberReplication(&scanning_system);
     registerMemberReplication(&global_message);
     registerMemberReplication(&global_message_timeout, 1.0);
     registerMemberReplication(&banner_string);
     registerMemberReplication(&victory_faction);
-    registerMemberReplication(&long_range_radar_range);
     registerMemberReplication(&use_beam_shield_frequencies);
     registerMemberReplication(&use_system_damage);
     registerMemberReplication(&use_repair_crew);

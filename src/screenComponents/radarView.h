@@ -58,6 +58,10 @@ private:
     bool show_game_master_data;
     bool auto_center_on_my_ship;
     float range_indicator_step_size;
+    float sonar_min;
+    float sonar_max;
+    bool test_sonar;
+    float sonar_parameter;
     ERadarStyle style;
     EFogOfWarStyle fog_style;
     func_t mouse_down_func;
@@ -74,6 +78,8 @@ public:
 
     virtual GuiRadarView* setDistance(float distance) { SectorsView::setDistance(distance); return this; }
     GuiRadarView* setRangeIndicatorStepSize(float step) { range_indicator_step_size = step; return this; }
+    GuiRadarView* setSonarParameter(float value) { sonar_parameter = value; return this; }
+    bool getSonarTest() { return test_sonar; }
     GuiRadarView* longRange() { long_range = true; return this; }
     GuiRadarView* shortRange() { long_range = false; return this; }
     GuiRadarView* enableGhostDots() { show_ghost_dots = true; return this; }
@@ -110,6 +116,8 @@ private:
     void drawGhostDots(sf::RenderTarget& window);
     void drawWaypoints(sf::RenderTarget& window);
     void drawRangeIndicators(sf::RenderTarget& window);
+    void drawCircularSonar(sf::RenderTarget& window);
+    void drawLineSonar(sf::RenderTarget& window);
     void drawTargetProjections(sf::RenderTarget& window);
     void drawMissileTubes(sf::RenderTarget& window);
     void drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget& window_alpha);

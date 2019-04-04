@@ -4,6 +4,8 @@
 #include "playerInfo.h"
 #include "gameGlobalInfo.h"
 #include "viewport3d.h"
+#include "screenComponents/waterOverlay.h"
+#include "screenComponents/noiseOverlay.h"
 
 #include "particleEffect.h"
 

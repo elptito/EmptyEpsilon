@@ -27,6 +27,7 @@ ServerCreationScreen::ServerCreationScreen()
     gameGlobalInfo->player_warp_jump_drive_setting = EPlayerWarpJumpDrive(PreferencesManager::get("server_config_warp_jump_drive_setting", "0").toInt());
     gameGlobalInfo->long_range_radar_range = PreferencesManager::get("server_config_long_range_radar_range", "30000").toInt();
     gameGlobalInfo->scanning_complexity = EScanningComplexity(PreferencesManager::get("server_config_scanning_complexity", "2").toInt());
+    gameGlobalInfo->scanning_system = EScanningSystem(PreferencesManager::get("server_config_scanning_system", "0").toInt());
     gameGlobalInfo->use_beam_shield_frequencies = PreferencesManager::get("server_config_use_beam_shield_frequencies", "1").toInt();
     gameGlobalInfo->use_system_damage = PreferencesManager::get("server_config_use_system_damage", "1").toInt();
     gameGlobalInfo->use_repair_crew = PreferencesManager::get("server_config_use_repair_crew", "1").toInt();

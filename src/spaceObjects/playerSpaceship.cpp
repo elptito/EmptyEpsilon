@@ -557,6 +557,20 @@ void PlayerSpaceship::update(float delta)
             }
         }
 
+        // If system door not functionnal, audio message
+        if (hasSystem(SYS_Door) && getSystemEffectiveness(SYS_Door) <= 0.1)
+        {
+            time_alert += delta;
+            if (time_alert > 30.0)
+            {
+//                soundManager->playTextToSpeech("Dysfonctionnement du SAS extérieur. Intrusion possible.");
+                time_alert = 0.0;
+            }
+        }else{
+            time_alert = 30.0;
+        }
+
+
         // If a ship is jumping or warping, consume additional energy.
         if (has_warp_drive && warp_request > 0 && !(has_jump_drive && jump_delay > 0))
         {
@@ -566,14 +580,21 @@ void PlayerSpaceship::update(float delta)
                 // If there's not enough energy, fall out of warp.
                 warp_request = 0;
 
-            for(float n=0; n<=4; n++)
+            for(float n=1; n<=4; n++)
             {
                 if ((current_warp > n-0.1 && current_warp < n+0.1) && warp_indicator != n)
                 {
-                    warp_indicator = n;
+                    warp_indicator = abs(n);
+//                    soundManager->playTextToSpeech("WARP en Vitesse " + string(warp_indicator));
                     addToShipLog("WARP " + string(abs(n)), sf::Color::White,"intern");
                 }
             }
+        }
+        if (warp_request == 0 && warp_indicator > 0)
+        {
+            warp_indicator = 0;
+//            soundManager->playTextToSpeech("Desactivation du moteur WARP");
+            addToShipLog("Desactivation du moteur WARP", sf::Color::White,"intern");
         }
 
         if (scanning_target)
@@ -725,6 +746,7 @@ void PlayerSpaceship::takeHullDamage(float damage_amount, DamageInfo& info)
             system_damage += string(getSystemName(ESystem(n))) + string(" ");
     }
     addToShipLog(system_damage,sf::Color::Red,"intern");
+//    soundManager->playTextToSpeech(system_damage);
 }
 
 void PlayerSpaceship::setSystemCoolantRequest(ESystem system, float request)
@@ -1088,7 +1110,8 @@ bool PlayerSpaceship::hailCommsByGM(string target_name)
 
     // Log the hail.
     addToShipLog("Contacte par " + target_name, colorConfig.log_generic);
-	soundManager->playSound("incoming_com.wav");
+//	soundManager->playSound("incoming_com.wav");
+    soundManager->playTextToSpeech("Communication entrante");
 
     // Set comms to the hail state and notify Relay/comms.
     comms_state = CS_BeingHailedByGM;

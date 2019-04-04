@@ -6,6 +6,7 @@
 class BlackHole : public SpaceObject, public Updatable
 {
     float update_delta;
+    float size;
 public:
     BlackHole();
 
@@ -19,6 +20,7 @@ public:
     virtual bool canHideInNebula()  override { return false; }
 
     virtual void collide(Collisionable* target, float force) override;
+    void setSize(float new_size);
 
     virtual string getExportLine() override { return "BlackHole():setPosition(" + string(getPosition().x, 0) + ", " + string(getPosition().y, 0) + ")"; }
 };

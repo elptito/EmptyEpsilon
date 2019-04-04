@@ -139,6 +139,8 @@ private:
     std::vector<ShipLogEntry> ships_log_docks;
     std::vector<ShipLogEntry> ships_log_science;
 
+    float time_alert;
+
 
 public:
     ESystem auto_repairing_system;

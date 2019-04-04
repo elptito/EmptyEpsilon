@@ -44,6 +44,13 @@ void GuiRadarView::onDraw(sf::RenderTarget& window)
     if (target_spaceship && auto_center_on_my_ship)
         setViewPosition(target_spaceship->getPosition());
 
+    //Ajust Sonar info
+    if (my_spaceship)
+    {
+        sonar_min = 20*my_spaceship->getSystemEffectiveness(SYS_Drones);
+        sonar_max = 1.5*my_spaceship->getSystemEffectiveness(SYS_Drones);
+    }
+
     //Setup our textures for rendering
     adjustRenderTexture(background_texture);
     adjustRenderTexture(forground_texture);
@@ -64,6 +71,12 @@ void GuiRadarView::onDraw(sf::RenderTarget& window)
         drawRenderTexture(mask_texture, background_texture, sf::Color::White, sf::BlendMultiply);
     drawSectorGrid(background_texture);
     drawRangeIndicators(background_texture);
+
+    if (long_range && style == Circular && gameGlobalInfo->scanning_system == SS_Circular)
+        drawCircularSonar(background_texture);
+    if (long_range && style == Circular && gameGlobalInfo->scanning_system == SS_Line)
+        drawLineSonar(background_texture);
+
     if (show_target_projection)
         drawTargetProjections(background_texture);
     if (show_missile_tubes)
@@ -214,6 +227,34 @@ void GuiRadarView::drawNebulaBlockedAreas(sf::RenderTarget& window)
         return;
     sf::Vector2f scan_center = my_spaceship->getPosition();
     sf::Vector2f radar_screen_center(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f);
+
+    if (gameGlobalInfo->scanning_system == SS_Circular)
+    {
+        // Big circle in black
+        window.clear(sf::Color(0, 0, 0, 255));
+
+        float min_sonar = (sonar_parameter * getScale())*0.5;
+        float max_sonar = (sonar_parameter * getScale())*1.2;
+
+        float r = 5000.0f * getScale();
+        sf::CircleShape circle(max_sonar, 32);
+        circle.setOrigin(max_sonar, max_sonar);
+        circle.setPosition(radar_screen_center + (scan_center - getViewPosition()) * getScale());
+        circle.setFillColor(sf::Color(255, 255, 255,255));
+        window.draw(circle, blend);
+
+        sf::CircleShape circle2(min_sonar, 32);
+        circle2.setOrigin(min_sonar, min_sonar);
+        circle2.setPosition(radar_screen_center + (scan_center - getViewPosition()) * getScale());
+        circle2.setFillColor(sf::Color(0, 0, 0,255));
+        window.draw(circle2, blend);
+    }
+
+    if (gameGlobalInfo->scanning_system == SS_Line)
+    {
+        window.clear(sf::Color(0, 0, 0, 255));
+    }
+
     PVector<Nebula> nebulas = Nebula::getNebulas();
     foreach(Nebula, n, nebulas)
     {
@@ -335,6 +376,44 @@ void GuiRadarView::drawRangeIndicators(sf::RenderTarget& window)
     }
 }
 
+void GuiRadarView::drawCircularSonar(sf::RenderTarget& window)
+{
+    // Test de sonar
+    if (sonar_parameter < 1.0)
+        return;
+
+    sf::Vector2f radar_screen_center(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f);
+    float circle_size = sonar_parameter;
+    float s = circle_size * getScale();
+    sf::CircleShape circle(s, 50);
+    circle.setOrigin(s, s);
+    circle.setPosition(radar_screen_center);
+    circle.setFillColor(sf::Color::Transparent);
+    circle.setFillColor(sf::Color(50, 255, 50, 50 * (gameGlobalInfo->long_range_radar_range*2 - circle_size) / (gameGlobalInfo->long_range_radar_range*1.5 - range_indicator_step_size)));
+    circle.setOutlineColor(sf::Color(50, 255, 50, 16));
+    circle.setOutlineThickness(2.0);
+    window.draw(circle);
+}
+
+void GuiRadarView::drawLineSonar(sf::RenderTarget& window)
+{
+
+    sf::Vector2f radar_screen_center(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f);
+    sf::VertexArray a(sf::TrianglesStrip, 4);
+
+    float max_line = gameGlobalInfo->long_range_radar_range * getScale() * 1.5;
+    a[0].position = radar_screen_center;
+    a[0].color = sf::Color(50, 255, 50, 0);
+    a[1].position = a[0].position + sf::vector2FromAngle(sonar_parameter+sonar_max) * max_line;
+    a[1].color = sf::Color(50, 255, 50, 128);
+    a[2].position = a[0].position + sf::vector2FromAngle(sonar_parameter-sonar_min) * max_line;
+    a[2].color = sf::Color(50, 255, 50, 0);
+    a[3].position = radar_screen_center;
+    a[3].color = sf::Color(50, 255, 50, 0);
+
+    window.draw(a);
+}
+
 void GuiRadarView::drawTargetProjections(sf::RenderTarget& window)
 {
     const float seconds_per_distance_tick = 5.0f;
@@ -449,7 +528,6 @@ void GuiRadarView::drawMissileTubes(sf::RenderTarget& window)
         {
             sf::Vector2f fire_position = target_spaceship->getPosition() + sf::rotateVector(target_spaceship->ship_template->model_data->getTubePosition2D(n), target_spaceship->getRotation());
             sf::Vector2f fire_draw_position = radar_screen_center + (getViewPosition() - fire_position) * getScale();
-
             float fire_angle = target_spaceship->getRotation() + target_spaceship->weapon_tube[n].getDirection();
 
             a[n * 2].position = fire_draw_position;
@@ -517,9 +595,34 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
     case NebulaFogOfWar:
         foreach(SpaceObject, obj, space_object_list)
         {
+            if (!my_spaceship)
+                break;
+
             if (obj->canHideInNebula() && my_spaceship && Nebula::blockedByNebula(my_spaceship->getPosition(), obj->getPosition()))
                 continue;
-            visible_objects.insert(*obj);
+
+            test_sonar = true;
+            if (gameGlobalInfo->scanning_system == SS_Circular)
+            {
+                sf::Vector2f diff = obj->getPosition() - my_spaceship->getPosition();
+                float diff_len = sf::length(diff);
+                float min_sonar = (sonar_parameter+obj->getRadius())*0.5;
+                float max_sonar = (sonar_parameter+obj->getRadius())*1.2;
+                test_sonar = diff_len < 5000.0 || (diff_len < max_sonar && diff_len > min_sonar);
+            }
+            if (gameGlobalInfo->scanning_system == SS_Line)
+            {
+                float diff_ang = sf::vector2ToAngle(obj->getPosition() - my_spaceship->getPosition());
+                float diff_len = sf::length(obj->getPosition() - my_spaceship->getPosition());
+                float min_sonar = sonar_parameter - sonar_max;
+                float max_sonar = sonar_parameter - sonar_min;
+                test_sonar = obj != my_spaceship &&
+                    (diff_len < 5000.0 ||
+                    (diff_ang < sonar_parameter + sonar_max && diff_ang > sonar_parameter - sonar_min));
+            }
+
+            if (test_sonar)
+                visible_objects.insert(*obj);
         }
         break;
     case NoObjects:

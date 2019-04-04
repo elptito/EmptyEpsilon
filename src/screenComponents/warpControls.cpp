@@ -60,13 +60,14 @@ void GuiWarpControls::onDraw(sf::RenderTarget& window)
         {
             if (!launch_sound_played)
             {
+//                soundManager->playTextToSpeech("Activation de la vitesse WARP");
                 soundManager->playSound("warp.wav", target_spaceship->getPosition(), 200.0, 1.0);
                 launch_sound_played = true;
             }
         }else{
             launch_sound_played = false;
         }
-            //soundManager->setMusicVolume(int(my_spaceship->current_warp * 25));
+        //soundManager->setMusicVolume(int(my_spaceship->current_warp * 25));
     }
 }
 

@@ -33,6 +33,12 @@ enum EScanningComplexity
     SC_Normal,
     SC_Advanced
 };
+enum EScanningSystem
+{
+    SS_Simple = 0,
+    SS_Circular,
+    SS_Line
+};
 enum ECommsGmInterception
 {
     CGI_None = 0,
@@ -74,6 +80,7 @@ public:
     NebulaInfo nebula_info[max_nebulas];
     EPlayerWarpJumpDrive player_warp_jump_drive_setting;
     EScanningComplexity scanning_complexity;
+    EScanningSystem scanning_system;
     /*!
      * \brief Range of the science radar.
      */
@@ -132,5 +139,6 @@ string getStringFromPosition(sf::Vector2f position);
 bool isValidPositionString(string sectorName);
 
 REGISTER_MULTIPLAYER_ENUM(EScanningComplexity);
+REGISTER_MULTIPLAYER_ENUM(EScanningSystem);
 
 #endif//GAME_GLOBAL_INFO_H

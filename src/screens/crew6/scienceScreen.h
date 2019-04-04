@@ -21,8 +21,13 @@ class GuiLabel;
 class DatabaseViewComponent;
 class GuiCustomShipFunctions;
 
-class ScienceScreen : public GuiOverlay
+class ScienceScreen : public GuiOverlay, public Updatable
 {
+private:
+    float sonar_step_time = 0.0;
+    float sonar_parameter = 5000.0;
+    bool sonar_sound_played = false;
+
 public:
     GuiOverlay* background_gradient;
     GuiOverlay* background_crosses;
@@ -66,6 +71,7 @@ public:
     ScienceScreen(GuiContainer* owner, ECrewPosition crew_position=scienceOfficer);
 
     virtual void onDraw(sf::RenderTarget& window);
+    virtual void update(float delta) override;
     virtual void onHotkey(const HotkeyResult& key) override;
 };
 

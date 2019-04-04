@@ -1112,6 +1112,7 @@ GuiShipTweakMessages::GuiShipTweakMessages(GuiContainer* owner)
     // Send the message
     send_message_log = new GuiButton(left_col, "", "Envoyer message", [this]() {
        target -> addToShipLog(message,color_message,type_log);
+       soundManager->playTextToSpeech(message);
     });
     send_message_log->setSize(GuiElement::GuiSizeMax, 40);
 
