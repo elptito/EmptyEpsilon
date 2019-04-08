@@ -15,6 +15,7 @@ private:
 
     GuiKeyValueDisplay* energy_display;
     GuiKeyValueDisplay* heading_display;
+    GuiKeyValueDisplay* heading2_display;
     GuiKeyValueDisplay* velocity_display;
     GuiElement* warp_controls;
     GuiElement* jump_controls;
@@ -22,7 +23,7 @@ private:
     GuiCombatManeuver* combat_maneuver;
 public:
     HelmsScreen(GuiContainer* owner);
-    
+
     virtual void onDraw(sf::RenderTarget& window) override;
     virtual void onHotkey(const HotkeyResult& key) override;
 };

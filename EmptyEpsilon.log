@@ -1,0 +1,10 @@
+[INFO]  Loaded: packs/Angryfly.pack with 166 files
+[INFO]  Loaded: packs/Asteroids.pack with 30 files
+[INFO]  Loaded: packs/msgamedev.pack with 96 files
+[INFO]  Loaded: Tokka_WalkingMan.png with 6 sprites
+[INFO]  Loaded shader: glitch
+[INFO]  OpenGL version: 4.4
+[INFO]  Load script: model_data.lua
+[INFO]  Load script: shipTemplates.lua
+[ERROR] LUA: require: [string "shipTemplates_Corvette.lua"]:33: bad argument #6 to 'setDocks' (number expected, got no value)
+[ERROR] LUA: run: require:[string "shipTemplates_Corvette.lua"]:33: bad argument #6 to 'setDocks' (number expected, got no value)

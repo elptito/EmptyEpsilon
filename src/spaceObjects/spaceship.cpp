@@ -89,6 +89,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     target_rotation = getRotation();
     impulse_request = 0;
     current_impulse = 0;
+    current_impulse_vector = sf::Vector2f(0, 0);
     has_warp_drive = true;
     warp_request = 0.0;
     current_warp = 0.0;
@@ -122,6 +123,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     registerMemberReplication(&target_rotation, 1.5);
     registerMemberReplication(&impulse_request, 0.1);
     registerMemberReplication(&current_impulse, 0.5);
+    registerMemberReplication(&current_impulse_vector, 0.0);
     registerMemberReplication(&has_warp_drive);
     registerMemberReplication(&warp_request, 0.1);
     registerMemberReplication(&current_warp, 0.1);
@@ -466,6 +468,9 @@ void SpaceShip::update(float delta)
     else
         setAngularVelocity(rotationDiff * turn_speed * getSystemEffectiveness(SYS_Maneuver));
 
+    // Determine forward direction and velocity.
+    sf::Vector2f forward = sf::vector2FromAngle(getRotation());
+
     if ((has_jump_drive && jump_delay > 0) || (has_warp_drive && warp_request > 0))
     {
         if (WarpJammer::isWarpJammed(getPosition()))
@@ -479,9 +484,9 @@ void SpaceShip::update(float delta)
         if (current_impulse > 0.0)
         {
             if (impulse_max_speed > 0)
-                current_impulse -= delta * (impulse_acceleration / impulse_max_speed);
-            if (current_impulse < 0.0)
-                current_impulse = 0.0;
+                current_impulse_vector -= forward * delta * (impulse_acceleration / impulse_max_speed);
+            if (current_impulse_vector.x + current_impulse_vector.y < 0.0)
+                current_impulse_vector = sf::Vector2f(0, 0);
         }
         if (current_warp > 0.0)
         {
@@ -500,9 +505,9 @@ void SpaceShip::update(float delta)
         if (current_impulse > 0.0)
         {
             if (impulse_max_speed > 0)
-                current_impulse -= delta * (impulse_acceleration / impulse_max_speed);
-            if (current_impulse < 0.0)
-                current_impulse = 0.0;
+                current_impulse_vector -= forward * delta * (impulse_acceleration / impulse_max_speed);
+            if (current_impulse_vector.x + current_impulse_vector.y < 0.0)
+                current_impulse_vector = sf::Vector2f(0, 0);
         }else{
             if (current_warp < warp_request)
             {
@@ -546,13 +551,15 @@ void SpaceShip::update(float delta)
         if (impulse_request > 0.0)
         {
             if (impulse_max_speed > 0)
-                current_impulse += delta * (impulse_acceleration / impulse_max_speed);
+                current_impulse_vector += forward * delta * impulse_acceleration * getSystemEffectiveness(SYS_Impulse);
+             //current_impulse += delta * (impulse_acceleration / impulse_max_speed);
 //            if (current_impulse > impulse_request)
 //                current_impulse = impulse_request;
         }else if (impulse_request < 0.0)
         {
             if (impulse_max_speed > 0)
-                current_impulse -= delta * (impulse_acceleration / impulse_max_speed);
+                current_impulse_vector -= forward * delta * impulse_acceleration * getSystemEffectiveness(SYS_Impulse);
+                //current_impulse -= delta * (impulse_acceleration / impulse_max_speed);
 //            if (current_impulse < impulse_request)
 //                current_impulse = impulse_request;
         }
@@ -561,9 +568,9 @@ void SpaceShip::update(float delta)
     // Add heat based on warp factor.
     addHeat(SYS_Warp, current_warp * delta * heat_per_warp);
 
-    // Determine forward direction and velocity.
-    sf::Vector2f forward = sf::vector2FromAngle(getRotation());
-    setVelocity(forward * (current_impulse * impulse_max_speed * getSystemEffectiveness(SYS_Impulse) + current_warp * warp_speed_per_warp_level * getSystemEffectiveness(SYS_Warp)));
+    current_impulse = current_impulse_vector.x + current_impulse_vector.y;
+
+    setVelocity(current_impulse_vector + forward * (current_warp * warp_speed_per_warp_level * getSystemEffectiveness(SYS_Warp)));
 
     if (combat_maneuver_boost_active > combat_maneuver_boost_request)
     {

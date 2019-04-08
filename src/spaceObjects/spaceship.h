@@ -83,8 +83,10 @@ public:
 
     /*!
      * [output] Amount of actual impulse from the engines (-1.0 to 1.0)
+        Desormais un vecteur d'impulsion
      */
     float current_impulse;
+    sf::Vector2f current_impulse_vector;
 
     /*!
      * [config] Speed of rotation, in deg/second
@@ -283,6 +285,8 @@ public:
     P<SpaceObject> getTarget();
 
     virtual std::unordered_map<string, string> getGMInfo();
+
+    float getHeading2() { float ret = vector2ToAngle(current_impulse_vector) - 270; while(ret < 0) ret += 360.0f; while(ret > 360.0f) ret -= 360.0f; return ret; }
 
     bool isDocked(P<SpaceObject> target) { return docking_state == DS_Docked && docking_target == target; }
     bool canStartDocking() { return current_warp <= 0.0 && (!has_jump_drive || jump_delay <= 0.0); }

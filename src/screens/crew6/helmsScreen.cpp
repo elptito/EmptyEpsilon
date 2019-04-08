@@ -112,8 +112,10 @@ HelmsScreen::HelmsScreen(GuiContainer* owner)
     energy_display->setIcon("gui/icons/energy")->setTextSize(20)->setPosition(20, 100, ATopLeft)->setSize(240, 40);
     heading_display = new GuiKeyValueDisplay(this, "HEADING_DISPLAY", 0.45, "Direction", "");
     heading_display->setIcon("gui/icons/heading")->setTextSize(20)->setPosition(20, 140, ATopLeft)->setSize(240, 40);
+    heading2_display = new GuiKeyValueDisplay(this, "HEADING_DISPLAY", 0.45, "Direction", "");
+    heading2_display->setIcon("gui/icons/heading")->setTextSize(20)->setPosition(20, 180, ATopLeft)->setSize(240, 40);
     velocity_display = new GuiKeyValueDisplay(this, "VELOCITY_DISPLAY", 0.45, "Vitesse", "");
-    velocity_display->setIcon("gui/icons/speed")->setTextSize(20)->setPosition(20, 180, ATopLeft)->setSize(240, 40);
+    velocity_display->setIcon("gui/icons/speed")->setTextSize(20)->setPosition(20, 220, ATopLeft)->setSize(240, 40);
 
     GuiAutoLayout* engine_layout = new GuiAutoLayout(this, "ENGINE_LAYOUT", GuiAutoLayout::LayoutHorizontalLeftToRight);
     engine_layout->setPosition(20, -100, ABottomLeft)->setSize(GuiElement::GuiSizeMax, 300);
@@ -132,6 +134,7 @@ void HelmsScreen::onDraw(sf::RenderTarget& window)
     {
         energy_display->setValue(string(int(my_spaceship->energy_level)));
         heading_display->setValue(string(my_spaceship->getHeading(), 1));
+        heading2_display->setValue(string(my_spaceship->getHeading2(),1));
         float velocity = sf::length(my_spaceship->getVelocity()) / 1000 * 60;
         velocity_display->setValue(string(velocity, 1) + DISTANCE_UNIT_1K + "/min");
 
