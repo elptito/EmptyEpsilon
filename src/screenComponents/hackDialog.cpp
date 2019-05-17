@@ -374,7 +374,7 @@ void GuiHackDialog::commandHack()
             else
             {
                 hack_message  += "\n> Code " + hack_text + " incorrect";
-                hack_message  += "\n> " + string(verifHackCode(6, hack_text, hack_code)) + "bits corrects";
+                hack_message  += "\n> " + string(verifHackCode(6, hack_text, hack_code)) + " bits corrects";
             }
         }
         else if (hack_step == 8)

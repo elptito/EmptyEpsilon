@@ -87,7 +87,10 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
     GuiAutoLayout* sidebar = new GuiAutoLayout(this, "SIDE_BAR", GuiAutoLayout::LayoutVerticalTopToBottom);
     sidebar->setPosition(-20, 150, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
 
-    info_radar_range = new GuiKeyValueDisplay(sidebar, "RADAR_RANGE", 0.4, "Portee radar", "");
+    info_distance = new GuiKeyValueDisplay(sidebar, "DISTANCE", 0.4, "Distance", "");
+    info_distance->setSize(GuiElement::GuiSizeMax, 30);
+
+    info_radar_range = new GuiKeyValueDisplay(sidebar, "DISTANCE", 0.4, "Portee radar", "");
     info_radar_range->setSize(GuiElement::GuiSizeMax, 30);
 
     info_callsign = new GuiKeyValueDisplay(sidebar, "SCIENCE_CALLSIGN", 0.4, "ID", "");
@@ -321,6 +324,15 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
         radar_range = 5000.0 * my_spaceship->getSystemEffectiveness(SYS_Drones);
         info_radar_range -> setValue(string(radar_range / 1000.0f, 1.0f) + " U");
     }
+
+    // Info Distance
+    if (my_spaceship)
+    {
+        float distance = sf::length(radar->getViewPosition() - my_spaceship->getPosition());
+        info_distance -> setValue(string(distance / 1000.0f, 1.0f) + " U");
+    }
+
+
 
     // Info progress probe
     if (my_spaceship)

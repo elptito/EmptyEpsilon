@@ -451,7 +451,8 @@ void PlayerSpaceship::update(float delta)
             {
                 comms_open_delay -= delta;
             }else{
-                if (!comms_target)
+                if (!comms_target && !comms_generic)
+//                if (!comms_target)
                 {
                     comms_state = CS_ChannelBroken;
                 }else{
@@ -484,7 +485,8 @@ void PlayerSpaceship::update(float delta)
         }
         if (comms_state == CS_ChannelOpen || comms_state == CS_ChannelOpenPlayer)
         {
-            if (!comms_target)
+//            if (!comms_target)
+            if (!comms_target && !comms_generic)
                 comms_state = CS_ChannelBroken;
         }
 
@@ -1326,6 +1328,7 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
             comms_target = game_server->getObjectById(id);
             if (comms_target)
             {
+                comms_generic = false;
                 P<PlayerSpaceship> player = comms_target;
                 comms_state = CS_OpeningChannel;
                 comms_open_delay = comms_channel_open_time;
@@ -1333,7 +1336,13 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
                 comms_incomming_message = "Ouvrir communication vers " + comms_target_name;
                 addToShipLog("Contact: " + comms_target_name, colorConfig.log_generic);
             }else{
-                comms_state = CS_Inactive;
+//                comms_state = CS_Inactive;
+                comms_generic = true;
+                comms_state = CS_OpeningChannel;
+                comms_open_delay = comms_channel_open_time;
+                comms_target_name = "";
+                comms_incomming_message = "Ouvrir communication generique";
+                addToShipLog("Lancement des communications", colorConfig.log_generic);
             }
         }
         break;
@@ -1826,10 +1835,20 @@ void PlayerSpaceship::commandAbortDock()
 
 void PlayerSpaceship::commandOpenTextComm(P<SpaceObject> obj)
 {
-    if (!obj) return;
-    sf::Packet packet;
-    packet << CMD_OPEN_TEXT_COMM << obj->getMultiplayerId();
-    sendClientCommand(packet);
+//    if (!obj) return;
+    if (obj)
+    {
+        sf::Packet packet;
+        packet << CMD_OPEN_TEXT_COMM << obj->getMultiplayerId();
+        sendClientCommand(packet);
+    }
+    else
+    {
+        sf::Packet packet;
+        packet << CMD_OPEN_TEXT_COMM;
+        sendClientCommand(packet);
+    }
+
 }
 
 void PlayerSpaceship::commandCloseTextComm()

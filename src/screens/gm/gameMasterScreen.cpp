@@ -16,6 +16,7 @@
 #include "gui/gui2_togglebutton.h"
 #include "gui/gui2_selector.h"
 #include "gui/gui2_autolayout.h"
+#include "gui/gui2_slider.h"
 #include "gui/gui2_listbox.h"
 #include "gui/gui2_label.h"
 #include "gui/gui2_keyvaluedisplay.h"
@@ -35,13 +36,25 @@ GameMasterScreen::GameMasterScreen()
     box_selection_overlay = new GuiOverlay(main_radar, "BOX_SELECTION", sf::Color(255, 255, 255, 32));
     box_selection_overlay->hide();
 
-    pause_button = new GuiToggleButton(this, "PAUSE_BUTTON", "Pause", [this](bool value) {
-        if (!value)
-            gameMasterActions->commandSetGameSpeed(1.0f);
-        else
-            gameMasterActions->commandSetGameSpeed(0.0f);
+//    pause_button = new GuiToggleButton(this, "PAUSE_BUTTON", "Pause", [this](bool value) {
+//        if (!value)
+//            gameMasterActions->commandSetGameSpeed(1.0f);
+//        else
+//            gameMasterActions->commandSetGameSpeed(0.0f);
+//    });
+//    pause_button->setValue(engine->getGameSpeed() == 0.0f)->setPosition(20, 20, ATopLeft)->setSize(250, 50);
+
+    pause_button = new GuiSlider(this, "PAUSE_BUTTON", 0.0, 10.0, 1.0, [this](float value) {
+                                 gameMasterActions->commandSetGameSpeed(value);
     });
-    pause_button->setValue(engine->getGameSpeed() == 0.0f)->setPosition(20, 20, ATopLeft)->setSize(250, 50);
+
+    pause_button->setPosition(20, 20, ATopLeft)->setSize(250, 50);
+    pause_button->addSnapValue(0.0, 0.5);
+    pause_button->addSnapValue(1.0, 0.5);
+    pause_button->addSnapValue(2.0, 0.5);
+    pause_button->addSnapValue(5.0, 0.5);
+    pause_button->addSnapValue(10.0, 0.5);
+
 
     if (gameGlobalInfo->intercept_all_comms_to_gm < CGI_Always){
         intercept_comms_button = new GuiToggleButton(this, "INTERCEPT_COMMS_BUTTON", "Intercept all comms", [this](bool value) {
@@ -398,7 +411,8 @@ void GameMasterScreen::update(float delta)
             gm_script_options->addEntry(callbackName, callbackName);
         }
     }
-    pause_button->setValue(engine->getGameSpeed() == 0.0f);
+//    pause_button->setValue(engine->getGameSpeed() == 0.0f);
+    pause_button->setValue(engine->getGameSpeed());
     intercept_comms_button->setValue(gameGlobalInfo->intercept_all_comms_to_gm);
 }
 
