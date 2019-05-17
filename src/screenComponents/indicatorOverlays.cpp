@@ -84,17 +84,17 @@ void GuiIndicatorOverlays::onDraw(sf::RenderTarget& window)
         }else{
             glitchPostProcessor->enabled = false;
         }
-//        if (my_spaceship->current_warp > 0.0)
-//        {
-//            warpPostProcessor->enabled = true;
-//            warpPostProcessor->setUniform("amount", my_spaceship->current_warp * 0.01);
-//        }else if (my_spaceship->jump_delay > 0.0 && my_spaceship->jump_delay < 2.0)
-//        {
-//            warpPostProcessor->enabled = true;
-//            warpPostProcessor->setUniform("amount", (2.0 - my_spaceship->jump_delay) * 0.1);
-//        }else{
-//            warpPostProcessor->enabled = false;
-//        }
+        if (my_spaceship->current_warp > 0.0 && PreferencesManager::get("warp_post_processor_disable").toInt() != 1)
+        {
+            warpPostProcessor->enabled = true;
+            warpPostProcessor->setUniform("amount", my_spaceship->current_warp * 0.01);
+        }else if (my_spaceship->jump_delay > 0.0 && my_spaceship->jump_delay < 2.0 && PreferencesManager::get("warp_post_processor_disable").toInt() != 1)
+        {
+            warpPostProcessor->enabled = true;
+            warpPostProcessor->setUniform("amount", (2.0 - my_spaceship->jump_delay) * 0.1);
+        }else{
+            warpPostProcessor->enabled = false;
+        }
     }else{
 //        warpPostProcessor->enabled = false;
         glitchPostProcessor->enabled = false;
