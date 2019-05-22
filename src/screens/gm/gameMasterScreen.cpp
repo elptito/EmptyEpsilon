@@ -399,7 +399,8 @@ void GameMasterScreen::update(float delta)
         }
     }
     pause_button->setValue(engine->getGameSpeed() == 0.0f);
-    intercept_comms_button->setValue(gameGlobalInfo->intercept_all_comms_to_gm);
+    if (gameGlobalInfo->intercept_all_comms_to_gm < CGI_Always)
+        intercept_comms_button->setValue(gameGlobalInfo->intercept_all_comms_to_gm);
 }
 
 void GameMasterScreen::onMouseDown(sf::Vector2f position)
