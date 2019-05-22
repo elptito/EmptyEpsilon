@@ -97,18 +97,21 @@ void DebugRenderer::render(sf::RenderTarget& window)
 
 void DebugRenderer::handleKeyPress(sf::Event::KeyEvent key, int unicode)
 {
-//    if (key.code == sf::Keyboard::F10)
-//    {
-//        show_fps = !show_fps;
-//        show_datarate = !show_datarate;
-//    }
-//    if (key.code == sf::Keyboard::F11)
-//    {
-//        show_timing_graph = !show_timing_graph;
-//        timing_graph_points.clear();
-//        if (show_timing_graph)
-//            P<WindowManager>(engine->getObject("windowManager"))->setFrameLimit(0);
-//        else
-//            P<WindowManager>(engine->getObject("windowManager"))->setFrameLimit(60);
-//    }
+    if (game_server)
+    {
+        if (key.code == sf::Keyboard::F10)
+        {
+            show_fps = !show_fps;
+            show_datarate = !show_datarate;
+        }
+        if (key.code == sf::Keyboard::F11)
+        {
+            show_timing_graph = !show_timing_graph;
+            timing_graph_points.clear();
+            if (show_timing_graph)
+                P<WindowManager>(engine->getObject("windowManager"))->setFrameLimit(0);
+            else
+                P<WindowManager>(engine->getObject("windowManager"))->setFrameLimit(60);
+        }
+    }
 }

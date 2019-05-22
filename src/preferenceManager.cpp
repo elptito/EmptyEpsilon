@@ -50,7 +50,7 @@ void PreferencesManager::save(string filename)
         {
             keys.push_back(i->first);
         }
-        std::sort(keys.begin(), keys.end());
+        std::sort(keys.rbegin(), keys.rend());
         for(string key : keys)
         {
             fprintf(f, "%s=%s\n", key.c_str(), preference[key].c_str());

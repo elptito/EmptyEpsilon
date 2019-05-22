@@ -4,6 +4,7 @@
 #include "gameGlobalInfo.h"
 #include "spaceObjects/wormHole.h"
 #include "spaceObjects/cpuShip.h"
+#include "spaceObjects/explosionEffect.h"
 
 const static int16_t CMD_RUN_SCRIPT = 0x0000;
 const static int16_t CMD_SEND_GLOBAL_MESSAGE = 0x0001;
@@ -178,8 +179,15 @@ void GameMasterActions::onReceiveClientCommand(int32_t client_id, sf::Packet& pa
             packet >> selection;
             for(P<SpaceObject> obj : selection)
             {
+//                if (obj)
+//                    obj->destroy();
                 if (obj)
+                {
+                    P<ExplosionEffect> e = new ExplosionEffect();
+                    e->setSize(obj->getRadius());
+                    e->setPosition(obj->getPosition());
                     obj->destroy();
+                }
             }
         }
         break;
