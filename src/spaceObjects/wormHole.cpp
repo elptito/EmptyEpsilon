@@ -80,6 +80,9 @@ void WormHole::draw3DTransparent()
 
 void WormHole::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range)
 {
+    if (getRadarSignatureGravity() < 0.15)
+        return;
+
     sf::Sprite object_sprite;
     textureManager.setTexture(object_sprite, "wormHole" + string(radar_visual) + ".png");
     object_sprite.setRotation(getRotation());
@@ -117,6 +120,9 @@ void WormHole::update(float delta)
 void WormHole::collide(Collisionable* target, float collision_force)
 {
     if (update_delta == 0.0)
+        return;
+
+    if (getRadarSignatureGravity() < 0.15)
         return;
 
     sf::Vector2f diff = getPosition() - target->getPosition();

@@ -180,7 +180,10 @@ void GuiCommsOverlay::onDraw(sf::RenderTarget& window)
         closed_box->setVisible(my_spaceship->isCommsClosed());
 
         chat_comms_title->setVisible(my_spaceship->isCommsChatOpen());
-        chat_label->setText("Communication avec " + my_spaceship->getCommsTargetName());
+        if (my_spaceship->getCommsTargetName() != "")
+            chat_label->setText("Communication avec " + my_spaceship->getCommsTargetName());
+        else
+            chat_label->setText("Communication");
         chat_comms_box->setVisible(my_spaceship->isCommsChatOpen() && !minimized);
         chat_comms_text->setText(my_spaceship->getCommsIncommingMessage());
 

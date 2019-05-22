@@ -7,7 +7,8 @@
 
 GuiOpenCommsButton::GuiOpenCommsButton(GuiContainer* owner, string id, TargetsContainer* targets)
 : GuiButton(owner, id, "Communications", [this]() {
-    if (my_spaceship && this->targets->get())
+//    if (my_spaceship && this->targets->get())
+    if (my_spaceship)
         my_spaceship->commandOpenTextComm(this->targets->get());
 }), targets(targets)
 {
@@ -18,11 +19,12 @@ GuiOpenCommsButton::GuiOpenCommsButton(GuiContainer* owner, string id, TargetsCo
 void GuiOpenCommsButton::onDraw(sf::RenderTarget& window)
 {
     disable();
-    if (targets->get() && my_spaceship && my_spaceship->isCommsInactive())
-    {
-        if (P<SpaceShip>(targets->get()) || P<SpaceStation>(targets->get()) || P<WormHole>(targets->get()))
+//    if (targets->get() && my_spaceship && my_spaceship->isCommsInactive())
+//    if (my_spaceship && my_spaceship->isCommsInactive())
+//    {
+//        if (P<SpaceShip>(targets->get()) || P<SpaceStation>(targets->get()) || P<WormHole>(targets->get()))
             enable();
-    }
+//    }
     GuiButton::onDraw(window);
 }
 

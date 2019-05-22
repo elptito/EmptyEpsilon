@@ -12,6 +12,7 @@ class GuiObjectTweak;
 class GuiRadarView;
 class GuiOverlay;
 class GuiSelector;
+class GuiSlider;
 class GuiAutoLayout;
 class GuiKeyValueDisplay;
 class GuiListbox;
@@ -48,7 +49,8 @@ private:
     GuiAutoLayout* order_layout;
     GuiButton* player_comms_hail;
     GuiButton* global_message_button;
-    GuiToggleButton* pause_button;
+//    GuiToggleButton* pause_button;
+    GuiSlider* pause_button;
     GuiToggleButton* intercept_comms_button;
     GuiButton* tweak_button;
     GuiButton* copy_scenario_button;

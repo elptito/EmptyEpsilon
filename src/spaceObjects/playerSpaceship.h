@@ -130,6 +130,7 @@ private:
     ECommsState comms_state;
     float comms_open_delay;
     P<SpaceObject> comms_target; // Server only
+    bool comms_generic = false;
     std::vector<int> comms_reply_id;
     std::vector<string> comms_reply_message;
     CommsScriptInterface comms_script_interface; // Server only
