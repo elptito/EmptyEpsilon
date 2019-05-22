@@ -140,12 +140,14 @@ SpaceObject::SpaceObject(float collision_range, string multiplayer_name, float m
     personality_id = 0;
     hull = 0;
     translate_z = 0;
+    id_dock = "";
 
     scanning_complexity_value = 0;
     scanning_depth_value = 0;
 
     registerMemberReplication(&translate_z);
     registerMemberReplication(&callsign);
+    registerMemberReplication(&id_dock);
     registerMemberReplication(&hull);
     registerMemberReplication(&faction_id);
     registerMemberReplication(&personality_id);
@@ -172,12 +174,15 @@ SpaceObject::SpaceObject(float collision_range, string multiplayer_name, float m
         registerMemberReplication(&oxygen_max[n]);
         registerMemberReplication(&oxygen_rate[n]);
     }
+
+    transparency = 0.0f;
+    registerMemberReplication(&transparency);
 }
 
 #if FEATURE_3D_RENDERING
 void SpaceObject::draw3D()
 {
-    model_info.render(getPosition(), getRotation());
+    model_info.render(getPosition(), getRotation(), 1 - transparency);
 }
 #endif//FEATURE_3D_RENDERING
 
@@ -218,11 +223,15 @@ bool SpaceObject::canBeTargetedBy(P<SpaceObject> other)
 {
     if(hull <= 0)
         return false;
+    if (getTransparency() > 0.5)
+        return false;
     return true;
 }
 
 bool SpaceObject::canBeSelectedBy(P<SpaceObject> other)
 {
+    if (getTransparency() > 0.5)
+        return false;
     if (getDescriptionFor(other).length() > 0)
         return true;
     if (canBeScannedBy(other))
@@ -234,6 +243,8 @@ bool SpaceObject::canBeSelectedBy(P<SpaceObject> other)
 
 bool SpaceObject::canBeScannedBy(P<SpaceObject> other)
 {
+    if (getTransparency() > 0.5)
+        return false;
     if (getScannedStateFor(other) == SS_NotScanned)
         return true;
     if (getScannedStateFor(other) == SS_FullScan)

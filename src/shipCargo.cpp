@@ -13,6 +13,7 @@ ShipCargo::ShipCargo() : Cargo("ShipCargo")
     registerMemberReplication(&template_name);
     registerMemberReplication(&hull_strength);
     registerMemberReplication(&has_reactor);
+    registerMemberReplication(&has_cloaking);
     for(int n=0; n<SYS_COUNT; n++) {
         registerMemberReplication(&systems_health[n]);
     }
@@ -25,6 +26,7 @@ ShipCargo::ShipCargo(P<ShipTemplate> ship_template) : ShipCargo()
     setEnergy(ship_template->energy_storage_amount);
     hull_strength = ship_template->hull;
     has_reactor = ship_template->has_reactor;
+    has_cloaking = ship_template->has_cloaking;
     for(int n=0; n<SYS_COUNT; n++) {
         systems_health[n] = 1;
     }
@@ -43,6 +45,7 @@ ShipCargo::ShipCargo(P<SpaceShip> ship) : ShipCargo()
     setEnergy(ship->getEnergy());
     hull_strength = ship->getHull();
     has_reactor = ship->has_reactor;
+    has_cloaking = ship->has_cloaking;
     float totalHeat = 0;
     for(unsigned int n=0; n<SYS_COUNT; n++)
         totalHeat += ship->getSystemHeat(ESystem(n));
@@ -102,6 +105,7 @@ bool ShipCargo::onLaunch(Dock &source)
             ship->setRotation(source.getLaunchRotation());
             ship->setHull(hull_strength);
             ship->has_reactor = has_reactor;
+            ship->has_cloaking = has_cloaking;
             ship->impulse_request = -0.5;
             int systemsCount = 0;
             for (unsigned int n = 0; n < SYS_COUNT; n++){

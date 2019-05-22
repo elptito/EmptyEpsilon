@@ -541,8 +541,9 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
             sf::RenderTarget* window = &window_normal;
             if (!obj->canHideInNebula())
                 window = &window_alpha;
-            obj->drawOnRadar(*window, object_position_on_screen, getScale(), long_range);
-            if (show_callsigns && obj->getCallSign() != "")
+            if (obj->getTransparency() < 0.5 || my_spaceship)
+                obj->drawOnRadar(*window, object_position_on_screen, getScale(), long_range);
+            if (show_callsigns && obj->getCallSign() != "" && obj->getTransparency() < 0.2 || my_spaceship)
                 drawText(*window, sf::FloatRect(object_position_on_screen.x, object_position_on_screen.y - 15, 0, 0), obj->getCallSign(), ACenter, 15, bold_font);
         }
     }
@@ -566,6 +567,8 @@ void GuiRadarView::drawObjectsGM(sf::RenderTarget& window)
         sf::FloatRect object_rect(object_position_on_screen.x - r, object_position_on_screen.y - r, r * 2, r * 2);
         if (rect.intersects(object_rect))
         {
+            if (obj->getTransparency() >= 0.5)
+                obj->drawOnRadar(window, object_position_on_screen, getScale(), long_range);
             obj->drawOnGMRadar(window, object_position_on_screen, getScale(), long_range);
         }
     }

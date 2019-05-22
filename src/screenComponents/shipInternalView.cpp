@@ -181,6 +181,9 @@ void GuiShipRoom::onDraw(sf::RenderTarget& window)
         case SYS_Reactor:
             textureManager.setTexture(sprite, "gui/icons/system_reactor");
             break;
+        case SYS_Cloaking:
+            textureManager.setTexture(sprite, "gui/icons/system_cloaking");
+            break;
         case SYS_BeamWeapons:
             textureManager.setTexture(sprite, "gui/icons/system_beam");
             break;

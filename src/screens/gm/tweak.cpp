@@ -230,6 +230,13 @@ GuiTemplateTweak::GuiTemplateTweak(GuiContainer* owner)
     });
     heading_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
+    // Transparency slider
+    (new GuiLabel(left_col, "", "Transparence:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    transparency_slider = new GuiSlider(left_col, "", 0.0, 1.0, 0.0, [this](float value) {
+       target->setTransparency(value);
+    });
+    transparency_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
     // Right column
     // Set type name. Does not change ship type.
     (new GuiLabel(right_col, "", "Type de vaisseau:", 30))->setSize(GuiElement::GuiSizeMax, 50);
@@ -264,6 +271,7 @@ GuiTemplateTweak::GuiTemplateTweak(GuiContainer* owner)
 {
     heading_slider->setValue(target->getHeading());
     hull_slider->setValue(target->hull_strength);
+    transparency_slider->setValue(target->getTransparency());
 }
 
  void GuiTemplateTweak::open(P<SpaceObject> target)
@@ -398,9 +406,14 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
     jump_toggle->setSize(GuiElement::GuiSizeMax, 40);
 
     reactor_toggle = new GuiToggleButton(left_col, "", "Reacteur", [this](bool value) {
-        target->setHasReactor(value);
+        target->setReactor(value);
     });
     reactor_toggle->setSize(GuiElement::GuiSizeMax, 40);
+
+    cloaking_toggle = new GuiToggleButton(left_col, "", "Invisibilite", [this](bool value) {
+        target->setCloaking(value);
+    });
+    cloaking_toggle->setSize(GuiElement::GuiSizeMax, 40);
 
     (new GuiLabel(right_col, "", "JUMP, distance Min :", 30))->setSize(GuiElement::GuiSizeMax, 50);
     jump_drive_min_distance_slider = new GuiSlider(right_col, "", 0.0, 50000, 0.0, [this](float value) {
@@ -457,7 +470,8 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
 
     warp_toggle->setValue(ship->has_warp_drive);
     jump_toggle->setValue(ship->hasJumpDrive());
-    reactor_toggle->setValue(ship->HasReactor());
+    reactor_toggle->setValue(ship->hasReactor());
+    cloaking_toggle->setValue(ship->hasCloaking());
     impulse_speed_slider->setValue(ship->impulse_max_speed);
     impulse_speed_slider->clearSnapValues()->addSnapValue(ship->ship_template->impulse_speed, 5.0f);
     turn_speed_slider->setValue(ship->turn_speed);

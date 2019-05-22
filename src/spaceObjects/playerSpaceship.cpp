@@ -143,6 +143,7 @@ float PlayerSpaceship::system_power_user_factor[] = {
     /*SYS_Docks*/         1.0 * 0.08,
     /*SYS_Drones*/        3.0 * 0.08,
     /*SYS_Door*/          1.0 * 0.08,
+    /*SYS_Cloaking*/     50.0 * 0.08,
 };
 
 static const int16_t CMD_TARGET_ROTATION = 0x0001;
@@ -309,6 +310,12 @@ PlayerSpaceship::PlayerSpaceship()
         systems[n].coolant_level = 0.0;
         systems[n].coolant_level = 0.0;
         systems[n].heat_level = 0.0;
+
+        if (n == SYS_Cloaking)
+        {
+            systems[n].power_level = 0.0;
+            systems[n].power_request = 0.0;
+        }
 
         registerMemberReplication(&systems[n].power_level);
         registerMemberReplication(&systems[n].power_request);

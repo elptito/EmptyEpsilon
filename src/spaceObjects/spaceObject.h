@@ -108,11 +108,13 @@ public:
     int scanning_complexity_value;
     int scanning_depth_value;
     string callsign;
+    string id_dock;
     int oxygen_zones;
     float oxygen_points[max_oxygen_zones];
     float oxygen_max[max_oxygen_zones];
     float oxygen_rate[max_oxygen_zones];
     float hull;
+    float transparency;
     uint8_t personality_id;
 
     float translate_z;
@@ -123,6 +125,9 @@ public:
 
     float getRadius() { return object_radius; }
     void setRadius(float radius) { object_radius = radius; setCollisionRadius(radius); }
+
+    float getTransparency() { return transparency; }
+    void setTransparency(float value) { transparency = value; }
 
     // Return the object's raw radar signature. The default signature is 0,0,0.
     RawRadarSignatureInfo radar_signature;

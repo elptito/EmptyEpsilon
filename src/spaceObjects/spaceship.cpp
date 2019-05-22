@@ -54,6 +54,10 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getRotationMaxSpeed);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setRotationMaxSpeed);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setCombatManeuver);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, hasReactor);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setReactor);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, hasCloaking);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setCloaking);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, hasJumpDrive);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setJumpDrive);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setJumpDriveRange);
@@ -109,6 +113,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     current_warp = 0.0;
     has_jump_drive = true;
     has_reactor = true;
+    has_cloaking = false;
     jump_drive_min_distance = 5000.0;
     jump_drive_max_distance = 50000.0;
     jump_drive_charge = jump_drive_max_distance;
@@ -152,6 +157,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     registerMemberReplication(&jump_drive_charge_time);
     registerMemberReplication(&jump_drive_energy_per_km_charge);
     registerMemberReplication(&has_reactor);
+    registerMemberReplication(&has_cloaking);
     registerMemberReplication(&wormhole_alpha, 0.5);
     registerMemberReplication(&weapon_tube_count);
     registerMemberReplication(&beam_weapons_count);
@@ -253,6 +259,7 @@ void SpaceShip::applyTemplateValues()
     warp_speed_per_warp_level = ship_template->warp_speed;
     has_jump_drive = ship_template->has_jump_drive;
     has_reactor = ship_template->has_reactor;
+    has_cloaking = ship_template->has_cloaking;
     jump_drive_min_distance = ship_template->jump_drive_min_distance;
     jump_drive_max_distance = ship_template->jump_drive_max_distance;
     jump_drive_charge = ship_template->jump_drive_charge;
@@ -270,7 +277,6 @@ void SpaceShip::applyTemplateValues()
                 weapon_tube[n].disallowLoadOf(EMissileWeapons(m));
         }
     }
-    //shipTemplate->has_cloaking;
     for(int n=0; n<MW_Count; n++)
         weapon_storage[n] = weapon_storage_max[n] = ship_template->weapon_storage[n];
 
@@ -722,6 +728,25 @@ void SpaceShip::update(float delta)
 
     for(int n = 0; n < oxygen_zones; n++)
         addOxygenPoints(getOxygenRechargeRate(n) * delta, n);
+
+    if (has_cloaking)
+    {
+        setTransparency(getCloakingDegree());
+        float factor_heat_cloaking = 0.1 * getTransparency() * delta;
+
+        addHeat(SYS_Cloaking , 0.1 * getSystemEffectiveness(SYS_Cloaking) * factor_heat_cloaking);
+
+        for(int n = 0; n < 2; n++)
+        {
+            ESystem system = ESystem(rand()%SYS_COUNT);
+            addHeat(system , getSystemEffectiveness(system) * factor_heat_cloaking);
+        }
+    }
+}
+
+float SpaceShip::getCloakingDegree()
+{
+    return (std::tanh(getSystemEffectiveness(SYS_Cloaking))-std::tanh(0))/(std::tanh(3)-std::tanh(0));
 }
 
 float SpaceShip::getOxygenRechargeRate(int index)
@@ -1094,6 +1119,8 @@ bool SpaceShip::hasSystem(ESystem system)
         return shield_count > 1;
     case SYS_Reactor:
         return has_reactor;
+    case SYS_Cloaking:
+        return has_cloaking;
     case SYS_BeamWeapons:
         return beam_weapons_count > 0;
     case SYS_Maneuver:

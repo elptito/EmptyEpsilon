@@ -62,7 +62,6 @@ private:
     GuiSlider* biological_s_slider;
     GuiSlider* scanning_complexity_selector;
     GuiSlider* scanning_channel_depth_selector;
-
 public:
     GuiObjectTweakBase(GuiContainer* owner);
 
@@ -80,6 +79,7 @@ private:
     GuiSlider* hull_max_slider;
     GuiSlider* hull_slider;
     GuiToggleButton* can_be_destroyed_toggle;
+    GuiSlider* transparency_slider;
 public:
     GuiTemplateTweak(GuiContainer* owner);
     virtual void onDraw(sf::RenderTarget& window) override;
@@ -112,6 +112,7 @@ private:
     GuiToggleButton* warp_toggle;
     GuiToggleButton* jump_toggle;
     GuiToggleButton* reactor_toggle;
+    GuiToggleButton* cloaking_toggle;
     GuiSlider* combat_maneuver_boost_speed_slider;
     GuiSlider* combat_maneuver_strafe_speed_slider;
     GuiSlider* jump_drive_min_distance_slider;

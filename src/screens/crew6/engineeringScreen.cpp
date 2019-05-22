@@ -107,6 +107,7 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner, ECrewPosition crew_pos
     }
 
     system_rows[SYS_Reactor].button->setIcon("gui/icons/system_reactor");
+    system_rows[SYS_Cloaking].button->setIcon("gui/icons/system_cloaking");
     system_rows[SYS_BeamWeapons].button->setIcon("gui/icons/system_beam");
     system_rows[SYS_MissileSystem].button->setIcon("gui/icons/system_missile");
     system_rows[SYS_Maneuver].button->setIcon("gui/icons/system_maneuver");
@@ -272,6 +273,13 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
                 for(int n = 0; n < my_spaceship->oxygen_zones; n++)
                     addSystemEffect("Zone " + string(n+1) + ", oxygene : ", string(my_spaceship->getOxygenRechargeRate(n) * 60.0, 1) + "/m");
                 break;
+            case SYS_Cloaking:
+                addSystemEffect("Degre d'invisibilite", string(my_spaceship->getCloakingDegree() * 100.0, 1) + "%");
+                if (my_spaceship->getCloakingDegree() > 0.5)
+                    addSystemEffect("Detection via radar", "non");
+                else
+                    addSystemEffect("Detection via radar", "oui");
+                break;
             case SYS_BeamWeapons:
                 addSystemEffect("Vitesse de tirs", string(int(effectiveness * 100)) + "%");
                 // If the ship has a turret, also note that the rotation rate
@@ -280,7 +288,7 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
                 {
                     if (my_spaceship->beam_weapons[n].getTurretArc() > 0)
                     {
-                        addSystemEffect("Turret rotation rate", string(int(effectiveness * 100)) + "%");
+                        addSystemEffect("Rotation des lasers", string(int(effectiveness * 100)) + "%");
                         break;
                     }
                 }
@@ -359,6 +367,7 @@ void EngineeringScreen::onHotkey(const HotkeyResult& key)
     if (key.category == "ENGINEERING" && my_spaceship)
     {
         if (key.hotkey == "SELECT_REACTOR") selectSystem(SYS_Reactor);
+        if (key.hotkey == "SELECT_CLOAKING") selectSystem(SYS_Cloaking);
         if (key.hotkey == "SELECT_BEAM_WEAPONS") selectSystem(SYS_BeamWeapons);
         if (key.hotkey == "SELECT_MISSILE_SYSTEM") selectSystem(SYS_MissileSystem);
         if (key.hotkey == "SELECT_MANEUVER") selectSystem(SYS_Maneuver);

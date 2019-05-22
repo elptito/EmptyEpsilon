@@ -200,7 +200,7 @@ std::vector<string> ModelData::getModelDataNames()
     return ret;
 }
 
-void ModelData::render()
+void ModelData::render(float alpha)
 {
 #if FEATURE_3D_RENDERING
     load();
@@ -209,11 +209,15 @@ void ModelData::render()
 
     glPushMatrix();
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     glScalef(scale, scale, scale);
     glTranslatef(mesh_offset.x, mesh_offset.y, mesh_offset.z);
 	glRotatef(mesh_rotation.x, 1.0, 0.0, 0.0);
 	glRotatef(mesh_rotation.y, 0.0, 1.0, 0.0);
 	glRotatef(mesh_rotation.z, 0.0, 0.0, 1.0);
+    glColor4f(1.0,1.0,1.0,alpha);
 
     shader->setParameter("baseMap", *texture);
     if (specular_texture)
@@ -221,8 +225,10 @@ void ModelData::render()
     if (illumination_texture)
         shader->setParameter("illuminationMap", *illumination_texture);
     sf::Shader::bind(shader);
+
     mesh->render();
 
+    glDisable(GL_BLEND);
     glPopMatrix();
 #endif//FEATURE_3D_RENDERING
 }

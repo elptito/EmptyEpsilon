@@ -53,7 +53,7 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, weaponTubeDisallowMissle);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setWeaponTubeExclusiveFor);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setTubeDirection);
-    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setHasReactor);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setReactor);
     /// Set the amount of starting hull
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setHull);
     /// Set the shield levels, amount of parameters defines the amount of shields. (Up to a maximum of 8 shields)
@@ -144,6 +144,7 @@ ShipTemplate::ShipTemplate()
         weapon_storage[n] = 0;
     radar_trace = "RadarArrow.png";
     has_reactor = true;
+    has_cloaking = false;
     launcher_dock_count = 0;
     energy_dock_count = 0;
     weapons_dock_count = 0;
@@ -344,6 +345,7 @@ string getSystemName(ESystem system)
     switch(system)
     {
     case SYS_Reactor: return "Reacteur";
+    case SYS_Cloaking: return "Generateur Invisibilite";
     case SYS_BeamWeapons: return "Faisceau laser";
     case SYS_MissileSystem: return "Systeme de missiles";
     case SYS_Maneuver: return "Manoeuvres";
@@ -408,9 +410,9 @@ void ShipTemplate::setRepairDocked(bool enabled)
     repair_docked = enabled;
 }
 
-void ShipTemplate::setHasReactor(bool hasReactor)
+void ShipTemplate::setReactor(bool enabled)
 {
-    has_reactor = hasReactor;
+    has_reactor = enabled;
 }
 
 void ShipTemplate::setJumpDrive(bool enabled)

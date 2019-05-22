@@ -28,6 +28,7 @@ enum ESystem
     SYS_Docks,
     SYS_Drones,
     SYS_Door,
+    SYS_Cloaking,
     SYS_COUNT
 };
 /* Define script conversion function for the ESystem enum. */
@@ -155,7 +156,7 @@ public:
     void setDockClasses(std::vector<string> classes);
     void setSharesEnergyWithDocked(bool enabled);
     void setRepairDocked(bool enabled);
-    void setHasReactor(bool hasReactor);
+    void setReactor(bool enabled);
     void setMesh(string model, string color_texture, string specular_texture, string illumination_texture);
     void setEnergyStorage(float energy_amount);
     void setRepairCrewCount(int amount);

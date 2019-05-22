@@ -19,12 +19,12 @@ void ModelInfo::setData(string name)
     }
 }
 
-void ModelInfo::render(sf::Vector2f position, float rotation)
+void ModelInfo::render(sf::Vector2f position, float rotation, float alpha)
 {
     if (!data)
         return;
 
-    data->render();
+    data->render(alpha);
 
     if (engine_scale > 0.0f)
     {

@@ -17,6 +17,7 @@ public:
 private:
   float hull_strength;
   bool has_reactor;
+  bool has_cloaking;
   float systems_health[SYS_COUNT];
 public:
   ShipCargo();

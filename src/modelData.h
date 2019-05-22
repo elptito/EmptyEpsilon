@@ -123,7 +123,7 @@ public:
     float getRadius();
 
     void load();
-    void render();
+    void render(float alpha = 1.0f);
 
     friend class ModelInfo;
     friend class GuiRotatingModelView;

@@ -157,6 +157,7 @@ public:
     float jump_drive_charge_time;
 
     bool has_reactor;
+    bool has_cloaking;
 
     float wormhole_alpha;    //Used for displaying the Warp-postprocessor
 
@@ -198,6 +199,7 @@ public:
     virtual void drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range) override;
 
     virtual void update(float delta) override;
+    virtual float getCloakingDegree();
     virtual float getOxygenRechargeRate(int index = 0);
     virtual float getShieldRechargeRate(int shield_index) override;
     virtual float getShieldDamageFactor(DamageInfo& info, int shield_index) override;
@@ -347,8 +349,8 @@ public:
 	float getJumpDriveChargeTime() { return jump_drive_charge_time; }
 	float getJumpDriveEnergy() { return jump_drive_energy_per_km_charge; }
 
-	void setHasReactor(bool hasReactor) { has_reactor = hasReactor; }
-	bool HasReactor() { return has_reactor; }
+	void setReactor(bool enabled) { has_reactor = enabled; }
+	bool hasReactor() { return has_reactor; }
 
     bool hasWarpDrive() { return has_warp_drive; }
     void setWarpDrive(bool has_warp)
@@ -363,6 +365,9 @@ public:
             warp_speed_per_warp_level = 0;
         }
     }
+
+	void setCloaking(bool enabled) { has_cloaking = enabled; }
+	bool hasCloaking() { return has_cloaking; }
 
     float getBeamWeaponArc(int index) { if (index < 0 || index >= max_beam_weapons) return 0.0; return beam_weapons[index].getArc(); }
     float getBeamWeaponDirection(int index) { if (index < 0 || index >= max_beam_weapons) return 0.0; return beam_weapons[index].getDirection(); }
