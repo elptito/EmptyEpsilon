@@ -62,7 +62,7 @@ WeaponsScreen::WeaponsScreen(GuiContainer* owner)
             (new GuiLabel(beam_info_box, "BEAM_INFO_LABEL", "Info Laser", 30))->addBackground()->setSize(GuiElement::GuiSizeMax, 50);
             (new GuiPowerDamageIndicator(beam_info_box, "", SYS_BeamWeapons, ACenterLeft, my_spaceship))->setSize(GuiElement::GuiSizeMax, 50);
             (new GuiBeamFrequencySelector(beam_info_box, "BEAM_FREQUENCY_SELECTOR"))->setPosition(0, 0, ABottomRight)->setSize(GuiElement::GuiSizeMax, 50);
-            (new GuiBeamTargetSelector(beam_info_box, "BEAM_TARGET_SELECTOR"))->setPosition(0, -50, ABottomRight)->setSize(GuiElement::GuiSizeMax, 50);
+            (new GuiBeamTargetSelector(beam_info_box, "BEAM_TARGET_SELECTOR", my_spaceship))->setPosition(0, -50, ABottomRight)->setSize(GuiElement::GuiSizeMax, 50);
 
             if (!gameGlobalInfo->use_beam_shield_frequencies)
             {   //If we do have system damage, but no shield frequencies, we can partially overlap this with the shield button.
