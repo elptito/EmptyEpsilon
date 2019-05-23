@@ -731,8 +731,9 @@ void PlayerSpaceship::takeHullDamage(float damage_amount, DamageInfo& info)
     for(int n=0; n<SYS_COUNT; n++)
     {
         if(systems_diff[n] != systems[n].health)
-            system_damage += string(getSystemName(ESystem(n))) + string(" ");
+            system_damage += string(getSystemName(ESystem(n))) + string(" / ");
     }
+    system_damage.erase(system_damage.end()-2, system_damage.end());
     addToShipLog(system_damage,sf::Color::Red,"intern");
 }
 
