@@ -98,7 +98,7 @@ SinglePilotView::SinglePilotView(GuiContainer* owner, P<PlayerSpaceship> targetS
     combat_maneuver->setPosition(-20, -260, ABottomRight)->setSize(200, 150);
 
     heat_display = new GuiKeyValueDisplay(this, "HEAT_DISPLAY", 0.45, "Surchauffe", "");
-    heat_display->setIcon("gui/icons/heat")->setTextSize(20)->setPosition(-20, -220, ABottomRight)->setSize(240, 40);
+    heat_display->setIcon("gui/icons/status_overheat")->setTextSize(20)->setPosition(-20, -220, ABottomRight)->setSize(240, 40);
     hull_display = new GuiKeyValueDisplay(this, "HULL_DISPLAY", 0.45, "Carlingue", "");
     hull_display->setIcon("gui/icons/hull")->setTextSize(20)->setPosition(-20, -180, ABottomRight)->setSize(240, 40);
     energy_display = new GuiKeyValueDisplay(this, "ENERGY_DISPLAY", 0.45, "Energie", "");

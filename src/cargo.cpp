@@ -16,7 +16,7 @@ Cargo::Entries Cargo::getEntries()
 {
     Cargo::Entries result;
     result.push_back(std::make_tuple("gui/icons/energy", "energie", int(energy_level)));
-    result.push_back(std::make_tuple("gui/icons/heat", "surchauffe", string(heat, 2)));
+    result.push_back(std::make_tuple("gui/icons/status_overheat", "surchauffe", string(heat, 2)));
     //result.push_back(std::make_tuple("gui/icons/hull", "carlingue", string(int(100 * getHealth() / getMaxHealth())) + "%"));
 
     for(int n = 0; n < MW_Count; n++)
