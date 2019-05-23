@@ -232,8 +232,8 @@ GuiTemplateTweak::GuiTemplateTweak(GuiContainer* owner)
 
     // Transparency slider
     (new GuiLabel(left_col, "", "Transparence:", 30))->setSize(GuiElement::GuiSizeMax, 50);
-    transparency_slider = new GuiSlider(left_col, "", 0.0, 1.0, 0.0, [this](float value) {
-       target->setTransparency(value);
+    transparency_slider = new GuiSlider(left_col, "", 0.0, 100.0, 0.0, [this](float value) {
+       target->setTransparency(value / 100.0);
     });
     transparency_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
@@ -271,7 +271,7 @@ GuiTemplateTweak::GuiTemplateTweak(GuiContainer* owner)
 {
     heading_slider->setValue(target->getHeading());
     hull_slider->setValue(target->hull_strength);
-    transparency_slider->setValue(target->getTransparency());
+    transparency_slider->setValue(target->getTransparency() * 100.0);
 }
 
  void GuiTemplateTweak::open(P<SpaceObject> target)
