@@ -5,7 +5,7 @@
 #include "gui/gui2_panel.h"
 #include "gui/gui2_selector.h"
 #include "gui/gui2_listbox.h"
-
+#include "screenComponents/rotatingModelView.h"
 
 GuiObjectCreationView::GuiObjectCreationView(GuiContainer* owner, func_t enterCreateMode)
 : GuiOverlay(owner, "OBJECT_CREATE_SCREEN", sf::Color(0, 0, 0, 128)), enterCreateMode(enterCreateMode)
@@ -19,58 +19,55 @@ GuiObjectCreationView::GuiObjectCreationView(GuiContainer* owner, func_t enterCr
     faction_selector->setSelectionIndex(0);
     faction_selector->setPosition(20, 20, ATopLeft)->setSize(300, 50);
 
-    float y = 20;
+    (new GuiButton(box, "CREATE OBJECT", "Creer", [this]() {
+        setCreateScript(script + ":setFactionId(" + string(faction_selector->getSelectionIndex()) + ")");
+    }))->setPosition(20, 70, ATopLeft)->setSize(300, 50);
+
+    model_view = new GuiRotatingModelView(box, "MODEL_VIEW", nullptr);
+    model_view->setPosition(20, 120, ATopLeft)->setSize(300, 300);
+
     std::vector<string> template_names = ShipTemplate::getTemplateNameList(ShipTemplate::Station);
     std::sort(template_names.begin(), template_names.end());
-    for(string template_name : template_names)
+    listbox_station = new GuiListbox(box, "CREATE_STATIONS", [this](int index, string value)
     {
-        (new GuiButton(box, "CREATE_STATION_" + template_name, template_name, [this, template_name]() {
-            setCreateScript("SpaceStation():setRotation(random(0, 360)):setFactionId(" + string(faction_selector->getSelectionIndex()) + "):setTemplate(\"" + template_name + "\")");
-        }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
-        y += 30;
-    }
+        script = "SpaceStation():setRotation(random(0, 360)):setTemplate(\"" + value + "\")";
+//        model_data = ;
+        model_view->setModel(ShipTemplate::getTemplate(value)->model_data);
+        listbox_other->setSelectionIndex(-1);
+        listbox_ship->setSelectionIndex(-1);
+    });
+    listbox_station->setTextSize(20)->setButtonHeight(30)->setPosition(-350, 20, ATopRight)->setSize(300, 250);
+    for(string template_name : template_names)
+        listbox_station->addEntry(template_name, template_name);
 
-    (new GuiButton(box, "CREATE_WARP_JAMMER", "Warp Jammer", [this]() {
-        setCreateScript("WarpJammer():setRotation(random(0, 360)):setFactionId(" + string(faction_selector->getSelectionIndex()) + ")");
-    }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
-    y += 30;
-    (new GuiButton(box, "CREATE_MINE", "Mine", [this]() {
-        setCreateScript("Mine():setFactionId(" + string(faction_selector->getSelectionIndex()) + ")");
-    }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
-    y += 30;
-    // Default supply drop values copied from scripts/supply_drop.lua
-    (new GuiButton(box, "CREATE_SUPPLY_DROP", "Supply Drop", [this]() {
-        setCreateScript("SupplyDrop():setFactionId(" + string(faction_selector->getSelectionIndex()) + "):setEnergy(500):setWeaponStorage('Nuke', 1):setWeaponStorage('Homing', 4):setWeaponStorage('Mine', 2):setWeaponStorage('EMP', 1)");
-    }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
-    y += 30;
-    (new GuiButton(box, "CREATE_ASTEROID", "Asteroid", [this]() {
-        setCreateScript("Asteroid():setSize(random(50, 200))");
-    }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
-    y += 30;
-    (new GuiButton(box, "CREATE_BLACKHOLE", "BlackHole", [this]() {
-        setCreateScript("BlackHole()");
-    }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
-    y += 30;
-    (new GuiButton(box, "CREATE_NEBULA", "Nebula", [this]() {
-        setCreateScript("Nebula()");
-    }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
-    y += 30;
-    (new GuiButton(box, "CREATE_WORMHOLE", "Worm Hole", [this]() {
-        setCreateScript("WormHole()");
-    }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
-    y += 30;
-    y = 20;
+    listbox_other = new GuiListbox(box, "CREATE_OTHERS", [this](int index, string value)
+    {
+        script = value + "()";
+        model_view->setModel(nullptr);
+        listbox_station->setSelectionIndex(-1);
+        listbox_ship->setSelectionIndex(-1);
+    });
+    listbox_other->setTextSize(20)->setButtonHeight(30)->setPosition(350, -20, ABottomLeft)->setSize(300, 250);
+    listbox_other->addEntry("Warp Jammer", "WarpJammer");
+    listbox_other->addEntry("Mine", "Mine");
+    listbox_other->addEntry("Asteroid", "Asteroid");
+    listbox_other->addEntry("BlackHole", "BlackHole");
+    listbox_other->addEntry("Nebula", "Nebula");
+    listbox_other->addEntry("WormHole", "WormHole");
+    listbox_other->addEntry("Planet", "Planet");
+
     template_names = ShipTemplate::getTemplateNameList(ShipTemplate::Ship);
     std::sort(template_names.begin(), template_names.end());
-    GuiListbox* listbox = new GuiListbox(box, "CREATE_SHIPS", [this](int index, string value)
+    listbox_ship = new GuiListbox(box, "CREATE_SHIPS", [this](int index, string value)
     {
-        setCreateScript("CpuShip():setRotation(random(0, 360)):setFactionId(" + string(faction_selector->getSelectionIndex()) + "):setTemplate(\"" + value + "\"):orderRoaming()");
+        script = "CpuShip():setRotation(random(0, 360)):setTemplate(\"" + value + "\"):orderRoaming()";
+        model_view->setModel(ShipTemplate::getTemplate(value)->model_data);
+        listbox_station->setSelectionIndex(-1);
+        listbox_other->setSelectionIndex(-1);
     });
-    listbox->setTextSize(20)->setButtonHeight(30)->setPosition(-20, 20, ATopRight)->setSize(300, 460);
+    listbox_ship->setTextSize(20)->setButtonHeight(30)->setPosition(-20, 20, ATopRight)->setSize(300, 460);
     for(string template_name : template_names)
-    {
-        listbox->addEntry(template_name, template_name);
-    }
+        listbox_ship->addEntry(template_name, template_name);
 
     (new GuiButton(box, "CLOSE_BUTTON", "Cancel", [this]() {
         create_script = "";

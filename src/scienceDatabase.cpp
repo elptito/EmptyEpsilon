@@ -74,9 +74,14 @@ void fillDefaultDatabaseData()
     }
 
     P<ScienceDatabase> shipDatabase = new ScienceDatabase();
-    shipDatabase->setName("Vaisseaux");
+    shipDatabase->setName("Constructions");
 
     std::vector<string> template_names = ShipTemplate::getTemplateNameList(ShipTemplate::Ship);
+    std::vector<string> template_names_drones = ShipTemplate::getTemplateNameList(ShipTemplate::Drone);
+    std::vector<string> template_names_stations = ShipTemplate::getTemplateNameList(ShipTemplate::Station);
+    template_names.insert( template_names.end(), template_names_drones.begin(), template_names_drones.end() );
+    template_names.insert( template_names.end(), template_names_stations.begin(), template_names_stations.end() );
+
     std::sort(template_names.begin(), template_names.end());
 
     std::vector<string> class_list;

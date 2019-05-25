@@ -127,9 +127,9 @@ ShipTemplate::ShipTemplate()
     shield_count = 0;
     for(int n=0; n<max_shield_count; n++)
         shield_level[n] = 0.0;
-    impulse_speed = 500.0;
-    impulse_acceleration = 20.0;
-    turn_speed = 10.0;
+    impulse_speed = 0.0;
+    impulse_acceleration = 0.0;
+    turn_speed = 0.0;
     combat_maneuver_boost_speed = 0.0f;
     combat_maneuver_strafe_speed = 0.0f;
     warp_speed = 0.0;
@@ -345,7 +345,7 @@ string getSystemName(ESystem system)
     switch(system)
     {
     case SYS_Reactor: return "Reacteur";
-    case SYS_Cloaking: return "Generateur Invisibilite";
+    case SYS_Cloaking: return "Boldgen Occulteur alpha";
     case SYS_BeamWeapons: return "Faisceau laser";
     case SYS_MissileSystem: return "Systeme de missiles";
     case SYS_Maneuver: return "Manoeuvres";

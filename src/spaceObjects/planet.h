@@ -22,6 +22,7 @@ public:
     void setPlanetAtmosphereColor(float r, float g, float b);
     void setPlanetAtmosphereTexture(string texture_name);
     void setPlanetSurfaceTexture(string texture_name);
+    string getPlanetSurfaceTexture();
     void setPlanetIcon(string texture_name);
     void setPlanetCloudTexture(string texture_name);
     void setPlanetRadius(float size);

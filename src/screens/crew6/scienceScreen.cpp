@@ -93,9 +93,21 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
     info_type->setSize(GuiElement::GuiSizeMax, 30);
     info_type_button = new GuiButton(info_type, "SCIENCE_TYPE_BUTTON", "DB", [this]() {
         P<SpaceShip> ship = targets.get();
+        P<SpaceStation> station = targets.get();
         if (ship)
         {
             P<ShipTemplate> st = ship->ship_template;
+            if (database_view->findAndDisplayEntry(st->getPublicName()))
+            {
+                view_mode_selection->setSelectionIndex(1);
+                radar_view->hide();
+                background_gradient->hide();
+                database_view->show();
+            }
+        }
+        if (station)
+        {
+            P<ShipTemplate> st = station->ship_template;
             if (database_view->findAndDisplayEntry(st->getPublicName()))
             {
                 view_mode_selection->setSelectionIndex(1);
@@ -408,11 +420,10 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
 
             if (station)
             {
+				P<ShipTemplate> st = station->ship_template;
                 info_faction->setValue(factionInfo[station->getFactionId()]->getName());
-//                if (factionInfo[station->getFactionId()]->getIcon() != "")
-//                    info_faction->setIcon("gui/icons/" + factionInfo[station->getFactionId()]->getIcon());
-//                else
-//                    info_faction->setIcon("");
+                info_type_button->show();
+                info_type->setValue(st->getPublicName());
                 info_shields->setValue(station->getShieldDataString());
                 info_hull->setValue(int(station->getHull()));
             }

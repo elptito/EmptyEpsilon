@@ -111,8 +111,8 @@ Planet::Planet()
 {
     planet_size = 5000;
     cloud_size = 5200;
-    planet_texture = "";
-    planet_icon = "";
+    planet_texture = "planets/2k_mercury.jpg";
+    planet_icon = "planets/icons/Storm-Planet.png";
     cloud_texture = "";
     atmosphere_texture = "";
     atmosphere_color = sf::Color(0, 0, 0);
@@ -155,6 +155,11 @@ void Planet::setPlanetAtmosphereTexture(string texture_name)
 void Planet::setPlanetSurfaceTexture(string texture_name)
 {
     planet_texture = texture_name;
+}
+
+string Planet::getPlanetSurfaceTexture()
+{
+    return planet_texture;
 }
 
 void Planet::setPlanetIcon(string texture_name)
