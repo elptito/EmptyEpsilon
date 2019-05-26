@@ -127,8 +127,8 @@ ShipTemplate::ShipTemplate()
     shield_count = 0;
     for(int n=0; n<max_shield_count; n++)
         shield_level[n] = 0.0;
-    impulse_speed = 0.0;
-    impulse_acceleration = 0.0;
+    impulse_speed = 500.0;
+    impulse_acceleration = 20.0;
     turn_speed = 0.0;
     combat_maneuver_boost_speed = 0.0f;
     combat_maneuver_strafe_speed = 0.0f;
