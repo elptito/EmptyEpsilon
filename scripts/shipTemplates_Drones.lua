@@ -2,7 +2,7 @@
 bada bip, bada bop, whaddaya know?
 ----------------------------------------------------------]]
 template = ShipTemplate():setName("L3 Mouse"):setType("drone"):setClass("Drone", "Beamer"):setModel("LaserCorvetteBlue")
-template:setHasReactor(false)
+template:setReactor(false)
 template:setRadarTrace("radar_fighter.png")
 template:setDescription([[beams attack drone]])
 template:setEnergyStorage(200)
@@ -18,7 +18,7 @@ template:setWarpSpeed(-1)
 template:setRepairCrewCount(0)
 
 template = ShipTemplate():setName("L3 Cat"):setType("drone"):setClass("Drone", "Swoosher"):setModel("MissileCorvetteBlue")
-template:setHasReactor(false)
+template:setReactor(false)
 template:setRadarTrace("radar_fighter.png")
 template:setDescription([[HVLI attack drone]])
 template:setEnergyStorage(200)
