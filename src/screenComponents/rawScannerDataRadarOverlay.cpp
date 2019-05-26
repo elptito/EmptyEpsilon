@@ -18,7 +18,8 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
 
     // Cap the number of signature points, which determines the raw data's
     // resolution.
-    const int point_count = 512;
+//    const int point_count = 512;
+    const int point_count = 256;
     float radius = std::min(rect.width, rect.height) / 2.0f;
 
     RawRadarSignatureInfo signatures[point_count];
@@ -152,7 +153,7 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
     a_b[point_count] = a_b[0];
 
     // Draw each band as a line.
-    window.draw(a_r, sf::BlendAdd);
-    window.draw(a_g, sf::BlendAdd);
-    window.draw(a_b, sf::BlendAdd);
+    if (my_spaceship->has_electrical_sensor) window.draw(a_r, sf::BlendAdd);
+    if (my_spaceship->has_biological_sensor) window.draw(a_g, sf::BlendAdd);
+    if (my_spaceship->has_gravity_sensor) window.draw(a_b, sf::BlendAdd);
 }
