@@ -5,7 +5,7 @@
 #include "gui/gui2_panel.h"
 #include "gui/gui2_selector.h"
 #include "gui/gui2_listbox.h"
-#include "screenComponents/rotatingModelView.h"
+//#include "screenComponents/rotatingModelView.h"
 
 GuiObjectCreationView::GuiObjectCreationView(GuiContainer* owner, func_t enterCreateMode)
 : GuiOverlay(owner, "OBJECT_CREATE_SCREEN", sf::Color(0, 0, 0, 128)), enterCreateMode(enterCreateMode)
@@ -23,16 +23,15 @@ GuiObjectCreationView::GuiObjectCreationView(GuiContainer* owner, func_t enterCr
         setCreateScript(script + ":setFactionId(" + string(faction_selector->getSelectionIndex()) + ")");
     }))->setPosition(20, 70, ATopLeft)->setSize(300, 50);
 
-    model_view = new GuiRotatingModelView(box, "MODEL_VIEW", nullptr);
-    model_view->setPosition(20, 120, ATopLeft)->setSize(300, 300);
+//    model_view = new GuiRotatingModelView(box, "MODEL_VIEW", nullptr);
+//    model_view->setPosition(20, 120, ATopLeft)->setSize(300, 300);
 
     std::vector<string> template_names = ShipTemplate::getTemplateNameList(ShipTemplate::Station);
     std::sort(template_names.begin(), template_names.end());
     listbox_station = new GuiListbox(box, "CREATE_STATIONS", [this](int index, string value)
     {
         script = "SpaceStation():setRotation(random(0, 360)):setTemplate(\"" + value + "\")";
-//        model_data = ;
-        model_view->setModel(ShipTemplate::getTemplate(value)->model_data);
+//        model_view->setModel(ShipTemplate::getTemplate(value)->model_data);
         listbox_other->setSelectionIndex(-1);
         listbox_ship->setSelectionIndex(-1);
     });
@@ -43,7 +42,7 @@ GuiObjectCreationView::GuiObjectCreationView(GuiContainer* owner, func_t enterCr
     listbox_other = new GuiListbox(box, "CREATE_OTHERS", [this](int index, string value)
     {
         script = value + "()";
-        model_view->setModel(nullptr);
+//        model_view->setModel(nullptr);
         listbox_station->setSelectionIndex(-1);
         listbox_ship->setSelectionIndex(-1);
     });
@@ -61,7 +60,7 @@ GuiObjectCreationView::GuiObjectCreationView(GuiContainer* owner, func_t enterCr
     listbox_ship = new GuiListbox(box, "CREATE_SHIPS", [this](int index, string value)
     {
         script = "CpuShip():setRotation(random(0, 360)):setTemplate(\"" + value + "\"):orderRoaming()";
-        model_view->setModel(ShipTemplate::getTemplate(value)->model_data);
+//        model_view->setModel(ShipTemplate::getTemplate(value)->model_data);
         listbox_station->setSelectionIndex(-1);
         listbox_other->setSelectionIndex(-1);
     });

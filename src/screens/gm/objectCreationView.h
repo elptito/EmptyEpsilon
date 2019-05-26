@@ -7,7 +7,7 @@
 class GuiSelector;
 class GuiContainer;
 class GuiListbox;
-class GuiRotatingModelView;
+//class GuiRotatingModelView;
 
 
 class GuiObjectCreationView : public GuiOverlay
@@ -16,8 +16,7 @@ class GuiObjectCreationView : public GuiOverlay
 private:
     string script;
     string create_script;
-    P<ModelData> model_data;
-    GuiRotatingModelView* model_view;
+//    GuiRotatingModelView* model_view;
     GuiSelector* faction_selector;
     GuiListbox* listbox_other;
     GuiListbox* listbox_station;
