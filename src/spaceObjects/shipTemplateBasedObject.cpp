@@ -254,7 +254,7 @@ void ShipTemplateBasedObject::takeDamage(float damage_amount, DamageInfo info)
         shield_index %= shield_count;
 
         float shield_damage = damage_amount * getShieldDamageFactor(info, shield_index);
-        soundManager->playSound("explosion_shields.wav", getPosition(), 200.0, 1.0, 1.0f + random(-0.2f, 0.2f),shield_damage*10.0);
+        soundManager->playSound("explosion_shields.wav", getPosition(), 200.0, 1.0, 1.0f + random(-0.1f, 0.1f),shield_damage*100.0);
 
         damage_amount -= shield_level[shield_index];
         shield_level[shield_index] -= shield_damage;
@@ -272,7 +272,7 @@ void ShipTemplateBasedObject::takeDamage(float damage_amount, DamageInfo info)
 
     if (info.type != DT_EMP && damage_amount > 0.0)
     {
-        soundManager->playSound("explosion.wav", getPosition(), 200.0, 1.0, 1.0f + random(-0.2f, 0.2f),damage_amount*10.0);
+        soundManager->playSound("explosion.wav", getPosition(), 200.0, 1.0, 1.0f + random(-0.1f, 0.1f),damage_amount*100.0);
         takeHullDamage(damage_amount, info);
     }
 }

@@ -96,7 +96,7 @@ void BeamEffect::update(float delta)
 
     if (delta > 0 && lifetime == 1.0)
     {
-     float volume = 50.0f + (beam_fire_sound_power * 75.0f);
+     float volume = 50.0f + (beam_fire_sound_power * 75.0f * 10.0f);
      float pitch = (1.0f / beam_fire_sound_power) + random(-0.1f, 0.1f);
      soundManager->playSound(beam_fire_sound, source->getPosition(), 200.0, 1.0, pitch, volume);
     }
