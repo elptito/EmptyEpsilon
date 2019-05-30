@@ -18,6 +18,7 @@ class AutoConnectScreen : public GuiCanvas, public Updatable
     std::map<string, string> ship_filters;
 
     GuiLabel* status_label;
+    GuiLabel* filter_label;
 public:
     AutoConnectScreen(ECrewPosition crew_position, int auto_mainscreen, bool control_main_screen, string ship_filter);
     virtual ~AutoConnectScreen();

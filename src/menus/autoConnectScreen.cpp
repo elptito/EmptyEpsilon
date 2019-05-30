@@ -32,6 +32,9 @@ AutoConnectScreen::AutoConnectScreen(ECrewPosition crew_position, int auto_mains
 
     (new GuiLabel(this, "POSITION", position_name, 20))->setPosition(0, 10, ATopCenter)->setSize(0, 10);
 
+    filter_label = new GuiLabel(this, "FILTER", "", 20);
+    filter_label->setPosition(0, 30, ATopCenter)->setSize(0, 10);
+
     for(string filter : ship_filter.split(";"))
     {
         std::vector<string> key_value = filter.split("=", 1);
@@ -44,6 +47,7 @@ AutoConnectScreen::AutoConnectScreen(ECrewPosition crew_position, int auto_mains
         else if (key_value.size() == 2)
             ship_filters[key] = key_value[1].strip();
         LOG(INFO) << "Auto connect filter: " << key << " = " << ship_filters[key];
+        filter_label->setText(filter_label->getText() + key + " : " + ship_filters[key] + " ");
     }
 
     if (PreferencesManager::get("instance_name") != "")
@@ -134,6 +138,8 @@ bool AutoConnectScreen::isValidShip(int index)
     if (!ship || !ship->ship_template)
         return false;
 
+    filter_label->setText("");
+
     for(auto it : ship_filters)
     {
         if (it.first == "solo")
@@ -152,17 +158,26 @@ bool AutoConnectScreen::isValidShip(int index)
         }
         else if (it.first == "faction")
         {
+            filter_label->setText(filter_label->getText() + " ; Federation : " + it.second.lower());
             if (ship->getFactionId() != FactionInfo::findFactionId(it.second))
                 return false;
         }
         else if (it.first == "callsign")
         {
+            filter_label->setText(filter_label->getText() + " ; ID : " + it.second.lower());
             if (ship->getCallSign().lower() != it.second.lower())
                 return false;
         }
         else if (it.first == "type")
         {
+            filter_label->setText(filter_label->getText() + " ; Type : " + it.second.lower());
             if (ship->getTypeName().lower() != it.second.lower())
+                return false;
+        }
+        else if (it.first == "bay")
+        {
+            filter_label->setText(filter_label->getText() + " ; Baie : " + it.second.lower());
+            if (ship->id_dock.lower() != it.second.lower())
                 return false;
         }
         else
