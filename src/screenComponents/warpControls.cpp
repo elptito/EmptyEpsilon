@@ -56,16 +56,16 @@ void GuiWarpControls::onDraw(sf::RenderTarget& window)
     if (target_spaceship)
     {
         label->setValue(string(target_spaceship->current_warp, 1));
-        if (target_spaceship->current_warp > 0)
-        {
-            if (!launch_sound_played)
-            {
-                soundManager->playSound("warp.wav", target_spaceship->getPosition(), 200.0, 1.0);
-                launch_sound_played = true;
-            }
-        }else{
-            launch_sound_played = false;
-        }
+//        if (target_spaceship->current_warp > 0)
+//        {
+//            if (!launch_sound_played)
+//            {
+//                soundManager->playSound("warp.wav", target_spaceship->getPosition(), 200.0, 1.0);
+//                launch_sound_played = true;
+//            }
+//        }else{
+//            launch_sound_played = false;
+//        }
             //soundManager->setMusicVolume(int(my_spaceship->current_warp * 25));
     }
 }
