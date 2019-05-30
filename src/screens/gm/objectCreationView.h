@@ -7,8 +7,8 @@
 class GuiSelector;
 class GuiContainer;
 class GuiListbox;
+class GuiTextEntry;
 //class GuiRotatingModelView;
-
 
 class GuiObjectCreationView : public GuiOverlay
 {
@@ -18,6 +18,8 @@ private:
     string create_script;
 //    GuiRotatingModelView* model_view;
     GuiSelector* faction_selector;
+    GuiSelector* ship_class_selector;
+    GuiTextEntry* regex_ship;
     GuiListbox* listbox_other;
     GuiListbox* listbox_station;
     GuiListbox* listbox_ship;
@@ -30,6 +32,7 @@ public:
     void setCreateScript(string script);
 
     void createObject(sf::Vector2f position);
+    void listShipTemplate(string class_name, string regex_ship = "");
 };
 
 #endif//OBJECT_CREATION_VIEW_H

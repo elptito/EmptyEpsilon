@@ -5,6 +5,8 @@
 #include "gui/gui2_panel.h"
 #include "gui/gui2_selector.h"
 #include "gui/gui2_listbox.h"
+#include "gui/gui2_textentry.h"
+#include <regex>
 //#include "screenComponents/rotatingModelView.h"
 
 GuiObjectCreationView::GuiObjectCreationView(GuiContainer* owner, func_t enterCreateMode)
@@ -55,8 +57,26 @@ GuiObjectCreationView::GuiObjectCreationView(GuiContainer* owner, func_t enterCr
     listbox_other->addEntry("WormHole", "WormHole");
     listbox_other->addEntry("Planet", "Planet");
 
-    template_names = ShipTemplate::getTemplateNameList(ShipTemplate::Ship);
-    std::sort(template_names.begin(), template_names.end());
+    std::vector<string> class_names = ShipTemplate::getTemplateClassList(ShipTemplate::Ship);
+    std::sort(class_names.begin(), class_names.end());
+    ship_class_selector = new GuiSelector(box, "CLASS_SELECTOR", [this](int index, string value){
+        listShipTemplate(value, regex_ship->getText());
+    });
+
+    for(string class_name : class_names)
+        ship_class_selector->addEntry(class_name, class_name);
+    ship_class_selector->setSelectionIndex(0);
+    ship_class_selector->setPosition(-20, 20, ATopRight)->setSize(300, 50);
+
+    regex_ship = new GuiTextEntry(box, "SECTOR_NAME_TEXT", "");
+    regex_ship->setPosition(-20, 80, ATopRight)->setSize(300, 50);
+    regex_ship->enterCallback([this](string text){
+        listbox_ship->setSelectionIndex(-1);
+        listbox_station->setSelectionIndex(-1);
+        listbox_other->setSelectionIndex(-1);
+        listShipTemplate(ship_class_selector->getSelectionValue(), text);
+    });
+
     listbox_ship = new GuiListbox(box, "CREATE_SHIPS", [this](int index, string value)
     {
         script = "CpuShip():setRotation(random(0, 360)):setTemplate(\"" + value + "\"):orderRoaming()";
@@ -64,9 +84,7 @@ GuiObjectCreationView::GuiObjectCreationView(GuiContainer* owner, func_t enterCr
         listbox_station->setSelectionIndex(-1);
         listbox_other->setSelectionIndex(-1);
     });
-    listbox_ship->setTextSize(20)->setButtonHeight(30)->setPosition(-20, 20, ATopRight)->setSize(300, 460);
-    for(string template_name : template_names)
-        listbox_ship->addEntry(template_name, template_name);
+    listbox_ship->setTextSize(20)->setButtonHeight(30)->setPosition(-20, 140, ATopRight)->setSize(300, 340);
 
     (new GuiButton(box, "CLOSE_BUTTON", "Cancel", [this]() {
         create_script = "";
@@ -75,7 +93,8 @@ GuiObjectCreationView::GuiObjectCreationView(GuiContainer* owner, func_t enterCr
 }
 
 bool GuiObjectCreationView::onMouseDown(sf::Vector2f position)
-{   //Catch clicks.
+{
+    //Catch clicks.
     return true;
 }
 
@@ -90,4 +109,24 @@ void GuiObjectCreationView::createObject(sf::Vector2f position)
     if (create_script == "")
         return;
     gameMasterActions->commandRunScript(create_script + ":setPosition("+string(position.x)+","+string(position.y)+")");
+}
+
+void GuiObjectCreationView::listShipTemplate(string class_name, string reg)
+{
+    std::vector<string> template_names = ShipTemplate::getTemplateNameList(ShipTemplate::Ship);
+    std::sort(template_names.begin(), template_names.end());
+
+    std::regex name_rgx("(.*)("+reg+")(.*)", std::regex_constants::icase);
+
+    listbox_ship->setOptions({});
+    P<ShipTemplate> ship_template;
+    for(string template_name : template_names)
+    {
+        ship_template = ShipTemplate::getTemplate(template_name);
+        string test_name = ship_template->getClass();
+        if (test_name != class_name)
+            continue;
+        if (reg == "" || std::regex_match(template_name,name_rgx))
+            listbox_ship->addEntry(template_name, template_name);
+    }
 }

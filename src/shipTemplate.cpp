@@ -340,6 +340,19 @@ std::vector<string> ShipTemplate::getTemplateNameList(TemplateType type)
     return ret;
 }
 
+std::vector<string> ShipTemplate::getTemplateClassList(TemplateType type)
+{
+    std::vector<string> ret;
+    std::vector<string>::iterator ip;
+    for(std::unordered_map<string, P<ShipTemplate> >::iterator i = templateMap.begin(); i != templateMap.end(); i++)
+        if (i->second->getType() == type)
+            ret.push_back(i->second->getClass());
+    std::sort(ret.begin(), ret.end());
+    auto last = std::unique(ret.begin(), ret.end());
+    ret.erase(last, ret.end());
+    return ret;
+}
+
 string getSystemName(ESystem system)
 {
     switch(system)
