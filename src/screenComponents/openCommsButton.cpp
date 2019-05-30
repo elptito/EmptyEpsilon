@@ -1,6 +1,7 @@
 #include "openCommsButton.h"
 
 #include "targetsContainer.h"
+#include "gameGlobalInfo.h"
 #include "playerInfo.h"
 #include "spaceObjects/playerSpaceship.h"
 #include "spaceObjects/wormHole.h"
@@ -19,12 +20,18 @@ GuiOpenCommsButton::GuiOpenCommsButton(GuiContainer* owner, string id, TargetsCo
 void GuiOpenCommsButton::onDraw(sf::RenderTarget& window)
 {
     disable();
-//    if (targets->get() && my_spaceship && my_spaceship->isCommsInactive())
-//    if (my_spaceship && my_spaceship->isCommsInactive())
-//    {
-//        if (P<SpaceShip>(targets->get()) || P<SpaceStation>(targets->get()) || P<WormHole>(targets->get()))
-            enable();
-//    }
+    if (gameGlobalInfo->intercept_all_comms_to_gm == CGI_None)
+    {
+        if (targets->get() && my_spaceship && my_spaceship->isCommsInactive())
+        if (my_spaceship && my_spaceship->isCommsInactive())
+        {
+            if (P<SpaceShip>(targets->get()) || P<SpaceStation>(targets->get()) || P<WormHole>(targets->get()))
+                enable();
+        }
+    }
+    else
+        enable();
+
     GuiButton::onDraw(window);
 }
 
