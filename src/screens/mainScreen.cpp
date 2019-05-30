@@ -162,13 +162,13 @@ void ScreenMainScreen::update(float delta)
         }
 
 #ifdef DEBUG
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
-        {
-            targetCameraPosition.x = my_spaceship->getPosition().x;
-            targetCameraPosition.y = my_spaceship->getPosition().y;
-            targetCameraPosition.z = 3000.0;
-            camera_pitch = 90.0f;
-        }
+//        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+//        {
+//            targetCameraPosition.x = my_spaceship->getPosition().x;
+//            targetCameraPosition.y = my_spaceship->getPosition().y;
+//            targetCameraPosition.z = 3000.0;
+//            camera_pitch = 90.0f;
+//        }
 #endif
 
         switch(my_spaceship->main_screen_setting)
@@ -247,12 +247,12 @@ void ScreenMainScreen::update(float delta)
         {
             if (impulse_sound > -1)
             {
-                soundManager->setSoundVolume(impulse_sound, std::max(10.0f * impulse_ability, fabsf(my_spaceship->current_impulse) * 30.0f * std::max(0.1f, impulse_ability)));
+                soundManager->setSoundVolume(impulse_sound, std::max(10.0f * impulse_ability, fabsf(my_spaceship->current_impulse) * 30.0f * 100.0f * std::max(0.1f, impulse_ability)));
                 soundManager->setSoundPitch(impulse_sound, std::max(0.7f * impulse_ability, fabsf(my_spaceship->current_impulse) + 0.2f * std::max(0.1f, impulse_ability)));
             }
             else
             {
-                impulse_sound = soundManager->playSound(impulse_sound_file, std::max(0.7f * impulse_ability, fabsf(my_spaceship->current_impulse) + 0.2f * impulse_ability), std::max(30.0f, fabsf(my_spaceship->current_impulse) * 10.0f * impulse_ability), true);
+                impulse_sound = soundManager->playSound(impulse_sound_file, std::max(0.7f * impulse_ability, fabsf(my_spaceship->current_impulse) + 0.2f * impulse_ability), std::max(30.0f, fabsf(my_spaceship->current_impulse) * 100.0f * impulse_ability), true);
             }
         }
         // If we don't have impulse available, stop the engine sound.
