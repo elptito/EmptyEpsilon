@@ -15,6 +15,7 @@ ScanProbe::ScanProbe()
 {
     lifetime = 60 * 60;
     hull = 2;
+    moving = true;
 
     registerMemberReplication(&owner_id);
     registerMemberReplication(&target_position);
@@ -42,11 +43,13 @@ void ScanProbe::update(float delta)
     lifetime -= delta;
     if (lifetime <= 0.0)
         destroy();
-    if ((target_position - getPosition()) > getRadius())
+    if ((target_position - getPosition()) > getRadius() && moving)
     {
         sf::Vector2f v = normalize(target_position - getPosition());
         setPosition(getPosition() + v * delta * probe_speed);
     }
+    else
+        moving = false;
 }
 
 void ScanProbe::collide(Collisionable* target, float force)
@@ -74,7 +77,7 @@ void ScanProbe::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, flo
     object_sprite.setScale(size, size);
     window.draw(object_sprite);
 
-    if (long_range)
+    if (long_range && moving)
     {
         sf::VertexArray a(sf::Lines, 2);
         a[0].position = position;
