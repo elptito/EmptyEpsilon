@@ -1,5 +1,5 @@
-#ifndef DOCK_MASTER_SCREEN_H
-#define DOCK_MASTER_SCREEN_H
+#ifndef DRONE_MASTER_SCREEN_H
+#define DRONE_MASTER_SCREEN_H
 
 #include "gui/gui2_overlay.h"
 #include "spaceObjects/shipTemplateBasedObject.h"
@@ -18,14 +18,12 @@ class GuiRotatingModelView;
 class GuiOverlay;
 class GuiElement;
 class Dock;
-class DockMasterScreen : public GuiOverlay
+class DroneMasterScreen : public GuiOverlay
 {
   private:
 
     GuiListbox* docks;
-    GuiListbox* bays;
-    int index_dock = 0;
-    int index_bay = 0;
+    int index = 0;
     GuiLabel *dockTitle;
     GuiLabel *droneTitle;
 
@@ -65,7 +63,6 @@ class DockMasterScreen : public GuiOverlay
 
     GuiButton* action_launch_button;
     GuiButton* action_move_button;
-    GuiButton* action_empty_button;
     GuiElement* action_move_dest;
 
     GuiSelector* action_move_selector;
@@ -75,14 +72,12 @@ class DockMasterScreen : public GuiOverlay
     GuiButton *cancel_move_button;
 
   public:
-    DockMasterScreen(GuiContainer *owner);
+    DroneMasterScreen(GuiContainer *owner);
 
     void onDraw(sf::RenderTarget &window) override;
   private:
-    void selectDock(int index_dock);
-    void selectBay(int index_bay);
+    void selectDock(int index);
   private:
-    void displayShipDetails(P<SpaceShip> ship);
+    void displayDroneDetails(Dock &dockData);
 };
-#endif //DOCK_MASTER_SCREEN_H
-
+#endif //DRONE_MASTER_SCREEN_H

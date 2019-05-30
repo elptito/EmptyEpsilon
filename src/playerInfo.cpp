@@ -21,6 +21,7 @@
 #include "screens/extra/databaseScreen.h"
 #include "screens/extra/droneOperatorScreen.h"
 #include "screens/extra/dockMasterScreen.h"
+#include "screens/extra/droneMasterScreen.h"
 #include "screens/extra/oxygenScreen.h"
 
 #include "screens/extra/shipLogScreen.h"
@@ -170,6 +171,8 @@ void PlayerInfo::spawnUI()
             screen->addStationTab(new ShipLogScreen(screen,"intern"), internLogView, getCrewPositionName(internLogView), getCrewPositionIcon(internLogView));
         if (crew_position[dronePilot])
             screen->addStationTab(new DroneOperatorScreen(screen), dronePilot, getCrewPositionName(dronePilot), getCrewPositionIcon(dronePilot));
+        if (crew_position[droneMaster])
+            screen->addStationTab(new DroneMasterScreen(screen), droneMaster, getCrewPositionName(droneMaster), getCrewPositionIcon(droneMaster));
         if (crew_position[dockMaster])
             screen->addStationTab(new DockMasterScreen(screen), dockMaster, getCrewPositionName(dockMaster), getCrewPositionIcon(dockMaster));
         if (crew_position[oxygenView])
@@ -232,6 +235,7 @@ string getCrewPositionName(ECrewPosition position)
     case logView: return "Log View";
     case internLogView: return "Intern Log View";
     case dronePilot: return "Drone Pilot";
+    case droneMaster: return "Drone Master";
     case dockMaster: return "Dock Master";
     case oxygenView: return "Log Oxygen";
     default: return "ErrUnk: " + string(position);
@@ -262,6 +266,7 @@ string getCrewPositionIcon(ECrewPosition position)
     case logView: return "";
     case internLogView: return "";
     case dronePilot: return "";
+    case droneMaster: return "";
     case dockMaster: return "";
     case oxygenView: return "";
     default: return "ErrUnk: " + string(position);
@@ -320,6 +325,8 @@ template<> void convert<ECrewPosition>::param(lua_State* L, int& idx, ECrewPosit
         cp = internLogView;
     else if (str == "dronepilot" || str == "dronepilotview")
         cp = dronePilot;
+    else if (str == "dronemaster" || str == "dronemasterview")
+        cp = droneMaster;
     else if (str == "dockmaster" || str == "dockmasterview")
         cp = dockMaster;
     else if (str == "oxygen" || str == "oxygenview")
