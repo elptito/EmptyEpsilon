@@ -34,6 +34,8 @@ REGISTER_SCRIPT_SUBCLASS(PlayerSpaceship, SpaceShip)
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, transferPlayersAtPositionToShip);
     // Returns true if a station is occupied by a player, and false if not.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, hasPlayerAtPosition);
+    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setTexture);
+    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setTextureColor);
 
     // Comms functions return Boolean values if true.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, isCommsInactive);
@@ -219,6 +221,17 @@ PlayerSpaceship::PlayerSpaceship()
     // Initialize ship settings
     main_screen_setting = MSS_Front;
     main_screen_overlay = MSO_HideComms;
+    texture_front = "StarsFront";
+    texture_back = "StarsBack";
+    texture_left = "StarsLeft";
+    texture_right = "StarsRight";
+    texture_top = "StarsTop";
+    texture_bottom = "StarsBottom";
+    texture_r = 1.0;
+    texture_g = 1.0;
+    texture_b = 1.0;
+    texture_a = 1.0;
+
     hull_damage_indicator = 0.0;
     jump_indicator = 0.0;
     comms_state = CS_Inactive;

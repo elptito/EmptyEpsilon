@@ -165,6 +165,18 @@ public:
     // Content overlaid on the main screen, such as comms
     EMainScreenOverlay main_screen_overlay;
 
+    string texture_front;
+    string texture_back;
+    string texture_left;
+    string texture_right;
+    string texture_top;
+    string texture_bottom;
+
+    float texture_r;
+    float texture_g;
+    float texture_b;
+    float texture_a;
+
     bool activate_self_destruct;
     uint32_t self_destruct_code[max_self_destruct_codes];
     bool self_destruct_code_confirmed[max_self_destruct_codes];
@@ -281,6 +293,22 @@ public:
     void commandHackingFinished(P<SpaceObject> target, string target_system, string target_faction);
     void commandCustomFunction(string name);
     void commandSetAutoRepairSystemTarget(ESystem system);
+
+    void setTexture(string tfront, string tback, string tleft, string tright, string ttop, string tbottom) {
+        texture_front = tfront;
+        texture_back = tback;
+        texture_left = tleft;
+        texture_right = tright;
+        texture_top = ttop;
+        texture_bottom = tbottom;
+    };
+
+    void setTextureColor(float r, float g, float b, float a) {
+        texture_r = r;
+        texture_g = g;
+        texture_b = b;
+        texture_a = a;
+    };
 
     virtual void onReceiveServerCommand(sf::Packet& packet) override;
 
