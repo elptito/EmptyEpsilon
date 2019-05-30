@@ -177,6 +177,11 @@ GameMasterScreen::GameMasterScreen()
                 template_tweak_dialog->open(obj);
                 break;
             }
+			else if (P<Planet>(obj))
+			{
+                planet_tweak_dialog->open(obj);
+                break;
+            }
             else
             {
                 object_tweak_dialog->open(obj);
@@ -242,6 +247,8 @@ GameMasterScreen::GameMasterScreen()
     ship_tweak_dialog->hide();
     object_tweak_dialog = new GuiObjectTweak(this, TW_Object);
     object_tweak_dialog->hide();
+    planet_tweak_dialog = new GuiObjectTweak(this, TW_Planet);
+    planet_tweak_dialog->hide();
 
     global_message_entry = new GuiGlobalMessageEntryView(this);
     global_message_entry->hide();

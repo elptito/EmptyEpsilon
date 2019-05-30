@@ -5,6 +5,7 @@
 #include "missileWeaponData.h"
 #include "shipTemplate.h"
 #include "playerInfo.h"
+#include "spaceObjects/planet.h"
 #include "spaceObjects/playerSpaceship.h"
 
 class SpaceShip;
@@ -22,7 +23,8 @@ enum ETweakType
     TW_Ship,    // Ships
     TW_Template,// Template : Ships & station
     TW_Station, // TODO: Space stations
-    TW_Player   // Player ships
+    TW_Player,   // Player ships
+    TW_Planet   // Planet
 };
 
 class GuiTweakPage : public GuiElement
@@ -265,6 +267,20 @@ private:
 
 public:
     GuiShipTweakMessages(GuiContainer* owner);
+
+    virtual void open(P<SpaceObject> target);
+
+    virtual void onDraw(sf::RenderTarget& window) override;
+};
+
+class GuiShipTweakPlanet : public GuiTweakPage
+{
+private:
+    P<Planet> target;
+    GuiSelector* texture_selector;
+
+public:
+    GuiShipTweakPlanet(GuiContainer* owner);
 
     virtual void open(P<SpaceObject> target);
 

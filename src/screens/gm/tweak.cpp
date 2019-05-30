@@ -64,6 +64,12 @@ GuiObjectTweak::GuiObjectTweak(GuiContainer* owner, ETweakType tweak_type)
         list->addEntry("Messages", "");
     }
 
+    if (tweak_type == TW_Planet)
+    {
+        pages.push_back(new GuiShipTweakPlanet(this));
+        list->addEntry("Planete", "");
+    }
+
     for(GuiTweakPage* page : pages)
     {
         page->setSize(700, 600)->setPosition(0, 0, ABottomRight)->hide();
@@ -1188,3 +1194,45 @@ void GuiShipTweakMessages::open(P<SpaceObject> target)
 
     }
 }
+
+GuiShipTweakPlanet::GuiShipTweakPlanet(GuiContainer* owner)
+: GuiTweakPage(owner)
+{
+    GuiAutoLayout* left_col = new GuiAutoLayout(this, "LEFT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    left_col->setPosition(50, 25, ATopLeft)->setSize(200, GuiElement::GuiSizeMax);
+
+    GuiAutoLayout* center_col = new GuiAutoLayout(this, "CENTER_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    center_col->setPosition(0, 25, ATopCenter)->setSize(200, GuiElement::GuiSizeMax);
+
+    GuiAutoLayout* right_col = new GuiAutoLayout(this, "RIGHT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    right_col->setPosition(-25, 25, ATopRight)->setSize(200, GuiElement::GuiSizeMax);
+
+    (new GuiLabel(left_col, "", "Texture", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    texture_selector = new GuiSelector(left_col, "", [this](int index, string value)
+    {
+        target->setPlanetSurfaceTexture(value);
+    });
+    texture_selector->setPosition(0, 0, ATopRight)->setSize(GuiElement::GuiSizeMax, 50);
+
+    std::vector<string> texture_filenames = findResources("planets/*.jpg");
+    std::sort(texture_filenames.begin(), texture_filenames.end());
+    for(string filename : texture_filenames)
+    {
+        texture_selector->addEntry(filename.substr(filename.rfind("/") + 1, filename.rfind(".")), filename);
+    }
+}
+
+void GuiShipTweakPlanet::onDraw(sf::RenderTarget& window)
+{
+
+}
+
+void GuiShipTweakPlanet::open(P<SpaceObject> target)
+{
+    P<Planet> planet = target;
+    this->target = planet;
+    string texture = planet->getPlanetSurfaceTexture();
+    int id_texture = texture_selector->indexByValue(texture);
+    texture_selector->setSelectionIndex(id_texture);
+}
+

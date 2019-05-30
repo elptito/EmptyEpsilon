@@ -40,6 +40,7 @@ private:
     GuiObjectTweak* ship_tweak_dialog;
     GuiObjectTweak* template_tweak_dialog;
     GuiObjectTweak* object_tweak_dialog;
+    GuiObjectTweak* planet_tweak_dialog;
 
     bool position_text_custom;
     GuiTextEntry* position_text;
