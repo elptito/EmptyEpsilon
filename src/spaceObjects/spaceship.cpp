@@ -153,9 +153,10 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     max_energy_level = 1000;
     extern_log_size = 0;
     intern_log_size = 1;
+    turnSpeed = 0.0f;
 
     registerMemberReplication(&target_rotation, 1.5);
-    registerMemberReplication(&rotation, 1.5);
+    registerMemberReplication(&turnSpeed, 1.5);
     registerMemberReplication(&impulse_request, 0.1);
     registerMemberReplication(&current_impulse, 0.5);
     registerMemberReplication(&has_warp_drive);
@@ -294,9 +295,9 @@ void SpaceShip::handleClientCommand(int32_t client_id, int16_t command, sf::Pack
     case CMD_TARGET_ROTATION:
         packet >> target_rotation;
         break;
-    case CMD_ROTATION:
+    case CMD_TURN_SPEED:
         target_rotation = getRotation();
-        packet >> rotation;
+        packet >> turnSpeed;
         break;
     case CMD_IMPULSE:
         packet >> impulse_request;
@@ -845,10 +846,10 @@ void SpaceShip::update(float delta)
     }
 
     float rotationDiff;
-    if (rotation == 0) {
+    if (turnSpeed == 0.0f) {
         rotationDiff = sf::angleDifference(getRotation(), target_rotation);
     } else {
-        rotationDiff = rotation;
+        rotationDiff = turnSpeed;
     }
 
     if (rotationDiff > 1.0)
@@ -1664,10 +1665,10 @@ void SpaceShip::commandTargetRotation(float target)
     sendClientCommand(packet);
 }
 
-void SpaceShip::commandRotation(float rotation)
+void SpaceShip::commandTurnSpeed(float turnSpeed)
 {
     sf::Packet packet;
-    packet << CMD_ROTATION << rotation;
+    packet << CMD_TURN_SPEED << turnSpeed;
     sendClientCommand(packet);
 }
 

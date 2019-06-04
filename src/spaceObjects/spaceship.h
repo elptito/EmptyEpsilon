@@ -83,7 +83,7 @@ protected:
     static const int16_t CMD_SET_TRACTOR_BEAM_ARC = 0x0032;
     static const int16_t CMD_SET_TRACTOR_BEAM_RANGE = 0x0033;
     static const int16_t CMD_SET_TRACTOR_BEAM_MODE = 0x0034;
-    static const int16_t CMD_ROTATION = 0x0035;
+    static const int16_t CMD_TURN_SPEED = 0x0035;
 public:
     constexpr static int max_frequency = 20;
     constexpr static float combat_maneuver_charge_time = 20.0f; /*< Amount of time it takes to fully charge the combat maneuver system */
@@ -129,7 +129,7 @@ public:
     /*!
      *[input] Ship will rotate in this velocity. ([-1,1], overrides target_rotation)
      */
-    float rotation;
+    float turnSpeed;
 
     /*!
      * [input] Amount of impulse requested from the user (-1.0 to 1.0)
@@ -492,7 +492,7 @@ public:
     float getDronesControlRange();
         // Client command functions
     void commandTargetRotation(float target);
-    void commandRotation(float rotation);
+    void commandTurnSpeed(float turnSpeed);
     void commandImpulse(float target);
     void commandWarp(int8_t target);
     void commandJump(float distance);
