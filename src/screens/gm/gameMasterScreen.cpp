@@ -528,10 +528,12 @@ void GameMasterScreen::handleJoystickButton(unsigned int joystick, unsigned int 
             possession_target->commandFireTubeAtTarget(selected_posessed_tube, possession_target->getTarget());
             break;
         case 4 : 
-            selected_posessed_tube = (selected_posessed_tube + possession_target->weapon_tube_count - 1) % possession_target->weapon_tube_count;
+            if (possession_target->weapon_tube_count)
+                selected_posessed_tube = (selected_posessed_tube + possession_target->weapon_tube_count - 1) % possession_target->weapon_tube_count;
             break;
         case 6 : 
-            selected_posessed_tube = (selected_posessed_tube + 1) % possession_target->weapon_tube_count;
+            if (possession_target->weapon_tube_count)
+                selected_posessed_tube = (selected_posessed_tube + 1) % possession_target->weapon_tube_count;
             break;
         default:
             break;
