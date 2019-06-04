@@ -375,7 +375,7 @@ void GuiElement::drawText(sf::RenderTarget& window, sf::FloatRect rect, string t
         break;
     }
     textElement.setPosition(x, y);
-    textElement.setColor(color);
+    textElement.setFillColor(color);
     window.draw(textElement);
 }
 
@@ -405,7 +405,7 @@ void GuiElement::drawVerticalText(sf::RenderTarget& window, sf::FloatRect rect, 
         break;
     }
     textElement.setPosition(x, y);
-    textElement.setColor(color);
+    textElement.setFillColor(color);
     window.draw(textElement);
 }
 

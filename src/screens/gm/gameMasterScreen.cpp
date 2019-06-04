@@ -511,7 +511,7 @@ void GameMasterScreen::handleJoystickAxis(unsigned int joystick, sf::Joystick::A
             possession_target->commandImpulse(-position / 100);  
             break;
         case sf::Joystick::R: 
-            possession_target->commandRotation(position / 100);
+            possession_target->commandTurnSpeed(position / 100);
             break;
         default:
             break;

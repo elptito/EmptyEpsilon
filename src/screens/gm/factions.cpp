@@ -9,9 +9,10 @@
 #define MARGIN 10
 #define CELL_SIZE 50
 #define LABEL_SIZE 160
+#define NO_FACTION (unsigned int) -1
 
 GuiFactions::GuiFactions(GuiContainer *owner)
-    : GuiOverlay(owner, "FACTIONS_OVERLAY", sf::Color(0, 0, 0, 128)), faction_a(-1), faction_b(-1)
+    : GuiOverlay(owner, "FACTIONS_OVERLAY", sf::Color(0, 0, 0, 128)), faction_a(NO_FACTION), faction_b(NO_FACTION)
 {
     this->setBlocking(true);
     GuiPanel *box = new GuiPanel(this, "PANEL");
@@ -56,7 +57,7 @@ GuiFactions::GuiFactions(GuiContainer *owner)
     (new GuiLabel(editPanel, "", "to be", 15))->setAlignment(ACenter)->setPosition(0, MARGIN * 4 + CELL_SIZE * 3, ATopCenter)->setSize(LABEL_SIZE - MARGIN, CELL_SIZE - MARGIN);
 
     edit_selector = new GuiSelector(editPanel, "", [this](int selection_index, string value) {
-        if (faction_a != -1 && faction_b != -1) {
+        if (faction_a != NO_FACTION && faction_b != NO_FACTION) {
             gameMasterActions->commandSetFactionsState(faction_a, faction_b, selection_index);
         }
     });
@@ -81,14 +82,14 @@ void GuiFactions::onSelectFactions(unsigned int i, unsigned int j)
 
 void GuiFactions::deSelectFactions()
 {
-    if (faction_a != -1 && faction_b != -1)
+    if (faction_a != NO_FACTION && faction_b != NO_FACTION)
     {
         this->buttons[faction_a * factionInfo.size() + faction_b]->setActive(false);
         h_labels[faction_a]->removeBackground();
         v_labels[faction_b]->removeBackground();
     }
-    faction_a = -1;
-    faction_b = -1;
+    faction_a = NO_FACTION;
+    faction_b = NO_FACTION;
     editPanel->hide();
 }
 

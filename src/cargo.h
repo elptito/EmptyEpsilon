@@ -14,8 +14,8 @@ public:
   typedef std::vector<std::tuple<string, string, string>> Entries;
 
 private:
-  float heat;
   float energy_level;
+  float heat;
 
 public:
   Cargo(string multiplayerClassIdentifier);

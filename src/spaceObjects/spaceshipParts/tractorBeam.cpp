@@ -119,6 +119,9 @@ void TractorBeam::update(float delta)
                 {
                     sf::Vector2f destination;
                     switch(mode) {
+                        case TBM_Off : 
+                            // do nothing. here to avoid compiler -Wswitch warning
+                            break;
                         case TBM_Pull : 
                             destination = parent->getPosition();
                             break;

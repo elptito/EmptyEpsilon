@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 2.8.12)
 
 option(ENABLE_CRASH_LOGGER "Enable the drmingw crash logging facilities" OFF)
 message(STATUS "ENABLE_CRASH_LOGGER is " ${ENABLE_CRASH_LOGGER})
-# cmake_policy(SET CMP0074 NEW)
+cmake_policy(SET CMP0074 NEW)
 
 # Check if serious proton dir is set.
 if(NOT DEFINED SERIOUS_PROTON_DIR)

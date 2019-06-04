@@ -161,8 +161,8 @@ PlayerSpaceship::PlayerSpaceship()
     auto_repairing_system = SYS_None;
     setFactionId(1);
 
-    extern_log_size = 1000;
-    intern_log_size = 1000;
+    extern_log_size = (uint8)1000;
+    intern_log_size = (uint8)1000;
 
     // For now, set player ships to always be fully scanned to all other ships
     for(unsigned int faction_id = 0; faction_id < factionInfo.size(); faction_id++)
