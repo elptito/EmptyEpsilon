@@ -35,7 +35,7 @@ GuiIndicatorOverlays::GuiIndicatorOverlays(GuiContainer* owner)
 
 GuiIndicatorOverlays::~GuiIndicatorOverlays()
 {
-//    warpPostProcessor->enabled = false;
+    warpPostProcessor->enabled = false;
     glitchPostProcessor->enabled = false;
 }
 
@@ -97,7 +97,7 @@ void GuiIndicatorOverlays::onDraw(sf::RenderTarget& window)
             warpPostProcessor->enabled = false;
         }
     }else{
-//        warpPostProcessor->enabled = false;
+        warpPostProcessor->enabled = false;
         glitchPostProcessor->enabled = false;
     }
 

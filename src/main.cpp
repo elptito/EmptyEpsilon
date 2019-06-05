@@ -44,7 +44,7 @@ RenderLayer* effectLayer;
 RenderLayer* hudLayer;
 RenderLayer* mouseLayer;
 PostProcessor* glitchPostProcessor;
-//PostProcessor* warpPostProcessor;
+PostProcessor* warpPostProcessor;
 
 int main(int argc, char** argv)
 {
@@ -179,8 +179,8 @@ int main(int argc, char** argv)
         mouseLayer = new RenderLayer(hudLayer);
         glitchPostProcessor = new PostProcessor("glitch", mouseLayer);
         glitchPostProcessor->enabled = false;
-        //warpPostProcessor = new PostProcessor("warp", glitchPostProcessor);
-        //warpPostProcessor->enabled = false;
+        warpPostProcessor = new PostProcessor("warp", glitchPostProcessor);
+        warpPostProcessor->enabled = false;
         defaultRenderLayer = objectLayer;
 
         int width = 1200;
@@ -194,7 +194,7 @@ int main(int argc, char** argv)
             if (fsaa < 2)
                 fsaa = 2;
         }
-        //P<WindowManager> window_manager = new WindowManager(width, height, fullscreen, warpPostProcessor, fsaa);
+        P<WindowManager> window_manager = new WindowManager(width, height, fullscreen, warpPostProcessor, fsaa);
         P<WindowManager> window_manager = new WindowManager(width, height, fullscreen, glitchPostProcessor, fsaa);
         window_manager->setAllowVirtualResize(true);
         engine->registerObject("windowManager", window_manager);
