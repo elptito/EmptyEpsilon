@@ -153,6 +153,7 @@ Planet::Planet()
 
     registerMemberReplication(&planet_size);
     registerMemberReplication(&cloud_size);
+    registerMemberReplication(&atmosphere_size);
     registerMemberReplication(&planet_texture);
     registerMemberReplication(&planet_icon);
     registerMemberReplication(&cloud_texture);
