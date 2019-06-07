@@ -115,9 +115,11 @@ Planet::Planet()
     planet_icon = "planets/icons/Storm-Planet.png";
     cloud_texture = "";
     atmosphere_texture = "";
+    atmosphere_size = 0;
     atmosphere_color = sf::Color(0, 0, 0);
     distance_from_movement_plane = 0;
-    axial_rotation_time = 0.0;
+    axial_rotation_time = random(100.0,400.0);
+    rotation_axis = random(0.0,360.0);
     orbit_target_id = -1;
     orbit_time = 0.0f;
     orbit_distance = 0.0f;
@@ -126,6 +128,24 @@ Planet::Planet()
 
     setRadarSignatureInfo(0.5, 0, 0);
 
+    addInfos(0,"Rotation",string(irandom(5,45))+ " ALX");
+	addInfos(1,"Revolution",string(irandom(50,50000))+ " ALX");
+	addInfos(2,"Axe de rotation",string(irandom(1,360))+"°" + string(irandom(1,60))+"'" + string(irandom(1,60))+"''");
+	addInfos(3,"Taille",string(irandom(50,500) * 100) + " km");
+	if (random(0.0,1.0) < 0.1)
+        addInfos(4,"Type","Gazeuse");
+    else
+        addInfos(4,"Type","Tellurique");
+	addInfos(5,"Age",string(irandom(5,100)*100)+ " MM ALX");
+
+	if (infos_value[4] == "Tellurique" && random(0.0,1.0) < 0.3)
+        addInfos(6,"Atmosphere","oui");
+    else
+        addInfos(6,"Atmosphere","non");
+	addInfos(7,"Pression",string(random(0.1,4),1)+" Pa");
+	addInfos(8,"Gravite",string(random(2.0,20.0),3)+" m/s2");
+	addInfos(9,"ressource principale","");
+
     registerMemberReplication(&planet_size);
     registerMemberReplication(&cloud_size);
     registerMemberReplication(&planet_texture);
@@ -133,8 +153,10 @@ Planet::Planet()
     registerMemberReplication(&cloud_texture);
     registerMemberReplication(&atmosphere_texture);
     registerMemberReplication(&atmosphere_color);
+    registerMemberReplication(&atmosphere_size);
     registerMemberReplication(&distance_from_movement_plane);
     registerMemberReplication(&axial_rotation_time);
+    registerMemberReplication(&rotation_axis);
     registerMemberReplication(&orbit_target_id);
     registerMemberReplication(&orbit_time);
     registerMemberReplication(&orbit_distance);
@@ -243,10 +265,12 @@ void Planet::draw3D()
         level_of_detail = 2;
     if (view_scale < 0.1)
         level_of_detail = 3;
+    level_of_detail = 4;
 
     if (planet_texture != "" && planet_size > 0)
     {
         glTranslatef(0, 0, distance_from_movement_plane);
+        glRotatef(rotation_axis, 0.0, 1.0, 0.0);
         glScalef(planet_size, planet_size, planet_size);
         glColor3f(1, 1, 1);
 
@@ -274,6 +298,7 @@ void Planet::draw3DTransparent()
         level_of_detail = 2;
     if (view_scale < 0.1)
         level_of_detail = 3;
+    level_of_detail = 4;
 
     glTranslatef(0, 0, distance_from_movement_plane);
     if (cloud_texture != "" && cloud_size > 0)

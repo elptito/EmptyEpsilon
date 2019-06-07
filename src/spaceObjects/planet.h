@@ -46,6 +46,7 @@ private:
     float distance_from_movement_plane;
 
     float axial_rotation_time;
+    float rotation_axis;
     int32_t orbit_target_id;
     float orbit_time;
     float orbit_distance;

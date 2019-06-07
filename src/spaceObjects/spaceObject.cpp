@@ -106,6 +106,8 @@ REGISTER_SCRIPT_CLASS_NO_CREATE(SpaceObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getDescription);
     /// Sets the description of this object in scanned and unscanned states. First parameter is the description in unscanned state, while the 2nd parameter is in scanned state.
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setDescriptions);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, addInfos);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, removeInfos);
     /// Set the radar signature of this object. Objects' signatures create noise
     /// on the Science station's raw radar signal ring.
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setRadarSignatureInfo);
@@ -143,10 +145,17 @@ SpaceObject::SpaceObject(float collision_range, string multiplayer_name, float m
     translate_z = 0;
     id_dock = "";
 
+    for(int n = 0; n < 10; n++)
+    {
+        infos_label[n] = "";
+        infos_value[n] = "";
+    }
+
     scanning_complexity_value = 0;
     scanning_depth_value = 0;
 
     registerMemberReplication(&translate_z);
+    registerMemberReplication(&object_radius);
     registerMemberReplication(&callsign);
     registerMemberReplication(&id_dock);
     registerMemberReplication(&hull);
@@ -164,6 +173,11 @@ SpaceObject::SpaceObject(float collision_range, string multiplayer_name, float m
     registerMemberReplication(&scanning_depth_value);
     registerCollisionableReplication(multiplayer_significant_range);
 
+    for (int n=0; n<10; n++)
+    {
+        registerMemberReplication(&infos_label[n]);
+        registerMemberReplication(&infos_value[n]);
+    }
     oxygen_zones = 0;
     registerMemberReplication(&oxygen_zones);
     for(int n=0; n<max_oxygen_zones; n++)
@@ -239,7 +253,7 @@ bool SpaceObject::canBeSelectedBy(P<SpaceObject> other)
         return true;
     if (canBeTargetedBy(other))
         return true;
-    return false;
+    return true;
 }
 
 bool SpaceObject::canBeScannedBy(P<SpaceObject> other)
@@ -250,11 +264,12 @@ bool SpaceObject::canBeScannedBy(P<SpaceObject> other)
         return true;
     if (getScannedStateFor(other) == SS_FullScan)
         return false;
-    if (scanning_complexity_value > 0)
-        return true;
-    if (scanning_depth_value > 0)
-        return true;
-    return false;
+//    if (scanning_complexity_value > 0)
+//        return true;
+//    if (scanning_depth_value > 0)
+//        return true;
+//    return false;
+    return true;
 }
 
 bool SpaceObject::canBeHackedBy(P<SpaceObject> other)
@@ -347,7 +362,19 @@ bool SpaceObject::isScannedByFaction(string faction)
 
 void SpaceObject::scannedBy(P<SpaceObject> other)
 {
-    setScannedStateFor(other, SS_FullScan);
+//    setScannedStateFor(other, SS_FullScan);
+    switch(getScannedStateFor(other))
+    {
+    case SS_NotScanned:
+    case SS_FriendOrFoeIdentified:
+        setScannedStateFor(other, SS_SimpleScan);
+        break;
+    case SS_SimpleScan:
+        setScannedStateFor(other, SS_FullScan);
+        break;
+    case SS_FullScan:
+        break;
+    }
 }
 
 void SpaceObject::setScanningParameters(int complexity, int depth)
