@@ -196,6 +196,7 @@ static const int16_t CMD_CANCEL_MOVE_CARGO = 0x0033;
 static const int16_t CMD_SET_DOCK_MOVE_TARGET = 0x0034;
 static const int16_t CMD_SET_DOCK_ENERGY_REQUEST = 0x0035;
 static const int16_t CMD_SET_AUTO_REPAIR_SYSTEM_TARGET = 0x0036;
+static const int16_t CMD_SET_DOCK_TARGET = 0x0037;
 
 string alertLevelToString(EAlertLevel level)
 {
@@ -300,6 +301,17 @@ PlayerSpaceship::PlayerSpaceship()
     registerMemberReplication(&has_biological_sensor);
     registerMemberReplication(&custom_functions);
     registerMemberReplication(&auto_repairing_system);
+
+    registerMemberReplication(&texture_front);
+    registerMemberReplication(&texture_back);
+    registerMemberReplication(&texture_left);
+    registerMemberReplication(&texture_right);
+    registerMemberReplication(&texture_top);
+    registerMemberReplication(&texture_bottom);
+    registerMemberReplication(&texture_r);
+    registerMemberReplication(&texture_g);
+    registerMemberReplication(&texture_b);
+    registerMemberReplication(&texture_a);
 
     // Determine which stations must provide self-destruct confirmation codes.
     for(int n = 0; n < max_self_destruct_codes; n++)
@@ -1213,6 +1225,13 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
                 addToShipLog("Cible active : " + string(SpaceShip::getTarget()->SpaceObject::getCallSign()),sf::Color::Yellow,"intern");
         }
         break;
+    case CMD_SET_DOCK_TARGET:
+        {
+            packet >> dock_target_id;
+            if (dock_target_id != int32_t(-1))
+                addToShipLog("Cible du docking : " + string(SpaceShip::getDockTarget()->SpaceObject::getCallSign()),sf::Color::Yellow,"intern");
+        }
+        break;
     case CMD_LOAD_TUBE:
         {
             int8_t tube_nr;
@@ -1764,6 +1783,16 @@ void PlayerSpaceship::commandSetTarget(P<SpaceObject> target)
         packet << CMD_SET_TARGET << target->getMultiplayerId();
     else
         packet << CMD_SET_TARGET << int32_t(-1);
+    sendClientCommand(packet);
+}
+
+void PlayerSpaceship::commandSetDockTarget(P<SpaceObject> target)
+{
+    sf::Packet packet;
+    if (target)
+        packet << CMD_SET_DOCK_TARGET << target->getMultiplayerId();
+    else
+        packet << CMD_SET_DOCK_TARGET << int32_t(-1);
     sendClientCommand(packet);
 }
 

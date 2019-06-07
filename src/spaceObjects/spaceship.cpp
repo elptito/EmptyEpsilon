@@ -25,6 +25,7 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, isFullyScannedByFaction);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, isDocked);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getTarget);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getDockTarget);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getWeaponStorage);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getWeaponStorageMax);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setWeaponStorage);
@@ -136,6 +137,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     combat_maneuver_boost_speed = 0.0f;
     combat_maneuver_strafe_speed = 0.0f;
     target_id = -1;
+    dock_target_id = -1;
     beam_frequency = irandom(0, max_frequency);
     beam_system_target = SYS_None;
     shield_frequency = irandom(0, max_frequency);
@@ -163,6 +165,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     registerMemberReplication(&weapon_tube_count);
     registerMemberReplication(&beam_weapons_count);
     registerMemberReplication(&target_id);
+    registerMemberReplication(&dock_target_id);
     registerMemberReplication(&turn_speed);
     registerMemberReplication(&impulse_max_speed);
     registerMemberReplication(&impulse_acceleration);
@@ -786,6 +789,13 @@ P<SpaceObject> SpaceShip::getTarget()
     return game_client->getObjectById(target_id);
 }
 
+P<SpaceObject> SpaceShip::getDockTarget()
+{
+    if (game_server)
+        return game_server->getObjectById(dock_target_id);
+    return game_client->getObjectById(dock_target_id);
+}
+
 void SpaceShip::executeJump(float distance)
 {
     float f = systems[SYS_JumpDrive].health;
@@ -862,6 +872,7 @@ void SpaceShip::requestDock(P<SpaceObject> target)
 
     docking_state = DS_Docking;
     docking_target = target;
+//    dock_target_id = target->getMultiplayerId();
     warp_request = 0.0;
 }
 
@@ -1156,8 +1167,9 @@ bool SpaceShip::hasSystem(ESystem system)
         return impulse_max_speed > 0.0;
     case SYS_Docks:
     case SYS_Drones:
-    case SYS_Door:
         return docks[0].dock_type != Dock_Disabled;
+    case SYS_Door:
+        return false;
     }
     return true;
 }
