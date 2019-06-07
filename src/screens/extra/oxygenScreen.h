@@ -20,7 +20,8 @@ private:
     GuiKeyValueDisplay* oxygen_value_extern[max_oxygen_zones];
     GuiProgressbar* oxygen_bar_intern[max_oxygen_zones];
     GuiProgressbar* oxygen_bar_extern[max_oxygen_zones];
-    GuiLabel* oxygen_label;
+    GuiLabel* oxygen_label_intern;
+    GuiLabel* oxygen_label_extern;
 
     float time_left;
 

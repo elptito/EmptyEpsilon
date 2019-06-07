@@ -21,7 +21,10 @@ OxygenScreen::OxygenScreen(GuiContainer *owner)
     oxygen_view->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax)->setPosition(0, 0, ACenter);
 
     (new GuiLabel(oxygen_view, "OXYGEN_LABEL", "Gestion de l'oxygene", 100))->setPosition(0, 200, ACenter);
-    (new GuiLabel(oxygen_view, "Ship_LABEL", "Vaisseau", 50))->setPosition(0, 200, ACenter);
+
+    oxygen_label_intern = new GuiLabel(oxygen_view, "Ship_LABEL_INTERN", "Interne", 50);
+    oxygen_label_intern->setPosition(0, 200, ACenter);
+    oxygen_label_intern->setVisible(false);
 
     for(int n=0; n<max_oxygen_zones; n++)
     {
@@ -34,11 +37,13 @@ OxygenScreen::OxygenScreen(GuiContainer *owner)
 
         oxygen_value_intern[n] = new GuiKeyValueDisplay(oxygen_intern[n], "OXY_VALUE_INTERN" + string(n), 0.8, "Zone " + string(n+1), "0%");
         oxygen_value_intern[n]->setSize(GuiElement::GuiSizeMax, 40)->setPosition(0, 400, ACenter);
+
+        oxygen_value_intern[n]->setVisible(false);
     }
 
-    oxygen_label = new GuiLabel(oxygen_view, "Ship_LABEL", "Exterieur", 50);
-    oxygen_label->setPosition(0, 200, ACenter);
-    oxygen_label->setVisible(false);
+    oxygen_label_extern = new GuiLabel(oxygen_view, "Ship_LABEL", "Externe", 50);
+    oxygen_label_extern->setPosition(0, 200, ACenter);
+    oxygen_label_extern->setVisible(false);
 
     // Choix dock
     for(int n=0; n<max_oxygen_zones; n++)
@@ -63,6 +68,7 @@ void OxygenScreen::onDraw(sf::RenderTarget &window)
 
     if (my_spaceship)
     {
+        oxygen_label_intern->setVisible(my_spaceship->getOxygenMaxTotal()>0);
         for(int n=0; n<max_oxygen_zones; n++)
         {
             float rate  = my_spaceship->getOxygenRechargeRate(n);
@@ -112,13 +118,12 @@ void OxygenScreen::onDraw(sf::RenderTarget &window)
     // Dock
     if (my_spaceship)
     {
-
         if (my_spaceship->docking_state == DS_Docked)
         {
-            P<SpaceShip> ship = my_spaceship->getTarget();
+            P<SpaceShip> ship = my_spaceship->getDockTarget();
             if (ship && my_spaceship->isDocked(ship))
             {
-                oxygen_label->setVisible(ship->getOxygenMaxTotal()>0);
+                oxygen_label_extern->setVisible(ship->getOxygenMaxTotal()>0);
                 for(int n=0; n<max_oxygen_zones; n++)
                 {
                     float rate  = ship->getOxygenRechargeRate(n);
