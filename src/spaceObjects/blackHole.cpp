@@ -17,7 +17,7 @@ REGISTER_MULTIPLAYER_CLASS(BlackHole, "BlackHole");
 BlackHole::BlackHole()
 : SpaceObject(5000, "BlackHole")
 {
-	size = getRadius();
+	size = 5000;
     update_delta = 0.0;
     PathPlannerManager::getInstance()->addAvoidObject(this, 7000);
     setRadarSignatureInfo(0.9, 0, 0);
@@ -59,7 +59,7 @@ void BlackHole::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, flo
     textureManager.setTexture(object_sprite, "blackHole.png");
     object_sprite.setRotation(getRotation());
     object_sprite.setPosition(position);
-    float size_radar = size * scale / object_sprite.getTextureRect().width / 5;
+    float size_radar = size * scale / object_sprite.getTextureRect().width;
     object_sprite.setScale(size_radar, size_radar );
     object_sprite.setColor(sf::Color(64, 64, 255));
     window.draw(object_sprite);
