@@ -128,8 +128,8 @@ Planet::Planet()
 
     setRadarSignatureInfo(0.5, 0, 0);
 
-    addInfos(0,"Rotation",string(irandom(5,45))+ " ALX");
-	addInfos(1,"Revolution",string(irandom(50,50000))+ " ALX");
+    addInfos(0,"Rotation",string(irandom(5,45))+ " HLX");
+	addInfos(1,"Revolution",string(irandom(50,50000))+ " JLX");
 	addInfos(2,"Axe de rotation",string(irandom(1,360))+"°" + string(irandom(1,60))+"'" + string(irandom(1,60))+"''");
 	addInfos(3,"Taille",string(irandom(50,500) * 100) + " km");
 	if (random(0.0,1.0) < 0.1)
