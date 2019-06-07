@@ -128,15 +128,15 @@ Planet::Planet()
 
     setRadarSignatureInfo(0.5, 0, 0);
 
-    addInfos(0,"Rotation",string(irandom(5,45))+ " HLX");
-	addInfos(1,"Revolution",string(irandom(50,50000))+ " JLX");
+    addInfos(0,"Rotation",string(irandom(5,45))+ " H.LO");
+	addInfos(1,"Revolution",string(irandom(50,5000))+ " J.LO");
 	addInfos(2,"Axe de rotation",string(irandom(1,360))+"°" + string(irandom(1,60))+"'" + string(irandom(1,60))+"''");
 	addInfos(3,"Taille",string(irandom(50,500) * 100) + " km");
 	if (random(0.0,1.0) < 0.1)
         addInfos(4,"Type","Gazeuse");
     else
         addInfos(4,"Type","Tellurique");
-	addInfos(5,"Age",string(irandom(5,100)*100)+ " MM ALX");
+	addInfos(5,"Age",string(irandom(5,100)*100)+ " M³ A.LO");
 
 	if (infos_value[4] == "Tellurique" && random(0.0,1.0) < 0.3)
         addInfos(6,"Atmosphere","oui");
