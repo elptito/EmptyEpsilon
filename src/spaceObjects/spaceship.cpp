@@ -807,18 +807,18 @@ void SpaceShip::executeJump(float distance)
     if (WarpJammer::isWarpJammed(target_position))
         target_position = WarpJammer::getFirstNoneJammedPosition(getPosition(), target_position);
 
-    P<ElectricExplosionEffect> e1 = new ElectricExplosionEffect();
-    e1->setSize((distance / 10.0) * random(0.8, 1.2));
-    e1->setPosition(getPosition());
-    e1->setOnRadar(true);
+//    P<ElectricExplosionEffect> e1 = new ElectricExplosionEffect();
+//    e1->setSize((distance / 10.0) * random(0.8, 1.2));
+//    e1->setPosition(getPosition());
+//    e1->setOnRadar(true);
 
     setPosition(target_position);
     addHeat(SYS_JumpDrive, jump_drive_heat_per_jump);
 
-    P<ElectricExplosionEffect> e2 = new ElectricExplosionEffect();
-    e2->setSize((distance / 10.0) * random(0.8, 1.2));;
-    e2->setPosition(getPosition());
-    e2->setOnRadar(true);
+//    P<ElectricExplosionEffect> e2 = new ElectricExplosionEffect();
+//    e2->setSize((distance / 10.0) * random(0.8, 1.2));;
+//    e2->setPosition(getPosition());
+//    e2->setOnRadar(true);
 }
 
 bool SpaceShip::canBeDockedBy(P<SpaceObject> obj)
