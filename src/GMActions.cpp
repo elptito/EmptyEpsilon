@@ -17,6 +17,7 @@ const static int16_t CMD_CONTEXTUAL_GO_TO = 0x0007;
 const static int16_t CMD_ORDER_SHIP = 0x0008;
 const static int16_t CMD_DESTROY = 0x0009;
 const static int16_t CMD_SEND_COMM_TO_PLAYER_SHIP = 0x000A;
+const static int16_t CMD_SET_PERSONALITY_ID = 0x000B;
 
 P<GameMasterActions> gameMasterActions;
 
@@ -139,6 +140,16 @@ void GameMasterActions::onReceiveClientCommand(int32_t client_id, sf::Packet& pa
                 obj->setFactionId(faction_id);
             }
         }
+       case CMD_SET_PERSONALITY_ID:
+        {
+            uint32_t personality_id;
+            PVector<SpaceObject> selection;
+            packet >> personality_id >> selection;
+            for(P<SpaceObject> obj : selection)
+            {
+                obj->setPersonalityId(personality_id);
+            }
+        }
         break;
         case CMD_CONTEXTUAL_GO_TO:
         {
@@ -248,6 +259,12 @@ void GameMasterActions::commandSetFactionId(uint32_t faction_id, PVector<SpaceOb
 {
     sf::Packet packet;
     packet << CMD_SET_FACTION_ID << faction_id << selection;
+    sendClientCommand(packet);
+}
+void GameMasterActions::commandSetPersonalityId(uint32_t personality_id, PVector<SpaceObject> selection)
+{
+    sf::Packet packet;
+    packet << CMD_SET_PERSONALITY_ID << personality_id << selection;
     sendClientCommand(packet);
 }
 void GameMasterActions::commandContextualGoTo(sf::Vector2f position, bool force, PVector<SpaceObject> selection)
