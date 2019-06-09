@@ -4,6 +4,7 @@
 #include "playerInfo.h"
 #include "gameGlobalInfo.h"
 #include "viewport3d.h"
+#include "spaceObjects/planet.h"
 
 #include "particleEffect.h"
 
@@ -178,7 +179,10 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
             continue;
         if (depth > 0 && obj->getRadius() / depth < 1.0 / 500)
             continue;
-        int render_list_index = std::max(0, int((depth + obj->getRadius()) / 25000));
+//        int render_list_index = std::max(0, int((depth + obj->getRadius()) / 25000));
+        int render_list_index = std::max(0, int((depth + obj->getRadius()) / 999999));
+        if (P<Planet>(obj))
+            render_list_index = std::max(0, int((depth + obj->getRadius() * 1000) / 999999));
         while(render_list_index >= int(render_lists.size()))
             render_lists.emplace_back();
         render_lists[render_list_index].emplace_back(*obj, depth);
@@ -191,7 +195,8 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
 
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        _glPerspective(camera_fov, rect.width/rect.height, 1.f, 25000.f * (n + 1));
+//        _glPerspective(camera_fov, rect.width/rect.height, 1.f, 25000.f * (n + 1));
+        _glPerspective(camera_fov, rect.width/rect.height, 1.f, 999999.f * (n + 1));
         glMatrixMode(GL_MODELVIEW);
         glDepthMask(true);
         glClear(GL_DEPTH_BUFFER_BIT);
