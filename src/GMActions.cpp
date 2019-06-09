@@ -140,6 +140,7 @@ void GameMasterActions::onReceiveClientCommand(int32_t client_id, sf::Packet& pa
                 obj->setFactionId(faction_id);
             }
         }
+        break;
 //       case CMD_SET_PERSONALITY_ID:
 //        {
 //            uint32_t personality_id;
