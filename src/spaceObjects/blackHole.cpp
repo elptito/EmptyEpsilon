@@ -9,15 +9,20 @@
 /// Which will lead to the eventual destruction of said object.
 REGISTER_SCRIPT_SUBCLASS(BlackHole, SpaceObject)
 {
+	/// Set the size of this BlackHole, per default BlackHole have a size of 5000
+    REGISTER_SCRIPT_CLASS_FUNCTION(BlackHole, setSize);
 }
 
 REGISTER_MULTIPLAYER_CLASS(BlackHole, "BlackHole");
 BlackHole::BlackHole()
 : SpaceObject(5000, "BlackHole")
 {
+	size = 5000;
     update_delta = 0.0;
     PathPlannerManager::getInstance()->addAvoidObject(this, 7000);
     setRadarSignatureInfo(0.9, 0, 0);
+
+    registerMemberReplication(&size);
 }
 
 void BlackHole::update(float delta)
@@ -33,7 +38,7 @@ void BlackHole::draw3DTransparent()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     ShaderManager::getShader("billboardShader")->setParameter("textureMap", *textureManager.getTexture("blackHole3d.png"));
     sf::Shader::bind(ShaderManager::getShader("billboardShader"));
-    glColor4f(1, 1, 1, 5000.0);
+    glColor4f(1, 1, 1, size * 2.0);
     glBegin(GL_QUADS);
     glTexCoord2f(0, 0);
     glVertex3f(0, 0, 0);
@@ -54,12 +59,18 @@ void BlackHole::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, flo
     textureManager.setTexture(object_sprite, "blackHole.png");
     object_sprite.setRotation(getRotation());
     object_sprite.setPosition(position);
-    float size = getRadius() * scale / object_sprite.getTextureRect().width * 2;
-    object_sprite.setScale(size, size);
+    float size_radar = size * scale / object_sprite.getTextureRect().width;
+    object_sprite.setScale(size_radar, size_radar );
     object_sprite.setColor(sf::Color(64, 64, 255));
     window.draw(object_sprite);
     object_sprite.setColor(sf::Color(0, 0, 0));
     window.draw(object_sprite);
+}
+
+void BlackHole::setSize(float new_size)
+{
+    size = new_size;
+    setRadius(size);
 }
 
 void BlackHole::collide(Collisionable* target, float collision_force)
@@ -69,19 +80,22 @@ void BlackHole::collide(Collisionable* target, float collision_force)
 
     sf::Vector2f diff = getPosition() - target->getPosition();
     float distance = sf::length(diff);
-    float force = (getRadius() * getRadius() * 50.0f) / (distance * distance);
-    if (force > 10000.0)
-    {
-        force = 10000.0;
+    float force = (size * size * 50.0f) / (distance * distance);
+    if (distance < 1000.0)
         if (isServer())
             target->destroy();
-    }
-    DamageInfo info(NULL, DT_Kinetic, getPosition());
-    if (force > 100.0 && isServer())
-    {
-        P<SpaceObject> obj = P<Collisionable>(target);
-        if (obj)
-            obj->takeDamage(force * update_delta / 10.0f, info);
-    }
+//    if (force > 10000000.0)
+//    {
+//        force = 10000.0;
+//        if (isServer())
+//            target->destroy();
+//    }
+    // DamageInfo info(NULL, DT_Kinetic, getPosition());
+    // if (force > 100.0 && isServer())
+    // {
+        // P<SpaceObject> obj = P<Collisionable>(target);
+        // if (obj)
+            // obj->takeDamage(force * update_delta / 10.0f, info);
+    // }
     target->setPosition(target->getPosition() + diff / distance * update_delta * force);
 }

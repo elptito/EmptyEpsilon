@@ -63,6 +63,17 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
         // Get the object's radar signature.
         RawRadarSignatureInfo info = obj->getRadarSignatureInfo();
 
+        // Anti-object have more signature range
+        float material = info.gravity + info.biological + info.electrical;
+        if (material < 0.0)
+        {
+            a_0 -= - material * 10;
+            a_1 += - material * 10;
+        }
+
+//        a_0 = std::max(a_0, 0.0f);
+//        a_1 = std::min(a_1, 360.0f);
+
         // For each interval determined by the level of raw data resolution,
         // initialize the signatures array.
         for(float a = a_0; a <= a_1; a += 360.f / float(point_count))

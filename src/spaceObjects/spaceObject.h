@@ -105,6 +105,8 @@ public:
         string full_scan;
     } object_description;
 
+    string infos_label[10];
+    string infos_value[10];
     int scanning_complexity_value;
     int scanning_depth_value;
     string callsign;
@@ -175,6 +177,22 @@ public:
     string getDescriptionFor(P<SpaceObject> obj)
     {
         return getDescription(getScannedStateFor(obj));
+    }
+
+    void addInfos(int index, string label, string value)
+    {
+        if (index < 0 || index > 9)
+            return;
+        infos_label[index] = label;
+        infos_value[index] = value;
+    }
+
+    void removeInfos(int index)
+    {
+        if (index < 0 || index > 9)
+            return;
+        infos_label[index] = "";
+        infos_value[index] = "";
     }
 
     float getHeading() { float ret = getRotation() - 270; while(ret < 0) ret += 360.0f; while(ret > 360.0f) ret -= 360.0f; return ret; }

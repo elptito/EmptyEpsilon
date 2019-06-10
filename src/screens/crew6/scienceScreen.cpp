@@ -129,7 +129,7 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
 
     // Draw and hide the sidebar pager.
     sidebar_pager = new GuiSelector(info_sidebar, "SIDEBAR_PAGER", [this](int index, string value) {});
-    sidebar_pager->setSize(GuiElement::GuiSizeMax, 50)->hide();
+    sidebar_pager->setSize(GuiElement::GuiSizeMax, 50)->show();
 
     // If the server uses frequencies, add the Tactical sidebar page.
     if (gameGlobalInfo->use_beam_shield_frequencies)
@@ -142,6 +142,9 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
 
     // Add sidebar page for a description.
     sidebar_pager->addEntry("Description", "Description");
+
+    // Add sidebar page for informations.
+    sidebar_pager->addEntry("Informations", "Informations");
 
     // Default the pager to the first item.
     sidebar_pager->setSelectionIndex(0);
@@ -174,6 +177,13 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
     // Prep and hide the description text area.
     info_description = new GuiScrollText(info_sidebar, "SCIENCE_DESC", "");
     info_description->setTextSize(28)->setMargins(20, 20, 0, 0)->setSize(GuiElement::GuiSizeMax, 350)->hide();
+
+    for(int n = 0; n < 10; n++)
+    {
+        info_other[n] = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_INFOS_" + string(n), 0.6, "-", "-");
+        info_other[n]->setSize(GuiElement::GuiSizeMax, 30);
+        info_other[n]->hide();
+    }
 
     // Prep and hide the database view.
     database_view = new DatabaseViewComponent(this);
@@ -257,10 +267,13 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
     else
         probe = game_client->getObjectById(my_spaceship->linked_science_probe_id);
 
-    float radar_range = 5000.0 * my_spaceship->getSystemEffectiveness(SYS_Drones);
+    float radar_range = 5000.0;
+    if (my_spaceship->hasSystem(SYS_Drones))
+        radar_range = radar_range * my_spaceship->getSystemEffectiveness(SYS_Drones);
+
     if (probe_view_button->getValue() && probe)
     {
-        if (targets.get() && (probe->getPosition() - targets.get()->getPosition()) > radar_range)
+        if (targets.get() && (probe->getPosition() - targets.get()->getPosition()) > radar_range + targets.get()->getRadius())
             targets.clear();
     }else{
         if (targets.get() && Nebula::blockedByNebula(my_spaceship->getPosition(), targets.get()->getPosition()))
@@ -280,12 +293,16 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
     info_beam_frequency->setFrequency(-1)->hide();
     info_description->hide();
     info_type_button->hide();
-    sidebar_pager->hide();
+//    sidebar_pager->hide();
 
     for(int n = 0; n < SYS_COUNT; n++)
         info_system[n]->setValue("-")->hide();
-
     info_oxygen->setValue("-")->hide();
+    for(int n = 0; n < 10; n++)
+    {
+        info_other[n]->setValue("-")->hide();
+        info_other[n]->setKey("-")->hide();
+    }
 
     if (probe)
     {
@@ -368,22 +385,43 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
         string description = obj->getDescriptionFor(my_spaceship);
         string sidebar_pager_selection = sidebar_pager->getSelectionValue();
 
-        if (description.size() > 0)
-        {
-            info_description->setText(description)->show();
+        info_description->setText(description)->show();
 
-            if (!sidebar_pager->indexByValue("Description"))
-            {
-                sidebar_pager->addEntry("Description", "Description");
-            }
-        }
-        else
-        {
-            sidebar_pager->removeEntry(sidebar_pager->indexByValue("Description"));
-        }
+        if (obj->getScannedStateFor(my_spaceship) == SS_NotScanned)
+            sidebar_pager->setSelectionIndex(sidebar_pager->indexByValue("Description"));
 
-        // De base, pas de sidebar
-        sidebar_pager->hide();
+//        if (description.size() > 0)
+//        {
+//
+//            if (!sidebar_pager->indexByValue("Description"))
+//                sidebar_pager->addEntry("Description", "Description");
+//        }
+//        else
+//            sidebar_pager->removeEntry(sidebar_pager->indexByValue("Description"));
+//
+//        if (obj->infos_label[0] != "")
+//        {
+//            if (!sidebar_pager->indexByValue("Informations"))
+//                sidebar_pager->addEntry("Informations", "Informations");
+//        }
+//        else
+//            sidebar_pager->removeEntry(sidebar_pager->indexByValue("Informations"));
+//
+//        if (ship)
+//        {
+//            if (!sidebar_pager->indexByValue("Tactique"))
+//                sidebar_pager->addEntry("Tactique", "Tactique");
+//            if (!sidebar_pager->indexByValue("Systemes"))
+//                sidebar_pager->addEntry("Systemes", "Systemes");
+//        }
+//        else
+//        {
+//            sidebar_pager->removeEntry(sidebar_pager->indexByValue("Tactique"));
+//            sidebar_pager->removeEntry(sidebar_pager->indexByValue("Systemes"));
+//        }
+//
+//        // De base, pas de sidebar
+//        sidebar_pager->hide();
 
         // On a simple scan or deeper, show the faction, ship type, shields,
         // hull integrity, and database reference button.
@@ -429,76 +467,165 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
             }
         }
 
+        // On commence par le pager
+        if (obj->getScannedStateFor(my_spaceship) >= SS_FullScan)
+        {
+            info_shield_frequency->hide();
+            info_beam_frequency->hide();
+
+            for(int n = 0; n < SYS_COUNT; n++)
+                info_system[n]->hide();
+            info_oxygen->hide();
+
+            info_description->hide();
+
+            for(int n = 0; n < 10; n++)
+                info_other[n]->hide();
+
+            if (sidebar_pager_selection == "Informations")
+                for(int n = 0; n < 10; n++)
+                {
+                    if (obj->infos_label[n] == "")
+                        continue;
+                    info_other[n]->show();
+                    info_other[n]->setKey(obj->infos_label[n]);
+                    info_other[n]->setValue(obj->infos_value[n]);
+                }
+            if (sidebar_pager_selection == "Description")
+                info_description->show();
+
+            if (ship)
+            {
+                if (sidebar_pager_selection == "Tactique")
+                {
+                    info_shield_frequency->show();
+                    info_beam_frequency->show();
+                    if (gameGlobalInfo->use_beam_shield_frequencies)
+                    {
+                        info_shield_frequency->setFrequency(ship->shield_frequency);
+                        info_beam_frequency->setFrequency(ship->beam_frequency);
+                    }
+                }
+                if (sidebar_pager_selection == "Systemes")
+                {
+                    for(int n = 0; n < SYS_COUNT; n++)
+                    {
+                        info_system[n]->setVisible(ship->hasSystem(ESystem(n)));
+                        float system_health = ship->systems[n].health;
+                        info_system[n]->setValue(string(int(system_health * 100.0f)) + "%")->setColor(sf::Color(255, 127.5 * (system_health + 1), 127.5 * (system_health + 1), 255));
+                    }
+                    info_oxygen->setVisible(obj->getOxygenMax() > 0);
+                    info_oxygen->setValue(string(int(100.0f * obj->getOxygenTotal())) + "%");
+                    if (obj->getOxygenTotal() < 0.20)
+                        info_oxygen->setColor(sf::Color::Red);
+                    else
+                        info_oxygen->setColor(sf::Color::White);
+                }
+            }
+//            sidebar_pager->setVisible(sidebar_pager->entryCount() > 1);
+        }
         // On a full scan : frequencies
         // Only for ship
-        if (obj->getScannedStateFor(my_spaceship) >= SS_FullScan && ship)
-        {
-            sidebar_pager->setVisible(sidebar_pager->entryCount() > 1);
-
-            // Check sidebar pager state.
-            if (sidebar_pager_selection == "Tactique")
-            {
-                info_shield_frequency->show();
-                info_beam_frequency->show();
-
-                for(int n = 0; n < SYS_COUNT; n++)
-                {
-                    info_system[n]->hide();
-                }
-                info_oxygen->hide();
-
-                info_description->hide();
-            }
-            else if (sidebar_pager_selection == "Systemes")
-            {
-                info_shield_frequency->hide();
-                info_beam_frequency->hide();
-
-                for(int n = 0; n < SYS_COUNT; n++)
-                    info_system[n]->setVisible(ship->hasSystem(ESystem(n)));
-
-                info_oxygen->setVisible(obj->getOxygenMax() > 0);
-
-                info_description->hide();
-            }
-            else if (sidebar_pager_selection == "Description")
-            {
-                info_shield_frequency->hide();
-                info_beam_frequency->hide();
-
-                for(int n = 0; n < SYS_COUNT; n++)
-                {
-                    info_system[n]->hide();
-                }
-                info_oxygen->hide();
-
-                info_description->show();
-            }
-            else
-            {
-                LOG(WARNING) << "Invalid pager state: " << sidebar_pager_selection;
-            }
-
-            // If beam and shield frequencies are enabled on the server,
-            // populate their graphs.
-            if (gameGlobalInfo->use_beam_shield_frequencies)
-            {
-                info_shield_frequency->setFrequency(ship->shield_frequency);
-                info_beam_frequency->setFrequency(ship->beam_frequency);
-            }
-
-            // Show the status of each subsystem.
-            for(int n = 0; n < SYS_COUNT; n++)
-            {
-                float system_health = ship->systems[n].health;
-                info_system[n]->setValue(string(int(system_health * 100.0f)) + "%")->setColor(sf::Color(255, 127.5 * (system_health + 1), 127.5 * (system_health + 1), 255));
-            }
-            info_oxygen->setValue(string(int(100.0f * obj->getOxygenTotal())) + "%");
-            if (obj->getOxygenTotal() < 0.20)
-                info_oxygen->setColor(sf::Color::Red);
-            else
-                info_oxygen->setColor(sf::Color::White);
-        }
+//        if (obj->getScannedStateFor(my_spaceship) >= SS_FullScan && ship)
+//        if (obj->getScannedStateFor(my_spaceship) >= SS_FullScan)
+//        {
+//            sidebar_pager->setVisible(sidebar_pager->entryCount() > 1);
+//
+//            if (sidebar_pager_selection == "Informations")
+//            {
+//                info_shield_frequency->hide();
+//                info_beam_frequency->hide();
+//
+//                for(int n = 0; n < SYS_COUNT; n++)
+//                {
+//                    info_system[n]->hide();
+//                }
+//                info_oxygen->hide();
+//
+//                info_description->hide();
+//
+//                for(int n = 0; n < 10; n++)
+//                    info_other[n]->show();
+//            }
+//
+//            if (ship)
+//            {
+//
+//                // Check sidebar pager state.
+//                if (sidebar_pager_selection == "Tactique")
+//                {
+//                    info_shield_frequency->show();
+//                    info_beam_frequency->show();
+//
+//                    for(int n = 0; n < SYS_COUNT; n++)
+//                    {
+//                        info_system[n]->hide();
+//                    }
+//                    info_oxygen->hide();
+//
+//                    info_description->hide();
+//                }
+//                else if (sidebar_pager_selection == "Systemes")
+//                {
+//                    info_shield_frequency->hide();
+//                    info_beam_frequency->hide();
+//
+//                    for(int n = 0; n < SYS_COUNT; n++)
+//                        info_system[n]->setVisible(ship->hasSystem(ESystem(n)));
+//
+//                    info_oxygen->setVisible(obj->getOxygenMax() > 0);
+//
+//                    info_description->hide();
+//                }
+//                else if (sidebar_pager_selection == "Description")
+//                {
+//                    info_shield_frequency->hide();
+//                    info_beam_frequency->hide();
+//
+//                    for(int n = 0; n < SYS_COUNT; n++)
+//                    {
+//                        info_system[n]->hide();
+//                    }
+//                    info_oxygen->hide();
+//
+//                    info_description->show();
+//                }
+//                else
+//                {
+//                    LOG(WARNING) << "Invalid pager state: " << sidebar_pager_selection;
+//                }
+//
+//            // Infos extra
+////            for(int n = 0; n < 10; n++)
+////            {
+////                if (obj->infos_label.size() < n)
+////                    break;
+////                info_other[n]->setKey(obj->infos_label[n]);
+////                info_other[n]->setValue(obj->infos_value[n]);
+////            }
+//
+//
+//                // If beam and shield frequencies are enabled on the server,
+//                // populate their graphs.
+//                if (gameGlobalInfo->use_beam_shield_frequencies)
+//                {
+//                    info_shield_frequency->setFrequency(ship->shield_frequency);
+//                    info_beam_frequency->setFrequency(ship->beam_frequency);
+//                }
+//
+//                // Show the status of each subsystem.
+//                for(int n = 0; n < SYS_COUNT; n++)
+//                {
+//                    float system_health = ship->systems[n].health;
+//                    info_system[n]->setValue(string(int(system_health * 100.0f)) + "%")->setColor(sf::Color(255, 127.5 * (system_health + 1), 127.5 * (system_health + 1), 255));
+//                }
+//                info_oxygen->setValue(string(int(100.0f * obj->getOxygenTotal())) + "%");
+//                if (obj->getOxygenTotal() < 0.20)
+//                    info_oxygen->setColor(sf::Color::Red);
+//                else
+//                    info_oxygen->setColor(sf::Color::White);
+//            }
+//        }
     }
 
     // If the target is a waypoint, show its heading and distance, and our

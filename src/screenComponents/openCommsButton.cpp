@@ -1,9 +1,11 @@
 #include "openCommsButton.h"
 
 #include "targetsContainer.h"
+#include "gameGlobalInfo.h"
 #include "playerInfo.h"
 #include "spaceObjects/playerSpaceship.h"
 #include "spaceObjects/wormHole.h"
+#include "spaceObjects/planet.h"
 
 GuiOpenCommsButton::GuiOpenCommsButton(GuiContainer* owner, string id, TargetsContainer* targets)
 : GuiButton(owner, id, "Communications", [this]() {
@@ -19,12 +21,29 @@ GuiOpenCommsButton::GuiOpenCommsButton(GuiContainer* owner, string id, TargetsCo
 void GuiOpenCommsButton::onDraw(sf::RenderTarget& window)
 {
     disable();
-//    if (targets->get() && my_spaceship && my_spaceship->isCommsInactive())
-//    if (my_spaceship && my_spaceship->isCommsInactive())
-//    {
-//        if (P<SpaceShip>(targets->get()) || P<SpaceStation>(targets->get()) || P<WormHole>(targets->get()))
+    if (gameGlobalInfo->intercept_all_comms_to_gm == CGI_None)
+    {
+        if (targets->get() && my_spaceship && my_spaceship->isCommsInactive())
+        {
+            if (P<SpaceShip>(targets->get()) || P<SpaceStation>(targets->get()) || P<WormHole>(targets->get()))
+                enable();
+        }
+    }
+    else
+    {
+        if (my_spaceship && my_spaceship->isCommsInactive())
+        {
             enable();
-//    }
+            if (targets->get())
+                setText("Comms : " + targets->get()->getCallSign());
+            else
+                setText("Comms libre");
+        }else
+        {
+            disable();
+        }
+    }
+
     GuiButton::onDraw(window);
 }
 

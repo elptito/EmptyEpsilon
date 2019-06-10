@@ -6,6 +6,7 @@
 #include "spaceObjects/blackHole.h"
 #include "spaceObjects/wormHole.h"
 #include "spaceObjects/scanProbe.h"
+#include "spaceObjects/planet.h"
 #include "playerInfo.h"
 #include "radarView.h"
 #include "missileTubeControls.h"
@@ -189,7 +190,7 @@ void GuiRadarView::drawNoneFriendlyBlockedAreas(sf::RenderTarget& window)
                 window.draw(circle);
             }
 //            if ((P<SpaceShip>(obj) || P<SpaceStation>(obj)) && obj->isFriendly(my_spaceship))
-            if ((P<SpaceShip>(obj) || P<SpaceStation>(obj)) && obj->faction_id == my_spaceship->faction_id)
+            if ((P<SpaceShip>(obj) || P<SpaceStation>(obj) || P<Planet>(obj)) && (obj->faction_id == my_spaceship->faction_id || obj->personality_id == 1))
             {
                 circle.setPosition(radar_screen_center + (obj->getPosition() - getViewPosition()) * getScale());
                 window.draw(circle);
@@ -490,10 +491,10 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
 //                    continue;
 //                }
 //            }
-            if (obj->faction_id != target_spaceship->faction_id)
+            if (obj->faction_id != target_spaceship->faction_id && obj->personality_id != 1)
                 continue;
 
-            if (!P<PlayerSpaceship>(obj) && !P<SpaceShip>(obj) && !P<SpaceStation>(obj) && !P<ScanProbe>(obj) && !P<WormHole>(obj))
+            if (!P<PlayerSpaceship>(obj) && !P<SpaceShip>(obj) && !P<SpaceStation>(obj) && !P<ScanProbe>(obj) && !P<WormHole>(obj) && !P<Planet>(obj))
                 continue;
 
             sf::Vector2f position = obj->getPosition();
@@ -541,9 +542,9 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
             sf::RenderTarget* window = &window_normal;
             if (!obj->canHideInNebula())
                 window = &window_alpha;
-            if (obj->getTransparency() < 0.5 || my_spaceship)
+            if (obj->getTransparency() < 0.5)
                 obj->drawOnRadar(*window, object_position_on_screen, getScale(), long_range);
-            if (show_callsigns && obj->getCallSign() != "" && obj->getTransparency() < 0.2 || my_spaceship)
+            if (show_callsigns && obj->getCallSign() != "" && obj->getTransparency() < 0.2)
                 drawText(*window, sf::FloatRect(object_position_on_screen.x, object_position_on_screen.y - 15, 0, 0), obj->getCallSign(), ACenter, 15, bold_font);
         }
     }

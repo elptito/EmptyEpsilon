@@ -57,6 +57,7 @@ public:
     GuiFrequencyCurve* info_shield_frequency;
     GuiFrequencyCurve* info_beam_frequency;
     GuiKeyValueDisplay* info_system[SYS_COUNT];
+    GuiKeyValueDisplay* info_other[SYS_COUNT];
     GuiKeyValueDisplay* info_oxygen;
 
     GuiToggleButton* probe_view_button;

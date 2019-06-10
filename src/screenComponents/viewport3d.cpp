@@ -4,6 +4,7 @@
 #include "playerInfo.h"
 #include "gameGlobalInfo.h"
 #include "viewport3d.h"
+#include "spaceObjects/planet.h"
 
 #include "particleEffect.h"
 
@@ -69,54 +70,57 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
     glGetDoublev(GL_VIEWPORT, viewport);
 
     glDepthMask(false);
-    sf::Texture::bind(textureManager.getTexture(my_spaceship->texture_back), sf::Texture::Normalized);
-    glColor4f(my_spaceship->texture_r,my_spaceship->texture_g,my_spaceship->texture_b,my_spaceship->texture_a);
-    glBegin(GL_TRIANGLE_STRIP);
-    glTexCoord2f(0.0, 0.0); glVertex3f( 100, 100, 100);
-    glTexCoord2f(0.0, 1.0); glVertex3f( 100, 100,-100);
-    glTexCoord2f(1.0, 0.0); glVertex3f(-100, 100, 100);
-    glTexCoord2f(1.0, 1.0); glVertex3f(-100, 100,-100);
-    glEnd();
-    sf::Texture::bind(textureManager.getTexture(my_spaceship->texture_left), sf::Texture::Normalized);
-    glColor4f(my_spaceship->texture_r,my_spaceship->texture_g,my_spaceship->texture_b,my_spaceship->texture_a);
-    glBegin(GL_TRIANGLE_STRIP);
-    glTexCoord2f(0.0, 0.0); glVertex3f(-100, 100, 100);
-    glTexCoord2f(0.0, 1.0); glVertex3f(-100, 100,-100);
-    glTexCoord2f(1.0, 0.0); glVertex3f(-100,-100, 100);
-    glTexCoord2f(1.0, 1.0); glVertex3f(-100,-100,-100);
-    glEnd();
-    sf::Texture::bind(textureManager.getTexture(my_spaceship->texture_front), sf::Texture::Normalized);
-    glColor4f(my_spaceship->texture_r,my_spaceship->texture_g,my_spaceship->texture_b,my_spaceship->texture_a);
-    glBegin(GL_TRIANGLE_STRIP);
-    glTexCoord2f(0.0, 0.0); glVertex3f(-100,-100, 100);
-    glTexCoord2f(0.0, 1.0); glVertex3f(-100,-100,-100);
-    glTexCoord2f(1.0, 0.0); glVertex3f( 100,-100, 100);
-    glTexCoord2f(1.0, 1.0); glVertex3f( 100,-100,-100);
-    glEnd();
-    sf::Texture::bind(textureManager.getTexture(my_spaceship->texture_right), sf::Texture::Normalized);
-    glColor4f(my_spaceship->texture_r,my_spaceship->texture_g,my_spaceship->texture_b,my_spaceship->texture_a);
-    glBegin(GL_TRIANGLE_STRIP);
-    glTexCoord2f(0.0, 0.0); glVertex3f( 100,-100, 100);
-    glTexCoord2f(0.0, 1.0); glVertex3f( 100,-100,-100);
-    glTexCoord2f(1.0, 0.0); glVertex3f( 100, 100, 100);
-    glTexCoord2f(1.0, 1.0); glVertex3f( 100, 100,-100);
-    glEnd();
-    sf::Texture::bind(textureManager.getTexture(my_spaceship->texture_top), sf::Texture::Normalized);
-    glColor4f(my_spaceship->texture_r,my_spaceship->texture_g,my_spaceship->texture_b,my_spaceship->texture_a);
-    glBegin(GL_TRIANGLE_STRIP);
-    glTexCoord2f(0.0, 0.0); glVertex3f(-100, 100, 100);
-    glTexCoord2f(0.0, 1.0); glVertex3f(-100,-100, 100);
-    glTexCoord2f(1.0, 0.0); glVertex3f( 100, 100, 100);
-    glTexCoord2f(1.0, 1.0); glVertex3f( 100,-100, 100);
-    glEnd();
-    sf::Texture::bind(textureManager.getTexture(my_spaceship->texture_bottom), sf::Texture::Normalized);
-    glColor4f(my_spaceship->texture_r,my_spaceship->texture_g,my_spaceship->texture_b,my_spaceship->texture_a);
-    glBegin(GL_TRIANGLE_STRIP);
-    glTexCoord2f(1.0, 0.0); glVertex3f( 100,-100,-100);
-    glTexCoord2f(0.0, 0.0); glVertex3f(-100,-100,-100);
-    glTexCoord2f(1.0, 1.0); glVertex3f( 100, 100,-100);
-    glTexCoord2f(0.0, 1.0); glVertex3f(-100, 100,-100);
-    glEnd();
+    if (my_spaceship)
+    {
+        sf::Texture::bind(textureManager.getTexture(my_spaceship->texture_back), sf::Texture::Normalized);
+        glColor4f(my_spaceship->texture_r,my_spaceship->texture_g,my_spaceship->texture_b,my_spaceship->texture_a);
+        glBegin(GL_TRIANGLE_STRIP);
+        glTexCoord2f(0.0, 0.0); glVertex3f( 100, 100, 100);
+        glTexCoord2f(0.0, 1.0); glVertex3f( 100, 100,-100);
+        glTexCoord2f(1.0, 0.0); glVertex3f(-100, 100, 100);
+        glTexCoord2f(1.0, 1.0); glVertex3f(-100, 100,-100);
+        glEnd();
+        sf::Texture::bind(textureManager.getTexture(my_spaceship->texture_left), sf::Texture::Normalized);
+        glColor4f(my_spaceship->texture_r,my_spaceship->texture_g,my_spaceship->texture_b,my_spaceship->texture_a);
+        glBegin(GL_TRIANGLE_STRIP);
+        glTexCoord2f(0.0, 0.0); glVertex3f(-100, 100, 100);
+        glTexCoord2f(0.0, 1.0); glVertex3f(-100, 100,-100);
+        glTexCoord2f(1.0, 0.0); glVertex3f(-100,-100, 100);
+        glTexCoord2f(1.0, 1.0); glVertex3f(-100,-100,-100);
+        glEnd();
+        sf::Texture::bind(textureManager.getTexture(my_spaceship->texture_front), sf::Texture::Normalized);
+        glColor4f(my_spaceship->texture_r,my_spaceship->texture_g,my_spaceship->texture_b,my_spaceship->texture_a);
+        glBegin(GL_TRIANGLE_STRIP);
+        glTexCoord2f(0.0, 0.0); glVertex3f(-100,-100, 100);
+        glTexCoord2f(0.0, 1.0); glVertex3f(-100,-100,-100);
+        glTexCoord2f(1.0, 0.0); glVertex3f( 100,-100, 100);
+        glTexCoord2f(1.0, 1.0); glVertex3f( 100,-100,-100);
+        glEnd();
+        sf::Texture::bind(textureManager.getTexture(my_spaceship->texture_right), sf::Texture::Normalized);
+        glColor4f(my_spaceship->texture_r,my_spaceship->texture_g,my_spaceship->texture_b,my_spaceship->texture_a);
+        glBegin(GL_TRIANGLE_STRIP);
+        glTexCoord2f(0.0, 0.0); glVertex3f( 100,-100, 100);
+        glTexCoord2f(0.0, 1.0); glVertex3f( 100,-100,-100);
+        glTexCoord2f(1.0, 0.0); glVertex3f( 100, 100, 100);
+        glTexCoord2f(1.0, 1.0); glVertex3f( 100, 100,-100);
+        glEnd();
+        sf::Texture::bind(textureManager.getTexture(my_spaceship->texture_top), sf::Texture::Normalized);
+        glColor4f(my_spaceship->texture_r,my_spaceship->texture_g,my_spaceship->texture_b,my_spaceship->texture_a);
+        glBegin(GL_TRIANGLE_STRIP);
+        glTexCoord2f(0.0, 0.0); glVertex3f(-100, 100, 100);
+        glTexCoord2f(0.0, 1.0); glVertex3f(-100,-100, 100);
+        glTexCoord2f(1.0, 0.0); glVertex3f( 100, 100, 100);
+        glTexCoord2f(1.0, 1.0); glVertex3f( 100,-100, 100);
+        glEnd();
+        sf::Texture::bind(textureManager.getTexture(my_spaceship->texture_bottom), sf::Texture::Normalized);
+        glColor4f(my_spaceship->texture_r,my_spaceship->texture_g,my_spaceship->texture_b,my_spaceship->texture_a);
+        glBegin(GL_TRIANGLE_STRIP);
+        glTexCoord2f(1.0, 0.0); glVertex3f( 100,-100,-100);
+        glTexCoord2f(0.0, 0.0); glVertex3f(-100,-100,-100);
+        glTexCoord2f(1.0, 1.0); glVertex3f( 100, 100,-100);
+        glTexCoord2f(0.0, 1.0); glVertex3f(-100, 100,-100);
+        glEnd();
+    }
 
     if (gameGlobalInfo)
     {
@@ -175,7 +179,10 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
             continue;
         if (depth > 0 && obj->getRadius() / depth < 1.0 / 500)
             continue;
-        int render_list_index = std::max(0, int((depth + obj->getRadius()) / 25000));
+//        int render_list_index = std::max(0, int((depth + obj->getRadius()) / 25000));
+        int render_list_index = std::max(0, int((depth + obj->getRadius()) / 999999));
+        if (P<Planet>(obj))
+            render_list_index = std::max(0, int((depth + obj->getRadius() * 1000) / 999999));
         while(render_list_index >= int(render_lists.size()))
             render_lists.emplace_back();
         render_lists[render_list_index].emplace_back(*obj, depth);
@@ -188,7 +195,8 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
 
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        _glPerspective(camera_fov, rect.width/rect.height, 1.f, 25000.f * (n + 1));
+//        _glPerspective(camera_fov, rect.width/rect.height, 1.f, 25000.f * (n + 1));
+        _glPerspective(camera_fov, rect.width/rect.height, 1.f, 999999.f * (n + 1));
         glMatrixMode(GL_MODELVIEW);
         glDepthMask(true);
         glClear(GL_DEPTH_BUFFER_BIT);

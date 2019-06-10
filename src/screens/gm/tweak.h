@@ -64,6 +64,7 @@ private:
     GuiSlider* biological_s_slider;
     GuiSlider* scanning_complexity_selector;
     GuiSlider* scanning_channel_depth_selector;
+    GuiSlider* radius_slider;
 public:
     GuiObjectTweakBase(GuiContainer* owner);
 
@@ -281,6 +282,22 @@ private:
 
 public:
     GuiShipTweakPlanet(GuiContainer* owner);
+
+    virtual void open(P<SpaceObject> target);
+
+    virtual void onDraw(sf::RenderTarget& window) override;
+};
+
+class GuiShipTweakInfos : public GuiTweakPage
+{
+private:
+    P<SpaceObject> target;
+
+    GuiTextEntry* infos_label[10];
+    GuiTextEntry* infos_value[10];
+
+public:
+    GuiShipTweakInfos(GuiContainer* owner);
 
     virtual void open(P<SpaceObject> target);
 

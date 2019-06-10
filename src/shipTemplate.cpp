@@ -112,7 +112,7 @@ ShipTemplate::ShipTemplate()
     case 9: os_name = "zer" + string(os_name_counter); break;
     }
 
-    shares_energy_with_docked = true;
+    shares_energy_with_docked = false;
     repair_docked = false;
     energy_storage_amount = 1000;
     repair_crew_count = 3;

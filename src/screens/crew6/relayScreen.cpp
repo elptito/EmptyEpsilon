@@ -3,6 +3,7 @@
 #include "spaceObjects/playerSpaceship.h"
 #include "spaceObjects/wormHole.h"
 #include "spaceObjects/scanProbe.h"
+#include "spaceObjects/planet.h"
 #include "scriptInterface.h"
 #include "gameGlobalInfo.h"
 
@@ -328,8 +329,13 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
     // Info Distance
     if (my_spaceship)
     {
-        float distance = sf::length(radar->getViewPosition() - my_spaceship->getPosition());
-        info_distance -> setValue(string(distance / 1000.0f, 1.0f) + " U");
+        float ratio_screen = radar->getRect().width / radar->getRect().height;
+        float distance_width = radar->getDistance() * 2.0 * ratio_screen / 1000.0f;
+        float distance_height = radar->getDistance() * 2.0 / 1000.0f;
+        if (distance_width < 100)
+            info_distance -> setValue(string(distance_width, 1.0f) + " U / " + string(distance_height, 1.0f) + " U");
+        else
+            info_distance -> setValue(string(distance_width, 0.0f) + " U / " + string(distance_height, 0.0f) + " U");
     }
 
 
@@ -353,7 +359,7 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
         bool near_friendly = false;
         foreach(SpaceObject, obj, space_object_list)
         {
-            if ((!P<SpaceShip>(obj) && !P<SpaceStation>(obj) && !P<WormHole>(obj)) || !obj->isFriendly(my_spaceship))
+            if ((!P<SpaceShip>(obj) && !P<SpaceStation>(obj) && !P<WormHole>(obj) && !P<Planet>(obj)) || !obj->isFriendly(my_spaceship))
             {
                 P<ScanProbe> sp = obj;
                 if (!sp || sp->owner_id != my_spaceship->getMultiplayerId())

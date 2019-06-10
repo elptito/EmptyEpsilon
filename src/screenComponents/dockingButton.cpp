@@ -16,12 +16,15 @@ void GuiDockingButton::click()
     {
     case DS_NotDocking:
         target_spaceship->commandDock(findDockingTarget());
+        target_spaceship->commandSetDockTarget(findDockingTarget());
         break;
     case DS_Docking:
         target_spaceship->commandAbortDock();
+        target_spaceship->commandSetDockTarget(NULL);
         break;
     case DS_Docked:
         target_spaceship->commandUndock();
+        target_spaceship->commandSetDockTarget(NULL);
         break;
     }
 }

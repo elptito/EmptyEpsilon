@@ -32,6 +32,9 @@ GuiObjectTweak::GuiObjectTweak(GuiContainer* owner, ETweakType tweak_type)
     pages.push_back(new GuiObjectTweakBase(this));
     list->addEntry("Base", "");
 
+    pages.push_back(new GuiShipTweakInfos(this));
+    list->addEntry("Infos", "");
+
     if (tweak_type == TW_Template || tweak_type == TW_Ship || tweak_type == TW_Player)
     {
         pages.push_back(new GuiTemplateTweak(this));
@@ -158,19 +161,22 @@ GuiObjectTweakBase::GuiObjectTweakBase(GuiContainer* owner)
 	// Radar signature
 	//(new GuiLabel(right_col, "", "Radar Signature", 30))->setSize(GuiElement::GuiSizeMax, 50);
 	(new GuiLabel(right_col, "", "Signature Gravitationnelle", 30))->setSize(GuiElement::GuiSizeMax, 50);
-	gravity_s_slider = new GuiSlider(right_col, "", 0.0, 100.0, 0.0, [this](float value) {
+	gravity_s_slider = new GuiSlider(right_col, "", -100.0, 100.0, 0.0, [this](float value) {
         target->radar_signature.gravity = value / 100.0f;
     });
+    gravity_s_slider->addSnapValue(0.0f, 5.0f);
     gravity_s_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 50);
  	(new GuiLabel(right_col, "", "Signature Energetique", 30))->setSize(GuiElement::GuiSizeMax, 50);
-	electrical_s_slider = new GuiSlider(right_col, "", 0.0, 100.0, 0.0, [this](float value) {
+	electrical_s_slider = new GuiSlider(right_col, "", -100.0, 100.0, 0.0, [this](float value) {
         target->radar_signature.electrical = value / 100.0f;
     });
+    electrical_s_slider->addSnapValue(0.0f, 5.0f);
     electrical_s_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 50);
  	(new GuiLabel(right_col, "", "Signature Biologique", 30))->setSize(GuiElement::GuiSizeMax, 50);
-	biological_s_slider = new GuiSlider(right_col, "", 0.0, 100.0, 0.0, [this](float value) {
+	biological_s_slider = new GuiSlider(right_col, "", -100.0, 100.0, 0.0, [this](float value) {
         target->radar_signature.biological = value / 100.0f;
     });
+    biological_s_slider->addSnapValue(0.0f, 5.0f);
     biological_s_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 50);
 
     // Scanning complexity
@@ -187,6 +193,12 @@ GuiObjectTweakBase::GuiObjectTweakBase(GuiContainer* owner)
 //        target->scanning_depth_value = value;
     });
     scanning_channel_depth_selector->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
+    (new GuiLabel(right_col, "", "Taille:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    radius_slider = new GuiSlider(right_col, "", 0, 50000, 0.0, [this](float value) {
+        target->setRadius(value);
+    });
+    radius_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
 }
 
@@ -215,6 +227,8 @@ void GuiObjectTweakBase::open(P<SpaceObject> target)
 	scanning_channel_depth_selector->setValue(target->scanning_depth_value);
 
 	zaxis_slider->setValue(target->translate_z);
+	radius_slider->setValue(target->getRadius());
+	radius_slider->setRange(target->getRadius()/10,target->getRadius()*10);
 }
 
 GuiTemplateTweak::GuiTemplateTweak(GuiContainer* owner)
@@ -1195,6 +1209,7 @@ void GuiShipTweakMessages::open(P<SpaceObject> target)
     }
 }
 
+
 GuiShipTweakPlanet::GuiShipTweakPlanet(GuiContainer* owner)
 : GuiTweakPage(owner)
 {
@@ -1236,3 +1251,42 @@ void GuiShipTweakPlanet::open(P<SpaceObject> target)
     texture_selector->setSelectionIndex(id_texture);
 }
 
+GuiShipTweakInfos::GuiShipTweakInfos(GuiContainer* owner)
+: GuiTweakPage(owner)
+{
+    GuiAutoLayout* right_col = new GuiAutoLayout(this, "RIGHT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    right_col->setPosition(-25, 25, ATopRight)->setSize(200, GuiElement::GuiSizeMax);
+
+    (new GuiLabel(left_col, "", "Label", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(right_col, "", "Valeur", 30))->setSize(GuiElement::GuiSizeMax, 50);
+
+    for(int n = 0; n < 10; n++)
+    {
+        infos_label[n] = new GuiTextEntry(left_col, "", "");
+        infos_label[n]->setSize(GuiElement::GuiSizeMax, 50);
+        infos_label[n]->callback([this, n](string text) {
+            target->infos_label[n] = text;
+        });
+
+        infos_value[n] = new GuiTextEntry(right_col, "", "");
+        infos_value[n]->setSize(GuiElement::GuiSizeMax, 50);
+        infos_value[n]->callback([this, n](string text) {
+            target->infos_value[n] = text;
+        });
+    }
+}
+
+void GuiShipTweakInfos::onDraw(sf::RenderTarget& window)
+{
+    // Update infos.
+    for(int n = 0; n < max_oxygen_zones; n++)
+    {
+        infos_label[n]->setText(target->infos_label[n]);
+        infos_value[n]->setText(target->infos_value[n]);
+    }
+}
+
+void GuiShipTweakInfos::open(P<SpaceObject> target)
+{
+    this->target = target;
+}

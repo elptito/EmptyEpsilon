@@ -5,6 +5,7 @@
 #include "spaceObjects/beamEffect.h"
 #include "factionInfo.h"
 #include "spaceObjects/explosionEffect.h"
+#include "electricExplosionEffect.h"
 #include "particleEffect.h"
 #include "spaceObjects/warpJammer.h"
 #include "gameGlobalInfo.h"
@@ -24,6 +25,7 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, isFullyScannedByFaction);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, isDocked);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getTarget);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getDockTarget);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getWeaponStorage);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getWeaponStorageMax);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setWeaponStorage);
@@ -135,6 +137,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     combat_maneuver_boost_speed = 0.0f;
     combat_maneuver_strafe_speed = 0.0f;
     target_id = -1;
+    dock_target_id = -1;
     beam_frequency = irandom(0, max_frequency);
     beam_system_target = SYS_None;
     shield_frequency = irandom(0, max_frequency);
@@ -162,6 +165,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     registerMemberReplication(&weapon_tube_count);
     registerMemberReplication(&beam_weapons_count);
     registerMemberReplication(&target_id);
+    registerMemberReplication(&dock_target_id);
     registerMemberReplication(&turn_speed);
     registerMemberReplication(&impulse_max_speed);
     registerMemberReplication(&impulse_acceleration);
@@ -785,6 +789,13 @@ P<SpaceObject> SpaceShip::getTarget()
     return game_client->getObjectById(target_id);
 }
 
+P<SpaceObject> SpaceShip::getDockTarget()
+{
+    if (game_server)
+        return game_server->getObjectById(dock_target_id);
+    return game_client->getObjectById(dock_target_id);
+}
+
 void SpaceShip::executeJump(float distance)
 {
     float f = systems[SYS_JumpDrive].health;
@@ -795,8 +806,19 @@ void SpaceShip::executeJump(float distance)
     sf::Vector2f target_position = getPosition() + sf::vector2FromAngle(getRotation()) * distance;
     if (WarpJammer::isWarpJammed(target_position))
         target_position = WarpJammer::getFirstNoneJammedPosition(getPosition(), target_position);
+
+//    P<ElectricExplosionEffect> e1 = new ElectricExplosionEffect();
+//    e1->setSize((distance / 10.0) * random(0.8, 1.2));
+//    e1->setPosition(getPosition());
+//    e1->setOnRadar(true);
+
     setPosition(target_position);
     addHeat(SYS_JumpDrive, jump_drive_heat_per_jump);
+
+//    P<ElectricExplosionEffect> e2 = new ElectricExplosionEffect();
+//    e2->setSize((distance / 10.0) * random(0.8, 1.2));;
+//    e2->setPosition(getPosition());
+//    e2->setOnRadar(true);
 }
 
 bool SpaceShip::canBeDockedBy(P<SpaceObject> obj)
@@ -850,6 +872,7 @@ void SpaceShip::requestDock(P<SpaceObject> target)
 
     docking_state = DS_Docking;
     docking_target = target;
+//    dock_target_id = target->getMultiplayerId();
     warp_request = 0.0;
 }
 
@@ -1144,8 +1167,9 @@ bool SpaceShip::hasSystem(ESystem system)
         return impulse_max_speed > 0.0;
     case SYS_Docks:
     case SYS_Drones:
-    case SYS_Door:
         return docks[0].dock_type != Dock_Disabled;
+    case SYS_Door:
+        return false;
     }
     return true;
 }

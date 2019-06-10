@@ -73,6 +73,7 @@ GameMasterScreen::GameMasterScreen()
     personality_selector = new GuiSelector(this, "FACTION_SELECTOR", [this](int index, string value) {
         for(P<SpaceObject> obj : targets.getTargets())
         {
+//            gameMasterActions->commandSetPersonalityId(index, targets.getTargets());
             obj->setPersonalityId(index);
         }
     });
