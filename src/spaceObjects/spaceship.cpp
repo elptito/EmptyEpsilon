@@ -846,7 +846,7 @@ void SpaceShip::update(float delta)
     }
 
     float rotationDiff;
-    if (turnSpeed == 0.0f) {
+    if (fabs(turnSpeed) < 0.0005f) {
         rotationDiff = sf::angleDifference(getRotation(), target_rotation);
     } else {
         rotationDiff = turnSpeed;
