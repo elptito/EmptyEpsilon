@@ -138,9 +138,9 @@ int main(int argc, char** argv)
         new DirectoryResourceProvider(string(getenv("HOME")) + "/.emptyepsilon/scripts/");
         new DirectoryResourceProvider(string(getenv("HOME")) + "/.emptyepsilon/packs/SolCommand/");
     }
-    new DirectoryResourceProvider("resources/");
-    new DirectoryResourceProvider("scripts/");
-    new DirectoryResourceProvider("packs/SolCommand/");
+    new DirectoryResourceProvider("./resources/");
+    new DirectoryResourceProvider("./scripts/");
+    new DirectoryResourceProvider("./packs/SolCommand/");
     PackResourceProvider::addPackResourcesForDirectory("packs");
     textureManager.setDefaultSmooth(true);
     textureManager.setDefaultRepeated(true);
