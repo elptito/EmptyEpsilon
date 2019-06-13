@@ -38,7 +38,7 @@ OxygenScreen::OxygenScreen(GuiContainer *owner)
         oxygen_value_intern[n] = new GuiKeyValueDisplay(oxygen_intern[n], "OXY_VALUE_INTERN" + string(n), 0.8, "Zone " + string(n+1), "0%");
         oxygen_value_intern[n]->setSize(GuiElement::GuiSizeMax, 40)->setPosition(0, 400, ACenter);
 
-        oxygen_value_intern[n]->setVisible(false);
+        oxygen_intern[n]->setVisible(false);
     }
 
     oxygen_label_extern = new GuiLabel(oxygen_view, "Ship_LABEL", "Externe", 50);

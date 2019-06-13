@@ -288,6 +288,7 @@ PlayerSpaceship::PlayerSpaceship()
     registerMemberReplication(&ships_log_extern);
     registerMemberReplication(&ships_log_intern);
     registerMemberReplication(&ships_log_docks);
+    registerMemberReplication(&ships_log_science);
     registerMemberReplication(&waypoints);
     registerMemberReplication(&scan_probe_stock);
     registerMemberReplication(&activate_self_destruct);
