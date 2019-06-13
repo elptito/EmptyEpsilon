@@ -22,6 +22,8 @@ class DockMasterScreen : public GuiOverlay
 {
   private:
 
+    P<SpaceShip> selected_ship;
+
     GuiListbox* docks;
     GuiListbox* bays;
     int index_dock = 0;
@@ -34,10 +36,13 @@ class DockMasterScreen : public GuiOverlay
     GuiAutoLayout *bottomPanel;
     GuiAutoLayout *dronePanel;
 
-    GuiAutoLayout* action_move;
+    GuiAutoLayout* layout_move;
     GuiAutoLayout* action_launch;
     GuiAutoLayout* action_energy;
     GuiAutoLayout* action_weapons;
+
+    GuiAutoLayout* layout_actions;
+    GuiListbox* actions;
 
     GuiAutoLayout* cargoInfo;
     GuiAutoLayout* shipCargoInfo;
