@@ -490,25 +490,26 @@ void ShipAI::flyTowards(sf::Vector2f target, float keep_distance)
         }else{
             owner->warp_request = 0.0;
         }
-        if (distance > 10000 && owner->has_jump_drive && owner->jump_delay <= 0.0 && owner->jump_drive_charge >= owner->jump_drive_max_distance)
+//        if (distance > 10000 && owner->has_jump_drive && owner->jump_delay <= 0.0 && owner->jump_drive_charge >= owner->jump_drive_max_distance)
+        if (distance > owner->jump_drive_min_distance && owner->has_jump_drive && owner->jump_delay <= 0.0 && owner->jump_drive_charge >= owner->jump_drive_max_distance)
         {
             if (rotation_diff < 1.0)
             {
-                float jump = distance;
+                float jump = std::max(std::min(distance,owner->jump_drive_max_distance),owner->jump_drive_min_distance);
                 if (pathPlanner.route.size() < 2)
                 {
                     jump -= 3000;
                     if (has_missiles)
                         jump -= 5000;
                 }
-                if (owner->jump_drive_max_distance == 50000)
-                {   //If the ship has the default max jump drive distance of 50k, then limit our jumps to 15k, else we limit ourselves to whatever the ship layout is with a bit margin.
-                    if (jump > 15000)
-                        jump = 15000;
-                }else{
-                    if (jump > owner->jump_drive_max_distance - 2000)
-                        jump = owner->jump_drive_max_distance - 2000;
-                }
+//                if (owner->jump_drive_max_distance == 50000)
+//                {   //If the ship has the default max jump drive distance of 50k, then limit our jumps to 15k, else we limit ourselves to whatever the ship layout is with a bit margin.
+//                    if (jump > 15000)
+//                        jump = 15000;
+//                }else{
+//                    if (jump > owner->jump_drive_max_distance - 2000)
+//                        jump = owner->jump_drive_max_distance - 2000;
+//                }
                 jump += random(-1500, 1500);
                 owner->initializeJump(jump);
             }
