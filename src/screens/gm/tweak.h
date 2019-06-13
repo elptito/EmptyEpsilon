@@ -238,11 +238,14 @@ public:
 class GuiShipTweakOxygen : public GuiTweakPage
 {
 private:
-    P<SpaceObject> target;
+    P<SpaceShip> target;
 
     GuiSlider* oxygen_point_slider[max_oxygen_zones];
     GuiSlider* oxygen_max_slider[max_oxygen_zones];
     GuiSlider* oxygen_rate_slider[max_oxygen_zones];
+
+    GuiSlider* passagers_slider;
+    GuiSlider* max_passagers_slider;
 
 public:
     GuiShipTweakOxygen(GuiContainer* owner);

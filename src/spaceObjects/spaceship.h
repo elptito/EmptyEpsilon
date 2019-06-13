@@ -78,6 +78,10 @@ public:
 
     float energy_level;
     float max_energy_level;
+
+    int passagers_count;
+    int max_passagers_count;
+
     Dock docks[max_docks_count];
 
     ShipSystem systems[SYS_COUNT];
@@ -305,6 +309,11 @@ public:
     P<SpaceObject> getDockTarget();
 
     virtual std::unordered_map<string, string> getGMInfo();
+
+    int getPassagersCount(){return passagers_count;}
+    void setPassagersCount(int value){passagers_count = value;}
+    int getMaxPassagersCount(){return max_passagers_count;}
+    void setMaxPassagersCount(int value){max_passagers_count = value;}
 
     bool isDocked(P<SpaceObject> target) { return docking_state == DS_Docked && docking_target == target; }
     bool canStartDocking() { return current_warp <= 0.0 && (!has_jump_drive || jump_delay <= 0.0); }

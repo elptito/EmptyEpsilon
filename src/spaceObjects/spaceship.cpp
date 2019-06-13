@@ -145,6 +145,8 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     impulse_acceleration = 20.0;
     energy_level = 1000;
     max_energy_level = 1000;
+    passagers_count = 6;
+    max_passagers_count = 20;
 
     registerMemberReplication(&target_rotation, 1.5);
     registerMemberReplication(&impulse_request, 0.1);
@@ -181,6 +183,8 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     registerMemberReplication(&combat_maneuver_boost_speed);
     registerMemberReplication(&combat_maneuver_strafe_speed);
     registerMemberReplication(&radar_trace);
+    registerMemberReplication(&passagers_count);
+    registerMemberReplication(&max_passagers_count);
 
     for(int n=0; n<SYS_COUNT; n++)
     {
@@ -765,6 +769,10 @@ float SpaceShip::getOxygenRechargeRate(int index)
         rate -= (0.5f - std::max(0.0f,getSystemEffectiveness(SYS_Reactor)));
     else
         rate += (getSystemEffectiveness(SYS_Reactor) - 0.5f);
+
+    // Modifs selon nombre de passagers
+    float rate_passagers = (float) getPassagersCount()/getMaxPassagersCount();
+    rate -= rate_passagers * 2.0f;
 
     return rate;
 }

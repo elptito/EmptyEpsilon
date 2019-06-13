@@ -1048,6 +1048,18 @@ GuiShipTweakOxygen::GuiShipTweakOxygen(GuiContainer* owner)
         oxygen_rate_slider[n]->addSnapValue(-40.0, 0.01);
         oxygen_rate_slider[n]->addSnapValue(-20.0, 0.01);
     }
+
+    (new GuiLabel(left_col, "", "Passagers:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    passagers_slider = new GuiSlider(left_col, "", 0.0, 20.0, 0.0, [this](float value) {
+       target->setPassagersCount(value);
+    });
+    passagers_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
+    (new GuiLabel(right_col, "", "Passagers Max:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    max_passagers_slider = new GuiSlider(right_col, "", 0.0, 40.0, 0.0, [this](float value) {
+       target->setMaxPassagersCount(value);
+    });
+    max_passagers_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 }
 
 void GuiShipTweakOxygen::onDraw(sf::RenderTarget& window)
@@ -1063,7 +1075,11 @@ void GuiShipTweakOxygen::onDraw(sf::RenderTarget& window)
 
 void GuiShipTweakOxygen::open(P<SpaceObject> target)
 {
-    this->target = target;
+    P<SpaceShip> ship = target;
+    this->target = ship;
+
+    passagers_slider->setValue(ship->getPassagersCount());
+    max_passagers_slider->setValue(ship->getMaxPassagersCount());
 }
 
 GuiShipTweakMessages::GuiShipTweakMessages(GuiContainer* owner)
@@ -1254,6 +1270,9 @@ void GuiShipTweakPlanet::open(P<SpaceObject> target)
 GuiShipTweakInfos::GuiShipTweakInfos(GuiContainer* owner)
 : GuiTweakPage(owner)
 {
+    GuiAutoLayout* left_col = new GuiAutoLayout(this, "LEFT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    left_col->setPosition(50, 25, ATopLeft)->setSize(200, GuiElement::GuiSizeMax);
+
     GuiAutoLayout* right_col = new GuiAutoLayout(this, "RIGHT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
     right_col->setPosition(-25, 25, ATopRight)->setSize(200, GuiElement::GuiSizeMax);
 
