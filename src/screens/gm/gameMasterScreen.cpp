@@ -235,10 +235,17 @@ void GameMasterScreen::update(float delta)
         if (view_distance < min_distance)
             view_distance = min_distance;
         main_radar->setDistance(view_distance);
-        if (view_distance < 10000)
+        if (view_distance < 10000) {
             main_radar->shortRange();
-        else
+            if (possession_target){
+                main_radar->setRangeIndicatorStepSize(1000.0);   
+            }
+        } else{ 
             main_radar->longRange();
+            if (possession_target){
+               main_radar->setRangeIndicatorStepSize(ceil(view_distance / 50000.0) * 5000.0);
+            }
+        }
     }
     
     bool has_object = false;
@@ -587,12 +594,12 @@ void GameMasterScreen::possess(P<CpuShip> target)
     possession_target = target;
     if(possession_target){
         gameMasterActions->commandSetPosessed(possession_target, true);
-    }
-    if (selected_posessed_tube >= possession_target->weapon_tube_count){
-        selected_posessed_tube = 0;
-    }
-    main_radar->setTargetSpaceship(possession_target)->setRangeIndicatorStepSize(1000.0)->enableCallsigns()->setAutoCentering(true)->enableGhostDots()->enableWaypoints()->enableHeadingIndicators();
-    if (main_radar->getDistance() >= 10000){
-        main_radar->setDistance(10000 - 1)->shortRange();
+        if (selected_posessed_tube >= possession_target->weapon_tube_count){
+            selected_posessed_tube = 0;
+        }
+        main_radar->setTargetSpaceship(possession_target)->setRangeIndicatorStepSize(1000.0)->enableCallsigns()->setAutoCentering(true)->enableGhostDots()->enableWaypoints()->enableHeadingIndicators();
+        if (main_radar->getDistance() >= 10000){
+            main_radar->setDistance(10000 - 1)->shortRange();
+        }
     }
 }
