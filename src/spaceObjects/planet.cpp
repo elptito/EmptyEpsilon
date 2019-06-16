@@ -196,6 +196,7 @@ void Planet::setPlanetCloudTexture(string texture_name)
 
 void Planet::setPlanetRadius(float size)
 {
+    setRadius(size);
     this->planet_size = size;
     this->cloud_size = size * 1.05;
     this->atmosphere_size = size * 1.2;
@@ -259,19 +260,22 @@ void Planet::draw3D()
     float distance = sf::length(camera_position - sf::Vector3f(getPosition().x, getPosition().y, distance_from_movement_plane));
 
     //view_scale ~= about the size the planet is on the screen.
-    float view_scale = planet_size / distance;
+//    float view_scale = planet_size / distance;
+    float view_scale = getRadius() / distance;
     int level_of_detail = 4;
     if (view_scale < 0.01)
         level_of_detail = 2;
     if (view_scale < 0.1)
         level_of_detail = 3;
-    level_of_detail = 4;
+//    level_of_detail = 4;
 
-    if (planet_texture != "" && planet_size > 0)
+//    if (planet_texture != "" && planet_size > 0)
+    if (planet_texture != "" && getRadius() > 0)
     {
         glTranslatef(0, 0, distance_from_movement_plane);
         glRotatef(rotation_axis, 0.0, 1.0, 0.0);
-        glScalef(planet_size, planet_size, planet_size);
+//        glScalef(planet_size, planet_size, planet_size);
+        glScalef(getRadius(), getRadius(), getRadius());
         glColor3f(1, 1, 1);
 
         if (!planet_mesh[level_of_detail])
@@ -292,7 +296,8 @@ void Planet::draw3DTransparent()
     float distance = sf::length(camera_position - sf::Vector3f(getPosition().x, getPosition().y, distance_from_movement_plane));
 
     //view_scale ~= about the size the planet is on the screen.
-    float view_scale = planet_size / distance;
+//    float view_scale = planet_size / distance;
+    float view_scale = getRadius() / distance;
     int level_of_detail = 4;
     if (view_scale < 0.01)
         level_of_detail = 2;
@@ -304,7 +309,8 @@ void Planet::draw3DTransparent()
     if (cloud_texture != "" && cloud_size > 0)
     {
         glPushMatrix();
-        glScalef(cloud_size, cloud_size, cloud_size);
+//        glScalef(cloud_size, cloud_size, cloud_size);
+        glScalef(getRadius()*1.05, getRadius()*1.05, getRadius()*1.05);
         glRotatef(engine->getElapsedTime() * 1.0f, 0, 0, 1);
         glColor3f(1, 1, 1);
 
@@ -324,7 +330,8 @@ void Planet::draw3DTransparent()
     {
         ShaderManager::getShader("billboardShader")->setParameter("textureMap", *textureManager.getTexture(atmosphere_texture));
         sf::Shader::bind(ShaderManager::getShader("billboardShader"));
-        glColor4f(atmosphere_color.r / 255.0f, atmosphere_color.g / 255.0f, atmosphere_color.b / 255.0f, atmosphere_size * 2.0f);
+//        glColor4f(atmosphere_color.r / 255.0f, atmosphere_color.g / 255.0f, atmosphere_color.b / 255.0f, atmosphere_size * 2.0f);
+        glColor4f(atmosphere_color.r / 255.0f, atmosphere_color.g / 255.0f, atmosphere_color.b / 255.0f, getRadius() * 2.0f);
         glBegin(GL_QUADS);
         glTexCoord2f(0, 0);
         glVertex3f(0, 0, 0);

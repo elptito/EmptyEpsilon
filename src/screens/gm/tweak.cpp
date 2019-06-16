@@ -1245,12 +1245,14 @@ GuiShipTweakPlanet::GuiShipTweakPlanet(GuiContainer* owner)
     });
     texture_selector->setPosition(0, 0, ATopRight)->setSize(GuiElement::GuiSizeMax, 50);
 
-    std::vector<string> texture_filenames = findResources("planets/*.jpg");
-    std::sort(texture_filenames.begin(), texture_filenames.end());
-    for(string filename : texture_filenames)
-    {
+    std::vector<string> texture_filenames_jpg = findResources("planets/*.jpg");
+    std::sort(texture_filenames_jpg.begin(), texture_filenames_jpg.end());
+    std::vector<string> texture_filenames_png = findResources("planets/*.png");
+    std::sort(texture_filenames_png.begin(), texture_filenames_png.end());
+    for(string filename : texture_filenames_jpg)
         texture_selector->addEntry(filename.substr(filename.rfind("/") + 1, filename.rfind(".")), filename);
-    }
+    for(string filename : texture_filenames_png)
+        texture_selector->addEntry(filename.substr(filename.rfind("/") + 1, filename.rfind(".")), filename);
 }
 
 void GuiShipTweakPlanet::onDraw(sf::RenderTarget& window)

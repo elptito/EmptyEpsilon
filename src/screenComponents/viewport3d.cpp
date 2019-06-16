@@ -179,10 +179,10 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
             continue;
         if (depth > 0 && obj->getRadius() / depth < 1.0 / 500)
             continue;
-//        int render_list_index = std::max(0, int((depth + obj->getRadius()) / 25000));
-        int render_list_index = std::max(0, int((depth + obj->getRadius()) / 999999));
-        if (P<Planet>(obj))
-            render_list_index = std::max(0, int((depth + obj->getRadius() * 1000) / 999999));
+        int render_list_index = std::max(0, int((depth + obj->getRadius()) / 25000));
+//        int render_list_index = std::max(0, int((depth + obj->getRadius()) / 999999));
+//        if (P<Planet>(obj))
+//            render_list_index = std::max(0, int((depth + obj->getRadius() * 1000) / 999999));
         while(render_list_index >= int(render_lists.size()))
             render_lists.emplace_back();
         render_lists[render_list_index].emplace_back(*obj, depth);
