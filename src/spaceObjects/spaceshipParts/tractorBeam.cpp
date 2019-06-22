@@ -105,38 +105,39 @@ void TractorBeam::update(float delta)
     if (game_server && mode > TBM_Off && range > 0.0 && delta > 0)
     {
         float dragCapability = delta * getDragSpeed();
+        float area = (M_PI * range * range * arc) / 360.0f; // in square meters
+        if (parent->useEnergy(energy_per_area * area)){
 
-        foreach(SpaceObject, target, space_object_list)
-        {
-            if (target != parent) {
-                // Get the angle to the target.
+            foreach(SpaceObject, target, space_object_list)
+            { 
+                if (target != parent) {
+                    // Get the angle to the target.
 
-                sf::Vector2f diff = target->getPosition() - parent->getPosition();
-                float angle_diff = fabsf(sf::angleDifference(direction + parent->getRotation(), sf::vector2ToAngle(diff)));
+                    sf::Vector2f diff = target->getPosition() - parent->getPosition();
+                    float angle_diff = fabsf(sf::angleDifference(direction + parent->getRotation(), sf::vector2ToAngle(diff)));
 
-                // If the target is in the beam's arc and range 
-                if (sf::length(diff) < range && angle_diff < arc / 2.0)
-                {
-                    sf::Vector2f destination;
-                    switch(mode) {
-                        case TBM_Off : 
-                            // do nothing. here to avoid compiler -Wswitch warning
-                            break;
-                        case TBM_Pull : 
-                            destination = parent->getPosition();
-                            break;
-                        case TBM_Push :
-                            destination = parent->getPosition() + normalize(target->getPosition() - parent->getPosition()) * (range * 2);
-                            break;
-                        case TBM_Hold :
-                            destination = parent->getPosition() + normalize(target->getPosition() - parent->getPosition()) * (range / 2);
-                            break;
-                    }
-                    diff = target->getPosition() - destination;
-                    float target_distance = std::max(0.0f, sf::length(diff) - parent->getRadius() - target->getRadius());
-                    float distanceToDrag = std::min(target_distance, dragCapability);
-                    if (parent->useEnergy(energy_per_target_u * distanceToDrag))
+                    // If the target is in the beam's arc and range 
+                    if (sf::length(diff) < range && angle_diff < arc / 2.0)
                     {
+                        sf::Vector2f destination;
+                        switch(mode) {
+                            case TBM_Off : 
+                                // do nothing. here to avoid compiler -Wswitch warning
+                                break;
+                            case TBM_Pull : 
+                                destination = parent->getPosition();
+                                break;
+                            case TBM_Push :
+                                destination = parent->getPosition() + normalize(target->getPosition() - parent->getPosition()) * (range * 2);
+                                break;
+                            case TBM_Hold :
+                                destination = parent->getPosition() + normalize(target->getPosition() - parent->getPosition()) * (range / 2);
+                                break;
+                        }
+                        diff = target->getPosition() - destination;
+                        float target_distance = std::max(0.0f, sf::length(diff) - parent->getRadius() - target->getRadius());
+                        float distanceToDrag = std::min(target_distance, dragCapability);
+                        parent->addHeat(SYS_Docks, heat_per_target_u * distanceToDrag);
                         P<PlayerSpaceship> target_ship = target;
                         if (target_distance < dragCapability && target_ship && mode == TBM_Pull)
                         {

@@ -31,7 +31,8 @@ protected:
     float direction;
     float range;
 public:
-    constexpr static float energy_per_target_u = 0.05f; /*< Amount of energy it takes to drag a target (of radius 100) for 1U */
+    constexpr static float energy_per_area = 0.00000005f; /*< Amount of energy it takes to keep a tractor beam running per square meter */
+    constexpr static float heat_per_target_u = 0.0004f; /*< Amount of energy it takes to drag a target (of radius 100) for 1U */
 
     TractorBeam();
 
