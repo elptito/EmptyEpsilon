@@ -63,10 +63,6 @@ private:
     func_t mouse_down_func;
     func_t mouse_drag_func;
     func_t mouse_up_func;
-    ffunc_t joystick_x_func;
-    ffunc_t joystick_y_func;
-    ffunc_t joystick_z_func;
-    ffunc_t joystick_r_func;
 public:
     GuiRadarView(GuiContainer* owner, string id, float distance, TargetsContainer* targets, P<PlayerSpaceship> targetSpaceship);
 

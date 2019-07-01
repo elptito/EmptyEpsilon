@@ -59,51 +59,7 @@ HelmsScreen::HelmsScreen(GuiContainer* owner)
             heading_hint->hide();
         }
     );
-
-    radar->setJoystickCallbacks(
-        [this](float x_position) {
-            if (my_spaceship)
-            {
-                my_spaceship->commandTurnSpeed(x_position / 100);
-            }
-        },
-        [this](float y_position) {
-//            if (my_spaceship)
-//            {
-//                if (my_spaceship->combat_maneuver_boost_speed > 0.0)
-//                {
-//                    // Add some more hysteresis, since y-axis can be hard to keep at 0
-//                    float value;
-//                    if (y_position > 0)
-//                        value = (y_position-20)*1.25/100;
-//                    else
-//                        value = (y_position+20)*1.25/100;
-//
-//                    my_spaceship->commandCombatManeuverBoost(-value);
-//                    combat_maneuver->setBoostValue(fabs(value));
-//                }
-//                else
-//                {
-//                    my_spaceship->commandCombatManeuverBoost(0.0);
-//                combat_maneuver->setBoostValue(0.0);
-//                }
-//            }
-        },
-        [this](float z_position) {
-            if (my_spaceship)
-                my_spaceship->commandImpulse(-(z_position / 100));
-        },
-        [this](float r_position) {
-//            if (my_spaceship)
-//            {
-//                if (my_spaceship->combat_maneuver_strafe_speed > 0.0)
-//                {
-//                    my_spaceship->commandCombatManeuverStrafe(r_position/100);
-//                    combat_maneuver->setStrafeValue(r_position/100);
-//                }
-//            }
-        }
-        );
+    
     heading_hint = new GuiLabel(this, "HEADING_HINT", "", 30);
     heading_hint->setAlignment(ACenter)->setSize(0, 0);
 
@@ -135,7 +91,7 @@ void HelmsScreen::onDraw(sf::RenderTarget& window)
         else
             energy_display->setColor(sf::Color::White);
 
-        heading_display->setValue(string(my_spaceship->getHeading(), 1) + "°");
+        heading_display->setValue(string(my_spaceship->getHeading(), 1) + "ï¿½");
         float velocity = sf::length(my_spaceship->getVelocity()) / 1000 * 60;
         velocity_display->setValue(string(velocity, 1) + DISTANCE_UNIT_1K + "/min");
 
