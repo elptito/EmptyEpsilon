@@ -209,6 +209,7 @@ static const int16_t CMD_SET_DOCK_TARGET = 0x0037;
 static const int16_t CMD_LAND = 0x0038;
 static const int16_t CMD_ABORT_LANDING = 0x0039;
 static const int16_t CMD_SET_LANDING_TARGET = 0x0040;
+static const int16_t CMD_TURN_SPEED = 0x002A;
 
 string alertLevelToString(EAlertLevel level)
 {
@@ -1245,6 +1246,10 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
     case CMD_TARGET_ROTATION:
         packet >> target_rotation;
         break;
+    case CMD_TURN_SPEED:
+        target_rotation = getRotation();
+        packet >> turnSpeed;
+        break;
     case CMD_IMPULSE:
         packet >> impulse_request;
         break;
@@ -1821,6 +1826,13 @@ void PlayerSpaceship::commandTargetRotation(float target)
 {
     sf::Packet packet;
     packet << CMD_TARGET_ROTATION << target;
+    sendClientCommand(packet);
+}
+
+void PlayerSpaceship::commandTurnSpeed(float turnSpeed)
+{
+    sf::Packet packet;
+    packet << CMD_TURN_SPEED << turnSpeed;
     sendClientCommand(packet);
 }
 
