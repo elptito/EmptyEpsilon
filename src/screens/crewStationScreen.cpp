@@ -12,6 +12,7 @@
 #include "gui/gui2_togglebutton.h"
 #include "gui/gui2_panel.h"
 #include "gui/gui2_scrolltext.h"
+#include "gui/joystickConfig.h"
 
 CrewStationScreen::CrewStationScreen()
 {
@@ -47,7 +48,7 @@ CrewStationScreen::CrewStationScreen()
 
     keyboard_help = new GuiHelpOverlay(this, "Keyboard Shortcuts");
 
-    for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("General"))
+    for (std::pair<string, string> shortcut : listControlsByCategory("General"))
         keyboard_general += shortcut.second + ":\t" + shortcut.first + "\n";
 
 //#ifndef __ANDROID__
@@ -90,7 +91,7 @@ void CrewStationScreen::addStationTab(GuiElement* element, ECrewPosition positio
 
         string keyboard_category = "";
 
-        for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory(info.button->getText()))
+        for (std::pair<string, string> shortcut : listControlsByCategory(info.button->getText()))
             keyboard_category += shortcut.second + ":\t" + shortcut.first + "\n";
         if (keyboard_category == "")	// special hotkey combination for crew1 and crew4 screens
             keyboard_category = listHotkeysLimited(info.button->getText());
@@ -232,7 +233,7 @@ void CrewStationScreen::showTab(GuiElement* element)
 
             string keyboard_category = "";
 
-            for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory(info.button->getText()))
+            for (std::pair<string, string> shortcut : listControlsByCategory(info.button->getText()))
                 keyboard_category += shortcut.second + ":\t" + shortcut.first + "\n";
 			if (keyboard_category == "")	// special hotkey combination for crew1 and crew4 screens
 				keyboard_category = listHotkeysLimited(info.button->getText());
@@ -260,15 +261,15 @@ string CrewStationScreen::listHotkeysLimited(string station)
 {
 	string ret = "";
 	keyboard_general = "";
-	for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("General"))
-		if (shortcut.first == "Station suivante" || shortcut.first =="Station precedente")
+	for (std::pair<string, string> shortcut : listControlsByCategory("General"))
+		if (shortcut.first == "Station suivante" || shortcut.first =="Station precedente") 				
 			keyboard_general += shortcut.second + ":\t" + shortcut.first + "\n";
 	if (station == "Tactique")
-	{
-
-		for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Pilote"))
+	{	
+		
+		for (std::pair<string, string> shortcut : listControlsByCategory("Pilote"))
             ret += shortcut.second + ":\t" + shortcut.first + "\n";
-		for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Armes"))
+		for (std::pair<string, string> shortcut : listControlsByCategory("Armes"))
 		{
 			if (shortcut.first != "Action boucliers")
 				ret += shortcut.second + ":\t" + shortcut.first + "\n";
@@ -276,9 +277,9 @@ string CrewStationScreen::listHotkeysLimited(string station)
 	}
 	else if (station == "Engineering+")
 	{
-		for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Ingenieur"))
+		for (std::pair<string, string> shortcut : listControlsByCategory("Ingenieur"))
             ret += shortcut.second + ":\t" + shortcut.first + "\n";
-        for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Armes"))
+        for (std::pair<string, string> shortcut : listControlsByCategory("Armes"))
         {
             if (shortcut.first == "Action boucliers")
 				ret += shortcut.second + ":\t" + shortcut.first + "\n";
@@ -292,10 +293,17 @@ string CrewStationScreen::listHotkeysLimited(string station)
 
 	else if (station == "Pilote a tout faire")
 	{
-		for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Pilote"))
+		for (std::pair<string, string> shortcut : listControlsByCategory("Pilote"))
             ret += shortcut.second + ":\t" + shortcut.first + "\n";
-		for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Armes"))
+		for (std::pair<string, string> shortcut : listControlsByCategory("Armes"))
 			ret += shortcut.second + ":\t" + shortcut.first + "\n";
 	}
     return ret;
+}
+
+std::vector<std::pair<string, string>> CrewStationScreen::listControlsByCategory(string category){
+    std::vector<std::pair<string, string>> hotkeyControls = hotkeys.listHotkeysByCategory(category);
+    std::vector<std::pair<string, string>> joystickControls = joystick.listJoystickByCategory(category);
+    hotkeyControls.insert(hotkeyControls.end(), joystickControls.begin(), joystickControls.end());
+    return hotkeyControls;
 }
