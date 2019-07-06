@@ -7,6 +7,7 @@
 #include "scriptInterface.h"
 REGISTER_SCRIPT_SUBCLASS_NO_CREATE(ScanProbe, SpaceObject)
 {
+    REGISTER_SCRIPT_CLASS_FUNCTION(ScanProbe, setTarget);
 }
 
 REGISTER_MULTIPLAYER_CLASS(ScanProbe, "ScanProbe");
