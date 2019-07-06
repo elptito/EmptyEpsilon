@@ -346,8 +346,9 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
                 addSystemEffect("Vitesse de transfert energie", string(effectiveness * PlayerSpaceship::energy_transfer_per_second) + "/s");
                 break;
             case SYS_Drones:
-                addSystemEffect("Portee controle des drones", string(my_spaceship->getDronesControlRange() / 1000.0f,1) + "U");
-                addSystemEffect("Rayon radar relai et sondes", string(5000.0 * my_spaceship->getSystemEffectiveness(SYS_Drones)  / 1000.0f,1) + "U");
+                addSystemEffect("Controle des drones", string(my_spaceship->getDronesControlRange() / 1000.0f,1) + "U");
+                addSystemEffect("Radar relai et sondes", string(5000.0 * my_spaceship->getSystemEffectiveness(SYS_Drones)  / 1000.0f,1) + "U");
+                addSystemEffect("Capteurs Analyste", string( gameGlobalInfo->long_range_radar_range * 50.0 * my_spaceship->getSystemEffectiveness(SYS_Drones)  / 1000.0f,0) + "U");
                 break;
             case SYS_Door:
                 addSystemEffect("Resistance du sas exterieur", string(int(my_spaceship->getSystemEffectiveness(SYS_Door) * 100))+ "%");

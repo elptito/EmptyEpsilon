@@ -29,6 +29,7 @@ public:
     void setPlanetCloudRadius(float size);
     void setDistanceFromMovementPlane(float distance_from_movement_plane);
     void setAxialRotationTime(float time);
+    void setAxialRotation(float axis);
     void setOrbit(P<SpaceObject> target, float orbit_time);
 
     virtual string getExportLine() { return "Planet():setPosition(" + string(getPosition().x, 0) + ", " + string(getPosition().y, 0) + ")"; }

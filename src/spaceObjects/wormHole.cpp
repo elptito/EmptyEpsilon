@@ -125,11 +125,15 @@ void WormHole::collide(Collisionable* target, float collision_force)
     if (getRadarSignatureGravity() < 0.15)
         return;
 
+    P<SpaceObject> obj = P<Collisionable>(target);
+    if (obj && P<Nebula>(obj))
+        return;
+
     sf::Vector2f diff = getPosition() - target->getPosition();
     float distance = sf::length(diff);
     float force = (getRadius() * getRadius() * FORCE_MULTIPLIER) / (distance * distance);
 
-    P<SpaceShip> obj = P<Collisionable>(target);
+    P<SpaceShip> ship = P<Collisionable>(target);
 
     if (force > FORCE_MAX)
     {
@@ -138,13 +142,13 @@ void WormHole::collide(Collisionable* target, float collision_force)
             target->setPosition( (target_position +
                                   sf::Vector2f(random(-TARGET_SPREAD, TARGET_SPREAD),
                                                random(-TARGET_SPREAD, TARGET_SPREAD))));
-            if (obj)
-                obj->wormhole_alpha = 0.0;
+            if (ship)
+                ship->wormhole_alpha = 0.0;
     }
 
     // Warp postprocessor-alpha is calculated using alpha = (1 - (delay/10))
-    if (obj)
-        obj->wormhole_alpha = ((distance / getRadius()) * ALPHA_MULTIPLIER);
+    if (ship)
+        ship->wormhole_alpha = ((distance / getRadius()) * ALPHA_MULTIPLIER);
 
     // TODO: Escaping is impossible. Change setPosition to something Newtonianish.
     target->setPosition(target->getPosition() + diff / distance * update_delta * force);

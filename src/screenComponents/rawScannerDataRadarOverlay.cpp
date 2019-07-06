@@ -14,6 +14,9 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
     if (!my_spaceship)
         return;
 
+    if (my_spaceship->getSystemEffectiveness(SYS_Drones) < 0.1)
+        return;
+
     sf::Vector2f view_position = radar->getViewPosition();
 
     // Cap the number of signature points, which determines the raw data's
@@ -35,15 +38,18 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
         float a_0, a_1;
         float dist = sf::length(obj->getPosition() - view_position);
         float scale = 1.0;
+        // Nombre de fois la portée du radar
+        float dist_max = 50.0;
 
         // If the object is more than twice as far away as the maximum radar
         // range, disregard it.
-        if (dist > distance * 10000.0)
+        distance = distance * exp(my_spaceship->getSystemEffectiveness(SYS_Drones)-1);
+        if (dist > distance * dist_max)
             continue;
 
         // The further away the object is, the less its effect on radar data.
         if (dist > distance)
-            scale = scale - (dist - distance) / (distance * 10000.0 - distance);
+            scale = scale - (dist - distance) / (distance * dist_max - distance);
 
         // If we're adjacent to the object ...
         if (dist <= obj->getRadius())
@@ -110,9 +116,9 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
  		if (my_spaceship->has_gravity_sensor) { b += random(-20, 20) * signatures[n].gravity; }
 
         // Apply the values to the radar bands.
-        amp_r[n] = r;
-        amp_g[n] = g;
-        amp_b[n] = b;
+        amp_r[n] = r * my_spaceship->getSystemEffectiveness(SYS_Drones);
+        amp_g[n] = g * my_spaceship->getSystemEffectiveness(SYS_Drones);
+        amp_b[n] = b * my_spaceship->getSystemEffectiveness(SYS_Drones);
     }
 
     // Create a vertex array containing each data point.

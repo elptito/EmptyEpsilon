@@ -92,6 +92,7 @@ void Asteroid::setModel(int model_number)
 void Asteroid::setSize(float new_size)
 {
     size = new_size;
+    setRadius(new_size);
 }
 
 /// An asteroid in space. Outside of hit range, just for visuals.
@@ -121,12 +122,12 @@ VisualAsteroid::VisualAsteroid()
 void VisualAsteroid::draw3D()
 {
 #if FEATURE_3D_RENDERING
-    if (size != getRadius())
-        setRadius(size);
+//    if (size != getRadius())
+//        setRadius(size);
 
     glTranslatef(0, 0, z);
     glRotatef(engine->getElapsedTime() * rotation_speed, 0, 0, 1);
-    glScalef(getRadius(), getRadius(), getRadius());
+    glScalef(size, size, size);
     sf::Shader* shader = ShaderManager::getShader("objectShaderBS");
     shader->setParameter("baseMap", *textureManager.getTexture("Astroid_" + string(model_number) + "_d.png"));
     shader->setParameter("specularMap", *textureManager.getTexture("Astroid_" + string(model_number) + "_s.png"));
