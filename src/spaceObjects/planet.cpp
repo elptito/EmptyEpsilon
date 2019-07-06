@@ -102,6 +102,7 @@ REGISTER_SCRIPT_SUBCLASS(Planet, SpaceObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(Planet, setPlanetCloudRadius);
     REGISTER_SCRIPT_CLASS_FUNCTION(Planet, setDistanceFromMovementPlane);
     REGISTER_SCRIPT_CLASS_FUNCTION(Planet, setAxialRotationTime);
+    REGISTER_SCRIPT_CLASS_FUNCTION(Planet, setAxialRotation);
     REGISTER_SCRIPT_CLASS_FUNCTION(Planet, setOrbit);
 }
 
@@ -136,7 +137,7 @@ Planet::Planet()
         addInfos(4,"Type","Gazeuse");
     else
         addInfos(4,"Type","Tellurique");
-	addInfos(5,"Age",string(irandom(5,100)*100)+ " M³ A.LO");
+	addInfos(5,"Age",string(irandom(5,100)*100)+ " M3 A.LO");
 
 	if (infos_value[4] == "Tellurique" && random(0.0,1.0) < 0.3)
         addInfos(6,"Atmosphere","oui");
@@ -215,6 +216,11 @@ void Planet::setDistanceFromMovementPlane(float distance_from_movement_plane)
 void Planet::setAxialRotationTime(float time)
 {
     axial_rotation_time = time;
+}
+
+void Planet::setAxialRotation(float axis)
+{
+    rotation_axis = axis;
 }
 
 void Planet::setOrbit(P<SpaceObject> target, float orbit_time)
