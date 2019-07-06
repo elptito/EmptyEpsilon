@@ -365,6 +365,21 @@ static int getPlayerShip(lua_State* L)
 /// Return the player's ship, use -1 to get the first active player ship.
 REGISTER_SCRIPT_FUNCTION(getPlayerShip);
 
+static int getPlayerShips(lua_State* L)
+{
+    PVector<PlayerSpaceship> ships;
+    for(int index = 0; index<GameGlobalInfo::max_player_ships; index++)
+    {
+        P<PlayerSpaceship> ship = gameGlobalInfo->getPlayerShip(index);
+        if (ship)
+            ships.push_back(ship);
+    }
+    return convert<PVector<PlayerSpaceship> >::returnType(L, ships);
+}
+/// getPlayerShip()
+/// Return the vector of player's ships.
+REGISTER_SCRIPT_FUNCTION(getPlayerShips);
+
 static int getObjectsInRadius(lua_State* L)
 {
     float x = luaL_checknumber(L, 1);
