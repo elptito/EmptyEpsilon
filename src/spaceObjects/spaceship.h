@@ -315,7 +315,8 @@ public:
     int getMaxPassagersCount(){return max_passagers_count;}
     void setMaxPassagersCount(int value){max_passagers_count = value;}
 
-    bool isDocked(P<SpaceObject> target) { return docking_state == DS_Docked && docking_target == target; }
+    bool isDocked() { return docking_state == DS_Docked; }
+    bool isDockedWith(P<SpaceObject> target) { return docking_state == DS_Docked && docking_target == target; }
     bool canStartDocking() { return current_warp <= 0.0 && (!has_jump_drive || jump_delay <= 0.0); }
     int getWeaponStorage(EMissileWeapons weapon) { if (weapon == MW_None) return 0; return weapon_storage[weapon]; }
     int getWeaponStorageMax(EMissileWeapons weapon) { if (weapon == MW_None) return 0; return weapon_storage_max[weapon]; }

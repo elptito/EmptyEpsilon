@@ -24,6 +24,7 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, isFriendOrFoeIdentifiedByFaction);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, isFullyScannedByFaction);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, isDocked);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, isDockedWith);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getTarget);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getDockTarget);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getWeaponStorage);
@@ -38,6 +39,7 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getEnergy);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setEnergy);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getBeamsFrequency);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, hasSystem);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getSystemHealth);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setSystemHealth);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getSystemHealthMax);
@@ -197,9 +199,14 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
         systems[n].heat_level = 0.0;
         systems[n].hacked_level = 0.0;
 
-        registerMemberReplication(&systems[n].health, 0.1);
-        registerMemberReplication(&systems[n].health_max, 0.1);
-        registerMemberReplication(&systems[n].hacked_level, 0.1);
+        registerMemberReplication(&systems[n].health);
+        registerMemberReplication(&systems[n].health_max);
+        registerMemberReplication(&systems[n].power_level);
+        registerMemberReplication(&systems[n].power_request);
+        registerMemberReplication(&systems[n].coolant_level);
+        registerMemberReplication(&systems[n].coolant_request);
+        registerMemberReplication(&systems[n].heat_level);
+        registerMemberReplication(&systems[n].hacked_level);
     }
 
     for(int n = 0; n < max_beam_weapons; n++)
@@ -762,13 +769,13 @@ float SpaceShip::getOxygenRechargeRate(int index)
     float rate = (oxygen_rate[index] / 100.0 * oxygen_max[index]) / 100.0;
     // Diminution de l'oxygene si Hull trop base
     if (hull_strength / hull_max < 0.6)
-        rate -= (0.6 - hull_strength / hull_max) / 2.0f;
+        rate -= (0.6 - hull_strength / hull_max) * 2.0f;
 
     // Modifs selon Reacteur
-    if (getSystemEffectiveness(SYS_Reactor) < 0.5f)
-        rate -= (0.5f - std::max(0.0f,getSystemEffectiveness(SYS_Reactor)));
+    if (getSystemEffectiveness(SYS_Reactor) < 0.8f)
+        rate -= (0.8f - std::max(0.0f,getSystemEffectiveness(SYS_Reactor)));
     else
-        rate += (getSystemEffectiveness(SYS_Reactor) - 0.5f);
+        rate += (getSystemEffectiveness(SYS_Reactor) - 0.8f);
 
     // Modifs selon nombre de passagers
     float rate_passagers = (float) getPassagersCount()/getMaxPassagersCount();
@@ -1173,11 +1180,11 @@ bool SpaceShip::hasSystem(ESystem system)
         return turn_speed > 0.0;
     case SYS_Impulse:
         return impulse_max_speed > 0.0;
-    case SYS_Docks:
     case SYS_Drones:
-        return docks[0].dock_type != Dock_Disabled;
+        return true;
+    case SYS_Docks:
     case SYS_Door:
-        return false;
+        return docks[0].dock_type != Dock_Disabled;
     }
     return true;
 }
