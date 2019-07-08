@@ -44,17 +44,20 @@ public:
     float power_level; //0.0-3.0, default 1.0
     float power_request;
     float heat_level; //0.0-1.0, system will damage at 1.0
-    float coolant_level; //0.0-10.0
+    float coolant_level; //0.0-3.0
     float coolant_request;
     float hacked_level; //0.0-1.0
+    float coolant_max; //0.0-3.0
 
     float getHeatingDelta()
     {
         if (health > -0.5)
 //            return powf(1.7, power_level - 1.0) - (1.01 + coolant_level * 0.1);
-            return powf(1.7, power_level - 1.0) - (1.01 + coolant_level * 0.06);
+//            return powf(1.7, power_level - 1.0) - (1.01 + coolant_level * 0.06);
+            return powf(1.7, power_level - 1.0) - (1.01 + coolant_level * 0.6);
         else
-            return - (coolant_level * 0.1);
+            return - (coolant_level);
+//            return - (coolant_level * 0.1);
     }
 };
 
@@ -295,6 +298,7 @@ public:
      * Check if ship has certain system
      */
     bool hasSystem(ESystem system);
+    int countSystems();
 
     /*!
      * Check effectiveness of system.
@@ -339,7 +343,8 @@ public:
     float getSystemPower(ESystem system) { if (system >= SYS_COUNT) return 0.0; if (system <= SYS_None) return 0.0; return systems[system].power_level; }
     void setSystemPower(ESystem system, float power) { if (system >= SYS_COUNT) return; if (system <= SYS_None) return; systems[system].power_level = std::min(3.0f, std::max(0.0f, power)); }
     float getSystemCoolant(ESystem system) { if (system >= SYS_COUNT) return 0.0; if (system <= SYS_None) return 0.0; return systems[system].coolant_level; }
-    void setSystemCoolant(ESystem system, float coolant) { if (system >= SYS_COUNT) return; if (system <= SYS_None) return; systems[system].coolant_level = std::min(1.0f, std::max(0.0f, coolant)); }
+//    void setSystemCoolant(ESystem system, float coolant) { if (system >= SYS_COUNT) return; if (system <= SYS_None) return; systems[system].coolant_level = std::min(1.0f, std::max(0.0f, coolant)); }
+    void setSystemCoolant(ESystem system, float coolant) { if (system >= SYS_COUNT) return; if (system <= SYS_None) return; systems[system].coolant_level = std::min(systems[system].coolant_max, std::max(0.0f, coolant)); }
     float getSystemHack(ESystem system) { if (system >= SYS_COUNT) return 0.0; if (system <= SYS_None) return 0.0; return systems[system].hacked_level; }
     void setSystemHack(ESystem system, float hack) { if (system >= SYS_COUNT) return; if (system <= SYS_None) return; systems[system].hacked_level = std::min(3.0f, std::max(0.0f, hack)); }
     float getImpulseMaxSpeed() { return impulse_max_speed; }

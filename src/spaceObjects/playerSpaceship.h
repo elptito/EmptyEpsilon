@@ -43,7 +43,7 @@ public:
     constexpr static float cargo_repair_per_second = 0.1;
 
     // Coolant change rate
-    constexpr static float system_coolant_level_change_per_second = 1.2;
+    constexpr static float system_coolant_level_change_per_second = 1.2 / 10.0;
     // Overheat subsystem damage rate
     constexpr static float damage_per_second_on_overheat = 0.08f;
     // Base time it takes to perform an action
@@ -58,7 +58,8 @@ public:
 
     // Total coolant
     float max_coolant;
-    float max_per_system = 10.0;
+//    float max_per_system = 10.0;
+    float max_per_system;
 
     bool has_gravity_sensor;
 	bool has_electrical_sensor;

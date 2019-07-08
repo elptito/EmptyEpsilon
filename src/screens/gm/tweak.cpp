@@ -746,16 +746,19 @@ GuiShipTweakSystems::GuiShipTweakSystems(GuiContainer* owner)
     GuiAutoLayout* col_1 = new GuiAutoLayout(this, "LAYOUT_1", GuiAutoLayout::LayoutVerticalTopToBottom);
     col_1->setPosition(50, 25, ATopLeft)->setSize(150, GuiElement::GuiSizeMax);
     GuiAutoLayout* col_2 = new GuiAutoLayout(this, "LAYOUT_2", GuiAutoLayout::LayoutVerticalTopToBottom);
-    col_2->setPosition(-75, 25, ATopCenter)->setSize(150, GuiElement::GuiSizeMax);
+    col_2->setPosition(210, 25, ATopLeft)->setSize(100, GuiElement::GuiSizeMax);
     GuiAutoLayout* col_3 = new GuiAutoLayout(this, "LAYOUT_3", GuiAutoLayout::LayoutVerticalTopToBottom);
-    col_3->setPosition(100, 25, ATopCenter)->setSize(150, GuiElement::GuiSizeMax);
+    col_3->setPosition(320, 25, ATopLeft)->setSize(100, GuiElement::GuiSizeMax);
     GuiAutoLayout* col_4 = new GuiAutoLayout(this, "LAYOUT_4", GuiAutoLayout::LayoutVerticalTopToBottom);
-    col_4->setPosition(-25, 25, ATopRight)->setSize(150, GuiElement::GuiSizeMax);
+    col_4->setPosition(430, 25, ATopLeft)->setSize(100, GuiElement::GuiSizeMax);
+    GuiAutoLayout* col_5 = new GuiAutoLayout(this, "LAYOUT_4", GuiAutoLayout::LayoutVerticalTopToBottom);
+    col_5->setPosition(540, 25, ATopLeft)->setSize(100, GuiElement::GuiSizeMax);
 
     (new GuiLabel(col_1, "", "etat", 20))->setSize(GuiElement::GuiSizeMax, 30);
     (new GuiLabel(col_2, "", "max", 20))->setSize(GuiElement::GuiSizeMax, 30);
     (new GuiLabel(col_3, "", "chaleur", 20))->setSize(GuiElement::GuiSizeMax, 30);
     (new GuiLabel(col_4, "", "Hack", 20))->setSize(GuiElement::GuiSizeMax, 30);
+    (new GuiLabel(col_5, "", "max coolant", 20))->setSize(GuiElement::GuiSizeMax, 30);
 
     for(int n=0; n<SYS_COUNT; n++)
     {
@@ -773,12 +776,17 @@ GuiShipTweakSystems::GuiShipTweakSystems(GuiContainer* owner)
         temp_3[n] = new GuiLabel(col_4, "", " ", 20);
         temp_3[n]->setSize(GuiElement::GuiSizeMax, 30);
 
+        temp_4[n] = new GuiLabel(col_5, "", " ", 20);
+        temp_4[n]->setSize(GuiElement::GuiSizeMax, 30);
+
         system_damage[n] = new GuiSlider(col_1, "", -1.0, 1.0, 0.0, [this, n](float value) {
             target->systems[n].health = std::min(value,target->systems[n].health_max);
         });
         system_damage[n]->setSize(GuiElement::GuiSizeMax, 30);
         system_damage[n]->addSnapValue(-1.0, 0.01);
+        system_damage[n]->addSnapValue(-0.5, 0.01);
         system_damage[n]->addSnapValue( 0.0, 0.01);
+        system_damage[n]->addSnapValue( 0.5, 0.01);
         system_damage[n]->addSnapValue( 1.0, 0.01);
 
         system_health[n] = new GuiSlider(col_2, "", 0.0, 1.0, 0.0, [this, n](float value) {
@@ -788,6 +796,7 @@ GuiShipTweakSystems::GuiShipTweakSystems(GuiContainer* owner)
         system_health[n]->setSize(GuiElement::GuiSizeMax, 30);
         system_health[n]->setPosition(0,30);
         system_health[n]->addSnapValue( 0.0, 0.01);
+        system_health[n]->addSnapValue( 0.5, 0.01);
         system_health[n]->addSnapValue( 1.0, 0.01);
 
         system_heat[n] = new GuiSlider(col_3, "", 0.0, 1.0, 0.0, [this, n](float value) {
@@ -795,6 +804,7 @@ GuiShipTweakSystems::GuiShipTweakSystems(GuiContainer* owner)
         });
         system_heat[n]->setSize(GuiElement::GuiSizeMax, 30);
         system_heat[n]->addSnapValue( 0.0, 0.01);
+        system_heat[n]->addSnapValue( 0.5, 0.01);
         system_heat[n]->addSnapValue( 1.0, 0.01);
 
         system_hack[n] = new GuiSlider(col_4, "", 0.0, 1.0, 0.0, [this, n](float value) {
@@ -802,7 +812,21 @@ GuiShipTweakSystems::GuiShipTweakSystems(GuiContainer* owner)
         });
         system_hack[n]->setSize(GuiElement::GuiSizeMax, 30);
         system_hack[n]->addSnapValue( 0.0, 0.01);
+        system_hack[n]->addSnapValue( 0.5, 0.01);
         system_hack[n]->addSnapValue( 1.0, 0.01);
+
+        system_coolant[n] = new GuiSlider(col_5, "", 0.0, 2.0, 0.0, [this, n](float value) {
+            target->systems[n].coolant_max = value;
+            P<PlayerSpaceship> player = target;
+            if (player)
+                player->setSystemCoolantRequest(ESystem(n), player->systems[n].coolant_request);
+        });
+        system_coolant[n]->setSize(GuiElement::GuiSizeMax, 30);
+        system_coolant[n]->addSnapValue( 0.0, 0.01);
+        system_coolant[n]->addSnapValue( 0.5, 0.01);
+        system_coolant[n]->addSnapValue( 1.0, 0.01);
+        system_coolant[n]->addSnapValue( 1.5, 0.01);
+        system_coolant[n]->addSnapValue( 2.0, 0.01);
     }
 }
 
@@ -814,6 +838,7 @@ void GuiShipTweakSystems::onDraw(sf::RenderTarget& window)
         system_health[n]->setValue(target->systems[n].health_max);
         system_heat[n]->setValue(target->systems[n].heat_level);
         system_hack[n]->setValue(target->systems[n].hacked_level);
+        system_coolant[n]->setValue(target->systems[n].coolant_max);
 
         if (!target->hasSystem(ESystem(n)))
         {
@@ -821,10 +846,12 @@ void GuiShipTweakSystems::onDraw(sf::RenderTarget& window)
             temp_1[n]->hide();
             temp_2[n]->hide();
             temp_3[n]->hide();
+            temp_4[n]->hide();
             system_damage[n]->hide();
             system_health[n]->hide();
             system_heat[n]->hide();
             system_hack[n]->hide();
+            system_coolant[n]->hide();
         }
         else
         {
@@ -832,10 +859,12 @@ void GuiShipTweakSystems::onDraw(sf::RenderTarget& window)
             temp_1[n]->show();
             temp_2[n]->show();
             temp_3[n]->show();
+            temp_4[n]->show();
             system_damage[n]->show();
             system_health[n]->show();
             system_heat[n]->show();
             system_hack[n]->show();
+            system_coolant[n]->show();
         }
     }
 }
@@ -911,10 +940,20 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
 
     (new GuiLabel(left_col, "", "Total de Coolant:", 30))->setSize(GuiElement::GuiSizeMax, 50);
 
-    max_coolant_slider = new GuiSlider(left_col, "", 0.0, 30, 0.0, [this](float value) {
-        target->max_coolant = value;
+    max_coolant_slider = new GuiSlider(left_col, "", 0.0, 300.0, 0.0, [this](float value) {
+        target->max_coolant = value / 100.0;
+        P<PlayerSpaceship> player = target;
+        if (player)
+            player->setSystemCoolantRequest(ESystem(0), player->systems[0].coolant_request);
     });
     max_coolant_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    max_coolant_slider->addSnapValue(0.0, 1.0);
+    max_coolant_slider->addSnapValue(50.0, 1.0);
+    max_coolant_slider->addSnapValue(100.0, 1.0);
+    max_coolant_slider->addSnapValue(150.0, 1.0);
+    max_coolant_slider->addSnapValue(200.0, 1.0);
+    max_coolant_slider->addSnapValue(250.0, 1.0);
+    max_coolant_slider->addSnapValue(300.0, 1.0);
 
     // Right column
 
@@ -974,7 +1013,7 @@ void GuiShipTweakPlayer::onDraw(sf::RenderTarget& window)
     max_energy_level_slider->setValue(target->max_energy_level);
 
     // Update Max of coolant level
-    max_coolant_slider->setValue(target->max_coolant);
+    max_coolant_slider->setValue(target->max_coolant * 100.0);
 
     // Update reputation points.
     repair_team_slider->setValue(target->getRepairCrewCount());

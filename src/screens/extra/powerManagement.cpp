@@ -71,6 +71,7 @@ void PowerManagementScreen::onDraw(sf::RenderTarget& window)
             systems[n].box->setVisible(my_spaceship->hasSystem(ESystem(n)));
             systems[n].power_slider->setValue(my_spaceship->systems[n].power_request);
             systems[n].coolant_slider->setValue(my_spaceship->systems[n].coolant_request);
+            systems[n].coolant_slider->setRange(0.0,my_spaceship->systems[n].coolant_max);
 
             float heat = my_spaceship->systems[n].heat_level;
             float power = my_spaceship->systems[n].power_level;
@@ -78,6 +79,7 @@ void PowerManagementScreen::onDraw(sf::RenderTarget& window)
             systems[n].heat_bar->setValue(heat)->setColor(sf::Color(128, 128 * (1.0 - heat), 0));
             systems[n].power_bar->setValue(power)->setColor(sf::Color(255, 255, 0));
             systems[n].coolant_bar->setValue(coolant)->setColor(sf::Color(0,128,255));
+            systems[n].coolant_bar->setRange(0.0,my_spaceship->systems[n].coolant_max);
         }
     }
 }
@@ -107,15 +109,15 @@ void PowerManagementScreen::onHotkey(const HotkeyResult& key)
 				}
 				if (key.hotkey == getSystemName(ESystem(n))+ string("_COOLANT_UP"))
 				{
-					if(my_spaceship->systems[n].coolant_request < 10.0f)
-						my_spaceship->commandSetSystemCoolantRequest(ESystem(n), my_spaceship->systems[n].coolant_request + 0.5f);
+					if(my_spaceship->systems[n].coolant_request < my_spaceship->systems[n].coolant_max)
+						my_spaceship->commandSetSystemCoolantRequest(ESystem(n), my_spaceship->systems[n].coolant_request + 0.05f);
 					else
-						my_spaceship->commandSetSystemCoolantRequest(ESystem(n), 10.0f);
+						my_spaceship->commandSetSystemCoolantRequest(ESystem(n), my_spaceship->systems[n].coolant_max);
 				}
 				if (key.hotkey == getSystemName(ESystem(n))+ string("_COOLANT_DOWN"))
 				{
 					if(my_spaceship->systems[n].coolant_request > 0.0f)
-						my_spaceship->commandSetSystemCoolantRequest(ESystem(n), my_spaceship->systems[n].coolant_request - 0.5f);
+						my_spaceship->commandSetSystemCoolantRequest(ESystem(n), my_spaceship->systems[n].coolant_request - 0.05f);
 					else
 						my_spaceship->commandSetSystemCoolantRequest(ESystem(n), 0.0f);
 				}

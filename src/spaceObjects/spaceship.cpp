@@ -198,6 +198,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
         systems[n].coolant_request = 0.0;
         systems[n].heat_level = 0.0;
         systems[n].hacked_level = 0.0;
+        systems[n].coolant_max = 1.0;
 
         registerMemberReplication(&systems[n].health);
         registerMemberReplication(&systems[n].health_max);
@@ -207,6 +208,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
         registerMemberReplication(&systems[n].coolant_request);
         registerMemberReplication(&systems[n].heat_level);
         registerMemberReplication(&systems[n].hacked_level);
+        registerMemberReplication(&systems[n].coolant_max);
     }
 
     for(int n = 0; n < max_beam_weapons; n++)
@@ -1187,6 +1189,15 @@ bool SpaceShip::hasSystem(ESystem system)
         return docks[0].dock_type != Dock_Disabled;
     }
     return true;
+}
+
+int SpaceShip::countSystems()
+{
+    int count_system = 0;
+    for(int n=0; n<SYS_COUNT; n++)
+        if (hasSystem(ESystem(n)))
+            count_system += 1;
+    return count_system;
 }
 
 float SpaceShip::getSystemEffectiveness(ESystem system)

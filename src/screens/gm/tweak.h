@@ -197,10 +197,12 @@ private:
     GuiLabel* temp_1[SYS_COUNT];
     GuiLabel* temp_2[SYS_COUNT];
     GuiLabel* temp_3[SYS_COUNT];
+    GuiLabel* temp_4[SYS_COUNT];
     GuiSlider* system_damage[SYS_COUNT];
     GuiSlider* system_health[SYS_COUNT];
     GuiSlider* system_heat[SYS_COUNT];
     GuiSlider* system_hack[SYS_COUNT];
+    GuiSlider* system_coolant[SYS_COUNT];
 
 public:
     GuiShipTweakSystems(GuiContainer* owner);

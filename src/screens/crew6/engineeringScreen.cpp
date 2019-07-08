@@ -137,13 +137,13 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner, ECrewPosition crew_pos
     for(float snap_point = 0.0; snap_point <= 3.0; snap_point += 0.5)
         power_slider->addSnapValue(snap_point, snap_point == 1.0 ? 0.1 : 0.01);
     power_slider->disable();
-    coolant_slider = new GuiSlider(box, "COOLANT_SLIDER", 10.0, 0.0, 0.0, [this](float value) {
+    coolant_slider = new GuiSlider(box, "COOLANT_SLIDER", 1.0, 0.0, 0.0, [this](float value) {
         if (my_spaceship && selected_system != SYS_None)
             my_spaceship->commandSetSystemCoolantRequest(selected_system, value);
     });
     coolant_slider->setPosition(140, 20, ATopLeft)->setSize(60, 360);
-    for(float snap_point = 0.0; snap_point <= 10.0; snap_point += 2.5)
-        coolant_slider->addSnapValue(snap_point, 0.1);
+    for(float snap_point = 0.0; snap_point <= 3.0; snap_point += 0.25)
+        coolant_slider->addSnapValue(snap_point, 0.01);
     coolant_slider->disable();
 
     (new GuiShipInternalView(system_row_layouts, "SHIP_INTERNAL_VIEW", 48.0f))->setShip(my_spaceship)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
@@ -243,6 +243,8 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
             info.power_bar->setValue(my_spaceship->systems[n].power_level);
             info.coolant_bar->setValue(my_spaceship->systems[n].coolant_level);
 
+            info.coolant_bar->setRange(0.0,my_spaceship->systems[n].coolant_max);
+
             // Hack information
             //info.hacked_level = my_spaceship->systems[system].hacked_level;
             //else if (info.hacked_level > 0.1)
@@ -255,7 +257,7 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
         {
             ShipSystem& system = my_spaceship->systems[selected_system];
             power_label->setText("Puissance: " + string(int(system.power_level * 100)) + "%/" + string(int(system.power_request * 100)) + "%");
-            coolant_label->setText("Refroidissement: " + string(int(system.coolant_level / 10.0 * 100)) + "%/" + string(int(system.coolant_request / 10.0 * 100)) + "%");
+            coolant_label->setText("Refroidissement: " + string(int(system.coolant_level * 100)) + "%/" + string(int(system.coolant_request * 100)) + "%");
             coolant_slider->setEnable(!my_spaceship->auto_coolant_enabled);
 
             system_effects_index = 0;
@@ -402,17 +404,17 @@ void EngineeringScreen::onHotkey(const HotkeyResult& key)
             }
             if (key.hotkey == "INCREASE_COOLANT")
             {
-                coolant_slider->setValue(my_spaceship->systems[selected_system].coolant_request + 0.5f);
+                coolant_slider->setValue(my_spaceship->systems[selected_system].coolant_request + 0.05f);
                 my_spaceship->commandSetSystemCoolantRequest(selected_system, coolant_slider->getValue());
             }
             if (key.hotkey == "DECREASE_COOLANT")
             {
-                coolant_slider->setValue(my_spaceship->systems[selected_system].coolant_request - 0.5f);
+                coolant_slider->setValue(my_spaceship->systems[selected_system].coolant_request - 0.05f);
                 my_spaceship->commandSetSystemCoolantRequest(selected_system, coolant_slider->getValue());
             }
             if (key.hotkey == "COOLANT_MAX")
             {
-                coolant_slider->setValue(10.0f);
+                coolant_slider->setValue(my_spaceship->systems[selected_system].coolant_max);
                 my_spaceship->commandSetSystemCoolantRequest(selected_system, coolant_slider->getValue());
             }
             if (key.hotkey == "COOLANT_MIN")
@@ -446,6 +448,7 @@ void EngineeringScreen::selectSystem(ESystem system)
     {
         power_slider->setValue(my_spaceship->systems[system].power_request);
         coolant_slider->setValue(my_spaceship->systems[system].coolant_request);
+        coolant_slider->setRange(my_spaceship->systems[system].coolant_max,0.0);
     }
 }
 
