@@ -21,8 +21,6 @@ ShipsLog::ShipsLog(GuiContainer* owner, string station)
 
 void ShipsLog::onDraw(sf::RenderTarget& window)
 {
-    drawStretchedHV(window, sf::FloatRect(rect.left, rect.top, rect.width, rect.height + 100), 25.0f, "gui/PanelBackground");
-
     if (!my_spaceship)
         return;
 
@@ -30,6 +28,7 @@ void ShipsLog::onDraw(sf::RenderTarget& window)
 
     if (open)
     {
+        drawStretchedHV(window, sf::FloatRect(rect.left, rect.top, rect.width, rect.height + 100), 25.0f, "gui/PanelBackground");
         const std::vector<PlayerSpaceship::ShipLogEntry>& logs = my_spaceship->getShipsLog(station);
         if (log_text->getEntryCount() > 0 && logs.size() == 0)
             log_text->clearEntries();
@@ -62,7 +61,7 @@ void ShipsLog::onDraw(sf::RenderTarget& window)
             log_text->addEntry(logs[n].prefix, logs[n].text, logs[n].color);
         }
     }else{
-
+        drawStretchedHV(window, sf::FloatRect(rect.left, rect.top, rect.width, rect.height + 100), 25.0f, "gui/ButtonBackground.disabled");
         const std::vector<PlayerSpaceship::ShipLogEntry>& logs = my_spaceship->getShipsLog(station);
         if (log_text->getEntryCount() > 0 && logs.size() == 0)
             log_text->clearEntries();

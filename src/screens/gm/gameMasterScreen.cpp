@@ -216,7 +216,7 @@ GameMasterScreen::GameMasterScreen()
     gm_script_options->setPosition(20, 200, ATopLeft)->setSize(250, 500);
 
     order_layout = new GuiAutoLayout(this, "ORDER_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
-    order_layout->setPosition(-20, 350, ATopRight)->setSize(300, GuiElement::GuiSizeMax);
+    order_layout->setPosition(-20, 550, ATopRight)->setSize(300, GuiElement::GuiSizeMax);
 
     (new GuiLabel(order_layout, "ORDERS_LABEL", "Ordres:", 20))->addBackground()->setSize(GuiElement::GuiSizeMax, 30);
     (new GuiButton(order_layout, "ORDER_IDLE", "Repos", [this]() {
@@ -379,7 +379,7 @@ void GameMasterScreen::update(float delta)
             if (ship)
             {
                 float distance = sf::length(targets.getTargets()[0]->getPosition() - ship->getPosition());
-                selection_info["Distance PJ " + string(n+1)] = string(distance / 1000.0f,0) + " U";
+                selection_info["Distance " + ship->callsign] = string(distance / 1000.0f,0) + " U";
             }
         }
     }
