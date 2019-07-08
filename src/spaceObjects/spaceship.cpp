@@ -34,6 +34,10 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getShieldsFrequency);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setShieldsFrequency);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getOxygenRechargeRate);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setPassagersCount);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getPassagersCount);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setMaxPassagersCount);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getMaxPassagersCount);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getMaxEnergy);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setMaxEnergy);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getEnergy);
@@ -770,8 +774,8 @@ float SpaceShip::getOxygenRechargeRate(int index)
 {
     float rate = (oxygen_rate[index] / 100.0 * oxygen_max[index]) / 100.0;
     // Diminution de l'oxygene si Hull trop base
-    if (hull_strength / hull_max < 0.6)
-        rate -= (0.6 - hull_strength / hull_max) * 2.0f;
+    if (hull_strength / hull_max < 0.9)
+        rate -= (0.9 - hull_strength / hull_max) * 2.0f;
 
     // Modifs selon Reacteur
     if (getSystemEffectiveness(SYS_Reactor) < 0.8f)
@@ -780,8 +784,8 @@ float SpaceShip::getOxygenRechargeRate(int index)
         rate += (getSystemEffectiveness(SYS_Reactor) - 0.8f);
 
     // Modifs selon nombre de passagers
-    float rate_passagers = (float) getPassagersCount()/getMaxPassagersCount();
-    rate -= rate_passagers * 2.0f;
+    float rate_passagers = std::max(0.0f,(float) getPassagersCount()/getMaxPassagersCount() - 0.3f);
+    rate -= rate_passagers * 3.0f;
 
     return rate;
 }
@@ -873,7 +877,7 @@ void SpaceShip::initializeJump(float distance)
     if (jump_delay <= 0.0)
     {
         jump_distance = distance;
-        jump_delay = 10 * distance / (1000 * 1000);
+        jump_delay = 100 * distance / (1000 * 1000);
         jump_drive_charge -= distance;
     }
 }
