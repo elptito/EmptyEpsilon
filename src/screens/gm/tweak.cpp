@@ -474,6 +474,12 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
     });
     jump_delay_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
+    (new GuiLabel(right_col, "", "Warp, vitesse :", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    warp_speed_slider = new GuiSlider(right_col, "", 0.0, 90, 0.0, [this](float value) {
+        target->warp_speed_per_warp_level = value*16.667;
+    });
+    warp_speed_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
 }
  void GuiShipTweak::onDraw(sf::RenderTarget& window)
 {
@@ -481,6 +487,14 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
     jump_drive_min_distance_slider->setValue(round(target->jump_drive_min_distance / 1000000)*1000);
     jump_drive_max_distance_slider->setValue(round(target->jump_drive_max_distance / 1000000)*1000);
     jump_delay_slider->setValue(target->jump_delay);
+
+    jump_drive_charge_slider->setVisible(target->hasJumpDrive());
+    jump_drive_min_distance_slider->setVisible(target->hasJumpDrive());
+    jump_drive_max_distance_slider->setVisible(target->hasJumpDrive());
+    jump_delay_slider->setVisible(target->hasJumpDrive());
+    jump_drive_charge_time_slider->setVisible(target->hasJumpDrive());
+    jump_drive_energy_slider->setVisible(target->hasJumpDrive());
+    warp_speed_slider->setVisible(target->has_warp_drive);
 }
 
  void GuiShipTweak::open(P<SpaceObject> target)
@@ -507,6 +521,8 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
 
     jump_drive_charge_time_slider->setValue(ship->jump_drive_charge_time);
     jump_drive_energy_slider->setValue(ship->jump_drive_energy_per_km_charge);
+
+    warp_speed_slider->setValue(ship->warp_speed_per_warp_level/16.667);
 }
 
 GuiShipTweakMissileWeapons::GuiShipTweakMissileWeapons(GuiContainer* owner)

@@ -124,6 +124,7 @@ private:
     GuiSlider* jump_drive_charge_time_slider;
     GuiSlider* jump_drive_energy_slider;
     GuiSlider* jump_delay_slider;
+    GuiSlider* warp_speed_slider;
 
 public:
     GuiShipTweak(GuiContainer* owner);
