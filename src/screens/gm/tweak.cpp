@@ -16,8 +16,8 @@
 GuiObjectTweak::GuiObjectTweak(GuiContainer* owner, ETweakType tweak_type)
 : GuiPanel(owner, "GM_TWEAK_DIALOG")
 {
-    setPosition(0, -100, ABottomCenter);
-    setSize(1000, 600);
+    setPosition(0, 0, ACenter);
+    setSize(1000, 800);
 
     GuiListbox* list = new GuiListbox(this, "", [this](int index, string value)
     {
@@ -75,7 +75,7 @@ GuiObjectTweak::GuiObjectTweak(GuiContainer* owner, ETweakType tweak_type)
 
     for(GuiTweakPage* page : pages)
     {
-        page->setSize(700, 600)->setPosition(0, 0, ABottomRight)->hide();
+        page->setSize(700, 800)->setPosition(0, 0, ABottomRight)->hide();
     }
 
     pages[0]->show();
@@ -722,17 +722,29 @@ GuiShipTweakBeamweapons::GuiShipTweakBeamweapons(GuiContainer* owner)
     });
     range_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 30);
 
-    (new GuiLabel(right_col, "", "Vitesse de tir:", 20))->setSize(GuiElement::GuiSizeMax, 30);
+    (new GuiLabel(right_col, "", "Vitesse de rechargement:", 20))->setSize(GuiElement::GuiSizeMax, 30);
     cycle_time_slider = new GuiSlider(right_col, "", 0.1, 20.0, 0.0, [this](float value) {
         target->beam_weapons[beam_index].setCycleTime(value);
     });
     cycle_time_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 30);
 
-    (new GuiLabel(right_col, "", "Degat:", 20))->setSize(GuiElement::GuiSizeMax, 30);
+    (new GuiLabel(right_col, "", "Degats:", 20))->setSize(GuiElement::GuiSizeMax, 30);
     damage_slider = new GuiSlider(right_col, "", 0.1, 50.0, 0.0, [this](float value) {
         target->beam_weapons[beam_index].setDamage(value);
     });
     damage_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 30);
+
+    (new GuiLabel(right_col, "", "Surchauffe par tir (/100):", 20))->setSize(GuiElement::GuiSizeMax, 30);
+    heat_slider = new GuiSlider(right_col, "", 0.1, 50.0, 0.0, [this](float value) {
+        target->beam_weapons[beam_index].setHeatPerFire(value / 100.0f);
+    });
+    heat_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 30);
+
+    (new GuiLabel(right_col, "", "Energie par tir:", 20))->setSize(GuiElement::GuiSizeMax, 30);
+    energy_slider = new GuiSlider(right_col, "", 0.1, 50.0, 0.0, [this](float value) {
+        target->beam_weapons[beam_index].setEnergyPerFire(value);
+    });
+    energy_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 30);
 }
 
 void GuiShipTweakBeamweapons::onDraw(sf::RenderTarget& window)
@@ -748,6 +760,8 @@ void GuiShipTweakBeamweapons::onDraw(sf::RenderTarget& window)
     turret_rotation_rate_overlay_label->setText(string(target->beam_weapons[beam_index].getTurretRotationRate()));
     cycle_time_slider->setValue(target->beam_weapons[beam_index].getCycleTime());
     damage_slider->setValue(target->beam_weapons[beam_index].getDamage());
+    heat_slider->setValue(target->beam_weapons[beam_index].getHeatPerFire() * 100.0f);
+    energy_slider->setValue(target->beam_weapons[beam_index].getEnergyPerFire());
 }
 
 void GuiShipTweakBeamweapons::open(P<SpaceObject> target)
