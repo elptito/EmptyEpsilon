@@ -121,7 +121,7 @@ void OxygenScreen::onDraw(sf::RenderTarget &window)
         if (my_spaceship->docking_state == DS_Docked)
         {
             P<SpaceShip> ship = my_spaceship->getDockTarget();
-            if (ship && my_spaceship->isDocked(ship))
+            if (ship && my_spaceship->isDockedWith(ship))
             {
                 oxygen_label_extern->setVisible(ship->getOxygenMaxTotal()>0);
                 for(int n=0; n<max_oxygen_zones; n++)
