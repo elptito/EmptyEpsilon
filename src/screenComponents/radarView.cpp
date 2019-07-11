@@ -259,8 +259,9 @@ void GuiRadarView::drawNebulaBlockedAreas(sf::RenderTarget& window)
         }
     }
 
+    if (my_spaceship)
     {
-        float r = 5000.0f * getScale();
+        float r = 5000.0f * getScale() * my_spaceship->getSystemEffectiveness(SYS_Drones);
         sf::CircleShape circle(r, 32);
         circle.setOrigin(r, r);
         circle.setPosition(radar_screen_center + (scan_center - getViewPosition()) * getScale());
@@ -518,7 +519,7 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
     case NebulaFogOfWar:
         foreach(SpaceObject, obj, space_object_list)
         {
-            if (obj->canHideInNebula() && my_spaceship && Nebula::blockedByNebula(my_spaceship->getPosition(), obj->getPosition()))
+            if (obj->canHideInNebula() && target_spaceship && Nebula::blockedByNebula(my_spaceship->getPosition(), obj->getPosition()))
                 continue;
             visible_objects.insert(*obj);
         }

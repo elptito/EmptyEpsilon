@@ -47,11 +47,11 @@ void GuiDockingButton::onDraw(sf::RenderTarget& window)
             }
             break;
         case DS_Docking:
-            setText("Annuler dock : " + findDockingTarget()->callsign);
+            setText("Annuler dock");
             enable();
             break;
         case DS_Docked:
-            setText("Se Dedocker : " + findDockingTarget()->callsign);
+            setText("Se Dedocker");
             enable();
             break;
         }

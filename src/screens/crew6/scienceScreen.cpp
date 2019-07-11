@@ -276,7 +276,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
         if (targets.get() && (probe->getPosition() - targets.get()->getPosition()) > radar_range + targets.get()->getRadius())
             targets.clear();
     }else{
-        if (targets.get() && Nebula::blockedByNebula(my_spaceship->getPosition(), targets.get()->getPosition()))
+        if (targets.get() && !P<Nebula>(targets.get()) && Nebula::blockedByNebula(my_spaceship->getPosition(), targets.get()->getPosition()))
             targets.clear();
     }
 
