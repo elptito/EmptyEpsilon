@@ -715,8 +715,10 @@ void SpaceShip::update(float delta)
     }
 
     // Add heat to systems consuming combat maneuver boost.
-    addHeat(SYS_Impulse, fabs(combat_maneuver_boost_active) * delta * heat_per_combat_maneuver_boost);
-    addHeat(SYS_Maneuver, fabs(combat_maneuver_strafe_active) * delta * heat_per_combat_maneuver_strafe);
+    if (combat_maneuver_boost_speed > 0.0)
+        addHeat(SYS_Impulse, fabs(combat_maneuver_boost_active) * delta * heat_per_combat_maneuver_boost);
+    if (combat_maneuver_strafe_speed > 0.0)
+        addHeat(SYS_Maneuver, fabs(combat_maneuver_strafe_active) * delta * heat_per_combat_maneuver_strafe);
 
     beam_weapons_count = 0;
     for(int n = 0; n < max_beam_weapons; n++)
