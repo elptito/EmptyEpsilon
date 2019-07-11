@@ -583,6 +583,8 @@ P<SpaceObject> ShipAI::findBestTarget(sf::Vector2f position, float radius)
             continue;
         if (space_object->canHideInNebula() && Nebula::blockedByNebula(owner_position, space_object->getPosition()))
             continue;
+        if (owner->id_galaxy != space_object->id_galaxy)
+            continue;
         float score = targetScore(space_object);
         if (score == std::numeric_limits<float>::min())
             continue;

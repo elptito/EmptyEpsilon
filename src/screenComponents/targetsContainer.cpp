@@ -56,6 +56,8 @@ void TargetsContainer::setToClosestTo(sf::Vector2f position, float max_range, ES
         P<SpaceObject> spaceObject = obj;
         if (spaceObject && spaceObject != target_spaceship)
         {
+            if (target_spaceship && target_spaceship->id_galaxy != spaceObject->id_galaxy)
+                continue;
             switch(selection_type)
             {
             case Selectable:

@@ -70,7 +70,14 @@ void SectorsView::drawSectorGrid(sf::RenderTarget &window)
         for (int sector_y = sector_y_min - 1; sector_y <= sector_y_max; sector_y++)
         {
             float y = radar_screen_center.y + ((sector_y * sector_size_scaled) - view_position.y) * scale;
-            string name = getSectorName(sf::Vector2f(sector_x * sector_size_scaled + 1, sector_y * sector_size_scaled + 1));
+            float name_x = sector_x * sector_size_scaled + 1;
+            float name_y = sector_y * sector_size_scaled + 1;
+            if (my_spaceship)
+            {
+                name_x -= my_spaceship->correction_x;
+                name_y -= my_spaceship->correction_y;
+            }
+            string name = getSectorName(sf::Vector2f(name_x, name_y));
             sf::Color color = grid_colors[std::min(calcGridScaleMagnitude(scale_magnitude, sector_x), calcGridScaleMagnitude(scale_magnitude, sector_y))];
             drawText(window, sf::FloatRect(x, y, 30, 30), name, ATopLeft, 30, bold_font, color);
         }

@@ -19,6 +19,12 @@ REGISTER_SCRIPT_CLASS_NO_CREATE(SpaceObject)
     /// Gets the rotation of this object. In degrees. 0 degrees is pointing to the right of the world. So this does not match the heading of a ship.
     /// The value returned here can also go below 0 degrees or higher then 360 degrees, there is no limiting on the rotation.
     REGISTER_SCRIPT_CLASS_FUNCTION(Collisionable, getRotation);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setCorrectionX);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setCorrectionY);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getCorrectionX);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getCorrectionY);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setGalaxyId);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getGalaxyId);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setTranslateZ);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getTranslateZ);
     /// Get the heading of this object, in the range of 0 to 360. The heading is 90 degrees off from the rotation.
@@ -192,6 +198,13 @@ SpaceObject::SpaceObject(float collision_range, string multiplayer_name, float m
 
     transparency = 0.0f;
     registerMemberReplication(&transparency);
+
+    correction_x = 0.0;
+    correction_y = 0.0;
+    id_galaxy = 1;
+    registerMemberReplication(&correction_x);
+    registerMemberReplication(&correction_y);
+    registerMemberReplication(&id_galaxy);
 }
 
 #if FEATURE_3D_RENDERING

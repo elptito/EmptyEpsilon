@@ -117,6 +117,9 @@ public:
     float oxygen_rate[max_oxygen_zones];
     float hull;
     float transparency;
+    float correction_x;
+    float correction_y;
+    int id_galaxy;
     uint8_t personality_id;
 
     float translate_z;
@@ -130,6 +133,14 @@ public:
 
     float getTransparency() { return transparency; }
     void setTransparency(float value) { transparency = value; }
+
+    void setCorrectionX(float value) { correction_x = value; }
+    void setCorrectionY(float value) { correction_y = value; }
+    float getCorrectionX() { return correction_x; }
+    float getCorrectionY() { return correction_y; }
+
+    void setGalaxyId(int value) { id_galaxy = value; }
+    int getGalaxyId() { return id_galaxy; }
 
     // Return the object's raw radar signature. The default signature is 0,0,0.
     RawRadarSignatureInfo radar_signature;

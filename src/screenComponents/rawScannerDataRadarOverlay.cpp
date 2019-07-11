@@ -31,7 +31,10 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
     foreach(SpaceObject, obj, space_object_list)
     {
         // Don't measure our own ship.
-        if (obj == my_spaceship)
+        if (my_spaceship && obj == my_spaceship)
+            continue;
+
+        if (my_spaceship && my_spaceship->id_galaxy != obj->id_galaxy)
             continue;
 
         // Initialize angle, distance, and scale variables.

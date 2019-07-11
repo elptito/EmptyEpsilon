@@ -172,6 +172,8 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
         depth_cutoff_back = -std::numeric_limits<float>::infinity();
     foreach(SpaceObject, obj, space_object_list)
     {
+        if (my_spaceship && obj && my_spaceship->id_galaxy != obj->id_galaxy)
+            continue;
         float depth = sf::dot(viewVector, obj->getPosition() - sf::Vector2f(camera_position.x, camera_position.y));
         if (depth + obj->getRadius() < depth_cutoff_back)
             continue;
