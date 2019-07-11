@@ -33,6 +33,7 @@ public:
     float hull_strength, hull_max;
     float shield_hit_effect[max_shield_count];
     bool can_be_destroyed;
+    bool lock_fire;
 
     bool shares_energy_with_docked;       //[config]
     bool repair_docked;                   //[config]

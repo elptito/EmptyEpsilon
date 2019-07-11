@@ -105,6 +105,9 @@ ShipTemplateBasedObject::ShipTemplateBasedObject(float collision_range, string m
     can_be_destroyed = true;
     registerMemberReplication(&can_be_destroyed);
 
+    lock_fire = true;
+    registerMemberReplication(&lock_fire);
+
 }
 
 void ShipTemplateBasedObject::drawShieldsOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, float sprite_scale, bool show_levels)

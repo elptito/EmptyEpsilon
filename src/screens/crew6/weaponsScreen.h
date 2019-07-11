@@ -24,6 +24,7 @@ private:
     GuiMissileTubeControls* tube_controls;
     GuiRotationDial* missile_aim;
     GuiToggleButton* lock_aim;
+    GuiToggleButton* lock_fire;
 public:
     WeaponsScreen(GuiContainer* owner);
 

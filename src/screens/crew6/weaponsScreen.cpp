@@ -53,6 +53,15 @@ WeaponsScreen::WeaponsScreen(GuiContainer* owner)
     lock_aim = new AimLockButton(this, "LOCK_AIM", tube_controls, missile_aim, my_spaceship);
     lock_aim->setPosition(250, 20, ATopCenter)->setSize(200, 50);
 
+    lock_fire = new GuiToggleButton(this, "TOOGLE_FIRE", "Feu", [this](bool value){
+        if (my_spaceship)
+            my_spaceship->lock_fire = value;
+    });
+    lock_fire->setIcon("gui/icons/lock");
+    lock_fire->setPosition(-250, 20, ATopCenter)->setSize(200, 50);
+    if (my_spaceship)
+        lock_fire->setValue(true);
+
     if (gameGlobalInfo->use_beam_shield_frequencies || gameGlobalInfo->use_system_damage)
     {
         if (my_spaceship && my_spaceship->beam_weapons_count > 0)
