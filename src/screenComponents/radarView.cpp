@@ -190,13 +190,13 @@ void GuiRadarView::drawNoneFriendlyBlockedAreas(sf::RenderTarget& window)
                 window.draw(circle);
             }
 //            if ((P<SpaceShip>(obj) || P<SpaceStation>(obj)) && obj->isFriendly(my_spaceship))
-            if ((P<SpaceShip>(obj) || P<SpaceStation>(obj) || P<Planet>(obj)) && (obj->faction_id == my_spaceship->faction_id || obj->personality_id == 1))
+            if (obj->id_galaxy != my_spaceship->id_galaxy && (P<SpaceShip>(obj) || P<SpaceStation>(obj) || P<Planet>(obj)) && (obj->faction_id == my_spaceship->faction_id || obj->personality_id == 1))
             {
                 circle.setPosition(radar_screen_center + (obj->getPosition() - getViewPosition()) * getScale());
                 window.draw(circle);
             }
             P<ScanProbe> sp = obj;
-            if (sp && sp->owner_id == my_spaceship->getMultiplayerId())
+            if (sp && sp->owner_id == my_spaceship->getMultiplayerId() && sp->id_galaxy != my_spaceship->id_galaxy)
             {
                 circle.setPosition(radar_screen_center + (obj->getPosition() - getViewPosition()) * getScale());
                 window.draw(circle);
@@ -218,6 +218,9 @@ void GuiRadarView::drawNebulaBlockedAreas(sf::RenderTarget& window)
     PVector<Nebula> nebulas = Nebula::getNebulas();
     foreach(Nebula, n, nebulas)
     {
+        if (my_spaceship && n->id_galaxy != my_spaceship->id_galaxy)
+            continue;
+
         sf::Vector2f diff = n->getPosition() - scan_center;
         float diff_len = sf::length(diff);
 
@@ -498,6 +501,9 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
             if (!P<PlayerSpaceship>(obj) && !P<SpaceShip>(obj) && !P<SpaceStation>(obj) && !P<ScanProbe>(obj) && !P<WormHole>(obj) && !P<Planet>(obj))
                 continue;
 
+            if (obj->id_galaxy != target_spaceship->id_galaxy)
+                continue;
+
             sf::Vector2f position = obj->getPosition();
             radar_range = 5000.0 * my_spaceship->getSystemEffectiveness(SYS_Drones);
             PVector<Collisionable> obj_list = CollisionManager::queryArea(position - sf::Vector2f(radar_range*100, radar_range*100), position + sf::Vector2f(radar_range*100, radar_range*100));
@@ -535,6 +541,9 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
 
     for(SpaceObject* obj : visible_objects)
     {
+        if (obj->id_galaxy != target_spaceship->id_galaxy)
+            continue;
+
         sf::Vector2f object_position_on_screen = radar_screen_center + (obj->getPosition() - getViewPosition()) * getScale();
         float r = obj->getRadius() * getScale();
         sf::FloatRect object_rect(object_position_on_screen.x - r, object_position_on_screen.y - r, r * 2, r * 2);

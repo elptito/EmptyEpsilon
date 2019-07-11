@@ -98,6 +98,8 @@ P<SpaceObject> GuiDockingButton::findDockingTarget()
     foreach(Collisionable, obj, obj_list)
     {
         dock_object = obj;
+        if (target_spaceship->id_galaxy != dock_object->id_galaxy)
+            continue;
         dock_ship = obj;
         dock_station = obj;
         if (dock_object && (!dock_ship || dock_ship->docking_state == DS_NotDocking) && dock_object != target_spaceship && dock_object->canBeDockedBy(target_spaceship) && (dock_object->getPosition() - target_spaceship->getPosition()) < 1000.0f + dock_object->getRadius())
