@@ -129,17 +129,17 @@ GuiMainScreenControls::GuiMainScreenControls(GuiContainer* owner)
     ship_state_button = buttons.back();
 
      // Ship State button.
-    buttons.push_back(new GuiButton(this, "MAIN_SCREEN_PROBE_CAMERA_BUTTON", "Camera Sonde", [this]()
-    {
-        if (my_spaceship)
-        {
-            my_spaceship->commandMainScreenSetting(MSS_ProbeView);
-        }
-        open_button->setValue(false);
-        for(GuiButton* button : buttons)
-            button->setVisible(false);
-    }));
-    ship_state_button = buttons.back();
+//    buttons.push_back(new GuiButton(this, "MAIN_SCREEN_PROBE_CAMERA_BUTTON", "Camera Sonde", [this]()
+//    {
+//        if (my_spaceship)
+//        {
+//            my_spaceship->commandMainScreenSetting(MSS_ProbeView);
+//        }
+//        open_button->setValue(false);
+//        for(GuiButton* button : buttons)
+//            button->setVisible(false);
+//    }));
+//    ship_state_button = buttons.back();
 
     // If the player has control over comms, they can toggle the comms overlay
     // on the main screen.

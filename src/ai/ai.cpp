@@ -585,6 +585,8 @@ P<SpaceObject> ShipAI::findBestTarget(sf::Vector2f position, float radius)
             continue;
         if (owner->id_galaxy != space_object->id_galaxy)
             continue;
+        if (space_object->transparency > 0.6f)
+            continue;
         float score = targetScore(space_object);
         if (score == std::numeric_limits<float>::min())
             continue;
