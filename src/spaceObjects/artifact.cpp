@@ -20,7 +20,8 @@ REGISTER_SCRIPT_SUBCLASS(Artifact, SpaceObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(Artifact, allowPickup);
     /// Set a function that will be called if a player picks up the artifact.
     /// First argument given to the function will be the playerSpaceShip, the second the artifact.
-    REGISTER_SCRIPT_CLASS_FUNCTION(Artifact, setPickUpCallback);
+    REGISTER_SCRIPT_CLASS_FUNCTION(Artifact, onPickUp);
+    REGISTER_SCRIPT_CLASS_FUNCTION(Artifact, setOrbit);
 }
 
 REGISTER_MULTIPLAYER_CLASS(Artifact, "Artifact");
@@ -36,6 +37,13 @@ Artifact::Artifact()
     model_info.setData(current_model_data_name);
 
     allow_pickup = false;
+
+    orbit_target_id = -1;
+    orbit_time = 0.0f;
+    orbit_distance = 0.0f;
+    registerMemberReplication(&orbit_target_id);
+    registerMemberReplication(&orbit_time);
+    registerMemberReplication(&orbit_distance);
 }
 
 void Artifact::update(float delta)
@@ -45,6 +53,30 @@ void Artifact::update(float delta)
         current_model_data_name = model_data_name;
         model_info.setData(current_model_data_name);
     }
+
+    if (orbit_distance > 0.0f)
+    {
+        P<SpaceObject> orbit_target;
+        if (game_server)
+            orbit_target = game_server->getObjectById(orbit_target_id);
+        else
+            orbit_target = game_client->getObjectById(orbit_target_id);
+        if (orbit_target)
+        {
+            float angle = sf::vector2ToAngle(getPosition() - orbit_target->getPosition());
+            angle += delta / orbit_time * 360.0f;
+            setPosition(orbit_target->getPosition() + sf::vector2FromAngle(angle) * orbit_distance);
+        }
+    }
+}
+
+void Artifact::setOrbit(P<SpaceObject> target, float orbit_time)
+{
+    if (!target)
+        return;
+    this->orbit_target_id = target->getMultiplayerId();
+    this->orbit_distance = sf::length(getPosition() - target->getPosition());
+    this->orbit_time = orbit_time;
 }
 
 void Artifact::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range)
@@ -71,9 +103,10 @@ void Artifact::collide(Collisionable* target, float force)
     {
         if (on_pickup_callback.isSet())
         {
-            //on_pickup_callback.call(player, P<Artifact>(this));
+            on_pickup_callback.call(player, P<Artifact>(this));
         }
         destroy();
+        player->addToShipLog("Objet recupere en soute",sf::Color::White,"extern");
     }
 }
 
@@ -95,7 +128,7 @@ void Artifact::allowPickup(bool allow)
     allow_pickup = allow;
 }
 
-void Artifact::setPickUpCallback(ScriptSimpleCallback callback)
+void Artifact::onPickUp(ScriptSimpleCallback callback)
 {
     this->allow_pickup = 1;
     this->on_pickup_callback = callback;

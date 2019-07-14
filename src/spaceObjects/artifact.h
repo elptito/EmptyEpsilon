@@ -10,6 +10,9 @@ private:
     string model_data_name;
     bool allow_pickup;
     ScriptSimpleCallback on_pickup_callback;
+    int32_t orbit_target_id;
+    float orbit_time;
+    float orbit_distance;
 public:
     Artifact();
 
@@ -22,9 +25,10 @@ public:
     void setModel(string name);
     void explode();
     void allowPickup(bool allow);
-    
+    void setOrbit(P<SpaceObject> target, float orbit_time);
+
     virtual string getExportLine();
-    void setPickUpCallback(ScriptSimpleCallback callback);
+    void onPickUp(ScriptSimpleCallback callback);
 };
 
 #endif//ARTIFACT_H
