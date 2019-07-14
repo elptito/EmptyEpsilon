@@ -236,7 +236,7 @@ bool isValidPositionString(string positionStr)
     }
 }
 
-sf::Vector2f getSectorPosition(string sectorName)
+sf::Vector2f getSectorPosition(string sectorName, float correction_x, float correction_y)
 {
     std::smatch matches;
     if(std::regex_match(sectorName, matches, sector_rgx))
@@ -252,7 +252,7 @@ sf::Vector2f getSectorPosition(string sectorName)
             sector_x = -1 - sector_x;
         if ((quadrant /2) % 2)
             sector_y = -1 - sector_y;
-        return sf::Vector2f(sector_x * GameGlobalInfo::sector_size, sector_y * GameGlobalInfo::sector_size);
+        return sf::Vector2f(sector_x * GameGlobalInfo::sector_size + correction_x, sector_y * GameGlobalInfo::sector_size + correction_y);
     }
     else
     {
@@ -260,34 +260,37 @@ sf::Vector2f getSectorPosition(string sectorName)
     }
 }
 
-sf::Vector2f getPositionFromSring(string positionStr)
+sf::Vector2f getPositionFromSring(string positionStr, float correction_x, float correction_y)
 {
      if (isValidSectorName(positionStr))
-        return getSectorPosition(positionStr);
+        return getSectorPosition(positionStr, correction_x, correction_y);
     std::smatch matches;
     if(std::regex_match(positionStr, matches, location_rgx))
     {
-        sf::Vector2f sectorPosition = getSectorPosition(matches.str(1));
+        sf::Vector2f sectorPosition = getSectorPosition(matches.str(1), correction_x, correction_y);
         return sectorPosition + sf::Vector2f(std::stoi(matches.str(2)), std::stoi(matches.str(3)));
     } else {
-        return sf::Vector2f(0,0);
+        return sf::Vector2f(correction_x,correction_y);
     }
 }
 
-string getStringFromPosition(sf::Vector2f position)
+string getStringFromPosition(sf::Vector2f position, float correction_x, float correction_y)
 {
     int offset_x = fmod(fmod(position.x, GameGlobalInfo::sector_size) + GameGlobalInfo::sector_size, GameGlobalInfo::sector_size);
     int offset_y = fmod(fmod(position.y, GameGlobalInfo::sector_size) + GameGlobalInfo::sector_size, GameGlobalInfo::sector_size);
     if (offset_x < 1 && offset_y < 1) {
-        return getSectorName(position);
+        return getSectorName(position, correction_x, correction_y);
     } else {
         //return getSectorName(position) + ":" + string(offset_x,0) + ':' + string(offset_y,0);
-        return getSectorName(position);
+        return getSectorName(position, correction_x, correction_y);
     }
 }
 
-string getSectorName(sf::Vector2f position)
+string getSectorName(sf::Vector2f position, float correction_x, float correction_y)
 {
+    position.x = position.x - correction_x;
+    position.y = position.y - correction_y;
+
     int sector_x = floorf(position.x / GameGlobalInfo::sector_size);
     int sector_y = floorf(position.y / GameGlobalInfo::sector_size);
     int quadrant = 0;

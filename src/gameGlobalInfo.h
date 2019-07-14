@@ -124,11 +124,11 @@ public:
 };
 
 string playerWarpJumpDriveToString(EPlayerWarpJumpDrive player_warp_jump_drive);
-string getSectorName(sf::Vector2f position);
-sf::Vector2f getSectorPosition(string sectorName);
+string getSectorName(sf::Vector2f position, float correction_x = 0.0, float correction_y = 0.0);
+sf::Vector2f getSectorPosition(string sectorName, float correction_x = 0.0, float correction_y = 0.0);
 bool isValidSectorName(string sectorName);
-sf::Vector2f getPositionFromSring(string sectorName);
-string getStringFromPosition(sf::Vector2f position);
+sf::Vector2f getPositionFromSring(string sectorName, float correction_x = 0.0, float correction_y = 0.0);
+string getStringFromPosition(sf::Vector2f position,float correction_x = 0.0, float correction_y = 0.0);
 bool isValidPositionString(string sectorName);
 
 REGISTER_MULTIPLAYER_ENUM(EScanningComplexity);

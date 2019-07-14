@@ -50,8 +50,8 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
                     position_text_custom = false;
                     sf::Vector2f newPosition = radar->getViewPosition() - (position - mouse_down_position);
                     radar->setViewPosition(newPosition);
-                    if(!position_text_custom)
-                        position_text->setText(getStringFromPosition(newPosition));
+                    if(!position_text_custom && my_spaceship)
+                        position_text->setText(getStringFromPosition(newPosition, my_spaceship->correction_x, my_spaceship->correction_y));
                 }
             if (mode == MoveWaypoint && my_spaceship)
                 my_spaceship->commandMoveWaypoint(drag_waypoint_index, position);
@@ -126,11 +126,15 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
         position_text_custom = false;
         if (position_text->isValid())
         {
-            sf::Vector2f pos = getPositionFromSring(text);
-            radar->setViewPosition(pos);
+            if (my_spaceship)
+            {
+                sf::Vector2f pos = getPositionFromSring(text, my_spaceship->correction_x, my_spaceship->correction_y);
+                radar->setViewPosition(pos);
+            }
         }
     });
-    position_text->setText(getStringFromPosition(radar->getViewPosition()));
+    if (my_spaceship)
+        position_text->setText(getStringFromPosition(radar->getViewPosition(), my_spaceship->correction_x, my_spaceship->correction_y));
 
     position_entry = new GuiElement(this, id + "_ENTRY_ELEMENT");
     position_entry->setSize(250, 320)->setPosition(250, -50, ABottomLeft);
@@ -150,7 +154,10 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
     // Center screen
     center_screen_button = new GuiButton(view_controls, "CENTER_SCREEN_BUTTON", "Recentrer radar", [this]() {
         if (my_spaceship)
+        {
             radar->setViewPosition(my_spaceship->getPosition());
+            position_text->setText(getStringFromPosition(my_spaceship->getPosition(), my_spaceship->correction_x, my_spaceship->correction_y));
+        }
     });
     center_screen_button->setSize(GuiElement::GuiSizeMax, 50);
     center_screen_button->setIcon("gui/icons/lock");;

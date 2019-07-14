@@ -541,7 +541,7 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
 
     for(SpaceObject* obj : visible_objects)
     {
-        if (obj->id_galaxy != target_spaceship->id_galaxy)
+        if (target_spaceship && obj->id_galaxy != target_spaceship->id_galaxy)
             continue;
 
         sf::Vector2f object_position_on_screen = radar_screen_center + (obj->getPosition() - getViewPosition()) * getScale();
