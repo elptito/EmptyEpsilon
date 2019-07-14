@@ -11,6 +11,8 @@ REGISTER_SCRIPT_SUBCLASS(Asteroid, SpaceObject)
 {
     /// Set the size of this asteroid, per default asteroids have a size of 120
     REGISTER_SCRIPT_CLASS_FUNCTION(Asteroid, setSize);
+    REGISTER_SCRIPT_CLASS_FUNCTION(Collisionable, setVelocity);
+    REGISTER_SCRIPT_CLASS_FUNCTION(Collisionable, setAngularVelocity);
 }
 
 REGISTER_MULTIPLAYER_CLASS(Asteroid, "Asteroid");
@@ -100,6 +102,8 @@ REGISTER_SCRIPT_SUBCLASS(VisualAsteroid, SpaceObject)
 {
     /// Set the size of this asteroid, per default asteroids have a size of 120
     REGISTER_SCRIPT_CLASS_FUNCTION(VisualAsteroid, setSize);
+    REGISTER_SCRIPT_CLASS_FUNCTION(Collisionable, setVelocity);
+    REGISTER_SCRIPT_CLASS_FUNCTION(Collisionable, setAngularVelocity);
 }
 
 REGISTER_MULTIPLAYER_CLASS(VisualAsteroid, "VisualAsteroid");
@@ -117,6 +121,7 @@ VisualAsteroid::VisualAsteroid()
 
     registerMemberReplication(&z);
     registerMemberReplication(&size);
+
 }
 
 void VisualAsteroid::draw3D()

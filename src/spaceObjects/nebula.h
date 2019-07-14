@@ -8,6 +8,7 @@ class NebulaCloud
 public:
     sf::Vector2f offset;
     int texture;
+    float z;
     float size;
 };
 class Nebula : public SpaceObject

@@ -30,6 +30,7 @@ Nebula::Nebula()
     {
         clouds[n].size = random(512, 1024 * 2);
         clouds[n].texture = irandom(1, 3);
+        clouds[n].z = random(-200.0, 200.0);
         float dist_min = clouds[n].size / 2.0f;
         float dist_max = getRadius() - clouds[n].size;
         clouds[n].offset = sf::vector2FromAngle(float(n * 360 / cloud_count)) * random(dist_min, dist_max);
@@ -51,12 +52,13 @@ void Nebula::draw3DTransparent()
         float size = cloud.size;
 
         float distance = sf::length(camera_position - position);
-        float alpha = 1.0 - (distance / 10000.0f);
+        float alpha = 1.0 - (distance / 100000.0f);
         if (alpha < 0.0)
             continue;
 
         ShaderManager::getShader("billboardShader")->setParameter("textureMap", *textureManager.getTexture("Nebula" + string(cloud.texture) + ".png"));
         sf::Shader::bind(ShaderManager::getShader("billboardShader"));
+        glTranslatef(0,0,cloud.z);
         glBegin(GL_QUADS);
         glColor4f(alpha * 0.8, alpha * 0.8, alpha * 0.8, size);
         glTexCoord2f(0, 0);
