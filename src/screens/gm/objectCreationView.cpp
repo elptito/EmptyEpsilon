@@ -13,7 +13,7 @@ GuiObjectCreationView::GuiObjectCreationView(GuiContainer* owner, func_t enterCr
 : GuiOverlay(owner, "OBJECT_CREATE_SCREEN", sf::Color(0, 0, 0, 128)), enterCreateMode(enterCreateMode)
 {
     GuiPanel* box = new GuiPanel(this, "FRAME");
-    box->setPosition(0, 0, ACenter)->setSize(1000, 500);
+    box->setPosition(0, 0, ACenter)->setSize(1000, 650);
 
     faction_selector = new GuiSelector(box, "FACTION_SELECTOR", nullptr);
     for(P<FactionInfo> info : factionInfo)
@@ -37,7 +37,7 @@ GuiObjectCreationView::GuiObjectCreationView(GuiContainer* owner, func_t enterCr
         listbox_other->setSelectionIndex(-1);
         listbox_ship->setSelectionIndex(-1);
     });
-    listbox_station->setTextSize(20)->setButtonHeight(30)->setPosition(-350, 20, ATopRight)->setSize(300, 250);
+    listbox_station->setTextSize(20)->setButtonHeight(30)->setPosition(-350, 20, ATopRight)->setSize(300, 300);
     for(string template_name : template_names)
         listbox_station->addEntry(template_name, template_name);
 
@@ -48,7 +48,7 @@ GuiObjectCreationView::GuiObjectCreationView(GuiContainer* owner, func_t enterCr
         listbox_station->setSelectionIndex(-1);
         listbox_ship->setSelectionIndex(-1);
     });
-    listbox_other->setTextSize(20)->setButtonHeight(30)->setPosition(350, -20, ABottomLeft)->setSize(300, 250);
+    listbox_other->setTextSize(20)->setButtonHeight(30)->setPosition(350, -20, ABottomLeft)->setSize(300, 300);
     listbox_other->addEntry("Warp Jammer", "WarpJammer");
     listbox_other->addEntry("Mine", "Mine");
     listbox_other->addEntry("Asteroid", "Asteroid");
@@ -85,7 +85,7 @@ GuiObjectCreationView::GuiObjectCreationView(GuiContainer* owner, func_t enterCr
         listbox_station->setSelectionIndex(-1);
         listbox_other->setSelectionIndex(-1);
     });
-    listbox_ship->setTextSize(20)->setButtonHeight(30)->setPosition(-20, 140, ATopRight)->setSize(300, 340);
+    listbox_ship->setTextSize(20)->setButtonHeight(30)->setPosition(-20, 140, ATopRight)->setSize(300, 490);
 
     (new GuiButton(box, "CLOSE_BUTTON", "Cancel", [this]() {
         create_script = "";
