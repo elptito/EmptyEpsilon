@@ -58,7 +58,11 @@ void MissileWeapon::update(float delta)
         lifeEnded();
         destroy();
     }
-    setVelocity(sf::vector2FromAngle(getRotation()) * data.speed);
+    P<SpaceShip> ship = owner;
+    if (ship)
+        setVelocity(sf::vector2FromAngle(getRotation()) * data.speed * ship->getSystemEffectiveness(SYS_MissileSystem));
+    else
+        setVelocity(sf::vector2FromAngle(getRotation()) * data.speed);
 
     if (delta > 0)
         ParticleEngine::spawn(sf::Vector3f(getPosition().x, getPosition().y, translate_z), sf::Vector3f(getPosition().x, getPosition().y, translate_z), sf::Vector3f(1, 0.8, 0.8), sf::Vector3f(0, 0, 0), 5, 20, 5.0);

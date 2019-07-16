@@ -104,7 +104,8 @@ void WeaponTube::fire(float target_angle)
 
 void WeaponTube::spawnProjectile(float target_angle)
 {
-    sf::Vector2f fireLocation = parent->getPosition() + sf::rotateVector(parent->ship_template->model_data->getTubePosition2D(tube_index), parent->getRotation());
+//    sf::Vector2f fireLocation = parent->getPosition() + sf::rotateVector(parent->ship_template->model_data->getTubePosition2D(tube_index), parent->getRotation());
+    sf::Vector2f fireLocation = parent->getPosition() + sf::rotateVector(sf::Vector2f(parent->getRadius()/2,parent->getRadius()/2),parent->getRotation()+direction-45);
     switch(type_loaded)
     {
     case MW_Homing:
