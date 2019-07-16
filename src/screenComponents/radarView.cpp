@@ -190,13 +190,13 @@ void GuiRadarView::drawNoneFriendlyBlockedAreas(sf::RenderTarget& window)
                 window.draw(circle);
             }
 //            if ((P<SpaceShip>(obj) || P<SpaceStation>(obj)) && obj->isFriendly(my_spaceship))
-            if (obj->id_galaxy != my_spaceship->id_galaxy && (P<SpaceShip>(obj) || P<SpaceStation>(obj) || P<Planet>(obj)) && (obj->faction_id == my_spaceship->faction_id || obj->personality_id == 1))
+            if (obj->id_galaxy == my_spaceship->id_galaxy && (P<SpaceShip>(obj) || P<SpaceStation>(obj) || P<Planet>(obj)) && (obj->faction_id == my_spaceship->faction_id || obj->personality_id == 1))
             {
                 circle.setPosition(radar_screen_center + (obj->getPosition() - getViewPosition()) * getScale());
                 window.draw(circle);
             }
             P<ScanProbe> sp = obj;
-            if (sp && sp->owner_id == my_spaceship->getMultiplayerId() && sp->id_galaxy != my_spaceship->id_galaxy)
+            if (sp && sp->owner_id == my_spaceship->getMultiplayerId() && sp->id_galaxy == my_spaceship->id_galaxy)
             {
                 circle.setPosition(radar_screen_center + (obj->getPosition() - getViewPosition()) * getScale());
                 window.draw(circle);
