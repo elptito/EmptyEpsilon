@@ -192,6 +192,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     registerMemberReplication(&passagers_count);
     registerMemberReplication(&max_passagers_count);
 
+    // Initialize each subsystem to be powered with no coolant or heat.
     for(int n=0; n<SYS_COUNT; n++)
     {
         systems[n].health = 1.0;
@@ -203,6 +204,12 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
         systems[n].heat_level = 0.0;
         systems[n].hacked_level = 0.0;
         systems[n].coolant_max = 1.0;
+
+        if (n == SYS_Cloaking)
+        {
+            systems[n].power_level = 0.0;
+            systems[n].power_request = 0.0;
+        }
 
         registerMemberReplication(&systems[n].health);
         registerMemberReplication(&systems[n].health_max);
@@ -432,15 +439,19 @@ void SpaceShip::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, flo
             a[0].color = sf::Color(color.r, color.g, color.b, color.a / 2);
             a[1].color = sf::Color(color.r, color.g, color.b, color.a / 2);
 
-            // Draw the turret's left bound. (We're reusing the beam's origin.)
-            a[1].position = beam_offset + position + sf::vector2FromAngle(getRotation() + (turret_direction + turret_arc / 2.0f)) * beam_range * scale;
-            a[2].position = beam_offset + position + sf::vector2FromAngle(getRotation() + (turret_direction + turret_arc / 2.0f)) * beam_range * scale * 1.3f;
-            window.draw(a);
+            // Drawn Bounds only if beam arc diff than 360
+            if (turret_arc < 360.0)
+            {
+                // Draw the turret's left bound. (We're reusing the beam's origin.)
+                a[1].position = beam_offset + position + sf::vector2FromAngle(getRotation() + (turret_direction + turret_arc / 2.0f)) * beam_range * scale;
+                a[2].position = beam_offset + position + sf::vector2FromAngle(getRotation() + (turret_direction + turret_arc / 2.0f)) * beam_range * scale * 1.3f;
+                window.draw(a);
 
-            // Draw the turret's right bound.
-            a[1].position = beam_offset + position + sf::vector2FromAngle(getRotation() + (turret_direction - turret_arc / 2.0f)) * beam_range * scale;
-            a[2].position = beam_offset + position + sf::vector2FromAngle(getRotation() + (turret_direction - turret_arc / 2.0f)) * beam_range * scale * 1.3f;
-            window.draw(a);
+                // Draw the turret's right bound.
+                a[1].position = beam_offset + position + sf::vector2FromAngle(getRotation() + (turret_direction - turret_arc / 2.0f)) * beam_range * scale;
+                a[2].position = beam_offset + position + sf::vector2FromAngle(getRotation() + (turret_direction - turret_arc / 2.0f)) * beam_range * scale * 1.3f;
+                window.draw(a);
+            }
 
             // Draw the turret's arc.
             int turret_points = int(turret_arc / 10) + 1;

@@ -327,30 +327,6 @@ PlayerSpaceship::PlayerSpaceship()
         registerMemberReplication(&self_destruct_code_show_position[n]);
     }
 
-    // Initialize each subsystem to be powered with no coolant or heat.
-    for(int n = 0; n < SYS_COUNT; n++)
-    {
-        systems[n].health = 1.0;
-        systems[n].power_level = 1.0;
-        systems[n].power_request = 1.0;
-        systems[n].coolant_level = 0.0;
-        systems[n].coolant_max = 1.0;
-        systems[n].heat_level = 0.0;
-
-        if (n == SYS_Cloaking)
-        {
-            systems[n].power_level = 0.0;
-            systems[n].power_request = 0.0;
-        }
-
-        registerMemberReplication(&systems[n].power_level);
-        registerMemberReplication(&systems[n].power_request);
-        registerMemberReplication(&systems[n].coolant_level);
-        registerMemberReplication(&systems[n].coolant_max);
-        registerMemberReplication(&systems[n].coolant_request);
-        registerMemberReplication(&systems[n].heat_level, 1.0);
-    }
-
     if (game_server)
     {
         if (gameGlobalInfo->insertPlayerShip(this) < 0)
