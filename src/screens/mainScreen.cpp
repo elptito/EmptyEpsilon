@@ -75,7 +75,6 @@ ScreenMainScreen::ScreenMainScreen()
         });
     }
 
-    first_person = true;
     rotatetime = 0.0007;
     angle = 0.0f;
 }

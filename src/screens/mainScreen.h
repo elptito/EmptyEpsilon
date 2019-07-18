@@ -27,7 +27,6 @@ private:
     GuiLabel* label_dock;
     DamageControlScreen*ship_state;
     ProbeScreen*probe_view;
-    bool first_person;
     float angle;
     float rotatetime;
     P<ScanProbe> probe;

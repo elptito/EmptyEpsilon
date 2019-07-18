@@ -35,6 +35,7 @@
 sf::Vector3f camera_position;
 float camera_yaw;
 float camera_pitch;
+bool first_person = true;
 sf::Font* main_font;
 sf::Font* bold_font;
 RenderLayer* backgroundLayer;

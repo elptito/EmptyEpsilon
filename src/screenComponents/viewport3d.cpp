@@ -174,7 +174,7 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
     {
         if (my_spaceship && obj && my_spaceship->id_galaxy != obj->id_galaxy)
             continue;
-        if (my_spaceship && obj && my_spaceship == obj)
+        if (my_spaceship && obj && my_spaceship == obj && first_person)
             continue;
         float depth = sf::dot(viewVector, obj->getPosition() - sf::Vector2f(camera_position.x, camera_position.y));
         if (depth + obj->getRadius() < depth_cutoff_back)
