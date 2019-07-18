@@ -80,7 +80,11 @@ void CpuShip::update(float delta)
         return;
 
     for(int n=0; n<SYS_COUNT; n++)
+    {
         systems[n].health = std::min(1.0f, systems[n].health + delta * auto_system_repair_per_second);
+        systems[n].health = std::min(systems[n].health_max,systems[n].health);
+        systems[n].heat_level = std::max(0.0f, systems[n].heat_level - delta * auto_system_repair_per_second);
+    }
 
     if (new_ai_name.length() && ai->canSwitchAI())
     {
