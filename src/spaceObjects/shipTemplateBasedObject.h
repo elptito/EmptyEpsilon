@@ -34,6 +34,7 @@ public:
     float shield_hit_effect[max_shield_count];
     bool can_be_destroyed;
     bool lock_fire;
+    float rotation_speed;
 
     bool shares_energy_with_docked;       //[config]
     bool repair_docked;                   //[config]
@@ -57,6 +58,9 @@ public:
 
     void setCanBeDestroyed(bool enabled) { can_be_destroyed = enabled; }
     bool getCanBeDestroyed(){ return can_be_destroyed; }
+
+    void setRotationSpeed(float speed) { rotation_speed = speed; }
+    float getRotationSpeed(){ return rotation_speed; }
 
     virtual void applyTemplateValues() = 0;
     virtual float getShieldRechargeRate(int shield_index);

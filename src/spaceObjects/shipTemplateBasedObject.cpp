@@ -64,6 +64,9 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(ShipTemplateBasedObject, SpaceObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, setRearShield);
     /// [Depricated]
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, setRearShieldMax);
+
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, setRotationSpeed);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, getRotationSpeed);
 }
 
 ShipTemplateBasedObject::ShipTemplateBasedObject(float collision_range, string multiplayer_name, float multiplayer_significant_range)
@@ -108,6 +111,8 @@ ShipTemplateBasedObject::ShipTemplateBasedObject(float collision_range, string m
     lock_fire = true;
     registerMemberReplication(&lock_fire);
 
+    rotation_speed = 0.0;
+    registerMemberReplication(&rotation_speed);
 }
 
 void ShipTemplateBasedObject::drawShieldsOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, float sprite_scale, bool show_levels)
@@ -220,6 +225,8 @@ void ShipTemplateBasedObject::update(float delta)
             shield_hit_effect[n] -= delta;
         }
     }
+    if (rotation_speed > 0.0)
+        setHeading(getHeading()+delta*rotation_speed);
 }
 
 std::unordered_map<string, string> ShipTemplateBasedObject::getGMInfo()
