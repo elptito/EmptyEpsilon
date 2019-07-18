@@ -46,13 +46,13 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
 
         // If the object is more than twice as far away as the maximum radar
         // range, disregard it.
-        distance = distance * exp(my_spaceship->getSystemEffectiveness(SYS_Drones)-1);
-        if (dist > distance * dist_max)
+        float distance_modif = distance * my_spaceship->getSystemEffectiveness(SYS_Drones);
+        if (dist > distance_modif * dist_max)
             continue;
 
         // The further away the object is, the less its effect on radar data.
-        if (dist > distance)
-            scale = scale - (dist - distance) / (distance * dist_max - distance);
+        if (dist > distance_modif)
+            scale = scale - (dist - distance_modif) / (distance_modif * dist_max - distance_modif);
 
         // If we're adjacent to the object ...
         if (dist <= obj->getRadius())
