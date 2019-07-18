@@ -27,6 +27,7 @@ public:
     void setPlanetCloudTexture(string texture_name);
     void setPlanetRadius(float size);
     void setPlanetCloudRadius(float size);
+    void setPlanetAtmosphereRadius(float size);
     void setDistanceFromMovementPlane(float distance_from_movement_plane);
     void setAxialRotationTime(float time);
     void setAxialRotation(float axis);

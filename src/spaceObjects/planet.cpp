@@ -100,6 +100,7 @@ REGISTER_SCRIPT_SUBCLASS(Planet, SpaceObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(Planet, setPlanetCloudTexture);
     REGISTER_SCRIPT_CLASS_FUNCTION(Planet, setPlanetRadius);
     REGISTER_SCRIPT_CLASS_FUNCTION(Planet, setPlanetCloudRadius);
+    REGISTER_SCRIPT_CLASS_FUNCTION(Planet, setPlanetAtmosphereRadius);
     REGISTER_SCRIPT_CLASS_FUNCTION(Planet, setDistanceFromMovementPlane);
     REGISTER_SCRIPT_CLASS_FUNCTION(Planet, setAxialRotationTime);
     REGISTER_SCRIPT_CLASS_FUNCTION(Planet, setAxialRotation);
@@ -206,6 +207,11 @@ void Planet::setPlanetRadius(float size)
 void Planet::setPlanetCloudRadius(float size)
 {
     cloud_size = size;
+}
+
+void Planet::setPlanetAtmosphereRadius(float size)
+{
+    atmosphere_size = size;
 }
 
 void Planet::setDistanceFromMovementPlane(float distance_from_movement_plane)
@@ -315,8 +321,7 @@ void Planet::draw3DTransparent()
     if (cloud_texture != "" && cloud_size > 0)
     {
         glPushMatrix();
-//        glScalef(cloud_size, cloud_size, cloud_size);
-        glScalef(getRadius()*1.05, getRadius()*1.05, getRadius()*1.05);
+        glScalef(cloud_size, cloud_size, cloud_size);
         glRotatef(engine->getElapsedTime() * 1.0f, 0, 0, 1);
         glColor3f(1, 1, 1);
 
@@ -336,8 +341,7 @@ void Planet::draw3DTransparent()
     {
         ShaderManager::getShader("billboardShader")->setParameter("textureMap", *textureManager.getTexture(atmosphere_texture));
         sf::Shader::bind(ShaderManager::getShader("billboardShader"));
-//        glColor4f(atmosphere_color.r / 255.0f, atmosphere_color.g / 255.0f, atmosphere_color.b / 255.0f, atmosphere_size * 2.0f);
-        glColor4f(atmosphere_color.r / 255.0f, atmosphere_color.g / 255.0f, atmosphere_color.b / 255.0f, getRadius() * 2.0f);
+        glColor4f(atmosphere_color.r / 255.0f, atmosphere_color.g / 255.0f, atmosphere_color.b / 255.0f, atmosphere_size * 2.0f);
         glBegin(GL_QUADS);
         glTexCoord2f(0, 0);
         glVertex3f(0, 0, 0);
@@ -377,9 +381,10 @@ void Planet::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float 
         textureManager.setTexture(object_sprite, planet_icon);
         object_sprite.setRotation(getRotation());
         object_sprite.setPosition(position);
-        float size = getRadius() * collision_size * scale / object_sprite.getTextureRect().width * 3.0;
+//        float size = getRadius() * collision_size * scale / object_sprite.getTextureRect().width * 3.0;
+        float size = getRadius() * scale / object_sprite.getTextureRect().width * 3.0;
         object_sprite.setScale(size, size);
-        object_sprite.setColor(sf::Color(255, 255, 255));
+//        object_sprite.setColor(sf::Color(255, 255, 255));
         window.draw(object_sprite, sf::BlendAdd);
     }
 }
