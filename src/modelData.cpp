@@ -12,6 +12,7 @@ REGISTER_SCRIPT_CLASS(ModelData)
 {
     REGISTER_SCRIPT_CLASS_FUNCTION(ModelData, setName);
     REGISTER_SCRIPT_CLASS_FUNCTION(ModelData, setMesh);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ModelData, setAnimatedMesh);
     REGISTER_SCRIPT_CLASS_FUNCTION(ModelData, setTexture);
     REGISTER_SCRIPT_CLASS_FUNCTION(ModelData, setSpecular);
     REGISTER_SCRIPT_CLASS_FUNCTION(ModelData, setIllumination);
@@ -32,6 +33,13 @@ std::unordered_map<string, P<ModelData> > ModelData::data_map;
 ModelData::ModelData()
 : loaded(false), mesh(nullptr), texture(nullptr), specular_texture(nullptr), illumination_texture(nullptr), shader(nullptr), scale(1.0), radius(1.0)
 {
+    animated_mesh = false;
+    animation_nb_car = 6;
+    animation_prefix = "";
+    animation_suffix = "";
+    model_number = 0;
+    animation_number_max = 0;
+    animation_speed = 10;
 }
 
 void ModelData::setName(string name)
@@ -53,6 +61,16 @@ string ModelData::getName()
 void ModelData::setMesh(string mesh_name)
 {
     this->mesh_name = mesh_name;
+}
+
+void ModelData::setAnimatedMesh(string prefix, string suffix, int nb_car, int number_max, int speed)
+{
+    animated_mesh = true;
+    animation_nb_car = nb_car;
+    animation_prefix = prefix;
+    animation_suffix = suffix;
+    animation_number_max = number_max;
+    animation_speed = speed;
 }
 
 void ModelData::setTexture(string texture_name)
@@ -159,6 +177,7 @@ void ModelData::load()
 {
     if (!loaded)
     {
+        LOG(WARNING) << "Test mesh_name: " << mesh_name;
         mesh = Mesh::getMesh(mesh_name);
         texture = textureManager.getTexture(texture_name);
         if (specular_texture_name != "")
@@ -225,6 +244,13 @@ void ModelData::render(float alpha)
     if (illumination_texture)
         shader->setParameter("illuminationMap", *illumination_texture);
     sf::Shader::bind(shader);
+
+    if (animated_mesh)
+    {
+        model_number = (int)(engine->getElapsedTime()*animation_speed) % animation_number_max;
+        std::string new_string = std::string(animation_nb_car - string(model_number).length(), '0') + string(model_number);
+        mesh = Mesh::getMesh(animation_prefix+ new_string + animation_suffix);
+    }
 
     mesh->render();
 

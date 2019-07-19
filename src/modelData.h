@@ -35,6 +35,14 @@ private:
     string specular_texture_name;
     string illumination_texture_name;
 
+    bool animated_mesh;
+    int animation_nb_car;
+    string animation_prefix;
+    string animation_suffix;
+    int model_number;
+    int animation_number_max;
+    int animation_speed;
+
     bool loaded;
 
     Mesh* mesh;
@@ -64,6 +72,7 @@ public:
     void setName(string name);
     string getName();
     void setMesh(string mesh_name);
+    void setAnimatedMesh(string prefix, string suffix, int nb_car, int number_max, int speed);
 
     /*!
      * Set the texture (by name)
