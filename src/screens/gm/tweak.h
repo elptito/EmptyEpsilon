@@ -79,6 +79,7 @@ private:
 
     GuiTextEntry* type_name;
     GuiSlider* heading_slider;
+    GuiSlider* rotation_slider;
     GuiSlider* hull_max_slider;
     GuiSlider* hull_slider;
     GuiToggleButton* can_be_destroyed_toggle;

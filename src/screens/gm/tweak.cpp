@@ -250,6 +250,12 @@ GuiTemplateTweak::GuiTemplateTweak(GuiContainer* owner)
     });
     heading_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
+    (new GuiLabel(left_col, "", "Rotation:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    rotation_slider = new GuiSlider(left_col, "", -100.0, 100.0, 0.0, [this](float value) {
+        target->setRotationSpeed(value/10.0);
+    });
+    rotation_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
     // Transparency slider
     (new GuiLabel(left_col, "", "Transparence:", 30))->setSize(GuiElement::GuiSizeMax, 50);
     transparency_slider = new GuiSlider(left_col, "", 0.0, 100.0, 0.0, [this](float value) {
@@ -290,6 +296,7 @@ GuiTemplateTweak::GuiTemplateTweak(GuiContainer* owner)
  void GuiTemplateTweak::onDraw(sf::RenderTarget& window)
 {
     heading_slider->setValue(target->getHeading());
+    rotation_slider->setValue(target->getRotationSpeed()*10.0);
     hull_slider->setValue(target->hull_strength);
     transparency_slider->setValue(target->getTransparency() * 100.0);
 }

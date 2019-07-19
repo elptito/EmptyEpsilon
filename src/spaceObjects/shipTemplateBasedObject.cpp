@@ -225,7 +225,7 @@ void ShipTemplateBasedObject::update(float delta)
             shield_hit_effect[n] -= delta;
         }
     }
-    if (rotation_speed > 0.0)
+    if (rotation_speed != 0.0)
         setHeading(getHeading()+delta*rotation_speed);
 }
 
