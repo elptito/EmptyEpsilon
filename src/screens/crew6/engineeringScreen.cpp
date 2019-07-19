@@ -273,7 +273,7 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
                 addSystemEffect("Production d'energie", string(effectiveness * -PlayerSpaceship::system_power_user_factor[SYS_Reactor] * 60.0, 1) + "/m");
                 // Oxygene
                 for(int n = 0; n < my_spaceship->oxygen_zones; n++)
-                    addSystemEffect("Zone " + string(n+1) + ", oxygene : ", string(my_spaceship->getOxygenRechargeRate(n) * 60.0, 1) + "/m");
+                    addSystemEffect("Zone " + string(n+1) + ", oxygene", string(my_spaceship->getOxygenRechargeRate(n) * 60.0, 1) + "/m");
                 break;
             case SYS_Cloaking:
                 addSystemEffect("Degre d'invisibilite", string(my_spaceship->getCloakingDegree() * 100.0, 1) + "%");
