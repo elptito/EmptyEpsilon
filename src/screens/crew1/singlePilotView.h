@@ -48,6 +48,7 @@ public:
     
     virtual void onDraw(sf::RenderTarget& window);
     virtual void onHotkey(const HotkeyResult& key) override;
+    virtual bool onJoystickAxis(const AxisAction& axisAction) override;
     void setTargetSpaceship(P<PlayerSpaceship> targetSpaceship);
 
 };

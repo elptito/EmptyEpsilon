@@ -190,6 +190,7 @@ set(SOURCES
 	src/screenComponents/navigationView.cpp
 	src/gui/colorConfig.cpp
 	src/gui/hotkeyConfig.cpp
+	src/gui/joystickConfig.cpp
 	src/gui/mouseRenderer.cpp
 	src/gui/scriptError.cpp
 	src/gui/gui2_slider.cpp

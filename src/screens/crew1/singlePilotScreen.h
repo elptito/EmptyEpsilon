@@ -5,6 +5,7 @@
 #include "gui/gui2_element.h"
 #include "singlePilotView.h"
 #include "screenComponents/targetsContainer.h"
+#include "gui/joystickConfig.h"
 
 class GuiViewport3D;
 

@@ -61,10 +61,6 @@ private:
     func_t mouse_down_func;
     func_t mouse_drag_func;
     func_t mouse_up_func;
-    ffunc_t joystick_x_func;
-    ffunc_t joystick_y_func;
-    ffunc_t joystick_z_func;
-    ffunc_t joystick_r_func;
 public:
     GuiRadarView(GuiContainer* owner, string id, float distance, TargetsContainer* targets, P<SpaceShip> targetSpaceship);
 
@@ -92,8 +88,6 @@ public:
     bool getAutoCentering() { return auto_center_on_my_ship; }
     GuiRadarView* setAutoCentering(bool value) { this->auto_center_on_my_ship = value; return this; }
     virtual GuiRadarView* setCallbacks(func_t mouse_down_func, func_t mouse_drag_func, func_t mouse_up_func) { SectorsView::setCallbacks(mouse_down_func, mouse_drag_func, mouse_up_func); return this; }
-    virtual GuiRadarView* setJoystickCallbacks(ffunc_t joystick_x_func, ffunc_t joystick_y_func, ffunc_t joystick_z_func, ffunc_t joystick_r_func)
-                  { SectorsView::setJoystickCallbacks(joystick_x_func, joystick_y_func, joystick_z_func, joystick_r_func); return this; }
     virtual GuiRadarView* setViewPosition(sf::Vector2f view_position) { SectorsView::setViewPosition(view_position); return this; }
     virtual bool onMouseDown(sf::Vector2f position);
     GuiRadarView* setTargetSpaceship(P<SpaceShip> targetSpaceship){target_spaceship = targetSpaceship; return this;}

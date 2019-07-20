@@ -118,7 +118,6 @@ float PlayerSpaceship::system_power_user_factor[] = {
 };
 
 
-
 string alertLevelToString(EAlertLevel level)
 {
     // Convert an EAlertLevel to a string.
