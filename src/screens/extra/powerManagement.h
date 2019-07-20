@@ -26,7 +26,7 @@ public:
     PowerManagementScreen(GuiContainer* owner);
 
     void onDraw(sf::RenderTarget& window) override;
-    virtual void onJoystickAxis(AxisAction& axisAction) override;
+    virtual void onJoystickAxis(const AxisAction& axisAction) override;
     virtual void onHotkey(const HotkeyResult& key) override;
 };
 

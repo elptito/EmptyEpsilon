@@ -270,18 +270,24 @@ void SinglePilotView::onHotkey(const HotkeyResult& key)
     }
 }
 
-void SinglePilotView::onJoystickAxis(AxisAction& axisAction){
-    if(my_spaceship){
+void SinglePilotView::onJoystickAxis(const AxisAction& axisAction){
+    if(target_spaceship){
         if (axisAction.category == "HELMS"){
             if (axisAction.action == "IMPULSE"){
                 target_spaceship->commandImpulse(axisAction.value);  
-            } else if (axisAction.action == "ROTATE"){
+                return true;
+            } 
+            if (axisAction.action == "ROTATE"){
                 target_spaceship->commandTurnSpeed(axisAction.value);
-            } else if (axisAction.action == "STRAFE"){
+                return true;
+            } 
+            if (axisAction.action == "STRAFE"){
                 target_spaceship->commandCombatManeuverStrafe(axisAction.value);
-            } else if (axisAction.action == "BOOST"){
+                return true;
+            } 
+            if (axisAction.action == "BOOST"){
                 target_spaceship->commandCombatManeuverBoost(axisAction.value);
+                return true;
             }
         }
-    }
-}
+   

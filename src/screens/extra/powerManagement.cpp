@@ -129,7 +129,7 @@ void PowerManagementScreen::onHotkey(const HotkeyResult& key)
 			}
 		}
 	}
-void PowerManagementScreen::onJoystickAxis(AxisAction& axisAction){
+void PowerManagementScreen::onJoystickAxis(const AxisAction& axisAction){
     if(my_spaceship){
         if (axisAction.category == "ENGINEERING"){
             for(int n=0; n<SYS_COUNT; n++)
@@ -138,9 +138,12 @@ void PowerManagementScreen::onJoystickAxis(AxisAction& axisAction){
                 if (axisAction.action == std::string("POWER_") + getSystemName(system)){
                     systems[n].power_slider->setValue((axisAction.value + 1) * 3.0 / 2.0);
                     my_spaceship->commandSetSystemPowerRequest(system, systems[n].power_slider->getValue());
-                } else if (axisAction.action == std::string("COOLANT_") + getSystemName(system)){
+                    return true;
+                } 
+                if (axisAction.action == std::string("COOLANT_") + getSystemName(system)){
                     systems[n].coolant_slider->setValue((axisAction.value + 1) * 10.0 / 2.0);
                     my_spaceship->commandSetSystemCoolantRequest(system, systems[n].coolant_slider->getValue());
+                    return true;
                 }
             }
         }

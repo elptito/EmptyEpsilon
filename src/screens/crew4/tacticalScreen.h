@@ -35,7 +35,7 @@ public:
 
     virtual void onDraw(sf::RenderTarget& window);
     virtual void onHotkey(const HotkeyResult& key) override;
-    virtual void onJoystickAxis(AxisAction& axisAction) override;
+    virtual bool onJoystickAxis(const AxisAction& axisAction) override;
 };
 
 #endif//TACTICAL_SCREEN_H

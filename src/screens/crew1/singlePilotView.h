@@ -54,7 +54,7 @@ public:
     virtual void onDraw(sf::RenderTarget& window);
     virtual void onHotkey(const HotkeyResult& key) override;
     void setTargetSpaceship(P<PlayerSpaceship> targetSpaceship);
-    virtual void onJoystickAxis(AxisAction& axisAction) override;
+    virtual void onJoystickAxis(const AxisAction& axisAction) override;
 };
 
 #endif//SINGLE_PILOT_VIEW_H
