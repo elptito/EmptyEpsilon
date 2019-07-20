@@ -610,7 +610,7 @@ void SpaceObject::addOxygenPoints(float amount,int index)
 
 string SpaceObject::getSectorName()
 {
-    return ::getSectorName(getPosition());
+    return ::getSectorName(getPosition() - sf::Vector2f(correction_x,correction_y) );
 }
 
 string SpaceObject::getSectorNameLevel(int level)
@@ -618,8 +618,8 @@ string SpaceObject::getSectorNameLevel(int level)
     int factor = std::pow(8,level) * GameGlobalInfo::sector_size;
 
     sf::Vector2f position = getPosition();
-    position.x = floorf(position.x / factor) * factor;
-    position.y = floorf(position.y / factor) * factor;
+    position.x = floorf((position.x) / factor) * factor - correction_x;
+    position.y = floorf((position.y) / factor) * factor - correction_y;
 
     return ::getSectorName(position);
 }
