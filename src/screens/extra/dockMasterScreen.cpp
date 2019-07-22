@@ -107,6 +107,7 @@ bool GuiTractorBeamControl::onJoystickAxis(const AxisAction& axisAction){
             }
         }
     }
+    return false;
 }
 
 DockMasterScreen::DockMasterScreen(GuiContainer *owner)

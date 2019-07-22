@@ -212,6 +212,7 @@ bool SinglePilotView::onJoystickAxis(const AxisAction& axisAction){
             }
         }
     }
+    return false;
 }
 
 void SinglePilotView::onHotkey(const HotkeyResult& key)

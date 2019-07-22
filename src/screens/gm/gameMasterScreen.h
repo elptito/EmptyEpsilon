@@ -23,7 +23,7 @@ class GuiObjectCreationView;
 class GuiGlobalMessageEntryView;
 class GuiFactions;
 class CpuShip;
-class GameMasterScreen : public GuiCanvas, public Updatable, public JoystickEventHandler
+class GameMasterScreen : public GuiCanvas, public Updatable
 {
 private:
     TargetsContainer targets;

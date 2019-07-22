@@ -128,6 +128,7 @@ bool TacticalScreen::onJoystickAxis(const AxisAction& axisAction){
             }
         }
     }
+    return false;
 }
 
 void TacticalScreen::onHotkey(const HotkeyResult& key)

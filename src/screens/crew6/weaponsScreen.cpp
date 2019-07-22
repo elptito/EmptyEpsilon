@@ -187,4 +187,5 @@ bool WeaponsScreen::onJoystickAxis(const AxisAction& axisAction){
             return true;
         } 
     }
+    return false;
 }

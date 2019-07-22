@@ -117,6 +117,7 @@ bool HelmsScreen::onJoystickAxis(const AxisAction& axisAction){
             }
         }
     }
+    return false;
 }
 
 void HelmsScreen::onHotkey(const HotkeyResult& key)

@@ -1168,6 +1168,8 @@ int SpaceShip::scanningComplexity(P<SpaceObject> other)
         if (getScannedStateFor(other) == SS_SimpleScan)
             return 3;
         return 2;
+    case SC_MAX:
+        return 0;
     }
     return 0;
 }
@@ -1186,6 +1188,8 @@ int SpaceShip::scanningChannelDepth(P<SpaceObject> other)
         return 2;
     case SC_Advanced:
         return 2;
+    case SC_MAX:
+        return 0;
     }
     return 0;
 }

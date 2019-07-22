@@ -91,6 +91,7 @@ bool GuiScanningDialog::onJoystickAxis(const AxisAction& axisAction){
             }   
         }
     }
+    return false;
 }
 
 void GuiScanningDialog::setupParameters()
