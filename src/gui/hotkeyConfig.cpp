@@ -92,6 +92,13 @@ HotkeyConfig::HotkeyConfig()
     newKey("SELF_DESTRUCT_CONFIRM", std::make_tuple("Confirm self-destruct", ""));
     newKey("SELF_DESTRUCT_CANCEL", std::make_tuple("Cancel self-destruct", ""));
 
+    newCategory("TRACTOR_BEAM", "Tractor Beam");
+    newKey("MODE", std::make_tuple("Toggle tractor beam mode", ""));
+    newKey("MODE_OFF", std::make_tuple("Switch tractor beam off", ""));
+    newKey("MODE_PULL", std::make_tuple("Switch tractor beam to pull mode", ""));
+    newKey("MODE_PUSH", std::make_tuple("Switch tractor beam to push mode", ""));
+    newKey("MODE_HOLD", std::make_tuple("Switch tractor beam to hold mode", ""));
+
 }
 
 static std::vector<std::pair<string, sf::Keyboard::Key> > sfml_key_names = {

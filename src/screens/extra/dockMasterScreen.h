@@ -30,6 +30,9 @@ private:
 public:
     GuiTractorBeamControl(GuiContainer* owner, string id);
     virtual void onDraw(sf::RenderTarget& window) override;
+    virtual void onHotkey(const HotkeyResult& key);
+    virtual bool onJoystickAxis(const AxisAction& axisAction) override;
+
 };
 
 class DockMasterScreen : public GuiOverlay

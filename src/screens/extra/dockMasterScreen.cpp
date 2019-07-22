@@ -69,6 +69,45 @@ void GuiTractorBeamControl::onDraw(sf::RenderTarget& window)
         range_slider->setValue(my_spaceship->tractor_beam.getRange());
     }
 }
+void GuiTractorBeamControl::onHotkey(const HotkeyResult& key){
+    if (key.category == "TRACTOR_BEAM" && my_spaceship)
+    {
+        if (key.hotkey == "MODE_OFF")
+            my_spaceship->commandSetTractorBeamMode(ETractorBeamMode::TBM_Off);
+        else if (key.hotkey == "MODE_PULL")
+            my_spaceship->commandSetTractorBeamMode(ETractorBeamMode::TBM_Pull);
+        else if (key.hotkey == "MODE_PUSH")
+            my_spaceship->commandSetTractorBeamMode(ETractorBeamMode::TBM_Push);
+        else if (key.hotkey == "MODE_HOLD")
+            my_spaceship->commandSetTractorBeamMode(ETractorBeamMode::TBM_Hold);
+        else if (key.hotkey == "MODE")
+            my_spaceship->commandSetTractorBeamMode(ETractorBeamMode((my_spaceship->tractor_beam.getMode() + 1) % ETractorBeamMode::TBM_Max));
+    }
+}
+
+bool GuiTractorBeamControl::onJoystickAxis(const AxisAction& axisAction){
+    if(my_spaceship){
+        if (axisAction.category == "TRACTOR_BEAM"){
+            {
+            if (axisAction.action == "ARC"){
+                arc_slider->setValue((axisAction.value + 1) * 90.0 / 2.0);
+                my_spaceship->commandSetTractorBeamArc(arc_slider->getValue());
+                return true;            
+            } 
+            if (axisAction.action == "DIRECTION"){
+                direction_slider->setValue(axisAction.value * 180.0);
+                my_spaceship->commandSetTractorBeamDirection(direction_slider->getValue());
+                return true;
+            } 
+            if (axisAction.action == "RANGE"){
+                range_slider->setValue((axisAction.value + 1) * 2000.0 / 2.0);
+                my_spaceship->commandSetTractorBeamRange(range_slider->getValue());
+                return true;
+            } 
+            }
+        }
+    }
+}
 
 DockMasterScreen::DockMasterScreen(GuiContainer *owner)
     : GuiOverlay(owner, "DOCK_MASTER_SCREEN", colorConfig.background)

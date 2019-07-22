@@ -11,7 +11,8 @@ enum ETractorBeamMode
     TBM_Off,        // Tractor beam off
     TBM_Pull,       // pull objects to ship
     TBM_Push,       // push objects away from ship
-    TBM_Hold        // hold objects near ship
+    TBM_Hold,        // hold objects near ship
+    TBM_Max
 };
 /* Define script conversion function for the EMissileWeapons enum. */
 template<> void convert<ETractorBeamMode>::param(lua_State* L, int& idx, ETractorBeamMode& es);

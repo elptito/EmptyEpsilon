@@ -36,6 +36,11 @@ JoystickConfig::JoystickConfig()
         newAxis(std::string("POWER_") + getSystemName(ESystem(n)), std::make_tuple(std::string("Change power of ") + getSystemName(ESystem(n)), ""));
         newAxis(std::string("COOLANT_") + getSystemName(ESystem(n)), std::make_tuple(std::string("Change coolant of ") + getSystemName(ESystem(n)), ""));
     }
+
+    newCategory("TRACTOR_BEAM", "Tractor Beam");
+    newAxis("ARC", std::make_tuple("Change arc of tractor beam", ""));
+    newAxis("DIRECTION", std::make_tuple("Change direction of tractor beam", ""));
+    newAxis("RANGE", std::make_tuple("Change range of tractor beam", ""));
 }
 
 static std::vector<std::pair<string, sf::Joystick::Axis> > sfml_axis_names = {
