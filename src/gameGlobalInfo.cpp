@@ -244,8 +244,8 @@ string playerWarpJumpDriveToString(EPlayerWarpJumpDrive player_warp_jump_drive)
     }
 }
 
-std::regex sector_rgx("([a-zA-Z]+)(\\d+)([a-dA-D])");
-std::regex location_rgx("([a-zA-Z]+\\d+[a-dA-D]):(\\d+):(\\d+)");
+std::regex sector_rgx("(\\d)(\\d+)\\.(\\d+)");
+std::regex location_rgx("(\\d+\\.\\d+)\\.(\\d+)\\.(\\d+)");
 
 bool isValidSectorName(string sectorName)
 {
@@ -271,14 +271,10 @@ sf::Vector2f getSectorPosition(string sectorName)
     std::smatch matches;
     if(std::regex_match(sectorName, matches, sector_rgx)) 
     {
-        string row = string(matches.str(1)).upper();
-        int sector_y = 0;
-        for(unsigned int i=0; i<row.size(); i++)
-            sector_y = sector_y + std::pow(26, row.size() - i - 1) * (row.at(i) - 'A' + 1);
+        int quadrant = std::stoi(matches.str(1));
+        int sector_y = std::stoi(matches.str(3));
         int sector_x = std::stoi(matches.str(2));
         sector_y = sector_y - 1;
-
-        int quadrant = std::toupper(matches.str(3).at(0)) - 'A';
         if (quadrant % 2)
             sector_x = -1 - sector_x;
         if ((quadrant /2) % 2)
@@ -312,7 +308,7 @@ string getStringFromPosition(sf::Vector2f position)
     if (offset_x < 1 && offset_y < 1) {
         return getSectorName(position);
     } else {
-        return getSectorName(position) + ":" + string(offset_x,0) + ':' + string(offset_y,0);
+        return getSectorName(position) + "." + string(offset_x,0) + '.' + string(offset_y,0);
     }
 }
 
@@ -321,7 +317,6 @@ string getSectorName(sf::Vector2f position)
     int sector_x = floorf(position.x / GameGlobalInfo::sector_size);
     int sector_y = floorf(position.y / GameGlobalInfo::sector_size);
     int quadrant = 0;
-    string row = "";
     if (sector_y < 0)
     {
         quadrant += 2;
@@ -332,12 +327,7 @@ string getSectorName(sf::Vector2f position)
         quadrant += 1;
         sector_x = -1 - sector_x;
     }
-    while (sector_y > -1)
-    {
-        row = string(char('A' + (sector_y % 26))) + row;
-        sector_y = int(sector_y / 26) - 1;
-    }
-    return row + string(sector_x) + string(char('A' +quadrant));
+    return string(char('0' +quadrant)) + string(sector_x) + "." + string(sector_y);
 }
 
 static int victory(lua_State* L)
