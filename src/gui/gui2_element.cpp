@@ -1,5 +1,6 @@
 #include "gui2_element.h"
 #include "main.h"
+#include "gui2_canvas.h"
 
 GuiElement::GuiElement(GuiContainer* owner, string id)
 : position_alignment(ATopLeft), owner(owner), rect(0, 0, 0, 0), visible(true), enabled(true), hover(false), focus(false), active(false), id(id)
@@ -186,6 +187,14 @@ sf::Vector2f GuiElement::getCenterPoint() const
 GuiContainer* GuiElement::getOwner()
 {
     return owner;
+}
+
+void GuiElement::setFocus()
+{
+    //Find the owning canvas, which owns the focus
+    GuiCanvas* canvas = dynamic_cast<GuiCanvas*>(getTopLevelContainer());
+    if (canvas)
+        canvas->focusElement(this);
 }
 
 GuiContainer* GuiElement::getTopLevelContainer()

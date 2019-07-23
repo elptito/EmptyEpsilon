@@ -84,6 +84,7 @@ protected:
     static const int16_t CMD_SET_TRACTOR_BEAM_RANGE = 0x0033;
     static const int16_t CMD_SET_TRACTOR_BEAM_MODE = 0x0034;
     static const int16_t CMD_TURN_SPEED = 0x0035;
+    static const int16_t CMD_ADD_LOG_LINE = 0x0036;
 public:
     constexpr static int max_frequency = 20;
     constexpr static float combat_maneuver_charge_time = 20.0f; /*< Amount of time it takes to fully charge the combat maneuver system */
@@ -520,6 +521,7 @@ public:
     void commandSetTractorBeamArc(float arc);
     void commandSetTractorBeamRange(float range);
     void commandSetTractorBeamMode(ETractorBeamMode range);
+    void commandAddLogLine(string message, string station);
 
 };
 

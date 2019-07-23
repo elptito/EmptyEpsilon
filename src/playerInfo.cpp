@@ -173,10 +173,13 @@ void PlayerInfo::spawnUI()
             screen->addStationTab(new DroneOperatorScreen(screen), dronePilot, getCrewPositionName(dronePilot), getCrewPositionIcon(dronePilot));
         if (crew_position[dockMaster])
             screen->addStationTab(new DockMasterScreen(screen), dockMaster, getCrewPositionName(dockMaster), getCrewPositionIcon(dockMaster));
-       
+        if (crew_position[externLog])
+            screen->addStationTab(new ShipLogScreen(screen, "extern"), externLog, getCrewPositionName(externLog), getCrewPositionIcon(externLog));
+        if (crew_position[internLog])
+            screen->addStationTab(new ShipLogScreen(screen, "intern"), internLog, getCrewPositionName(internLog), getCrewPositionIcon(internLog));
         //Ship log screen, if you have comms, you have ships log. (note this is mostly replaced by the [at the bottom of the screen openable log]
         if (crew_position[singlePilot])
-            screen->addStationTab(new ShipLogScreen(screen), max_crew_positions, "Ships log", "");
+            screen->addStationTab(new ShipLogScreen(screen, "intern"), max_crew_positions, "Ships log", "");
         
         GuiSelfDestructEntry* sde = new GuiSelfDestructEntry(screen, "SELF_DESTRUCT_ENTRY");
         for(int n=0; n<max_crew_positions; n++)
@@ -228,6 +231,8 @@ string getCrewPositionName(ECrewPosition position)
     case navigation: return "Navigation";
     case dronePilot: return "Drone Pilot";
     case dockMaster: return "Dock Master";
+    case externLog: return "External Log";
+    case internLog: return "Internal Log";
     default: return "ErrUnk: " + string(position);
     }
 }
@@ -256,6 +261,8 @@ string getCrewPositionIcon(ECrewPosition position)
     case navigation: return "";
     case dronePilot: return "";
     case dockMaster: return "";
+    case externLog: return "";
+    case internLog: return "";
     default: return "ErrUnk: " + string(position);
     }
 }
@@ -310,6 +317,10 @@ template<> void convert<ECrewPosition>::param(lua_State* L, int& idx, ECrewPosit
         cp = dronePilot;
     else if (str == "dockmaster" || str == "dockmasterview")
         cp = dockMaster;
+    else if (str == "externLog" || str == "externLogview")
+        cp = externLog;
+    else if (str == "internLog" || str == "internLogview")
+        cp = internLog;
     else
         luaL_error(L, "Unknown value for crew position: %s", str.c_str());
 }

@@ -26,6 +26,7 @@ public:
     
     //Called when an element is destroyed in this tree. Recursive tests if the given element or any of it's children currently has focus, and unsets that focus.
     void unfocusElementTree(GuiElement* element);
+    void focusElement(GuiElement* element);
 };
 
 #endif//GUI2_CANVAS_H

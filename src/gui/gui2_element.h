@@ -54,6 +54,7 @@ public:
     virtual void onHotkey(const HotkeyResult& key);
     virtual bool onJoystickAxis(const AxisAction& axisAction);
 
+    void setFocus();
     GuiElement* setSize(sf::Vector2f size);
     GuiElement* setSize(float x, float y);
     sf::Vector2f getSize() const;

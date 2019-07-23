@@ -29,6 +29,8 @@ enum ECrewPosition
     navigation,
     dronePilot,
     dockMaster,
+    externLog,
+    internLog,
     max_crew_positions
 };
 

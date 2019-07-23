@@ -11,6 +11,13 @@ GuiCanvas::~GuiCanvas()
 {
 }
 
+void GuiCanvas::focusElement(GuiElement* element){
+    if (focus_element)
+        focus_element->focus = false;
+    focus_element = element;
+    if (focus_element)
+        focus_element->focus = true;
+}
 void GuiCanvas::render(sf::RenderTarget& window)
 {
     sf::Vector2f window_size = window.getView().getSize();
@@ -30,11 +37,7 @@ void GuiCanvas::render(sf::RenderTarget& window)
         click_element = getClickElement(mouse_position);
         if (!click_element)
             onClick(mouse_position);
-        if (focus_element)
-            focus_element->focus = false;
-        focus_element = click_element;
-        if (focus_element)
-            focus_element->focus = true;
+        focusElement(click_element);
     }
     if (InputHandler::mouseIsDown(sf::Mouse::Left) || InputHandler::mouseIsDown(sf::Mouse::Right) || InputHandler::mouseIsDown(sf::Mouse::Middle))
     {

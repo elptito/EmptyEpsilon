@@ -1,26 +1,35 @@
 #include "shipLogScreen.h"
 #include "playerInfo.h"
 #include "spaceObjects/playerSpaceship.h"
+#include "gui/gui2_textentry.h"
 
 #include "gui/gui2_advancedscrolltext.h"
 
-ShipLogScreen::ShipLogScreen(GuiContainer* owner)
-: GuiOverlay(owner, "SHIP_LOG_SCREEN", colorConfig.background)
+ShipLogScreen::ShipLogScreen(GuiContainer* owner, string station)
+: GuiOverlay(owner, "SHIP_LOG_SCREEN", colorConfig.background), station(station)
 {
     (new GuiOverlay(this, "", sf::Color::White))->setTextureTiled("gui/BackgroundCrosses");
 
     log_text = new GuiAdvancedScrollText(this, "SHIP_LOG");
     log_text->enableAutoScrollDown();
-    log_text->setPosition(50, 50)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+    log_text->setPosition(50, -50, EGuiAlign::ABottomLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+    new_line = new GuiTextEntry(this, "", "");
+    new_line->setPosition(0, 0, EGuiAlign::ABottomLeft)->setSize(GuiElement::GuiSizeMax, 50);
+    new_line->enterCallback([this](string text){
+        // TODO extract command
+        my_spaceship->commandAddLogLine(text, this->station);
+        new_line->setText("");
+    });
 }
 
 void ShipLogScreen::onDraw(sf::RenderTarget& window)
 {
     GuiOverlay::onDraw(window);
-    
+    new_line->setFocus();
+
     if (my_spaceship)
     {
-        const std::vector<PlayerSpaceship::ShipLogEntry>& logs = my_spaceship->getShipsLog("extern");
+        const std::vector<PlayerSpaceship::ShipLogEntry>& logs = my_spaceship->getShipsLog(station);
         if (log_text->getEntryCount() > 0 && logs.size() == 0)
             log_text->clearEntries();
 

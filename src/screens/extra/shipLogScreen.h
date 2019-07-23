@@ -4,13 +4,16 @@
 #include "gui/gui2_overlay.h"
 
 class GuiAdvancedScrollText;
+class GuiTextEntry;
 
 class ShipLogScreen : public GuiOverlay
 {
 private:
+    string station;
     GuiAdvancedScrollText* log_text;
+    GuiTextEntry* new_line;
 public:
-    ShipLogScreen(GuiContainer* owner);
+    ShipLogScreen(GuiContainer* owner, string station);
     
     void onDraw(sf::RenderTarget& window) override;
 };

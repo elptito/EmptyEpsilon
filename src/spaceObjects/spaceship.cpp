@@ -528,6 +528,13 @@ void SpaceShip::handleClientCommand(int32_t client_id, int16_t command, sf::Pack
             tractor_beam.setMode(ETractorBeamMode(mode));
         }
         break;
+    case CMD_ADD_LOG_LINE:
+        {
+            string message, station;
+            packet >> message >>station;
+            addToShipLog(message, colorConfig.log_custom, station);
+        }
+        break;
     }
 }
 
@@ -1872,6 +1879,11 @@ void SpaceShip::commandSetTractorBeamRange(float range){
 void SpaceShip::commandSetTractorBeamMode(ETractorBeamMode mode){
     sf::Packet packet;
     packet << CMD_SET_TRACTOR_BEAM_MODE << int(mode);
+    sendClientCommand(packet);
+}
+void SpaceShip::commandAddLogLine(string message, string station){
+    sf::Packet packet;
+    packet << CMD_ADD_LOG_LINE << message << station;
     sendClientCommand(packet);
 }
 

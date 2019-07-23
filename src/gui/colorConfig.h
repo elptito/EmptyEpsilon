@@ -30,6 +30,7 @@ public:
     sf::Color log_receive_friendly;
     sf::Color log_receive_enemy;
     sf::Color log_receive_neutral;
+    sf::Color log_custom;
     
     WidgetColorSet button;
     WidgetColorSet label;

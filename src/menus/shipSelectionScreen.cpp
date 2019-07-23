@@ -504,11 +504,13 @@ void ShipSelectionScreen::updateCrewTypeOptions()
         crew_position_button[databaseView]->show();
         crew_position_button[scienceRadar]->show();
         crew_position_button[relayRadar]->show();
+        crew_position_button[externLog]->show();
         break;
     case 7: // Systems - Engineering
         crew_position_button[damageControl]->show();
         crew_position_button[powerManagement]->show();
         crew_position_button[dockMaster]->show();
+        crew_position_button[internLog]->show();
         break;
     }
 
