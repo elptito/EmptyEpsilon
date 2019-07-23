@@ -44,7 +44,16 @@ ShipSelectionScreen::ShipSelectionScreen()
     crew_type_selector = new GuiSelector(stations_layout, "CREW_TYPE_SELECTION", [this](int index, string value) {
         updateCrewTypeOptions();
     });
-    crew_type_selector->setOptions({"Helios", "6/5 player crew", "4/3 player crew", "1 player crew/extras", "Alternative options"})->setSize(GuiElement::GuiSizeMax, 50);
+    crew_type_selector->setOptions({
+        "Helios", 
+        "6/5 player crew", 
+        "4/3 player crew", 
+        "1 player crew/extras", 
+        "Alternative options",
+        "Systems - Tactical",
+        "Systems - Signal",
+        "Systems - Engineering"
+    })->setSize(GuiElement::GuiSizeMax, 50);
 
     // Main screen button
     main_screen_button = new GuiToggleButton(stations_layout, "MAIN_SCREEN_BUTTON", "Main screen", [this](bool value) {
@@ -437,7 +446,7 @@ void ShipSelectionScreen::updateCrewTypeOptions()
     // Choose which set of screens to list from the crew type selector index.
     switch(crew_type_selector->getSelectionIndex())
     {
-    case 0:
+    case 0: // Helios
         crew_position_button[helmsOfficer]->show();
         crew_position_button[weaponsOfficer]->show();
         crew_position_button[damageControl]->show();
@@ -449,17 +458,17 @@ void ShipSelectionScreen::updateCrewTypeOptions()
         crew_position_button[dronePilot]->show();
         crew_position_button[dockMaster]->show();
         break;
-    case 1:
+    case 1: // 6/5 player crew
         for(int n = helmsOfficer; n <= relayOfficer; n++)
         {
             crew_position_button[n]->show();
         }
         break;
-    case 2:
+    case 2: // 4/3 player crew
         for(int n = tacticalOfficer; n <= operationsOfficer; n++)
             crew_position_button[n]->show();
         break;
-    case 3:
+    case 3: // 1 player crew/extras
         crew_position_button[singlePilot]->show();
         crew_position_button[damageControl]->show();
         crew_position_button[powerManagement]->show();
@@ -472,7 +481,7 @@ void ShipSelectionScreen::updateCrewTypeOptions()
         crew_position_button[dronePilot]->show();
         crew_position_button[dockMaster]->show();
         break;
-    case 4:
+    case 4: // Alternative options
         main_screen_button->hide();
         game_master_button->show();
         window_button->setVisible(canDoMainScreen());
@@ -480,6 +489,26 @@ void ShipSelectionScreen::updateCrewTypeOptions()
         window_angle->setVisible(canDoMainScreen());
         topdown_button->setVisible(canDoMainScreen());
         cinematic_view_button->setVisible(canDoMainScreen());
+        break;
+    case 5: // Systems - Tactical
+        crew_position_button[helmsOfficer]->show();
+        crew_position_button[weaponsOfficer]->show();
+        crew_position_button[dronePilot]->show();
+        crew_position_button[tacticalRadar]->show();
+        break;
+    case 6: // Systems - Signal
+        crew_position_button[scienceOfficer]->show();
+        crew_position_button[relayOfficerNC]->show();
+        crew_position_button[commsView]->show();
+        crew_position_button[navigation]->show();
+        crew_position_button[databaseView]->show();
+        crew_position_button[scienceRadar]->show();
+        crew_position_button[relayRadar]->show();
+        break;
+    case 7: // Systems - Engineering
+        crew_position_button[damageControl]->show();
+        crew_position_button[powerManagement]->show();
+        crew_position_button[dockMaster]->show();
         break;
     }
 
