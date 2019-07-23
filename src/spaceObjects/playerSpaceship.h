@@ -43,7 +43,10 @@ public:
     constexpr static float cargo_repair_per_second = 0.1;
 
     // Coolant change rate
-    constexpr static float system_coolant_level_change_per_second = 1.2 / 10.0;
+    constexpr static float system_coolant_level_change_per_second = 1.2 / 10.0; //TODO : pas du tout sur... verifier le commit cb605117c114342910b3471bb857bfef7ac3692f 
+    // Total coolant
+    constexpr static float max_coolant_per_system = 10.0f;
+    float max_coolant;
     // Overheat subsystem damage rate
     constexpr static float damage_per_second_on_overheat = 0.08f;
     // Base time it takes to perform an action
@@ -342,6 +345,8 @@ public:
     virtual void executeJump(float distance) override;
     virtual void takeHullDamage(float damage_amount, DamageInfo& info) override;
     void setSystemCoolantRequest(ESystem system, float request);
+    void setMaxCoolant(float coolant);
+    float getMaxCoolant() { return max_coolant; }
     void setAutoCoolant(bool active) { auto_coolant_enabled = active; }
     int getRepairCrewCount();
     void setRepairCrewCount(int amount);

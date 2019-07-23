@@ -70,7 +70,7 @@ void PowerManagementScreen::onDraw(sf::RenderTarget& window)
         {
             systems[n].box->setVisible(my_spaceship->hasSystem(ESystem(n)));
             systems[n].power_slider->setValue(my_spaceship->systems[n].power_request);
-            systems[n].coolant_slider->setValue(my_spaceship->systems[n].coolant_request);
+            systems[n].coolant_slider->setValue(std::min(my_spaceship->systems[n].coolant_request, my_spaceship->max_coolant));
             systems[n].coolant_slider->setRange(0.0,my_spaceship->systems[n].coolant_max);
 
             float heat = my_spaceship->systems[n].heat_level;
