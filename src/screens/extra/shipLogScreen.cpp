@@ -25,7 +25,7 @@ ShipLogScreen::ShipLogScreen(GuiContainer* owner, string station)
 void ShipLogScreen::onDraw(sf::RenderTarget& window)
 {
     GuiOverlay::onDraw(window);
-    new_line->setFocus();
+    // new_line->setFocus();
 
     if (my_spaceship)
     {
