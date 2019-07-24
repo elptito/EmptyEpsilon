@@ -69,6 +69,8 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setWarpSpeed);
     /// Set if this ship shares energy with docked ships. Example: template:setSharesEnergyWithDocked(false)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setSharesEnergyWithDocked);
+    /// Set if this ship restocks scan probes on docked ships. Example: template:setRestocksScanProbes(false)
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setRestocksScanProbes);
     /// Set if this ship has a jump drive. Example: template:setJumpDrive(true)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setJumpDrive);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setJumpDriveRange);
@@ -125,6 +127,7 @@ ShipTemplate::ShipTemplate()
 
     shares_energy_with_docked = false;
     repair_docked = false;
+    restocks_scan_probes = false;
     energy_storage_amount = 1000;
     repair_crew_count = 3;
     weapon_tube_count = 0;
@@ -445,6 +448,11 @@ void ShipTemplate::setReactor(bool enabled)
     has_reactor = enabled;
 }
 
+void ShipTemplate::setRestocksScanProbes(bool enabled)
+{
+    restocks_scan_probes = enabled;
+}
+
 void ShipTemplate::setJumpDrive(bool enabled)
 {
     has_jump_drive = enabled;
@@ -550,6 +558,7 @@ P<ShipTemplate> ShipTemplate::copy(string new_name)
     result->combat_maneuver_strafe_speed;
     result->shares_energy_with_docked = shares_energy_with_docked;
     result->repair_docked = repair_docked;
+    result->restocks_scan_probes = restocks_scan_probes;
     result->has_jump_drive = has_jump_drive;
     result->has_reactor = has_reactor;
     result->jump_drive_min_distance = jump_drive_min_distance;
