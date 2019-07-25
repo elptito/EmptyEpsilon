@@ -5,10 +5,13 @@
 
 class GuiNoiseOverlay : public GuiElement
 {
+private:
+    sf::Color color;
+    bool onShipDestroyed;
 public:
-    GuiNoiseOverlay(GuiContainer* owner);
-
+    GuiNoiseOverlay(GuiContainer* owner, string id = "NOISE_OVERLAY", bool onShipDestroyed = true);
     virtual void onDraw(sf::RenderTarget& window);
+    void setAlpha(int alpha);
 };
 
 #endif//NOISE_OVERLAY_H

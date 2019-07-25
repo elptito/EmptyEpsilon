@@ -4,6 +4,7 @@
 #include "gameGlobalInfo.h"
 
 #include "screenComponents/alertOverlay.h"
+#include "screenComponents/noiseOverlay.h"
 
 #include "gui/gui2_overlay.h"
 #include "gui/gui2_autolayout.h"
@@ -48,6 +49,8 @@ DroneOperatorScreen::DroneOperatorScreen(GuiContainer *owner)
     single_pilot_view = new SinglePilotView(this, selected_drone);
     single_pilot_view->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
+    noise_overlay = new GuiNoiseOverlay(this, "CONNECTION_NOISE", false);
+    
     connection_label = new GuiLabel(this, "CONNECTION_LABEL", "0%", 30);
     connection_label->setPosition(0, -50, ABottomCenter)->setSize(460, 50);
 
@@ -58,7 +61,7 @@ DroneOperatorScreen::DroneOperatorScreen(GuiContainer *owner)
     no_drones_label = new GuiLabel(this, "SHIP_SELECTION_NO_SHIPS_LABEL", "No active drones in range", 30);
     no_drones_label->setPosition(0, 100, ATopCenter)->setSize(460, 50);
     // Prep the alert overlay.
-    (new GuiPowerDamageIndicator(this, "DOCKS_DPI", SYS_Drones, ATopCenter, my_spaceship))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+    (new GuiPowerDamageIndicator(this, "DRONES_PDI", SYS_Drones, ATopCenter, my_spaceship))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 }
 
 void DroneOperatorScreen::disconnected()
@@ -107,6 +110,7 @@ void DroneOperatorScreen::onDraw(sf::RenderTarget &window)
         switch (mode)
         {
         case DroneSelection:
+            noise_overlay->hide();
             no_drones_label->hide();
             droneSelection->show();
             single_pilot_view->hide();
@@ -114,6 +118,8 @@ void DroneOperatorScreen::onDraw(sf::RenderTarget &window)
             connection_label->hide();
             break;
         case Piloting:
+            noise_overlay->show();
+            noise_overlay->setAlpha(std::max(0, int(200 - 200 * getConnectionQuality(selected_drone))- 50));
             no_drones_label->hide();
             droneSelection->hide();
             single_pilot_view->show();
@@ -123,6 +129,7 @@ void DroneOperatorScreen::onDraw(sf::RenderTarget &window)
             connection_label->show();
             break;
         case NoDrones:
+            noise_overlay->hide();
             no_drones_label->show();
             droneSelection->hide();
             single_pilot_view->hide();

@@ -19,6 +19,7 @@ class GuiSlider;
 class GuiLabel;
 class GuiTextEntry;
 class GuiListbox;
+class GuiNoiseOverlay;
 
 class DroneOperatorScreen : public GuiOverlay
 {
@@ -36,6 +37,7 @@ private:
     GuiOverlay* background_crosses;
     GuiAutoLayout* droneSelection;    
     GuiLabel* connection_label;
+    GuiNoiseOverlay* noise_overlay;
     GuiButton* disconnect_button;
     GuiLabel* no_drones_label;
     GuiListbox* drone_list;
