@@ -26,12 +26,12 @@ private:
     GuiKeyValueDisplay* hull_display;
     GuiKeyValueDisplay* shields_display;
     GuiKeyValueDisplay* oxygen_display;
+    GuiKeyValueDisplay* coolant_display;
     GuiLabel* power_label;
     GuiSlider* power_slider;
     GuiLabel* coolant_label;
     GuiSlider* coolant_slider;
-    GuiLabel* total_coolant_label;
-    
+
     class SystemRow
     {
     public:
