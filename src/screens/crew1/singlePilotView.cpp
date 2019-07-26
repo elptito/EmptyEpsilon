@@ -56,43 +56,6 @@ SinglePilotView::SinglePilotView(GuiContainer* owner, P<PlayerSpaceship> targetS
                 target_spaceship->commandTargetRotation(sf::vector2ToAngle(position - target_spaceship->getPosition()));
         }
     );
-
-    // Joystick controls.
-    radar->setJoystickCallbacks(
-        [this](float x_position) {
-            if (target_spaceship)
-            {
-                float angle = target_spaceship->getRotation() + x_position;
-                target_spaceship->commandTargetRotation(angle);
-            }
-        },
-        [this](float y_position) {
-            if (target_spaceship && (fabs(y_position) > 20))
-            {
-                // Add some more hysteresis, since y-axis can be hard to keep at 0
-                float value;
-                if (y_position > 0)
-                    value = (y_position-20) * 1.25 / 100;
-                else
-                    value = (y_position+20) * 1.25 / 100;
-
-                target_spaceship->commandCombatManeuverBoost(-value);
-            }
-            else if (target_spaceship)
-            {
-                target_spaceship->commandCombatManeuverBoost(0.0);
-            }
-        },
-        [this](float z_position) {
-            if (target_spaceship)
-                target_spaceship->commandImpulse(-(z_position / 100));
-        },
-        [this](float r_position) {
-            if (target_spaceship)
-                target_spaceship->commandCombatManeuverStrafe(r_position / 100);
-        }
-    );
-
     // Ship stats and combat maneuver at bottom right corner of left panel.
     combat_maneuver = new GuiCombatManeuver(this, "COMBAT_MANEUVER", target_spaceship);
     combat_maneuver->setPosition(-20, -260, ABottomRight)->setSize(200, 150);
@@ -190,9 +153,8 @@ void SinglePilotView::onDraw(sf::RenderTarget& window)
     GuiElement::onDraw(window);
 }
 
-
 bool SinglePilotView::onJoystickAxis(const AxisAction& axisAction){
-    if(my_spaceship){
+    if(target_spaceship && isVisible()){
         if (axisAction.category == "HELMS"){
             if (axisAction.action == "IMPULSE"){
                 target_spaceship->commandImpulse(axisAction.value);  
@@ -217,7 +179,7 @@ bool SinglePilotView::onJoystickAxis(const AxisAction& axisAction){
 
 void SinglePilotView::onHotkey(const HotkeyResult& key)
 {
-    if (isVisible()){
+    if (target_spaceship && isVisible()){
         if (key.category == "HELMS" && target_spaceship)
         {
             if (key.hotkey == "TURN_LEFT")

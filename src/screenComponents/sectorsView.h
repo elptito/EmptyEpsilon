@@ -50,23 +50,12 @@ public:
     virtual bool onMouseDown(sf::Vector2f position);
     virtual void onMouseDrag(sf::Vector2f position);
     virtual void onMouseUp(sf::Vector2f position);
-    virtual bool onJoystickXYMove(sf::Vector2f position);
-    virtual bool onJoystickZMove(float position);
-    virtual bool onJoystickRMove(float position);
 
     virtual SectorsView *setCallbacks(func_t mouse_down_func, func_t mouse_drag_func, func_t mouse_up_func)
     {
         this->mouse_down_func = mouse_down_func;
         this->mouse_drag_func = mouse_drag_func;
         this->mouse_up_func = mouse_up_func;
-        return this;
-    }
-    virtual SectorsView *setJoystickCallbacks(ffunc_t joystick_x_func, ffunc_t joystick_y_func, ffunc_t joystick_z_func, ffunc_t joystick_r_func)
-    {
-        this->joystick_x_func = joystick_x_func;
-        this->joystick_y_func = joystick_y_func;
-        this->joystick_z_func = joystick_z_func;
-        this->joystick_r_func = joystick_r_func;
         return this;
     }
   protected:

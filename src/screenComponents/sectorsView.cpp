@@ -177,26 +177,3 @@ void SectorsView::onMouseUp(sf::Vector2f position)
     if (mouse_up_func)
         mouse_up_func(screenToWorld(position));
 }
-
-bool SectorsView::onJoystickXYMove(sf::Vector2f position)
-{
-    if (joystick_x_func)
-        joystick_x_func(position.x);
-    if (joystick_y_func)
-        joystick_y_func(position.y);
-    return true;
-}
-
-bool SectorsView::onJoystickZMove(float position)
-{
-    if (joystick_z_func)
-        joystick_z_func(position);
-    return true;
-}
-
-bool SectorsView::onJoystickRMove(float position)
-{
-    if (joystick_r_func)
-        joystick_r_func(position);
-    return true;
-}
