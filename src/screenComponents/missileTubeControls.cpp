@@ -202,7 +202,7 @@ float GuiMissileTubeControls::getMissileTargetAngle()
 
 void GuiMissileTubeControls::setManualAim(bool manual)
 {
-    manual_aim = manual;
+    manual_aim = target_spaceship->ship_template->has_manual_aim && manual;
 }
 
 bool GuiMissileTubeControls::getManualAim()

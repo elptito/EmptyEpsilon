@@ -69,6 +69,7 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, addDoor);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, addDrones);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setRadarTrace);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setHasManualAim);
     /// Return a new template with the given name, which is an exact copy of this template.
     /// Used to make easy variations of templates.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, copy);
@@ -115,6 +116,7 @@ ShipTemplate::ShipTemplate()
     launcher_dock_count = 0;
     energy_dock_count = 0;
     thermic_dock_count = 0;
+    has_manual_aim = true;
 }
 
 void ShipTemplate::setBeamTexture(int index, string texture)
@@ -426,6 +428,11 @@ void ShipTemplate::setDocks(int launchers, int energy, int thermic, int repair){
 void ShipTemplate::setRadarTrace(string trace)
 {
     radar_trace = trace;
+}
+
+void ShipTemplate::setHasManualAim(bool manual_aim)
+{
+    has_manual_aim = manual_aim;
 }
 
 P<ShipTemplate> ShipTemplate::copy(string new_name)

@@ -101,6 +101,9 @@ void TacticalScreen::onDraw(sf::RenderTarget& window)
         float velocity = sf::length(my_spaceship->getVelocity()) / 1000 * 60;
         velocity_display->setValue(string(velocity, 1) + DISTANCE_UNIT_1K + "/min");
 
+        lock_aim->setVisible(my_spaceship->ship_template->has_manual_aim);
+        missile_aim->setVisible(tube_controls->getManualAim() && my_spaceship->ship_template->has_manual_aim);
+
         warp_controls->setVisible(my_spaceship->has_warp_drive);
         jump_controls->setVisible(my_spaceship->has_jump_drive);
 
@@ -126,6 +129,13 @@ bool TacticalScreen::onJoystickAxis(const AxisAction& axisAction){
                 my_spaceship->commandCombatManeuverBoost(axisAction.value);
                 return true;
             }
+        }
+        if (axisAction.category == "WEAPONS"){
+            if (axisAction.action == "AIM_MISSILE" && my_spaceship->ship_template->has_manual_aim){
+                missile_aim->setValue(axisAction.value * 180);
+                tube_controls->setMissileTargetAngle(missile_aim->getValue());
+                return true;
+            } 
         }
     }
     return false;
@@ -204,15 +214,17 @@ void TacticalScreen::onHotkey(const HotkeyResult& key)
                 }
             }
         }
-        if (key.hotkey == "AIM_MISSILE_LEFT")
-        {
-            missile_aim->setValue(missile_aim->getValue() - 5.0f);
-            tube_controls->setMissileTargetAngle(missile_aim->getValue());
-        }
-        if (key.hotkey == "AIM_MISSILE_RIGHT")
-        {
-            missile_aim->setValue(missile_aim->getValue() + 5.0f);
-            tube_controls->setMissileTargetAngle(missile_aim->getValue());
+        if (my_spaceship->ship_template->has_manual_aim){
+            if (key.hotkey == "AIM_MISSILE_LEFT")
+            {
+                missile_aim->setValue(missile_aim->getValue() - 5.0f);
+                tube_controls->setMissileTargetAngle(missile_aim->getValue());
+            }
+            if (key.hotkey == "AIM_MISSILE_RIGHT")
+            {
+                missile_aim->setValue(missile_aim->getValue() + 5.0f);
+                tube_controls->setMissileTargetAngle(missile_aim->getValue());
+            }
         }
     }
 }

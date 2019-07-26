@@ -122,6 +122,7 @@ public:
     int thermic_dock_count;
     int repair_dock_count;
     string radar_trace;
+    bool has_manual_aim;
 
     std::vector<ShipRoomTemplate> rooms;
     std::vector<ShipDoorTemplate> doors;
@@ -175,6 +176,7 @@ public:
     void addDrones(string template_name, int count);
     void setDocks(int launchers, int energy, int thermic, int repair);
     void setRadarTrace(string trace);
+    void setHasManualAim(bool manual_aim);
 
     P<ShipTemplate> copy(string new_name);
 

@@ -18,7 +18,7 @@ AimLockButton::AimLockButton(GuiContainer* owner, string id, GuiMissileTubeContr
 
 void AimLockButton::onHotkey(const HotkeyResult& key)
 {
-    if (key.category == "WEAPONS" && target_spaceship)
+    if (key.category == "WEAPONS" && target_spaceship && target_spaceship->ship_template->has_manual_aim)
     {
         if (key.hotkey == "TOGGLE_AIM_LOCK")
         {
@@ -40,6 +40,7 @@ void AimLockButton::onHotkey(const HotkeyResult& key)
 
 void AimLockButton::setAimLock(bool value)
 {
+    value = value || !target_spaceship->ship_template->has_manual_aim;
     this->tube_controls->setManualAim(!value);
     this->missile_aim->setVisible(!value);
     if (!value && target_spaceship)
