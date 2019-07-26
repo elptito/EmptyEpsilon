@@ -99,6 +99,13 @@ HotkeyConfig::HotkeyConfig()
     newKey("MODE_PUSH", std::make_tuple("Switch tractor beam to push mode", ""));
     newKey("MODE_HOLD", std::make_tuple("Switch tractor beam to hold mode", ""));
 
+    newCategory("GM", "Game Master");
+    newKey("DESTROY", std::make_tuple("Destroy delected targets", "Delete"));
+    newKey("COPY_SCENARIO", std::make_tuple("Copy scenario to clipboard", "F5"));
+    newKey("TOGGLE_PAUSE", std::make_tuple("Toggle Pause/unpause", "P"));
+    newKey("FIRE_TUBE", std::make_tuple("Fire selected Tube", "[B0]"));
+    newKey("PREV_TUBE", std::make_tuple("Select previous tube to fire", "[B4]"));
+    newKey("NEXT_TUBE", std::make_tuple("Select next tube to fire", "[B6]"));
 }
 
 static std::vector<std::pair<string, sf::Keyboard::Key> > sfml_key_names = {

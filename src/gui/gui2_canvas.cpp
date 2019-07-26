@@ -72,7 +72,9 @@ void GuiCanvas::handleKeyPress(sf::Event::KeyEvent key, int unicode)
 
 void GuiCanvas::handleJoystickAxis(unsigned int joystickId, sf::Joystick::Axis axis, float position){
     for(AxisAction action : joystick.getAxisAction(joystickId, axis, position)){
-        forwardJoystickAxisToElements(action);
+        if (!onJoystickAxis(action)){
+            forwardJoystickAxisToElements(action);
+        }
     }
 }
 
@@ -95,6 +97,11 @@ void GuiCanvas::onHotkey(const HotkeyResult& key)
 
 void GuiCanvas::onKey(sf::Event::KeyEvent key, int unicode)
 {
+}
+
+bool GuiCanvas::onJoystickAxis(const AxisAction& axisAction)
+{
+    return false;
 }
 
 void GuiCanvas::unfocusElementTree(GuiElement* element)

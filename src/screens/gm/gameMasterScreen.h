@@ -85,9 +85,10 @@ public:
     void onMouseUp(sf::Vector2f position);
 
     virtual void onKey(sf::Event::KeyEvent key, int unicode);
-    virtual void handleJoystickAxis(unsigned int joystick, sf::Joystick::Axis axis, float position);
-    virtual void handleJoystickButton(unsigned int joystick, unsigned int button, bool state);
     
+    virtual void onHotkey(const HotkeyResult& key) override;
+    virtual bool onJoystickAxis(const AxisAction& axisAction) override;
+
     PVector<SpaceObject> getSelection();
     
     string getScriptExport(bool selected_only);

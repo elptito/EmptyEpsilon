@@ -480,74 +480,67 @@ void GameMasterScreen::onKey(sf::Event::KeyEvent key, int unicode)
 {
     switch(key.code)
     {
-    case sf::Keyboard::Delete:
-        gameMasterActions->commandDestroy(targets.getTargets());
-        break;
-    case sf::Keyboard::F5:
-        Clipboard::setClipboard(getScriptExport(false));
-        break;
     //TODO: This is more generic code and is duplicated.
     case sf::Keyboard::Escape:
     case sf::Keyboard::Home:
         destroy();
         returnToShipSelection();
         break;
-    case sf::Keyboard::P:
-        if (engine->getGameSpeed() == 0.0f)
-            gameMasterActions->commandSetGameSpeed(1.0f);
-        else
-            gameMasterActions->commandSetGameSpeed(0.0f);
-        break;
     default:
         break;
     }
 }
 
-void GameMasterScreen::handleJoystickAxis(unsigned int joystick, sf::Joystick::Axis axis, float position)
+void GameMasterScreen::onHotkey(const HotkeyResult& key)
 {
-    if(possession_target){
-        switch(axis) 
-        {
-        case sf::Joystick::X: 
-            possession_target->commandCombatManeuverStrafe(position / 100);
-            break;
-        case sf::Joystick::Y: 
-            possession_target->commandCombatManeuverBoost(-position / 100);
-            break;
-        case sf::Joystick::Z: 
-            possession_target->commandImpulse(-position / 100);  
-            break;
-        case sf::Joystick::R: 
-            possession_target->commandTurnSpeed(position / 100);
-            break;
-        default:
-            break;
+    if (key.category == "GM")
+    {
+        if (key.hotkey == "DESTROY") {
+            gameMasterActions->commandDestroy(targets.getTargets());
+        } else if (key.hotkey == "COPY_SCENARIO") {
+            Clipboard::setClipboard(getScriptExport(false));
+        } else if (key.hotkey == "TOGGLE_PAUSE") {
+            if (engine->getGameSpeed() == 0.0f) {
+                gameMasterActions->commandSetGameSpeed(1.0f);
+            } else {
+                gameMasterActions->commandSetGameSpeed(0.0f);
+            } 
         }
-    }
-}
-
-void GameMasterScreen::handleJoystickButton(unsigned int joystick, unsigned int button, bool state)
-{
-    if(state && possession_target){
-        switch(button) 
-        {
-        case 0:
-            possession_target->commandFireTubeAtTarget(selected_posessed_tube, possession_target->getTarget());
-            break;
-        case 4 : 
-            if (possession_target->weapon_tube_count)
+        if (possession_target && possession_target->weapon_tube_count){
+            if (key.hotkey == "FIRE_TUBE") {
+                possession_target->commandFireTubeAtTarget(selected_posessed_tube, possession_target->getTarget());
+            } else if (key.hotkey == "PREV_TUBE") {
                 selected_posessed_tube = (selected_posessed_tube + possession_target->weapon_tube_count - 1) % possession_target->weapon_tube_count;
-            break;
-        case 6 : 
-            if (possession_target->weapon_tube_count)
+            } else if (key.hotkey == "NEXT_TUBE") {
                 selected_posessed_tube = (selected_posessed_tube + 1) % possession_target->weapon_tube_count;
-            break;
-        default:
-            break;
+            }
         }
     }
 }
 
+bool GameMasterScreen::onJoystickAxis(const AxisAction& axisAction){
+    if(possession_target){
+        if (axisAction.category == "HELMS"){
+            if (axisAction.action == "IMPULSE"){
+                possession_target->commandImpulse(axisAction.value);  
+                return true;
+            } 
+            if (axisAction.action == "ROTATE"){
+                possession_target->commandTurnSpeed(axisAction.value);
+                return true;
+            } 
+            if (axisAction.action == "STRAFE"){
+                possession_target->commandCombatManeuverStrafe(axisAction.value);
+                return true;
+            } 
+            if (axisAction.action == "BOOST"){
+                possession_target->commandCombatManeuverBoost(axisAction.value);
+                return true;
+            }
+        }
+    }
+    return false;
+}
 PVector<SpaceObject> GameMasterScreen::getSelection()
 {
     return targets.getTargets();
