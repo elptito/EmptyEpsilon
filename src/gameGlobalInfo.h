@@ -131,6 +131,8 @@ public:
 
     string getNextShipCallsign();
     void setTerrain(string textureName, sf::Vector2f coordinates, float scale);
+    // get export line of terrain data
+    string getExportLine();
     sf::Color getTerrainPixel(sf::Vector2f coordinates);
 };
 

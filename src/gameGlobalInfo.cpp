@@ -199,6 +199,18 @@ void GameGlobalInfo::destroy()
         state_logger->destroy();
 }
 
+string GameGlobalInfo::getExportLine(){
+    string ret = "";
+    if (terrain.defined){
+        ret += string("setTerrain(")+
+        "\"" + terrain.textureName + "\", "+
+        string(terrain.coordinates.x, 0) + ", "+
+        string(terrain.coordinates.y, 0) + ", "+
+        string(terrain.scale) + ")\n";
+    }
+    return ret;
+}
+
 void GameGlobalInfo::setTerrain(string textureName, sf::Vector2f coordinates, float scale){
     if (game_server){
         // only server can effectively load terrainImage data

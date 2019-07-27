@@ -555,6 +555,9 @@ string GameMasterScreen::getScriptExport(bool selected_only)
         objs = targets.getTargets();
     }else{
         objs = space_object_list;
+        string globalExportLine = gameGlobalInfo->getExportLine();
+        if (globalExportLine != "")
+                output += globalExportLine;
         for (unsigned int i = 0; i < factionInfo.size(); i++){
             string line = factionInfo[i]->getExportLine();
             if (line != "")
