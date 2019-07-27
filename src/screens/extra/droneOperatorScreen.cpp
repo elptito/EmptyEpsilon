@@ -119,7 +119,10 @@ void DroneOperatorScreen::onDraw(sf::RenderTarget &window)
             break;
         case Piloting:
             noise_overlay->show();
-            noise_overlay->setAlpha(std::max(0, int(200 - 200 * getConnectionQuality(selected_drone))- 50));
+            noise_overlay->setAlpha(std::max(0, int(Tween<float>::linear(
+                getConnectionQuality(selected_drone),
+                0, 0.5, 220, 0
+            ))));
             no_drones_label->hide();
             droneSelection->hide();
             single_pilot_view->show();

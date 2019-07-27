@@ -11,6 +11,7 @@
 #include "shipCargo.h"
 #include "scanProbe.h"
 #include "gui/colorConfig.h"
+#include "preferenceManager.h"
 
 #include "scriptInterface.h"
 
@@ -1665,7 +1666,13 @@ bool SpaceShip::tryDockDrone(SpaceShip* other){
 }
 
 float SpaceShip::getDronesControlRange() { 
-    return Tween<float>::easeInQuad(getSystemEffectiveness(SYS_Drones), 0.0, 3.0, 1, 37000); 
+    return Tween<float>::linear(
+            getSystemEffectiveness(SYS_Drones), 
+            0.0, 
+            3.0, 
+            1, 
+            PreferencesManager::get("drones_max_range", "15000").toInt()
+        ); 
 }
 
 // Client-side functions to send a command to the server.
