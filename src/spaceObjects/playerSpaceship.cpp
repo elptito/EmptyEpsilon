@@ -465,6 +465,8 @@ void PlayerSpaceship::update(float delta)
         if (has_warp_drive && warp_request > 0 && !(has_jump_drive && jump_delay > 0))
         {
             float warp_terrain_cap = PreferencesManager::get("warp_terrain_cap", "2.0").toFloat();
+            float energy_warp_per_second = PreferencesManager::get("energy_warp_per_second", "1.2").toFloat();
+            
             // If warping, consume energy at a rate of 120% the warp request.
             // If shields are up, that rate is increased by an additional 50%.
             if (!useEnergy(energy_warp_per_second * delta * std::min<float>(warp_terrain_cap, warp_request) * (shields_active ? 1.5 : 1.0)))

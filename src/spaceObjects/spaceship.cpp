@@ -959,6 +959,7 @@ void SpaceShip::update(float delta)
                 current_impulse = impulse_request;
         }
     }
+    float heat_per_warp = PreferencesManager::get("heat_per_warp", "0.02").toFloat();
 
     // Add heat based on warp factor.
     addHeat(SYS_Warp, std::min(warp_terrain_cap, current_warp) * delta * heat_per_warp);

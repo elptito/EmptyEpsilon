@@ -98,7 +98,6 @@ public:
     constexpr static float jump_drive_heat_per_jump = 0.35;
     constexpr static float heat_per_combat_maneuver_boost = 0.2;
     constexpr static float heat_per_combat_maneuver_strafe = 0.2;
-    constexpr static float heat_per_warp = 0.02;
     constexpr static float unhack_time = 180.0f; //It takes this amount of time to go from 100% hacked to 0% hacked for systems.
 
     // Content of a line in the ship's log
