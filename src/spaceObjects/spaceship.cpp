@@ -125,7 +125,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     has_warp_drive = true;
     warp_request = 0.0;
     current_warp = 0.0;
-    max_warp = 2.0;
+    max_warp = PreferencesManager::get("warp_terrain_cap", "2.0").toFloat();
     has_jump_drive = true;
     jump_drive_min_distance = 5000.0;
     jump_drive_max_distance = 50000.0;
@@ -809,7 +809,7 @@ void SpaceShip::drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f position, f
 void SpaceShip::update(float delta)
 {
     ShipTemplateBasedObject::update(delta);
-
+    float warp_terrain_cap = PreferencesManager::get("warp_terrain_cap", "2.0").toFloat();
     if (game_server)
     {
         if (docking_state == DS_Docking)
@@ -849,7 +849,7 @@ void SpaceShip::update(float delta)
             warp_request = 0.0;
             
         if (gameGlobalInfo->terrain[0].defined){
-            max_warp = 2.0f + 2.0f * float(gameGlobalInfo->getTerrainPixel(0, getPosition()).a) / 255;
+            max_warp = Tween<float>::linear(gameGlobalInfo->getTerrainPixel(0, getPosition()).a, 0, 255, warp_terrain_cap, 4.0f);
         }
     }
 
@@ -961,7 +961,7 @@ void SpaceShip::update(float delta)
     }
 
     // Add heat based on warp factor.
-    addHeat(SYS_Warp, current_warp * delta * heat_per_warp);
+    addHeat(SYS_Warp, std::min(warp_terrain_cap, current_warp) * delta * heat_per_warp);
 
     // Determine forward direction and velocity.
     sf::Vector2f forward = sf::vector2FromAngle(getRotation());

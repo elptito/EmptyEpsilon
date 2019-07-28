@@ -5,6 +5,7 @@
 #include "explosionEffect.h"
 #include "gameGlobalInfo.h"
 #include "main.h"
+#include "preferenceManager.h"
 
 #include "scriptInterface.h"
 
@@ -463,9 +464,10 @@ void PlayerSpaceship::update(float delta)
         // If a ship is jumping or warping, consume additional energy.
         if (has_warp_drive && warp_request > 0 && !(has_jump_drive && jump_delay > 0))
         {
+            float warp_terrain_cap = PreferencesManager::get("warp_terrain_cap", "2.0").toFloat();
             // If warping, consume energy at a rate of 120% the warp request.
             // If shields are up, that rate is increased by an additional 50%.
-            if (!useEnergy(energy_warp_per_second * delta * warp_request * 1.2 * (shields_active ? 1.5 : 1.0)))
+            if (!useEnergy(energy_warp_per_second * delta * std::min<float>(warp_terrain_cap, warp_request) * (shields_active ? 1.5 : 1.0)))
                 // If there's not enough energy, fall out of warp.
                 warp_request = 0;
                 
