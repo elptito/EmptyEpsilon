@@ -23,6 +23,7 @@ public:
     string textureName;
     sf::Vector2f coordinates;
     float scale; 
+    sf::Image image; // server only (no registerMemberReplication) pixels
 };
 
 enum EPlayerWarpJumpDrive
@@ -60,7 +61,7 @@ public:
      * \brief Maximum number of visual background nebulas.
      */
     static const int max_nebulas = 32;
-     /*!
+    /*!
      * \size of a sector.
      */
     static const int sector_size = 20000;
@@ -72,7 +73,6 @@ private:
      * \brief List of known scripts
      */
     PVector<Script> script_list;
-    sf::Image terrainImage; // server only (no registerMemberReplication) terrain image data
 public:
     string global_message;
     float global_message_timeout;

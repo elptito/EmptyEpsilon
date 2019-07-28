@@ -216,7 +216,7 @@ void GameGlobalInfo::setTerrain(string textureName, sf::Vector2f coordinates, fl
         // only server can effectively load terrainImage data
         P<ResourceStream> stream = getResourceStream(textureName);
         if (!stream) stream = getResourceStream(textureName + ".png");
-        if (stream && terrainImage.loadFromStream(**stream)){
+        if (stream && terrain.image.loadFromStream(**stream)){
             terrain.defined = true;
             terrain.textureName = textureName;
             terrain.coordinates = coordinates;
@@ -230,13 +230,13 @@ void GameGlobalInfo::setTerrain(string textureName, sf::Vector2f coordinates, fl
 }
 
 sf::Color GameGlobalInfo::getTerrainPixel(sf::Vector2f coordinates){ 
-    coordinates = (sf::Vector2f(terrainImage.getSize()) * 0.5f) + ((coordinates + terrain.coordinates) / terrain.scale);
-    if (coordinates.x < 0 || coordinates.x > terrainImage.getSize().x || 
-        coordinates.y < 0 || coordinates.y > terrainImage.getSize().y)
+    coordinates = (sf::Vector2f(terrain.image.getSize()) * 0.5f) + ((coordinates + terrain.coordinates) / terrain.scale);
+    if (coordinates.x < 0 || coordinates.x > terrain.image.getSize().x || 
+        coordinates.y < 0 || coordinates.y > terrain.image.getSize().y)
         // outside of image boundaries
         return sf::Color::Transparent;
      else 
-        return terrainImage.getPixel(coordinates.x, coordinates.y);
+        return terrain.image.getPixel(coordinates.x, coordinates.y);
 }
 
 string playerWarpJumpDriveToString(EPlayerWarpJumpDrive player_warp_jump_drive)
