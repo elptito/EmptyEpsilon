@@ -60,7 +60,11 @@ public:
     /*!
      * \brief Maximum number of visual background nebulas.
      */
-    static const int max_nebulas = 32;
+    static const int max_nebulas = 32;    
+    /*!
+     * \brief Maximum number of terrain layers.
+     */
+    static const int max_terrain_layers = 32;
     /*!
      * \size of a sector.
      */
@@ -102,7 +106,7 @@ public:
     //When active, all comms request goto the GM as chat, and normal scripted converstations are disabled. This does not disallow player<->player ship comms.
     ECommsGmInterception intercept_all_comms_to_gm;
 
-    TerrainInfo terrain;
+    TerrainInfo terrain[max_terrain_layers];
     GameGlobalInfo();
 
     P<PlayerSpaceship> getPlayerShip(int index);
@@ -130,10 +134,10 @@ public:
     virtual void destroy();
 
     string getNextShipCallsign();
-    void setTerrain(string textureName, sf::Vector2f coordinates, float scale);
+    void setTerrain(int terrainId, string textureName, sf::Vector2f coordinates, float scale);
     // get export line of terrain data
     string getExportLine();
-    sf::Color getTerrainPixel(sf::Vector2f coordinates);
+    sf::Color getTerrainPixel(int terrainId, sf::Vector2f coordinates);
 };
 
 string playerWarpJumpDriveToString(EPlayerWarpJumpDrive player_warp_jump_drive);

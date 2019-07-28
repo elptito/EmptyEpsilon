@@ -848,8 +848,8 @@ void SpaceShip::update(float delta)
         if ((docking_state == DS_Docked) || (docking_state == DS_Docking))
             warp_request = 0.0;
             
-        if (gameGlobalInfo->terrain.defined){
-            max_warp = 2.0f + 2.0f * float(gameGlobalInfo->getTerrainPixel(getPosition()).a) / 255;
+        if (gameGlobalInfo->terrain[0].defined){
+            max_warp = 2.0f + 2.0f * float(gameGlobalInfo->getTerrainPixel(0, getPosition()).a) / 255;
         }
     }
 

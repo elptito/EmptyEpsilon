@@ -147,12 +147,13 @@ void SectorsView::drawTargets(sf::RenderTarget& window)
     }
 }
 void SectorsView::drawTerrain(sf::RenderTarget &window){
-    if (gameGlobalInfo->terrain.defined){
+    TerrainInfo &terrain = gameGlobalInfo->terrain[0];
+    if (terrain.defined){
         sf::Sprite terrainMap;
-        textureManager.getTexture(gameGlobalInfo->terrain.textureName)->setSmooth(true);
-        textureManager.setTexture(terrainMap, gameGlobalInfo->terrain.textureName);
-        terrainMap.setPosition(worldToScreen(gameGlobalInfo->terrain.coordinates));
-        terrainMap.setScale(getScale() * gameGlobalInfo->terrain.scale, getScale()* gameGlobalInfo->terrain.scale);
+        textureManager.getTexture(terrain.textureName)->setSmooth(true);
+        textureManager.setTexture(terrainMap, terrain.textureName);
+        terrainMap.setPosition(worldToScreen(terrain.coordinates));
+        terrainMap.setScale(getScale() * terrain.scale, getScale()* terrain.scale);
         terrainMap.setColor(sf::Color(255, 255, 255, 128)); // half transparent
         window.draw(terrainMap);
     }

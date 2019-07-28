@@ -34,11 +34,14 @@ GameGlobalInfo::GameGlobalInfo()
         registerMemberReplication(&nebula_info[n].vector);
         registerMemberReplication(&nebula_info[n].textureName);
     }
-    registerMemberReplication(&terrain.textureName);
-    registerMemberReplication(&terrain.scale);
-    registerMemberReplication(&terrain.coordinates);
-    registerMemberReplication(&terrain.defined);
-
+    for(int n=0; n<max_terrain_layers; n++)
+    {
+        registerMemberReplication(&terrain[n].textureName);
+        registerMemberReplication(&terrain[n].scale);
+        registerMemberReplication(&terrain[n].coordinates);
+        registerMemberReplication(&terrain[n].defined);
+        terrain[n].defined = false;
+    }
     global_message_timeout = 0.0;
     player_warp_jump_drive_setting = PWJ_ShipDefault;
     scanning_complexity = SC_Normal;
@@ -50,7 +53,6 @@ GameGlobalInfo::GameGlobalInfo()
     allow_main_screen_long_range_radar = true;
     allow_main_screen_global_range_radar = true;
     allow_main_screen_ship_state = true;
-    terrain.defined = false;
     intercept_all_comms_to_gm = CGI_None;
 
     registerMemberReplication(&scanning_complexity);
@@ -201,18 +203,23 @@ void GameGlobalInfo::destroy()
 
 string GameGlobalInfo::getExportLine(){
     string ret = "";
-    if (terrain.defined){
-        ret += string("setTerrain(")+
-        "\"" + terrain.textureName + "\", "+
-        string(terrain.coordinates.x, 0) + ", "+
-        string(terrain.coordinates.y, 0) + ", "+
-        string(terrain.scale) + ")\n";
+    for(int n=0; n<max_terrain_layers; n++)
+    {
+        if (terrain[n].defined){
+            ret += string("setTerrain(")+
+            string(n, 0) + ", "+
+            "\"" + terrain[n].textureName + "\", "+
+            string(terrain[n].coordinates.x, 0) + ", "+
+            string(terrain[n].coordinates.y, 0) + ", "+
+            string(terrain[n].scale) + ")\n";
+        }
     }
     return ret;
 }
 
-void GameGlobalInfo::setTerrain(string textureName, sf::Vector2f coordinates, float scale){
+void GameGlobalInfo::setTerrain(int terrainId, string textureName, sf::Vector2f coordinates, float scale){
     if (game_server){
+        TerrainInfo &terrain = this->terrain[terrainId];
         // only server can effectively load terrainImage data
         P<ResourceStream> stream = getResourceStream(textureName);
         if (!stream) stream = getResourceStream(textureName + ".png");
@@ -229,7 +236,8 @@ void GameGlobalInfo::setTerrain(string textureName, sf::Vector2f coordinates, fl
     }
 }
 
-sf::Color GameGlobalInfo::getTerrainPixel(sf::Vector2f coordinates){ 
+sf::Color GameGlobalInfo::getTerrainPixel(int terrainId, sf::Vector2f coordinates){ 
+    TerrainInfo &terrain = this->terrain[terrainId];
     coordinates = (sf::Vector2f(terrain.image.getSize()) * 0.5f) + ((coordinates + terrain.coordinates) / terrain.scale);
     if (coordinates.x < 0 || coordinates.x > terrain.image.getSize().x || 
         coordinates.y < 0 || coordinates.y > terrain.image.getSize().y)
@@ -504,7 +512,7 @@ static int setTerrain(lua_State *L)
     float x = luaL_checknumber(L, 2);
     float y = luaL_checknumber(L, 3);
     float scale = luaL_checknumber(L, 4);
-    gameGlobalInfo->setTerrain(textureName, sf::Vector2f(x, y), scale);
+    gameGlobalInfo->setTerrain(0, textureName, sf::Vector2f(x, y), scale);
     return 0;
 }
 /// setTerrain(textureName, x, y, scale)
