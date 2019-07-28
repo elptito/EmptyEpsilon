@@ -508,13 +508,14 @@ REGISTER_SCRIPT_FUNCTION(playSoundFile);
 
 static int setTerrain(lua_State *L)
 {
-    string textureName = luaL_checkstring(L, 1);
-    float x = luaL_checknumber(L, 2);
-    float y = luaL_checknumber(L, 3);
-    float scale = luaL_checknumber(L, 4);
-    gameGlobalInfo->setTerrain(0, textureName, sf::Vector2f(x, y), scale);
+    float id = luaL_checknumber(L, 1);
+    string textureName = luaL_checkstring(L, 2);
+    float x = luaL_checknumber(L, 3);
+    float y = luaL_checknumber(L, 4);
+    float scale = luaL_checknumber(L, 5);
+    gameGlobalInfo->setTerrain(id, textureName, sf::Vector2f(x, y), scale);
     return 0;
 }
-/// setTerrain(textureName, x, y, scale)
+/// setTerrain(id, textureName, x, y, scale)
 /// set the terrain texture of the map
 REGISTER_SCRIPT_FUNCTION(setTerrain);

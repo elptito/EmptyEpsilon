@@ -70,7 +70,7 @@ function setWaveDistance(enemy_group_count)
 end
 
 function init()
-	setTerrain("cosmic-map-3.png", 0, 0, 7000)
+	setTerrain(0, "cosmic-map-3.png", 0, 0, 7000)
 	-- Spawn a player Atlantis.
 	player = PlayerSpaceship():setFaction("Human Navy"):setTemplate("Atlantis")
 
