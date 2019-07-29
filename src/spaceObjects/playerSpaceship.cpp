@@ -5,7 +5,6 @@
 #include "explosionEffect.h"
 #include "gameGlobalInfo.h"
 #include "main.h"
-#include "preferenceManager.h"
 
 #include "scriptInterface.h"
 
@@ -104,6 +103,22 @@ REGISTER_SCRIPT_SUBCLASS(PlayerSpaceship, SpaceShip)
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setControlCode);
 }
 
+float PlayerSpaceship::energy_warp_per_second = 0;
+float PlayerSpaceship::energy_shield_use_per_second = 0;
+float PlayerSpaceship::system_heatup_per_second = 0;
+float PlayerSpaceship::system_power_level_change_per_second = 0;
+float PlayerSpaceship::energy_transfer_per_second = 0;
+float PlayerSpaceship::heat_transfer_per_second = 0;
+float PlayerSpaceship::repair_per_second = 0;
+float PlayerSpaceship::cargo_repair_per_second = 0;
+float PlayerSpaceship::system_coolant_level_change_per_second = 0;
+float PlayerSpaceship::max_coolant = 0;
+float PlayerSpaceship::damage_per_second_on_overheat = 0;
+float PlayerSpaceship::shield_calibration_time = 0;
+float PlayerSpaceship::comms_channel_open_time = 0;
+float PlayerSpaceship::scan_probe_charge_time = 0;
+float PlayerSpaceship::max_scanning_delay = 0;
+float PlayerSpaceship::warp_terrain_cap = 0;
 float PlayerSpaceship::system_power_user_factor[] = {
     /*SYS_Reactor*/     -25.0 * 0.08,
     /*SYS_BeamWeapons*/   3.0 * 0.08,
@@ -464,9 +479,6 @@ void PlayerSpaceship::update(float delta)
         // If a ship is jumping or warping, consume additional energy.
         if (has_warp_drive && warp_request > 0 && !(has_jump_drive && jump_delay > 0))
         {
-            float warp_terrain_cap = PreferencesManager::get("warp_terrain_cap", "2.0").toFloat();
-            float energy_warp_per_second = PreferencesManager::get("energy_warp_per_second", "1.2").toFloat();
-            
             // If warping, consume energy at a rate of 120% the warp request.
             // If shields are up, that rate is increased by an additional 50%.
             if (!useEnergy(energy_warp_per_second * delta * std::min<float>(warp_terrain_cap, warp_request) * (shields_active ? 1.5 : 1.0)))

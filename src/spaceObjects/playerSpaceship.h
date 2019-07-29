@@ -6,6 +6,7 @@
 #include "playerInfo.h"
 #include "spaceshipParts/dock.h"
 #include <iostream>
+#include "preferenceManager.h"
 
 enum ECommsState
 {
@@ -58,31 +59,54 @@ protected:
     static const int16_t CMD_CUSTOM_FUNCTION = 0x002A;
     static const int16_t CMD_SET_AUTO_REPAIR_SYSTEM_TARGET = 0x0030;
 public:
-    // Power consumption and generation base rates
-    constexpr static float energy_shield_use_per_second = 1.5f;
-    constexpr static float system_heatup_per_second = 0.05f;
-    constexpr static float system_power_level_change_per_second = 0.3;
-    constexpr static float energy_transfer_per_second = 5;
-    constexpr static float heat_transfer_per_second = 0.1;
-    constexpr static float repair_per_second = 0.007;
-    constexpr static float cargo_repair_per_second = 0.1;
 
-    // Coolant change rate
-    constexpr static float system_coolant_level_change_per_second = 1.2;
-    // Total coolant
-    constexpr static float max_coolant = 10.0;
-    // Overheat subsystem damage rate
-    constexpr static float damage_per_second_on_overheat = 0.08f;
-    // Base time it takes to perform an action
-    constexpr static float shield_calibration_time = 25.0f;
-    constexpr static float comms_channel_open_time = 2.0;
-    constexpr static float scan_probe_charge_time = 10.0f;
-    constexpr static float max_scanning_delay = 6.0;
-    // Maximum number of self-destruction confirmation codes
-    constexpr static int max_self_destruct_codes = 3;
     // Subsystem effectiveness base rates
     static float system_power_user_factor[];
     
+    static void load(){
+        PlayerSpaceship::warp_terrain_cap = PreferencesManager::get("warp_terrain_cap", "2.0").toFloat();
+        PlayerSpaceship::energy_warp_per_second = PreferencesManager::get("energy_warp_per_second", "1.2").toFloat();
+        PlayerSpaceship::energy_shield_use_per_second = PreferencesManager::get("energy_shield_use_per_second", "1.5").toFloat();
+        PlayerSpaceship::system_heatup_per_second = PreferencesManager::get("system_heatup_per_second", "0.05").toFloat();
+        PlayerSpaceship::system_power_level_change_per_second = PreferencesManager::get("system_power_level_change_per_second", "0.3").toFloat();
+        PlayerSpaceship::energy_transfer_per_second = PreferencesManager::get("energy_transfer_per_second", "5").toFloat();
+        PlayerSpaceship::heat_transfer_per_second = PreferencesManager::get("heat_transfer_per_second", "0.1").toFloat();
+        PlayerSpaceship::repair_per_second = PreferencesManager::get("repair_per_second", "0.007").toFloat();
+        PlayerSpaceship::cargo_repair_per_second = PreferencesManager::get("cargo_repair_per_second", "0.1").toFloat();
+        PlayerSpaceship::system_coolant_level_change_per_second = PreferencesManager::get("system_coolant_level_change_per_second", "1.2").toFloat();
+        PlayerSpaceship::max_coolant = PreferencesManager::get("max_coolant", "10").toFloat();
+        PlayerSpaceship::damage_per_second_on_overheat = PreferencesManager::get("damage_per_second_on_overheat", "0.08").toFloat();
+        PlayerSpaceship::shield_calibration_time = PreferencesManager::get("shield_calibration_time", "25.0").toFloat();
+        PlayerSpaceship::comms_channel_open_time = PreferencesManager::get("comms_channel_open_time", "2.0").toFloat();
+        PlayerSpaceship::scan_probe_charge_time = PreferencesManager::get("scan_probe_charge_time", "10.0").toFloat();
+        PlayerSpaceship::max_scanning_delay = PreferencesManager::get("max_scanning_delay", "6.0").toFloat();
+    }
+    // Power consumption and generation base rates
+    static float energy_warp_per_second;
+    static float energy_shield_use_per_second;
+    static float system_heatup_per_second;
+    static float system_power_level_change_per_second ;
+    static float energy_transfer_per_second;
+    static float heat_transfer_per_second;
+    static float repair_per_second;
+    static float cargo_repair_per_second;
+
+    // Coolant change rate
+    static float system_coolant_level_change_per_second;
+    // Total coolant
+    static float max_coolant;
+    // Overheat subsystem damage rate
+    static float damage_per_second_on_overheat;
+    // Base time it takes to perform an action
+    static float shield_calibration_time;
+    static float comms_channel_open_time;
+    static float scan_probe_charge_time;
+    static float max_scanning_delay;
+    // Maximum number of self-destruction confirmation codes
+    constexpr static int max_self_destruct_codes = 3;
+
+    static float warp_terrain_cap; 
+
     constexpr static int16_t CMD_PLAY_CLIENT_SOUND = 0x0001;
 
     class CustomShipFunction

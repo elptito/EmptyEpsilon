@@ -7,6 +7,7 @@
 #include "spaceshipParts/tractorBeam.h"
 #include "spaceshipParts/weaponTube.h"
 #include "spaceshipParts/dock.h"
+#include "preferenceManager.h"
 
 enum EMainScreenSetting
 {
@@ -86,19 +87,37 @@ protected:
     static const int16_t CMD_TURN_SPEED = 0x0035;
     static const int16_t CMD_ADD_LOG_LINE = 0x0036;
 public:
-    constexpr static int max_frequency = 20;
-    constexpr static float combat_maneuver_charge_time = 20.0f; /*< Amount of time it takes to fully charge the combat maneuver system */
-    constexpr static float combat_maneuver_boost_max_time = 3.0f; /*< Amount of time we can boost with a fully charged combat maneuver system */
-    constexpr static float combat_maneuver_strafe_max_time = 3.0f; /*< Amount of time we can strafe with a fully charged combat maneuver system */
-    constexpr static float warp_charge_time = 4.0f;
-    constexpr static float warp_decharge_time = 2.0f;
-    constexpr static float jump_drive_charge_time = 90.0;   /*<Total charge time for the jump drive after a max range jump */
-    constexpr static float dock_move_time = 15.0f; // It takes this amount of time to move cargo between two docks
-    constexpr static float jump_drive_energy_per_km_charge = 4.0f;
-    constexpr static float jump_drive_heat_per_jump = 0.35;
-    constexpr static float heat_per_combat_maneuver_boost = 0.2;
-    constexpr static float heat_per_combat_maneuver_strafe = 0.2;
-    constexpr static float unhack_time = 180.0f; //It takes this amount of time to go from 100% hacked to 0% hacked for systems.
+    static void load(){
+        SpaceShip::heat_per_warp = PreferencesManager::get("heat_per_warp", "0.02").toFloat();
+        SpaceShip::max_frequency = PreferencesManager::get("max_frequency", "20").toInt();
+        SpaceShip::combat_maneuver_charge_time = PreferencesManager::get("combat_maneuver_charge_time", "20.0").toFloat();
+        SpaceShip::combat_maneuver_boost_max_time = PreferencesManager::get("combat_maneuver_boost_max_time", "3.0").toFloat();
+        SpaceShip::combat_maneuver_strafe_max_time = PreferencesManager::get("combat_maneuver_strafe_max_time", "3.0").toFloat();
+        SpaceShip::warp_charge_time = PreferencesManager::get("warp_charge_time", "4.0").toFloat();
+        SpaceShip::warp_decharge_time = PreferencesManager::get("warp_decharge_time", "2.0").toFloat();
+        SpaceShip::jump_drive_charge_time = PreferencesManager::get("jump_drive_charge_time", "90.0").toFloat();
+        SpaceShip::dock_move_time = PreferencesManager::get("dock_move_time", "15.0").toFloat();
+        SpaceShip::jump_drive_energy_per_km_charge = PreferencesManager::get("jump_drive_energy_per_km_charge", "4.0").toFloat();
+        SpaceShip::jump_drive_heat_per_jump = PreferencesManager::get("jump_drive_heat_per_jump", "0.35").toFloat();
+        SpaceShip::heat_per_combat_maneuver_boost = PreferencesManager::get("heat_per_combat_maneuver_boost", "0.2").toFloat();
+        SpaceShip::heat_per_combat_maneuver_strafe = PreferencesManager::get("heat_per_combat_maneuver_strafe", "0.2").toFloat();
+        SpaceShip::unhack_time = PreferencesManager::get("unhack_time", "180.0").toFloat();
+    }
+    static float heat_per_warp;
+    static int max_frequency;
+    static float combat_maneuver_charge_time; /*< Amount of time it takes to fully charge the combat maneuver system */
+    static float combat_maneuver_boost_max_time; /*< Amount of time we can boost with a fully charged combat maneuver system */
+    static float combat_maneuver_strafe_max_time; /*< Amount of time we can strafe with a fully charged combat maneuver system */
+    static float warp_charge_time;
+    static float warp_decharge_time;
+    static float jump_drive_charge_time;   /*<Total charge time for the jump drive after a max range jump */
+    static float dock_move_time; // It takes this amount of time to move cargo between two docks
+    static float jump_drive_energy_per_km_charge;
+    static float jump_drive_heat_per_jump;
+    static float heat_per_combat_maneuver_boost;
+    static float heat_per_combat_maneuver_strafe;
+    static float unhack_time; //It takes this amount of time to go from 100% hacked to 0% hacked for systems.
+
 
     // Content of a line in the ship's log
     class ShipLogEntry

@@ -24,6 +24,8 @@
 #include "preferenceManager.h"
 #include "networkRecorder.h"
 #include "tutorialGame.h"
+#include "spaceObjects/playerSpaceship.h"
+#include "spaceObjects/spaceship.h"
 
 #include "hardware/hardwareController.h"
 
@@ -163,6 +165,8 @@ int main(int argc, char** argv)
     colorConfig.load();
     hotkeys.load();
     joystick.load();
+    SpaceShip::load();
+    PlayerSpaceship::load();
 
     if (PreferencesManager::get("headless") == "")
     {

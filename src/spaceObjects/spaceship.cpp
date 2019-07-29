@@ -110,6 +110,21 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, commandSetTractorBeamRange);
 }
 
+float SpaceShip::heat_per_warp = 0;
+int SpaceShip::max_frequency = 0;
+float SpaceShip::combat_maneuver_charge_time = 0;
+float SpaceShip::combat_maneuver_boost_max_time = 0;
+float SpaceShip::combat_maneuver_strafe_max_time = 0; 
+float SpaceShip::warp_charge_time = 0;
+float SpaceShip::warp_decharge_time = 0;
+float SpaceShip::jump_drive_charge_time = 0; 
+float SpaceShip::dock_move_time = 0; 
+float SpaceShip::jump_drive_energy_per_km_charge = 0;
+float SpaceShip::jump_drive_heat_per_jump = 0;
+float SpaceShip::heat_per_combat_maneuver_boost = 0;
+float SpaceShip::heat_per_combat_maneuver_strafe = 0;
+float SpaceShip::unhack_time = 0;
+
 // Configure ship's log packets.
 static inline sf::Packet& operator << (sf::Packet& packet, const SpaceShip::ShipLogEntry& e) { return packet << e.prefix << e.text << e.color.r << e.color.g << e.color.b << e.color.a << e.station; }
 static inline sf::Packet& operator >> (sf::Packet& packet, SpaceShip::ShipLogEntry& e) { packet >> e.prefix >> e.text >> e.color.r >> e.color.g >> e.color.b >> e.color.a >> e.station; return packet; }
@@ -959,8 +974,6 @@ void SpaceShip::update(float delta)
                 current_impulse = impulse_request;
         }
     }
-    float heat_per_warp = PreferencesManager::get("heat_per_warp", "0.02").toFloat();
-
     // Add heat based on warp factor.
     addHeat(SYS_Warp, std::min(warp_terrain_cap, current_warp) * delta * heat_per_warp);
 
