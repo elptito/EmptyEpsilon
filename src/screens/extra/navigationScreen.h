@@ -20,20 +20,16 @@ private:
     enum EMode
     {
         TargetSelection,
-        WaypointPlacement,
         MoveWaypoint
     };
 
     EMode mode;
+    bool placeWayPoints;
     TargetsContainer targets;
     int drag_waypoint_index;
     NavigationView* radar;
-    GuiAutoLayout* option_buttons;
-    GuiAutoLayout* waypoint_place_controls;
-    GuiAutoLayout* layers_controls;
     GuiButton* layerButtons[GameGlobalInfo::max_terrain_layers];
-    GuiToggleButton* waypoint_place_multiple_toggle;
-    GuiAutoLayout* view_controls;
+    GuiButton* waypoint_place_button;
     GuiButton* delete_waypoint_button;
 
     bool position_text_custom;
@@ -46,10 +42,10 @@ private:
     const float max_distance = 10000000.0f; // has to match relay max_distance to have same zoom scale
     const float min_distance = 909090.0f; // not to zoom in too much
     
-    void stopPlacingWaypoint();
     void placeWaypoint(sf::Vector2f position);
 public:
     NavigationScreen(GuiContainer* owner);
+    virtual void onHotkey(const HotkeyResult& key) override;
 
     virtual void onDraw(sf::RenderTarget& window);
 };

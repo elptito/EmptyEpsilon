@@ -64,7 +64,7 @@ public:
     /*!
      * \brief Maximum number of terrain layers.
      */
-    static const int max_terrain_layers = 32;
+    static const int max_terrain_layers = 10;
     /*!
      * \size of a sector.
      */

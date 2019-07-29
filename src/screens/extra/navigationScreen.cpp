@@ -28,7 +28,7 @@ NavigationScreen::NavigationScreen(GuiContainer *owner)
     radar->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
     radar->setCallbacks(
         [this](sf::Vector2f position) { //down
-            if (mode == TargetSelection && targets.getWaypointIndex() > -1 && my_spaceship)
+            if (!placeWayPoints && mode == TargetSelection && targets.getWaypointIndex() > -1 && my_spaceship)
             {
                 if (sf::length(my_spaceship->waypoints[targets.getWaypointIndex()] - position) < 25.0 / radar->getScale())
                 {
@@ -39,7 +39,7 @@ NavigationScreen::NavigationScreen(GuiContainer *owner)
             mouse_down_position = position;
         },
         [this](sf::Vector2f position) { //drag
-            if (mode == TargetSelection)
+            if (!placeWayPoints && mode == TargetSelection)
             {
                 position_text_custom = false;
                 sf::Vector2f newPosition = radar->getViewPosition() - (position - mouse_down_position);
@@ -47,30 +47,32 @@ NavigationScreen::NavigationScreen(GuiContainer *owner)
                 if (!position_text_custom)
                     position_text->setText(getStringFromPosition(newPosition));
             }
-            if (mode == MoveWaypoint && my_spaceship)
+            if (!placeWayPoints && mode == MoveWaypoint && my_spaceship)
                 my_spaceship->commandMoveWaypoint(drag_waypoint_index, position);
         },
         [this](sf::Vector2f position) { //up
-            switch (mode)
-            {
-            case TargetSelection:
-                targets.setToClosestTo(position, 25.0 / radar->getScale(), TargetsContainer::Targetable);
-                break;
-            case WaypointPlacement:
+            if (placeWayPoints){
                 placeWaypoint(position);
-                break;
-            case MoveWaypoint:
-                mode = TargetSelection;
-                targets.setWaypointIndex(drag_waypoint_index);
-                break;
+            } else {
+                switch (mode)
+                {
+                case TargetSelection:
+                    targets.setToClosestTo(position, 25.0 / radar->getScale(), TargetsContainer::Targetable);
+                    break;
+                case MoveWaypoint:
+                    mode = TargetSelection;
+                    targets.setWaypointIndex(drag_waypoint_index);
+                    break;
+                }
             }
         });
 
     if (my_spaceship)
         radar->setViewPosition(my_spaceship->getPosition());
 
+    placeWayPoints = false;
     // Controls for the radar view
-    view_controls = new GuiAutoLayout(this, "VIEW_CONTROLS", GuiAutoLayout::LayoutVerticalBottomToTop);
+    GuiAutoLayout* view_controls = new GuiAutoLayout(this, "VIEW_CONTROLS", GuiAutoLayout::LayoutVerticalBottomToTop);
     view_controls->setPosition(20, -70, ABottomLeft)->setSize(250, GuiElement::GuiSizeMax);
     zoom_slider = new GuiSlider(view_controls, "ZOOM_SLIDER", max_distance, min_distance, radar->getDistance(), [this](float value) {
         zoom_label->setText("Zoom: " + string(max_distance / value, 1.0f) + "x");
@@ -96,23 +98,14 @@ NavigationScreen::NavigationScreen(GuiContainer *owner)
         }
     });
     position_text->setText(getStringFromPosition(radar->getViewPosition()));
-    // Option buttons for comms, waypoints, and probes.
-    option_buttons = new GuiAutoLayout(this, "BUTTONS", GuiAutoLayout::LayoutVerticalTopToBottom);
-    option_buttons->setPosition(20, 50, ATopLeft)->setSize(250, GuiElement::GuiSizeMax);
 
-    waypoint_place_controls = new GuiAutoLayout(this, "WAYPOINT_PLACE_CONTROLS", GuiAutoLayout::LayoutVerticalTopToBottom);
-    waypoint_place_controls->setPosition(20, 50, ATopLeft)->setSize(250, GuiElement::GuiSizeMax)->setVisible(false);
+    GuiAutoLayout* waypoint_controls = new GuiAutoLayout(this, "waypoint_controls", GuiAutoLayout::LayoutVerticalTopToBottom);
+    waypoint_controls->setPosition(20, 50, ATopLeft)->setSize(250, GuiElement::GuiSizeMax);
     
-    layers_controls = new GuiAutoLayout(this, "LAYERS_CONTROLS", GuiAutoLayout::LayoutVerticalTopToBottom);
-    layers_controls->setPosition(20, 50, ATopLeft)->setSize(250, GuiElement::GuiSizeMax)->setVisible(false);
+    GuiAutoLayout* layers_controls = new GuiAutoLayout(this, "LAYERS_CONTROLS", GuiAutoLayout::LayoutVerticalTopToBottom);
+    layers_controls->setPosition(-20, 50, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
     
     //manage layers
-    (new GuiButton(option_buttons, "LAYERS_BUTTON", "Layers", [this]() {
-        option_buttons->hide();
-        waypoint_place_controls->hide();
-        layers_controls->show();
-    }))->setSize(GuiElement::GuiSizeMax, 50);
-
     for (int n = 0; n < GameGlobalInfo::max_terrain_layers; n++){
         if (gameGlobalInfo->terrain[n].defined){
             // change its state on draw?
@@ -126,25 +119,16 @@ NavigationScreen::NavigationScreen(GuiContainer *owner)
     }
 
     // Manage waypoints.
-    (new GuiButton(option_buttons, "WAYPOINT_PLACE_BUTTON", "Place Waypoint", [this]() {
-        mode = WaypointPlacement;
-        option_buttons->hide();
-        waypoint_place_controls->show();
-        layers_controls->hide();
-    }))->setSize(GuiElement::GuiSizeMax, 50);
+    waypoint_place_button = new GuiButton(waypoint_controls, "WAYPOINT_PLACE_BUTTON", "Place Waypoints", [this]() {
+        placeWayPoints = !placeWayPoints;
+    });
+    waypoint_place_button->setSize(GuiElement::GuiSizeMax, 50);
 
-    (new GuiButton(waypoint_place_controls, "WAYPOINT_PLACE_CANCEL_BUTTON", "Cancel",  [this]() {
-        stopPlacingWaypoint();
-    }))->setSize(GuiElement::GuiSizeMax, 50);
-
-    (new GuiButton(waypoint_place_controls, "WAYPOINT_PLACE_AT_CENTER_BUTTON", "At View Center",  [this]() {
+    (new GuiButton(waypoint_controls, "WAYPOINT_PLACE_AT_CENTER_BUTTON", "Waypoint At View Center",  [this]() {
        placeWaypoint(radar->getViewPosition());
     }))->setSize(GuiElement::GuiSizeMax, 50);
 
-    waypoint_place_multiple_toggle = new GuiToggleButton(waypoint_place_controls, "WAYPOINT_PLACE_MULTIPLE_BUTTON", "Place More",  [this](bool value) {});
-    waypoint_place_multiple_toggle->setSize(GuiElement::GuiSizeMax, 50);
-
-    delete_waypoint_button = new GuiButton(option_buttons, "WAYPOINT_DELETE_BUTTON", "Delete Waypoint", [this]() {
+    delete_waypoint_button = new GuiButton(waypoint_controls, "WAYPOINT_DELETE_BUTTON", "Delete Waypoint", [this]() {
         if (my_spaceship && targets.getWaypointIndex() >= 0)
         {
             my_spaceship->commandRemoveWaypoint(targets.getWaypointIndex());
@@ -159,18 +143,6 @@ void NavigationScreen::placeWaypoint(sf::Vector2f position)
 {
     if (my_spaceship)
         my_spaceship->commandAddWaypoint(position);
-    if (!waypoint_place_multiple_toggle->getValue()){
-        stopPlacingWaypoint();
-    }
-}
-
-void NavigationScreen::stopPlacingWaypoint()
-{
-    mode = TargetSelection;
-    waypoint_place_controls->hide();
-    option_buttons->show();
-    layers_controls->hide();
-    waypoint_place_multiple_toggle->setValue(false);
 }
 
 void NavigationScreen::onDraw(sf::RenderTarget &window)
@@ -194,9 +166,30 @@ void NavigationScreen::onDraw(sf::RenderTarget &window)
     else
         delete_waypoint_button->disable();
     
+    waypoint_place_button->setActive(placeWayPoints);
     for (int n = 0; n < GameGlobalInfo::max_terrain_layers; n++){
         if (layerButtons[n]){
             layerButtons[n]->setActive(radar->getTerrainLayer(n));
+        }
+    }
+}
+
+void NavigationScreen::onHotkey(const HotkeyResult& key)
+{
+    if (key.category == "NAVIGATION")
+    {
+        if (key.hotkey == "PLACE_WAYPOINTS") {
+            placeWayPoints = !placeWayPoints;
+        } else if (key.hotkey == "WAYPOINT_PLACE_AT_CENTER") {
+            placeWaypoint(radar->getViewPosition());
+        } else if (key.hotkey == "WAYPOINT_DELETE" && my_spaceship && targets.getWaypointIndex() >= 0) {
+            my_spaceship->commandRemoveWaypoint(targets.getWaypointIndex());
+        } else {
+            for (int n = 0; n < GameGlobalInfo::max_terrain_layers; n++){
+                if (layerButtons[n] && key.hotkey == "LAYER_TOGGLE_" + string(n, 0)){
+                    radar->toggleTerrainLayer(n);
+                }
+            }
         }
     }
 }

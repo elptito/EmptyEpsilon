@@ -1,6 +1,7 @@
 #include "hotkeyConfig.h"
 #include "preferenceManager.h"
 #include "shipTemplate.h"
+#include "gameGlobalInfo.h"
 
 HotkeyConfig hotkeys;
 
@@ -106,6 +107,14 @@ HotkeyConfig::HotkeyConfig()
     newKey("FIRE_TUBE", std::make_tuple("Fire selected Tube", "[B0]"));
     newKey("PREV_TUBE", std::make_tuple("Select previous tube to fire", "[B4]"));
     newKey("NEXT_TUBE", std::make_tuple("Select next tube to fire", "[B6]"));
+    
+    newCategory("NAVIGATION", "Navigation");
+    newKey("PLACE_WAYPOINTS", std::make_tuple("Place waypoints using mouse", "Q"));
+    newKey("WAYPOINT_PLACE_AT_CENTER", std::make_tuple("Place waypoint at center of the screen", "W"));
+    for (int n = 0; n < GameGlobalInfo::max_terrain_layers; n++){
+        newKey("LAYER_TOGGLE_" + string(n, 0), std::make_tuple("toggle layer "+ string(n, 0), "Num" + string(n, 0)));
+    }
+    newKey("WAYPOINT_DELETE", std::make_tuple("Delete selected waypoint", "Delete"));
 }
 
 static std::vector<std::pair<string, sf::Keyboard::Key> > sfml_key_names = {
