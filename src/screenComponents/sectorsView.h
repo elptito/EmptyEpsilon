@@ -2,6 +2,7 @@
 #define SECTORS_VIEW_H
 
 #include "gui/gui2_element.h"
+#include "gameGlobalInfo.h"
 
 class TargetsContainer;
 class SectorsView : public GuiElement
@@ -18,7 +19,7 @@ private:
   sf::Vector2f view_position;
 
   TargetsContainer *targets;
-
+  bool terrainLayers[GameGlobalInfo::max_terrain_layers];
   func_t mouse_down_func;
   func_t mouse_drag_func;
   func_t mouse_up_func;
@@ -46,6 +47,8 @@ public:
   sf::Vector2f screenToWorld(sf::Vector2f screen_position);
   float getScale() { return std::min(rect.width, rect.height) / 2.0f / distance; };
 
+  void toggleTerrainLayer(int id) { terrainLayers[id] = !terrainLayers[id]; }
+  bool getTerrainLayer(int id) { return terrainLayers[id]; }
   void drawSectorGrid(sf::RenderTarget &window);
     virtual bool onMouseDown(sf::Vector2f position);
     virtual void onMouseDrag(sf::Vector2f position);

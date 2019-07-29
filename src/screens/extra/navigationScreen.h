@@ -30,6 +30,8 @@ private:
     NavigationView* radar;
     GuiAutoLayout* option_buttons;
     GuiAutoLayout* waypoint_place_controls;
+    GuiAutoLayout* layers_controls;
+    GuiButton* layerButtons[GameGlobalInfo::max_terrain_layers];
     GuiToggleButton* waypoint_place_multiple_toggle;
     GuiAutoLayout* view_controls;
     GuiButton* delete_waypoint_button;

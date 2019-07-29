@@ -103,11 +103,34 @@ NavigationScreen::NavigationScreen(GuiContainer *owner)
     waypoint_place_controls = new GuiAutoLayout(this, "WAYPOINT_PLACE_CONTROLS", GuiAutoLayout::LayoutVerticalTopToBottom);
     waypoint_place_controls->setPosition(20, 50, ATopLeft)->setSize(250, GuiElement::GuiSizeMax)->setVisible(false);
     
+    layers_controls = new GuiAutoLayout(this, "LAYERS_CONTROLS", GuiAutoLayout::LayoutVerticalTopToBottom);
+    layers_controls->setPosition(20, 50, ATopLeft)->setSize(250, GuiElement::GuiSizeMax)->setVisible(false);
+    
+    //manage layers
+    (new GuiButton(option_buttons, "LAYERS_BUTTON", "Layers", [this]() {
+        option_buttons->hide();
+        waypoint_place_controls->hide();
+        layers_controls->show();
+    }))->setSize(GuiElement::GuiSizeMax, 50);
+
+    for (int n = 0; n < GameGlobalInfo::max_terrain_layers; n++){
+        if (gameGlobalInfo->terrain[n].defined){
+            // change its state on draw?
+            layerButtons[n] = new GuiButton(layers_controls, "LAYER_TOGGLE_" + string(n, 0), "Layer " + string(n, 0),  [this, n]() {
+                radar->toggleTerrainLayer(n);
+            });
+            layerButtons[n]->setSize(GuiElement::GuiSizeMax, 50);
+        } else {
+            layerButtons[n] = nullptr;
+        }
+    }
+
     // Manage waypoints.
     (new GuiButton(option_buttons, "WAYPOINT_PLACE_BUTTON", "Place Waypoint", [this]() {
         mode = WaypointPlacement;
         option_buttons->hide();
         waypoint_place_controls->show();
+        layers_controls->hide();
     }))->setSize(GuiElement::GuiSizeMax, 50);
 
     (new GuiButton(waypoint_place_controls, "WAYPOINT_PLACE_CANCEL_BUTTON", "Cancel",  [this]() {
@@ -146,6 +169,7 @@ void NavigationScreen::stopPlacingWaypoint()
     mode = TargetSelection;
     waypoint_place_controls->hide();
     option_buttons->show();
+    layers_controls->hide();
     waypoint_place_multiple_toggle->setValue(false);
 }
 
@@ -169,4 +193,10 @@ void NavigationScreen::onDraw(sf::RenderTarget &window)
         delete_waypoint_button->enable();
     else
         delete_waypoint_button->disable();
+    
+    for (int n = 0; n < GameGlobalInfo::max_terrain_layers; n++){
+        if (layerButtons[n]){
+            layerButtons[n]->setActive(radar->getTerrainLayer(n));
+        }
+    }
 }

@@ -24,6 +24,10 @@ SectorsView::SectorsView(GuiContainer *owner, string id, float distance, Targets
     }
     // last color is white
     grid_colors[SectorsView::grid_scale_size - 1] = sf::Color(255, 255, 255, 128);
+
+    for (int n = 0; n < GameGlobalInfo::max_terrain_layers; n++){
+        terrainLayers[n] = false;
+    }
 }
 
 sf::Vector2f SectorsView::worldToScreen(sf::Vector2f world_position)
@@ -147,17 +151,20 @@ void SectorsView::drawTargets(sf::RenderTarget& window)
     }
 }
 void SectorsView::drawTerrain(sf::RenderTarget &window){
-    TerrainInfo &terrain = gameGlobalInfo->terrain[0];
-    if (terrain.defined){
-        sf::Sprite terrainMap;
-        textureManager.getTexture(terrain.textureName)->setSmooth(true);
-        textureManager.setTexture(terrainMap, terrain.textureName);
-        terrainMap.setPosition(worldToScreen(terrain.coordinates));
-        terrainMap.setScale(getScale() * terrain.scale, getScale()* terrain.scale);
-        terrainMap.setColor(sf::Color(255, 255, 255, 128)); // half transparent
-        window.draw(terrainMap);
+    for (int n = 0; n < GameGlobalInfo::max_terrain_layers; n++){
+        if (terrainLayers[n] && gameGlobalInfo->terrain[n].defined){
+            TerrainInfo &terrain = gameGlobalInfo->terrain[n];
+            sf::Sprite terrainMap;
+            textureManager.getTexture(terrain.textureName)->setSmooth(true);
+            textureManager.setTexture(terrainMap, terrain.textureName);
+            terrainMap.setPosition(worldToScreen(terrain.coordinates));
+            terrainMap.setScale(getScale() * terrain.scale, getScale()* terrain.scale);
+            terrainMap.setColor(sf::Color(255, 255, 255, 128)); // half transparent
+            window.draw(terrainMap);
+        }
     }
 }
+
 bool SectorsView::onMouseDown(sf::Vector2f position)
 {
     if (!mouse_down_func && !mouse_drag_func && !mouse_up_func)
