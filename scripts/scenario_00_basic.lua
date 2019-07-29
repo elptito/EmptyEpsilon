@@ -70,7 +70,16 @@ function setWaveDistance(enemy_group_count)
 end
 
 function init()
-	setTerrain(0, "cosmic-map-3.png", 0, 0, 7000)
+	setTerrain(0, "space dilation_00004_00000.png", 0, 0, 7000)
+	setTerrain(1, "space dilation_00004_00001.png", 0, 0, 7000)
+	setTerrain(2, "space dilation_00004_00002.png", 0, 0, 7000)
+	setTerrain(3, "space dilation_00004_00003.png", 0, 0, 7000)
+	setTerrain(4, "space dilation_00004_00004.png", 0, 0, 7000)
+	setTerrain(5, "space dilation_00004_00005.png", 0, 0, 7000)
+	setTerrain(6, "space dilation_00004_00006.png", 0, 0, 7000)
+	setTerrain(7, "space dilation_00004_00007.png", 0, 0, 7000)
+	setTerrain(8, "space dilation_00004_00008.png", 0, 0, 7000)
+	setTerrain(9, "space dilation_00004_00009.png", 0, 0, 7000)
 	-- Spawn a player Atlantis.
 	player = PlayerSpaceship():setFaction("Human Navy"):setTemplate("Atlantis")
 
