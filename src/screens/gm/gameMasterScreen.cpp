@@ -72,11 +72,11 @@ GameMasterScreen::GameMasterScreen()
             position_text->setText(getStringFromPosition(ship->getPosition()));
         targets.set(ship);
     });
-    player_ship_selector->setPosition(270, -20, ABottomLeft)->setSize(350, 50);
+    player_ship_selector->setPosition(270, -20, ABottomLeft)->setSize(200, 50);
 
     position_text_custom = false;
-    position_text = new GuiTextEntry(this, "SECTOR_NAME_TEXT", "");
-    position_text->setPosition(620, -20, ABottomLeft)->setSize(250, 50);
+    position_text = new GuiTextEntry(this, "POSITION_TEXT", "");
+    position_text->setPosition(470, -20, ABottomLeft)->setSize(200, 50);
     position_text->callback([this](string text){
         position_text_custom = true;
     });
@@ -89,6 +89,12 @@ GameMasterScreen::GameMasterScreen()
             main_radar->setViewPosition(pos);
         }
     });
+    
+    manageLayersButton = new GuiButton(this, "MANAGE_LAYERS", "Layers", [this]() {
+        managing_layers = !managing_layers;
+    });
+    manageLayersButton->setPosition(670, -20, ABottomLeft)->setSize(150, 50);
+
     position_text->setText(getStringFromPosition(main_radar->getViewPosition()));
     create_button = new GuiButton(this, "CREATE_OBJECT_BUTTON", "Create...", [this]() {
         object_creation_view->show();
@@ -182,6 +188,22 @@ GameMasterScreen::GameMasterScreen()
     order_layout = new GuiAutoLayout(this, "ORDER_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
     order_layout->setPosition(20, 130, ATopLeft)->setSize(250, GuiElement::GuiSizeMax);
 
+    layers_layout = new GuiAutoLayout(this, "LAYERS_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    layers_layout->setPosition(20, 130, ATopLeft)->setSize(250, GuiElement::GuiSizeMax);
+
+    //manage layers
+    for (int n = 0; n < GameGlobalInfo::max_terrain_layers; n++){
+        if (gameGlobalInfo->terrain[n].defined){
+            // change its state on draw?
+            layerButtons[n] = new GuiButton(layers_layout, "LAYER_TOGGLE_" + string(n, 0), "Layer " + string(n, 0),  [this, n]() {
+                main_radar->toggleTerrainLayer(n);
+            });
+            layerButtons[n]->setSize(GuiElement::GuiSizeMax, 50);
+        } else {
+            layerButtons[n] = nullptr;
+        }
+    }
+
     (new GuiLabel(order_layout, "ORDERS_LABEL", "Orders:", 20))->addBackground()->setSize(GuiElement::GuiSizeMax, 30);
     (new GuiButton(order_layout, "ORDER_IDLE", "Idle", [this]() {
         gameMasterActions->commandOrderShip(SO_Idle, getSelection());
@@ -222,6 +244,7 @@ GameMasterScreen::GameMasterScreen()
     });
     object_creation_view->hide();
     selected_posessed_tube = 0;
+    managing_layers = false;
 }
 
 void GameMasterScreen::update(float delta)
@@ -296,10 +319,18 @@ void GameMasterScreen::update(float delta)
     tweak_button->setVisible(has_object);
     possess_button->setVisible(possess_button->isActive() || has_cpu_ship);
 
-    order_layout->setVisible(has_cpu_ship);
-    gm_script_options->setVisible(!has_cpu_ship);
-    player_comms_hail->setVisible(has_player_ship);
-    
+    order_layout->setVisible(!managing_layers && has_cpu_ship);
+    gm_script_options->setVisible(!managing_layers && !has_cpu_ship);
+    player_comms_hail->setVisible(!managing_layers && has_player_ship);
+    layers_layout->setVisible(managing_layers);
+
+    manageLayersButton->setActive(managing_layers);
+    for (int n = 0; n < GameGlobalInfo::max_terrain_layers; n++){
+        if (layerButtons[n]){
+            layerButtons[n]->setActive(main_radar->getTerrainLayer(n));
+        }
+    }
+
     std::map<string, string> selection_info;
 
     // For each selected object, determine and report their type.
@@ -495,6 +526,7 @@ void GameMasterScreen::onHotkey(const HotkeyResult& key)
 {
     if (key.category == "GM")
     {
+        bool possessTubes = possession_target && possession_target->weapon_tube_count;
         if (key.hotkey == "DESTROY") {
             gameMasterActions->commandDestroy(targets.getTargets());
         } else if (key.hotkey == "COPY_SCENARIO") {
@@ -505,14 +537,19 @@ void GameMasterScreen::onHotkey(const HotkeyResult& key)
             } else {
                 gameMasterActions->commandSetGameSpeed(0.0f);
             } 
+        } else if (possessTubes && key.hotkey == "FIRE_TUBE") {
+            possession_target->commandFireTubeAtTarget(selected_posessed_tube, possession_target->getTarget());
+        } else if (possessTubes && key.hotkey == "PREV_TUBE") {
+            selected_posessed_tube = (selected_posessed_tube + possession_target->weapon_tube_count - 1) % possession_target->weapon_tube_count;
+        } else if (possessTubes && key.hotkey == "NEXT_TUBE") {
+            selected_posessed_tube = (selected_posessed_tube + 1) % possession_target->weapon_tube_count;
+        } else if (key.hotkey == "TOGGLE_MANAGE_LAYERS") {
+            managing_layers = !managing_layers;
         }
-        if (possession_target && possession_target->weapon_tube_count){
-            if (key.hotkey == "FIRE_TUBE") {
-                possession_target->commandFireTubeAtTarget(selected_posessed_tube, possession_target->getTarget());
-            } else if (key.hotkey == "PREV_TUBE") {
-                selected_posessed_tube = (selected_posessed_tube + possession_target->weapon_tube_count - 1) % possession_target->weapon_tube_count;
-            } else if (key.hotkey == "NEXT_TUBE") {
-                selected_posessed_tube = (selected_posessed_tube + 1) % possession_target->weapon_tube_count;
+    } else if(key.category == "NAVIGATION"){
+        for (int n = 0; n < GameGlobalInfo::max_terrain_layers; n++){
+            if (layerButtons[n] && key.hotkey == "LAYER_TOGGLE_" + string(n, 0)){
+                main_radar->toggleTerrainLayer(n);
             }
         }
     }

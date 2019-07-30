@@ -107,6 +107,7 @@ HotkeyConfig::HotkeyConfig()
     newKey("FIRE_TUBE", std::make_tuple("Fire selected Tube", "[B0]"));
     newKey("PREV_TUBE", std::make_tuple("Select previous tube to fire", "[B4]"));
     newKey("NEXT_TUBE", std::make_tuple("Select next tube to fire", "[B6]"));
+    newKey("TOGGLE_MANAGE_LAYERS", std::make_tuple("Toggle layers controls", "L"));
     
     newCategory("NAVIGATION", "Navigation");
     newKey("PLACE_WAYPOINTS", std::make_tuple("Place waypoints using mouse", "Q"));

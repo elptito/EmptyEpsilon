@@ -44,11 +44,15 @@ private:
     GuiFactions* factions_dialog;
 
     bool position_text_custom;
+    bool managing_layers;
+    GuiButton* manageLayersButton;
+    GuiButton* layerButtons[GameGlobalInfo::max_terrain_layers];
     GuiTextEntry* position_text;
     GuiAutoLayout* info_layout;
     std::vector<GuiKeyValueDisplay*> info_items;
     GuiListbox* gm_script_options;
     GuiAutoLayout* order_layout;
+    GuiAutoLayout* layers_layout;
     GuiButton* player_comms_hail;
     GuiButton* global_message_button;
     GuiToggleButton* pause_button;
