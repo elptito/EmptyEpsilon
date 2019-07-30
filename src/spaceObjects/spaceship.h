@@ -492,6 +492,8 @@ public:
         tractor_beam.setMaxArea(max_area);
         tractor_beam.setDragPerSecond(drag_per_second);
     }
+    void setMaxWarp(float maxWarp);
+    float getCurrentWarp();
     void setWeaponTubeCount(int amount);
     int getWeaponTubeCount();
     EMissileWeapons getWeaponTubeLoadType(int index);

@@ -257,7 +257,34 @@ function init()
 	Script():run("util_random_transports.lua")
 end
 
+local warp_terrain_cap = tonumber(getPreference("warp_terrain_cap", "2.0"))
+local heat_per_warp = tonumber(getPreference("heat_per_warp", "0.02"))
+local systems = {"warp", "rearshield", "docks", "impulse", "beamweapons", "drones", "frontshield", "maneuver", "reactor", "missilesystem"}
 function update(delta)
+	local ships = getAllShips()
+	for _, ship in ipairs(ships) do
+		-- set max warp for ship
+		local x, y = ship:getPosition()
+		local warpCapLayer = 6
+		local maxWarpFactor = getTerrainValueAtPosition(warpCapLayer, x, y)
+		local maxWarp = warp_terrain_cap + maxWarpFactor * (4 - warp_terrain_cap)
+		ship:setMaxWarp(maxWarp)
+
+		-- set warp danger effect on ship
+		local currWarp = ship:getCurrentWarp()
+		if (currWarp > 0) then
+			local warpDangerLayer = 0
+			local warpDangerFactor = getTerrainValueAtPosition(warpDangerLayer, x, y)
+			if (warpDangerFactor > 0) then
+				-- local system = systems[irandom(1,#systems)]
+				local systemIdx = 1 + math.floor(math.abs(math.fmod((x + y + irandom(1,30000)) / 50000, #systems)))
+				print("systemIdx", systemIdx)
+				local system = systems[systemIdx]
+				ship:setSystemHeat(system, ship:getSystemHeat(system) + currWarp * warpDangerFactor * delta * heat_per_warp)
+			end
+		end
+	end
+
 	enemy_count = 0
 	friendly_count = 0
 

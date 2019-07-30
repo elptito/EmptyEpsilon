@@ -71,6 +71,8 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setBeamWeaponEnergyPerFire);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setBeamWeaponHeatPerFire);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setTractorBeam);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setMaxWarp);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getCurrentWarp);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setWeaponTubeCount);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getWeaponTubeCount);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getWeaponTubeLoadType);
@@ -862,10 +864,6 @@ void SpaceShip::update(float delta)
         }
         if ((docking_state == DS_Docked) || (docking_state == DS_Docking))
             warp_request = 0.0;
-            
-        if (gameGlobalInfo->terrain[0].defined){
-            max_warp = Tween<float>::linear(gameGlobalInfo->getTerrainPixel(0, getPosition()).a, 0, 255, warp_terrain_cap, 4.0f);
-        }
     }
 
     float rotationDiff;
@@ -1442,6 +1440,15 @@ float SpaceShip::getSystemEffectiveness(ESystem system)
 
     // If a system cannot be damaged, excessive heat degrades it.
     return std::max(0.0f, power * (1.0f - systems[system].heat_level));
+}
+
+void SpaceShip::setMaxWarp(float maxWarp)
+{
+    max_warp = maxWarp;
+}
+
+float SpaceShip::getCurrentWarp(){ 
+    return current_warp;
 }
 
 void SpaceShip::setWeaponTubeCount(int amount)

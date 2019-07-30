@@ -1,4 +1,5 @@
 #include "preferenceManager.h"
+#include "script.h"
 
 std::unordered_map<string, string> PreferencesManager::preference;
 
@@ -58,3 +59,15 @@ void PreferencesManager::save(string filename)
         fclose(f);
     }
 }
+
+static int getPreference(lua_State *L){
+    string key = luaL_checkstring(L, 1);
+    string default_value = luaL_checkstring(L, 2);
+    string res = PreferencesManager::get(key, default_value);
+    lua_pushstring(L, res.c_str());
+    return 1;
+}
+
+/// getPreference(key, default_value)
+/// Return the value of a preference from the prefrences manager
+REGISTER_SCRIPT_FUNCTION(getPreference);

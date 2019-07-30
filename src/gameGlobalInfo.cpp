@@ -428,6 +428,21 @@ static int getObjectsInRadius(lua_State* L)
 /// Return a list of all space objects at the x,y location within a certain radius.
 REGISTER_SCRIPT_FUNCTION(getObjectsInRadius);
 
+static int getAllShips(lua_State* L)
+{
+    PVector<SpaceShip> ships;
+    foreach(SpaceObject, obj, space_object_list)
+    {
+        P<SpaceShip> sobj = obj;
+        if (sobj)
+            ships.push_back(sobj);
+    }
+    return convert<PVector<SpaceShip> >::returnType(L, ships);
+}
+/// getAllShips()
+/// Return a list of all spaceships.
+REGISTER_SCRIPT_FUNCTION(getAllShips);
+
 static int getAllObjects(lua_State* L)
 {
     return convert<PVector<SpaceObject> >::returnType(L, space_object_list);
@@ -508,14 +523,30 @@ REGISTER_SCRIPT_FUNCTION(playSoundFile);
 
 static int setTerrain(lua_State *L)
 {
-    float id = luaL_checknumber(L, 1);
-    string textureName = luaL_checkstring(L, 2);
-    float x = luaL_checknumber(L, 3);
-    float y = luaL_checknumber(L, 4);
-    float scale = luaL_checknumber(L, 5);
-    gameGlobalInfo->setTerrain(id, textureName, sf::Vector2f(x, y), scale);
+    int idx = 1;
+    float id = luaL_checknumber(L, idx++);
+    string textureName = luaL_checkstring(L, idx++);
+    sf::Vector2f position;
+    convert<sf::Vector2f>::param(L, idx, position);
+    float scale = luaL_checknumber(L, idx++);
+    gameGlobalInfo->setTerrain(id, textureName, position, scale);
     return 0;
 }
 /// setTerrain(id, textureName, x, y, scale)
 /// set the terrain texture of the map
 REGISTER_SCRIPT_FUNCTION(setTerrain);
+
+// TODO get vector like in SpaceObject:setPosition(sf::Vector2f v)
+static int getTerrainValueAtPosition(lua_State *L){
+    int idx = 1;
+    float id = luaL_checknumber(L, idx++);
+    sf::Vector2f position;
+    convert<sf::Vector2f>::param(L, idx, position);
+    float res = gameGlobalInfo->getTerrainPixel(id, position).a;
+    lua_pushnumber(L, res / 255);
+    return 1;
+}
+
+/// getTerrainValueAtPosition(id, x, y)
+/// Return the normalized alpha value of a layer in a given position, between 0 and 1;
+REGISTER_SCRIPT_FUNCTION(getTerrainValueAtPosition);
