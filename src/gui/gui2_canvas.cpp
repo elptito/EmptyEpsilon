@@ -58,6 +58,11 @@ void GuiCanvas::render(sf::RenderTarget& window)
 
 void GuiCanvas::handleKeyPress(sf::Event::KeyEvent key, int unicode)
 {
+    #ifdef DEBUG
+    if (key.code == sf::Keyboard::Tilde)
+        enable_debug_rendering = !enable_debug_rendering;
+    #endif
+
     if (focus_element)
         if (focus_element->onKey(key, unicode))
             return;
