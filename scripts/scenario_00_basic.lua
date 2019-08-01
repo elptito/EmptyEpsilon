@@ -257,18 +257,26 @@ function init()
 	Script():run("util_random_transports.lua")
 end
 
+local warp_boost_terrain_min_factor = tonumber(getPreference("warp_boost_terrain_min_factor", "1.0"))
+local warp_boost_terrain_range_factor = tonumber(getPreference("warp_boost_terrain_max_factor", "10.0")) - warp_boost_terrain_min_factor
 local warp_terrain_cap = tonumber(getPreference("warp_terrain_cap", "2.0"))
 local heat_per_warp = tonumber(getPreference("heat_per_warp", "0.02"))
 local systems = {"warp", "rearshield", "docks", "impulse", "beamweapons", "drones", "frontshield", "maneuver", "reactor", "missilesystem"}
 function update(delta)
 	local ships = getAllShips()
 	for _, ship in ipairs(ships) do
-		-- set max warp for ship
 		local x, y = ship:getPosition()
+
+		-- set max warp for ship
 		local warpCapLayer = 6
 		local maxWarpFactor = getTerrainValueAtPosition(warpCapLayer, x, y)
 		local maxWarp = warp_terrain_cap + maxWarpFactor * (4 - warp_terrain_cap)
 		ship:setMaxWarp(maxWarp)
+
+		-- set warp boost for ship
+		local warpBoostLayer = 7
+		local warpBoostFactor = warp_boost_terrain_min_factor + warp_boost_terrain_range_factor * getTerrainValueAtPosition(warpBoostLayer, x, y)
+		ship:setWarpBoostFactor(warpBoostFactor)
 
 		-- set warp danger effect on ship
 		local currWarp = ship:getCurrentWarp()

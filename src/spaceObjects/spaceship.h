@@ -186,6 +186,11 @@ public:
     float max_warp;
 
     /*!
+     * [output] Current warp boost factor from terrain, from 0.0 to infinity
+     */
+    float warp_boost_factor;
+
+    /*!
      * [input] Level of warp requested, from 0 to 4
      */
     int8_t warp_request;
@@ -493,6 +498,7 @@ public:
         tractor_beam.setDragPerSecond(drag_per_second);
     }
     void setMaxWarp(float maxWarp);
+    void setWarpBoostFactor(float warpBoostFactor);
     float getCurrentWarp();
     void setWeaponTubeCount(int amount);
     int getWeaponTubeCount();

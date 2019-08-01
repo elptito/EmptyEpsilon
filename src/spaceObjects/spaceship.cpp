@@ -72,6 +72,7 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setBeamWeaponHeatPerFire);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setTractorBeam);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setMaxWarp);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setWarpBoostFactor);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getCurrentWarp);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setWeaponTubeCount);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getWeaponTubeCount);
@@ -143,6 +144,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     warp_request = 0.0;
     current_warp = 0.0;
     max_warp = PreferencesManager::get("warp_terrain_cap", "2.0").toFloat();
+    warp_boost_factor = 1.0;
     has_jump_drive = true;
     jump_drive_min_distance = 5000.0;
     jump_drive_max_distance = 50000.0;
@@ -181,6 +183,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     registerMemberReplication(&warp_request, 0.1);
     registerMemberReplication(&current_warp, 0.1);
     registerMemberReplication(&max_warp, 0.5);
+    registerMemberReplication(&warp_boost_factor, 0.5);
     registerMemberReplication(&has_jump_drive);
     registerMemberReplication(&jump_drive_charge, 0.5);
     registerMemberReplication(&jump_delay, 0.5);
@@ -977,7 +980,10 @@ void SpaceShip::update(float delta)
 
     // Determine forward direction and velocity.
     sf::Vector2f forward = sf::vector2FromAngle(getRotation());
-    setVelocity(forward * (current_impulse * impulse_max_speed * getSystemEffectiveness(SYS_Impulse) + current_warp * warp_speed_per_warp_level * getSystemEffectiveness(SYS_Warp)));
+    float impulseVelocity = current_impulse * impulse_max_speed * getSystemEffectiveness(SYS_Impulse);
+    float warpVelocity = current_warp * warp_speed_per_warp_level * warp_boost_factor * getSystemEffectiveness(SYS_Warp);
+    
+    setVelocity(forward * (impulseVelocity + warpVelocity));
 
     if (combat_maneuver_boost_active > combat_maneuver_boost_request)
     {
@@ -1445,6 +1451,11 @@ float SpaceShip::getSystemEffectiveness(ESystem system)
 void SpaceShip::setMaxWarp(float maxWarp)
 {
     max_warp = maxWarp;
+}
+
+void SpaceShip::setWarpBoostFactor(float warpBoostFactor)
+{
+    warp_boost_factor = warpBoostFactor;
 }
 
 float SpaceShip::getCurrentWarp(){ 

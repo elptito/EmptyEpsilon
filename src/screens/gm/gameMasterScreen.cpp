@@ -357,6 +357,7 @@ void GameMasterScreen::update(float delta)
         P<SpaceShip> targetSpaceship = P<SpaceShip>(target);
         if (targetSpaceship){
             selection_info["Max Warp"] = string(targetSpaceship->max_warp, 2);
+            selection_info["Warp Boost"] = string(targetSpaceship->warp_boost_factor, 2);
             for(int8_t n=0; n < targetSpaceship->weapon_tube_count; n++)
             {
                 WeaponTube& tube = targetSpaceship->weapon_tube[n];
