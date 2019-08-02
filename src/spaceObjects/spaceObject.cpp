@@ -424,7 +424,7 @@ bool SpaceObject::isEnemy(P<SpaceObject> obj)
         if (personality_id == 2)
             return faction_id != obj->faction_id;
         if (personality_id == 3)
-            return true;
+            return callsign != obj->callsign;
         return factionInfo[faction_id]->states[obj->faction_id] == FVF_Enemy;
     } else {
         return false;
@@ -440,7 +440,7 @@ bool SpaceObject::isFriendly(P<SpaceObject> obj)
         if (personality_id == 2)
             return faction_id == obj->faction_id;
         if (personality_id == 3)
-            return false;
+            return callsign == obj->callsign;
         return factionInfo[faction_id]->states[obj->faction_id] == FVF_Friendly;
     } else {
         return false;
