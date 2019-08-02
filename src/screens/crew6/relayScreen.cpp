@@ -36,7 +36,7 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
         [this](sf::Vector2f position) { //down
             if (mode == TargetSelection && targets.getWaypointIndex() > -1 && my_spaceship)
             {
-                if (sf::length(my_spaceship->waypoints[targets.getWaypointIndex()] - position) < 1000.0)
+                if (sf::length(my_spaceship->waypoints[targets.getWaypointIndex()] - position) < 1000.0f)
                 {
                     mode = MoveWaypoint;
                     drag_waypoint_index = targets.getWaypointIndex();
@@ -391,6 +391,9 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
         P<SpaceStation> station = obj;
         P<ScanProbe> probe = obj;
 
+        distance = sf::length(obj->getPosition() - my_spaceship->getPosition()) / 1000.0f;
+        info_distance -> setValue(string(distance, 1.0f) + " U");
+
         info_callsign->setValue(obj->getCallSign());
 
         if (ship)
@@ -477,7 +480,11 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
     }
 
     if (targets.getWaypointIndex() >= 0)
+    {
         delete_waypoint_button->enable();
+        distance = sf::length(my_spaceship->waypoints[targets.getWaypointIndex()] - my_spaceship->getPosition()) / 1000.0f;
+        info_distance -> setValue(string(distance, 1.0f) + " U");
+    }
     else
         delete_waypoint_button->disable();
 

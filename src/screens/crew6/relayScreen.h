@@ -74,6 +74,7 @@ private:
     sf::Vector2f mouse_down_position;
     const float max_distance = 10000000.0f;
     const float min_distance = 6250.0f;
+    float distance;
 public:
     RelayScreen(GuiContainer* owner, bool has_comms = true);
 
