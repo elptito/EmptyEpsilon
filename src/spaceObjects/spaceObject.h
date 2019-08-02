@@ -174,15 +174,15 @@ public:
     }
     void setDescription(string description)
     {
-        setDescriptions(description, description);
+        setDescriptions(description, description, description);
     }
 
-    void setDescriptions(string unscanned_description, string scanned_description)
+    void setDescriptions(string unscanned_description, string scanned_description, string full_scanned_description)
     {
         object_description.not_scanned = unscanned_description;
         object_description.friend_of_foe_identified = unscanned_description;
         object_description.simple_scan = scanned_description;
-        object_description.full_scan = scanned_description;
+        object_description.full_scan = full_scanned_description;
     }
 
     string getDescriptionFor(P<SpaceObject> obj)
