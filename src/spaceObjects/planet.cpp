@@ -126,6 +126,9 @@ Planet::Planet()
     orbit_time = 0.0f;
     orbit_distance = 0.0f;
 
+    callsign = "PL" + string(getMultiplayerId());
+    setScanningParameters(3,1);
+
     collision_size = -2.0f;
 
     setRadarSignatureInfo(0.5, 0, 0);

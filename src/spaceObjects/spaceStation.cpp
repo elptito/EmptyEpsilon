@@ -20,6 +20,7 @@ SpaceStation::SpaceStation()
 {
     comms_script_name = "comms_station.lua";
     setRadarSignatureInfo(0.2, 0.5, 0.5);
+    setScanningParameters(2,2);
 
     callsign = "DS" + string(getMultiplayerId());
 }
