@@ -37,6 +37,7 @@ Artifact::Artifact()
     model_info.setData(current_model_data_name);
 
     allow_pickup = false;
+    hull = random(5,10);
 
     orbit_target_id = -1;
     orbit_time = 0.0f;

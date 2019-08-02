@@ -9,6 +9,7 @@ private:
     string current_model_data_name;
     string model_data_name;
     bool allow_pickup;
+    float size;
     ScriptSimpleCallback on_pickup_callback;
     int32_t orbit_target_id;
     float orbit_time;
