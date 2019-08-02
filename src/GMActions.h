@@ -31,7 +31,7 @@ public:
     void commandMoveObjects(sf::Vector2f delta, PVector<SpaceObject> selection);
     void commandSetGameSpeed(float speed);
     void commandSetFactionId(uint32_t faction_id, PVector<SpaceObject> selection);
-//    void commandSetPersonalityId(uint32_t faction_id, PVector<SpaceObject> selection);
+    void commandSetPersonalityId(uint32_t faction_id, PVector<SpaceObject> selection);
     void commandContextualGoTo(sf::Vector2f position, bool force, PVector<SpaceObject> selection);
     void commandOrderShip(EShipOrder order, PVector<SpaceObject> selection);
     void commandDestroy(PVector<SpaceObject> selection);
