@@ -168,7 +168,8 @@ void BeamWeapon::update(float delta)
 
     // Check on beam weapons only if we are on the server, have a target, and
     // not paused, and if the beams are cooled down or have a turret arc.
-    if (game_server && range > 0.0 && target && delta > 0 && parent->current_warp == 0.0 && parent->docking_state == DS_NotDocking)
+//    if (game_server && range > 0.0 && target && delta > 0 && parent->current_warp == 0.0 && parent->docking_state == DS_NotDocking)
+    if (game_server && range > 0.0 && target && delta > 0 && parent->docking_state == DS_NotDocking)
     {
         // Get the angle to the target.
         sf::Vector2f diff = target->getPosition() - (parent->getPosition() + sf::rotateVector(sf::Vector2f(position.x, position.y), parent->getRotation()));
