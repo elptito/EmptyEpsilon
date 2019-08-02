@@ -314,6 +314,8 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
             case SYS_JumpDrive:
                 addSystemEffect("Rechargement JUMP", string(int(my_spaceship->getJumpDriveRechargeRate() * 100)) + "%");
                 addSystemEffect("Vitesse de JUMP", string(int(effectiveness * 100)) + "%");
+                if (effectiveness > 1.0)
+                    addSystemEffect("Range JUMP", string(int(effectiveness * 100)) + "%");
                 break;
             case SYS_FrontShield:
                 if (gameGlobalInfo->use_beam_shield_frequencies)
