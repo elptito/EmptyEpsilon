@@ -31,6 +31,8 @@ enum ECrewPosition
     dockMaster,
     externLog,
     internLog,
+    // helios
+    engineControlScreen,
     max_crew_positions
 };
 

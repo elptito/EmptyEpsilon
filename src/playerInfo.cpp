@@ -27,6 +27,8 @@
 
 #include "screens/extra/radarScreen.h"
 
+#include "screens/helios/engineControlScreen.h"
+
 #include "screenComponents/mainScreenControls.h"
 #include "screenComponents/selfDestructEntry.h"
 
@@ -126,6 +128,9 @@ void PlayerInfo::spawnUI()
     }else{
 
         CrewStationScreen* screen = new CrewStationScreen();
+        // Helios
+        if (crew_position[engineControlScreen])
+            screen->addStationTab(new EngineControlScreen(screen), engineControlScreen, getCrewPositionName(engineControlScreen), getCrewPositionIcon(engineControlScreen));
         
         //Crew 6/5
         if (crew_position[helmsOfficer])
@@ -233,6 +238,7 @@ string getCrewPositionName(ECrewPosition position)
     case dockMaster: return "Dock Master";
     case externLog: return "External Log";
     case internLog: return "Internal Log";
+    case engineControlScreen: return "ECR";
     default: return "ErrUnk: " + string(position);
     }
 }
@@ -263,6 +269,7 @@ string getCrewPositionIcon(ECrewPosition position)
     case dockMaster: return "";
     case externLog: return "";
     case internLog: return "";
+    case engineControlScreen: return "";
     default: return "ErrUnk: " + string(position);
     }
 }
@@ -272,8 +279,11 @@ template<> void convert<ECrewPosition>::param(lua_State* L, int& idx, ECrewPosit
 {
     string str = string(luaL_checkstring(L, idx++)).lower();
 
+    // helios     
+    if (str == "ecr")
+        cp = engineControlScreen;
     //6/5 player crew
-    if (str == "helms" || str == "helmsofficer")
+    else if (str == "helms" || str == "helmsofficer")
         cp = helmsOfficer;
     else if (str == "weapons" || str == "weaponsofficer")
         cp = weaponsOfficer;

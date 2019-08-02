@@ -92,6 +92,10 @@ HotkeyConfig::HotkeyConfig()
     newKey("SELF_DESTRUCT_START", std::make_tuple("Start self-destruct", ""));
     newKey("SELF_DESTRUCT_CONFIRM", std::make_tuple("Confirm self-destruct", ""));
     newKey("SELF_DESTRUCT_CANCEL", std::make_tuple("Cancel self-destruct", ""));
+    for(int n=0; n<SYS_COUNT; n++) {
+        string systemName = getSystemName(ESystem(n));
+        newKey(std::string("REPAIR_") + systemName, std::make_tuple(std::string("Auto-repair ") + systemName, ""));
+    }
 
     newCategory("TRACTOR_BEAM", "Tractor Beam");
     newKey("MODE", std::make_tuple("Toggle tractor beam mode", ""));

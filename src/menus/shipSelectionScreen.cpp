@@ -447,16 +447,7 @@ void ShipSelectionScreen::updateCrewTypeOptions()
     switch(crew_type_selector->getSelectionIndex())
     {
     case 0: // Helios
-        crew_position_button[helmsOfficer]->show();
-        crew_position_button[weaponsOfficer]->show();
-        crew_position_button[damageControl]->show();
-        crew_position_button[powerManagement]->show();
-        crew_position_button[scienceOfficer]->show();
-        crew_position_button[relayOfficerNC]->show();
-        crew_position_button[commsView]->show();
-        crew_position_button[navigation]->show();
-        crew_position_button[dronePilot]->show();
-        crew_position_button[dockMaster]->show();
+        crew_position_button[engineControlScreen]->show();
         break;
     case 1: // 6/5 player crew
         for(int n = helmsOfficer; n <= relayOfficer; n++)
@@ -511,6 +502,7 @@ void ShipSelectionScreen::updateCrewTypeOptions()
         crew_position_button[powerManagement]->show();
         crew_position_button[dockMaster]->show();
         crew_position_button[internLog]->show();
+        crew_position_button[engineControlScreen]->show();
         break;
     }
 
