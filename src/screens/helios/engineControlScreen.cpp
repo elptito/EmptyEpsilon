@@ -17,9 +17,10 @@
 #include "gui/gui2_image.h"
 #include "gui/gui2_panel.h"
 
-EngineControlScreen::EngineControlScreen(GuiContainer* owner, ECrewPosition crew_position)
-: GuiOverlay(owner, "ENGINEERING_SCREEN", colorConfig.background)
+EngineControlScreen::EngineControlScreen(GuiContainer* owner, ECrewPosition crewPosition)
+: GuiOverlay(owner, "ENGINEERING_SCREEN", colorConfig.background), crew_position(crewPosition)
 {
+    new_warp_frequency = my_spaceship->getWarpFrequency();
     // Render the background decorations.
     background_crosses = new GuiOverlay(this, "BACKGROUND_CROSSES", sf::Color::White);
     background_crosses->setTextureTiled("gui/BackgroundCrosses");
@@ -28,7 +29,7 @@ EngineControlScreen::EngineControlScreen(GuiContainer* owner, ECrewPosition crew
     (new AlertLevelOverlay(this));
 
     GuiAutoLayout* global_info_layout = new GuiAutoLayout(this, "GLOBAL_INFO", GuiAutoLayout::LayoutVerticalTopToBottom);
-    global_info_layout->setPosition(50, 50, ATopLeft)->setSize(240, 200);
+    global_info_layout->setPosition(40, 40, ATopLeft)->setSize(240, 200);
 
     energy_display = new GuiKeyValueDisplay(global_info_layout, "ENERGY_DISPLAY", 0.45, "Energy", "");
     energy_display->setIcon("gui/icons/energy")->setTextSize(20)->setSize(GuiElement::GuiSizeMax, 40);
@@ -38,14 +39,18 @@ EngineControlScreen::EngineControlScreen(GuiContainer* owner, ECrewPosition crew
     front_shield_display->setIcon("gui/icons/shields-fore")->setTextSize(20)->setSize(GuiElement::GuiSizeMax, 40);
     rear_shield_display = new GuiKeyValueDisplay(global_info_layout, "SHIELDS_DISPLAY", 0.45, "Rear", "");
     rear_shield_display->setIcon("gui/icons/shields-aft")->setTextSize(20)->setSize(GuiElement::GuiSizeMax, 40);
+    engineering_control_display = new GuiKeyValueDisplay(global_info_layout, "ENGINEERING_CONTROL_DISPLAY", 0.45, "Control", "");
+    engineering_control_display->setIcon("gui/icons/station-engineering")->setTextSize(20)->setSize(GuiElement::GuiSizeMax, 40);
+    warp_frequency_display = new GuiKeyValueDisplay(global_info_layout, "WARP_FREQUENCY_DISPLAY", 0.45, "Frequency", "");
+    warp_frequency_display->setIcon("gui/icons/system_warpdrive")->setTextSize(20)->setSize(GuiElement::GuiSizeMax, 40);
+    new_warp_frequency_display = new GuiKeyValueDisplay(global_info_layout, "new_warp_frequency_DISPLAY", 0.45, "Next Frequency", "");
+    new_warp_frequency_display->setTextSize(20)->setSize(GuiElement::GuiSizeMax, 40);
 
     (new GuiCustomShipFunctions(this, crew_position, "CUSTOM_FUNCTIONS", my_spaceship))
-        ->setPosition(340, 50, ATopLeft)->setSize(250, 200);
+        ->setPosition(340, 40, ATopLeft)->setSize(250, 200);
 
-    // GuiElement* system_config_container = new GuiElement(this, "");
-    // system_config_container->setPosition(0, -50, ABottomCenter)->setSize(750 + 300, GuiElement::GuiSizeMax);
     GuiAutoLayout* system_row_layouts = new GuiAutoLayout(this, "SYSTEM_ROWS", GuiAutoLayout::LayoutVerticalBottomToTop);
-    system_row_layouts->setPosition(50, -50, ABottomLeft)->setSize(800, SYS_COUNT * 50);
+    system_row_layouts->setPosition(40, -40, ABottomLeft)->setSize(800, SYS_COUNT * 50);
     for(int n=0; n<SYS_COUNT; n++)
     {
         string id = "SYSTEM_ROW_" + getSystemName(ESystem(n));
@@ -135,6 +140,9 @@ void EngineControlScreen::onDraw(sf::RenderTarget& window)
             hull_display->setColor(sf::Color::White);
         front_shield_display->setValue(string(my_spaceship->getShieldPercentage(0)) + "%");
         rear_shield_display->setValue(string(my_spaceship->getShieldPercentage(1)) + "%");
+        engineering_control_display->setValue(my_spaceship->engineering_control_from_bridge? "bridge" : "ECR");
+        warp_frequency_display->setValue(frequencyToString(my_spaceship->shield_frequency));
+        new_warp_frequency_display->setValue(frequencyToString(new_warp_frequency));
 
         system_effects_index = 0;
         for(int n=0; n<SYS_COUNT; n++)
@@ -181,7 +189,7 @@ void EngineControlScreen::onDraw(sf::RenderTarget& window)
                 addSystemEffect("Energy production", string(effectiveness * -PlayerSpaceship::system_power_user_factor[SYS_Reactor] * 60.0, 1) + "/m");
                 break;
             case SYS_BeamWeapons:
-                addSystemEffect("Firing rate", string(int(effectiveness * 100)) + "%");
+                addSystemEffect("Beams Firing rate", string(int(effectiveness * 100)) + "%");
                 // If the ship has a turret, also note that the rotation rate
                 // is affected.
                 for(int n = 0; n < max_beam_weapons; n++)
@@ -194,7 +202,7 @@ void EngineControlScreen::onDraw(sf::RenderTarget& window)
                 }
                 break;
             case SYS_MissileSystem:
-                addSystemEffect("Reload rate", string(int(effectiveness * 100)) + "%");
+                addSystemEffect("Missile Reload rate", string(int(effectiveness * 100)) + "%");
                 break;
             case SYS_Maneuver:
                 addSystemEffect("Turning speed", string(int(effectiveness * 100)) + "%");
@@ -203,8 +211,6 @@ void EngineControlScreen::onDraw(sf::RenderTarget& window)
                 break;
             case SYS_Impulse:
                 addSystemEffect("Impulse speed", string(int(effectiveness * 100)) + "%");
-                if (my_spaceship->combat_maneuver_boost_speed > 0.0 || my_spaceship->combat_maneuver_strafe_speed)
-                    addSystemEffect("Combat recharge rate", string(int(((my_spaceship->getSystemEffectiveness(SYS_Maneuver) + my_spaceship->getSystemEffectiveness(SYS_Impulse)) / 2.0) * 100)) + "%");
                 break;
             case SYS_Warp:
                 addSystemEffect("Warp drive speed", string(int(my_spaceship->warp_boost_factor * effectiveness * 100)) + "%");
@@ -215,31 +221,28 @@ void EngineControlScreen::onDraw(sf::RenderTarget& window)
                 break;
             case SYS_FrontShield:
                 if (gameGlobalInfo->use_beam_shield_frequencies)
-                    addSystemEffect("Calibration speed", string(int((my_spaceship->getSystemEffectiveness(SYS_FrontShield) + my_spaceship->getSystemEffectiveness(SYS_RearShield)) / 2.0 * 100)) + "%");
-                addSystemEffect("Charge rate", string(int(effectiveness * 100)) + "%");
+                    addSystemEffect("Shield Calibration speed", string(int((my_spaceship->getSystemEffectiveness(SYS_FrontShield) + my_spaceship->getSystemEffectiveness(SYS_RearShield)) / 2.0 * 100)) + "%");
+                addSystemEffect("Front Charge rate", string(int(effectiveness * 100)) + "%");
                 {
                     DamageInfo di;
                     di.type = DT_Kinetic;
                     float damage_negate = 1.0f - my_spaceship->getShieldDamageFactor(di, 0);
                     if (damage_negate < 0.0)
-                        addSystemEffect("Extra damage", string(int(-damage_negate * 100)) + "%");
+                        addSystemEffect("Front Extra damage", string(int(-damage_negate * 100)) + "%");
                     else
-                        addSystemEffect("Damage negate", string(int(damage_negate * 100)) + "%");
+                        addSystemEffect("Front Damage negate", string(int(damage_negate * 100)) + "%");
                 }
                 break;
             case SYS_RearShield:
-                if (gameGlobalInfo->use_beam_shield_frequencies)
-                    addSystemEffect("Calibration speed", string(int((my_spaceship->getSystemEffectiveness(SYS_FrontShield) + my_spaceship->getSystemEffectiveness(SYS_RearShield)) / 2.0 * 100)) + "%");
-                addSystemEffect("Charge rate", string(int(effectiveness * 100)) + "%");
+                addSystemEffect("Rear Charge rate", string(int(effectiveness * 100)) + "%");
                 {
                     DamageInfo di;
                     di.type = DT_Kinetic;
-                    float damage_negate = 1.0f - 
-my_spaceship->getShieldDamageFactor(di, my_spaceship->shield_count - 1);
+                    float damage_negate = 1.0f - my_spaceship->getShieldDamageFactor(di, my_spaceship->shield_count - 1);
                     if (damage_negate < 0.0)
-                        addSystemEffect("Extra damage", string(int(-damage_negate * 100)) + "%");
+                        addSystemEffect("Rear Extra damage", string(int(-damage_negate * 100)) + "%");
                     else
-                        addSystemEffect("Damage negate", string(int(damage_negate * 100)) + "%");
+                        addSystemEffect("Rear Damage negate", string(int(damage_negate * 100)) + "%");
                 }
                 break;
             case SYS_Docks:
@@ -261,19 +264,17 @@ my_spaceship->getShieldDamageFactor(di, my_spaceship->shield_count - 1);
 }
 
 bool EngineControlScreen::onJoystickAxis(const AxisAction& axisAction){
-    if(my_spaceship){
-        if (axisAction.category == "ENGINEERING"){
-            for(int n=0; n<SYS_COUNT; n++)
-            {
-                ESystem system = ESystem(n);
-                if (axisAction.action == std::string("POWER_") + getSystemName(system)){
-                    my_spaceship->commandSetSystemPowerRequest(system, (axisAction.value + 1) * 3.0 / 2.0);
-                    return true;
-                } 
-                if (axisAction.action == std::string("COOLANT_") + getSystemName(system)){
-                    my_spaceship->commandSetSystemCoolantRequest(system, (axisAction.value + 1) * 10.0 / 2.0);
-                    return true;
-                }
+    if (hasControl() && axisAction.category == "ENGINEERING"){
+        for(int n=0; n<SYS_COUNT; n++)
+        {
+            ESystem system = ESystem(n);
+            if (axisAction.action == std::string("POWER_") + getSystemName(system)){
+                my_spaceship->commandSetSystemPowerRequest(system, (axisAction.value + 1) * 3.0 / 2.0);
+                return true;
+            } 
+            if (axisAction.action == std::string("COOLANT_") + getSystemName(system)){
+                my_spaceship->commandSetSystemCoolantRequest(system, (axisAction.value + 1) * 10.0 / 2.0);
+                return true;
             }
         }
     }
@@ -282,15 +283,38 @@ bool EngineControlScreen::onJoystickAxis(const AxisAction& axisAction){
 
 void EngineControlScreen::onHotkey(const HotkeyResult& key)
 {
-    if (key.category == "ENGINEERING" && my_spaceship)
-    {
-        for(int n=0; n<SYS_COUNT; n++) {
-            ESystem system = ESystem(n);
-            if (key.hotkey == std::string("REPAIR_") + getSystemName(system)) {
-                my_spaceship->commandSetAutoRepairSystemTarget(system);
+    if (key.category == "ENGINEERING") {
+        if (hasControl()){
+            if (key.hotkey == std::string("SET_CONTROL_BRIDGE")) {
+                my_spaceship->commandSetEngineeringControlToBridge();
+            } else if (key.hotkey == std::string("SET_CONTROL_ECR")) {
+                my_spaceship->commandSetEngineeringControlToECR();
+            } else {
+                for(int n=0; n<SYS_COUNT; n++) {
+                    ESystem system = ESystem(n);
+                    if (key.hotkey == std::string("REPAIR_") + getSystemName(system)) {
+                        my_spaceship->commandSetAutoRepairSystemTarget(system);
+                    }
+                }
+            }
+        } else if (my_spaceship && crew_position == engineControlScreen) {
+            if (key.hotkey == std::string("SET_CONTROL_ECR")) {
+                my_spaceship->commandSetEngineeringControlToECR();
+            } else if (key.hotkey == std::string("WARP_CAL_INC")) {
+                new_warp_frequency = (new_warp_frequency + 1) % SpaceShip::max_frequency;
+            } else if (key.hotkey == std::string("WARP_CAL_DEC")) {
+                new_warp_frequency = (new_warp_frequency + SpaceShip::max_frequency - 1) % SpaceShip::max_frequency;
+            } else if (key.hotkey == std::string("WARP_CAL_START")) {
+                my_spaceship->commandSetWarpFrequency(new_warp_frequency);
             }
         }
     }
+}
+
+bool EngineControlScreen::hasControl(){
+    return my_spaceship && 
+        ((crew_position == bridgeEngineeringScreen && my_spaceship->engineering_control_from_bridge) ||
+        (crew_position == engineControlScreen && !my_spaceship->engineering_control_from_bridge));
 }
 
 void EngineControlScreen::addSystemEffect(string key, string value)

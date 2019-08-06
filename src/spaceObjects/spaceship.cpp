@@ -556,6 +556,19 @@ void SpaceShip::handleClientCommand(int32_t client_id, int16_t command, sf::Pack
             addToShipLog(message, colorConfig.log_custom, station);
         }
         break;
+    case CMD_SET_WARP_FREQUENCY:
+        int32_t new_frequency;
+        packet >> new_frequency;
+        if (new_frequency != warp_frequency)
+        {
+            warp_frequency = new_frequency;
+            if (warp_frequency < 0)
+                warp_frequency = 0;
+            if (warp_frequency > SpaceShip::max_frequency)
+                warp_frequency = SpaceShip::max_frequency;
+            addToShipLog("Warp frequency changed : " + frequencyToString(new_frequency),sf::Color::Green,"intern");
+        }
+        break;
     }
 }
 
@@ -1923,6 +1936,13 @@ void SpaceShip::commandSetTractorBeamMode(ETractorBeamMode mode){
 void SpaceShip::commandAddLogLine(string message, string station){
     sf::Packet packet;
     packet << CMD_ADD_LOG_LINE << message << station;
+    sendClientCommand(packet);
+}
+
+void SpaceShip::commandSetWarpFrequency(int32_t frequency)
+{
+    sf::Packet packet;
+    packet << CMD_SET_WARP_FREQUENCY << frequency;
     sendClientCommand(packet);
 }
 

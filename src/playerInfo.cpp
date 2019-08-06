@@ -130,7 +130,9 @@ void PlayerInfo::spawnUI()
         CrewStationScreen* screen = new CrewStationScreen();
         // Helios
         if (crew_position[engineControlScreen])
-            screen->addStationTab(new EngineControlScreen(screen), engineControlScreen, getCrewPositionName(engineControlScreen), getCrewPositionIcon(engineControlScreen));
+            screen->addStationTab(new EngineControlScreen(screen, engineControlScreen), engineControlScreen, getCrewPositionName(engineControlScreen), getCrewPositionIcon(engineControlScreen));
+        if (crew_position[bridgeEngineeringScreen])
+            screen->addStationTab(new EngineControlScreen(screen, bridgeEngineeringScreen), bridgeEngineeringScreen, getCrewPositionName(bridgeEngineeringScreen), getCrewPositionIcon(bridgeEngineeringScreen));
         
         //Crew 6/5
         if (crew_position[helmsOfficer])
@@ -239,6 +241,7 @@ string getCrewPositionName(ECrewPosition position)
     case externLog: return "External Log";
     case internLog: return "Internal Log";
     case engineControlScreen: return "ECR";
+    case bridgeEngineeringScreen: return "Bridge Engineering";
     default: return "ErrUnk: " + string(position);
     }
 }
@@ -270,6 +273,7 @@ string getCrewPositionIcon(ECrewPosition position)
     case externLog: return "";
     case internLog: return "";
     case engineControlScreen: return "";
+    case bridgeEngineeringScreen: return "";
     default: return "ErrUnk: " + string(position);
     }
 }
@@ -282,6 +286,8 @@ template<> void convert<ECrewPosition>::param(lua_State* L, int& idx, ECrewPosit
     // helios     
     if (str == "ecr")
         cp = engineControlScreen;
+    if (str == "bridge engineering")
+        cp = bridgeEngineeringScreen;
     //6/5 player crew
     else if (str == "helms" || str == "helmsofficer")
         cp = helmsOfficer;

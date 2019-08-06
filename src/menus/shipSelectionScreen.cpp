@@ -448,6 +448,7 @@ void ShipSelectionScreen::updateCrewTypeOptions()
     {
     case 0: // Helios
         crew_position_button[engineControlScreen]->show();
+        crew_position_button[bridgeEngineeringScreen]->show();
         break;
     case 1: // 6/5 player crew
         for(int n = helmsOfficer; n <= relayOfficer; n++)
@@ -503,6 +504,7 @@ void ShipSelectionScreen::updateCrewTypeOptions()
         crew_position_button[dockMaster]->show();
         crew_position_button[internLog]->show();
         crew_position_button[engineControlScreen]->show();
+        crew_position_button[bridgeEngineeringScreen]->show();
         break;
     }
 

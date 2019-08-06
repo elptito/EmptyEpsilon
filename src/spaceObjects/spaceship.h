@@ -69,10 +69,10 @@ protected:
     static const int16_t CMD_UNDOCK = 0x0011;
     static const int16_t CMD_SET_BEAM_FREQUENCY = 0x0018;
     static const int16_t CMD_SET_BEAM_SYSTEM_TARGET = 0x0019;
-    static const int16_t CMD_SET_SHIELD_FREQUENCY = 0x001A; // need player override
+    static const int16_t CMD_SET_SHIELD_FREQUENCY = 0x001A; // need player override (player has delay factor)
     static const int16_t CMD_COMBAT_MANEUVER_BOOST = 0x0021;
     static const int16_t CMD_COMBAT_MANEUVER_STRAFE = 0x0022;
-    static const int16_t CMD_LAUNCH_PROBE = 0x0023; // need player override
+    static const int16_t CMD_LAUNCH_PROBE = 0x0023; // need player override (player has quota)
     static const int16_t CMD_ABORT_DOCK = 0x0027;
     static const int16_t CMD_HACKING_FINISHED = 0x0029;
     static const int16_t CMD_LAUNCH_CARGO = 0x002B;
@@ -86,6 +86,7 @@ protected:
     static const int16_t CMD_SET_TRACTOR_BEAM_MODE = 0x0034;
     static const int16_t CMD_TURN_SPEED = 0x0035;
     static const int16_t CMD_ADD_LOG_LINE = 0x0036;
+    static const int16_t CMD_SET_WARP_FREQUENCY = 0x0038; // need player override (player has delay factor)
 public:
     static void load(){
         SpaceShip::heat_per_warp = PreferencesManager::get("heat_per_warp", "0.02").toFloat();
@@ -245,6 +246,7 @@ public:
      * Frequency setting of the shields.
      */
     int shield_frequency;
+    int warp_frequency;
 
     /// MultiplayerObjectID of the targeted object, or -1 when no target is selected.
     int32_t target_id;
@@ -456,6 +458,8 @@ public:
 
     int getShieldsFrequency(void){ return shield_frequency; }
     void setShieldsFrequency(float freq) { if ((freq > SpaceShip::max_frequency) || (freq < 0)) return; shield_frequency = freq;}
+    int getWarpFrequency(void){ return warp_frequency; }
+    void setWarpFrequency(float freq) { if ((freq > SpaceShip::max_frequency) || (freq < 0)) return; warp_frequency = freq;}
     
     int getBeamsFrequency(void){ return beam_frequency; }
 
@@ -548,7 +552,7 @@ public:
     void commandSetTractorBeamRange(float range);
     void commandSetTractorBeamMode(ETractorBeamMode range);
     void commandAddLogLine(string message, string station);
-
+    void commandSetWarpFrequency(int32_t frequency);
 };
 
 float frequencyVsFrequencyDamageFactor(int beam_frequency, int shield_frequency);

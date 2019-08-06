@@ -58,6 +58,7 @@ protected:
     static const int16_t CMD_SET_MAIN_SCREEN_OVERLAY = 0x0028;
     static const int16_t CMD_CUSTOM_FUNCTION = 0x002A;
     static const int16_t CMD_SET_AUTO_REPAIR_SYSTEM_TARGET = 0x0030;
+    static const int16_t CMD_SET_ENGINEERING_CONTROL = 0x0037;
 public:
 
     // Subsystem effectiveness base rates
@@ -141,6 +142,8 @@ public:
     int scanning_depth;
     // Time in seconds it takes to recalibrate shields
     float shield_calibration_delay;
+    // Time in seconds it takes to recalibrate warp engine
+    float warp_calibration_delay;
     // Ship automation features, mostly for single-person ships like fighters
     bool auto_repair_enabled;
     bool auto_coolant_enabled;
@@ -178,7 +181,7 @@ public:
     EMainScreenSetting main_screen_setting;
     // Content overlaid on the main screen, such as comms
     EMainScreenOverlay main_screen_overlay;
-
+    bool engineering_control_from_bridge;
     bool activate_self_destruct;
     uint32_t self_destruct_code[max_self_destruct_codes];
     bool self_destruct_code_confirmed[max_self_destruct_codes];
@@ -264,6 +267,8 @@ public:
     void commandSetAlertLevel(EAlertLevel level);
     void commandCustomFunction(string name);
     void commandSetAutoRepairSystemTarget(ESystem system);
+    void commandSetEngineeringControlToBridge();
+    void commandSetEngineeringControlToECR();
 
     virtual void onReceiveServerCommand(sf::Packet& packet) override;
 

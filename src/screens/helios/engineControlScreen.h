@@ -24,7 +24,11 @@ private:
     GuiKeyValueDisplay* hull_display;
     GuiKeyValueDisplay* front_shield_display;
     GuiKeyValueDisplay* rear_shield_display;
+    GuiKeyValueDisplay* engineering_control_display;
+    GuiKeyValueDisplay* warp_frequency_display;
+    GuiKeyValueDisplay* new_warp_frequency_display;
     
+    int new_warp_frequency;
     
     class RollingDeriviateAvg {
         public:
@@ -57,16 +61,16 @@ private:
     unsigned int system_effects_index;
     float last_measurement_time;
     RollingDeriviateAvg energy_deriv;
-    // float previous_energy_level;
-    // float average_energy_delta;
+    ECrewPosition crew_position;
     
     void addSystemEffect(string key, string value);
 public:
-    EngineControlScreen(GuiContainer* owner, ECrewPosition crew_position=engineering);
+    EngineControlScreen(GuiContainer* owner, ECrewPosition crew_position);
     
     virtual void onDraw(sf::RenderTarget& window) override;
     virtual void onHotkey(const HotkeyResult& key) override;
     virtual bool onJoystickAxis(const AxisAction& axisAction) override;
+    bool hasControl();
 };
 
 #endif//ENGINE_CONTROL_SCREEN_H

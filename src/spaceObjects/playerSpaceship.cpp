@@ -275,6 +275,12 @@ void PlayerSpaceship::update(float delta)
     {
         shield_calibration_delay -= delta * (getSystemEffectiveness(SYS_FrontShield) + getSystemEffectiveness(SYS_RearShield)) / 2.0;
     }
+    // If warp is are calibrating, tick the calibration delay. Factor shield
+    // subsystem effectiveness when determining the tick rate.
+    if (warp_calibration_delay > 0)
+    {
+        warp_calibration_delay -= delta * getSystemEffectiveness(SYS_Warp);
+    }
 
     // Docking actions.
     if (docking_state == DS_Docked)
@@ -1367,6 +1373,31 @@ void PlayerSpaceship::handleClientCommand(int32_t client_id, int16_t command, sf
                 auto_repairing_system = system;
         }
         break;
+    case CMD_SET_ENGINEERING_CONTROL:
+        {
+            bool value;
+            packet >> value;
+            engineering_control_from_bridge = value;
+        }
+        break;
+    case CMD_SET_WARP_FREQUENCY:
+    {
+        if (warp_calibration_delay <= 0.0)
+        {
+            int32_t new_frequency;
+            packet >> new_frequency;
+            if (new_frequency != warp_frequency)
+            {
+                warp_frequency = new_frequency;
+                if (warp_frequency < 0)
+                    warp_frequency = 0;
+                if (warp_frequency > SpaceShip::max_frequency)
+                    warp_frequency = SpaceShip::max_frequency;
+                addToShipLog("Warp frequency changed : " + frequencyToString(new_frequency),sf::Color::Green,"intern");
+            }
+        }
+        break;
+    }
     default:
         SpaceShip::handleClientCommand(client_id, command, packet);
     }
@@ -1563,6 +1594,20 @@ void PlayerSpaceship::commandSetAutoRepairSystemTarget(ESystem system)
 {
     sf::Packet packet;
     packet << CMD_SET_AUTO_REPAIR_SYSTEM_TARGET << system;
+    sendClientCommand(packet);
+}
+
+void PlayerSpaceship::commandSetEngineeringControlToBridge()
+{
+    sf::Packet packet;
+    packet << CMD_SET_ENGINEERING_CONTROL << true;
+    sendClientCommand(packet);
+}
+
+void PlayerSpaceship::commandSetEngineeringControlToECR()
+{
+    sf::Packet packet;
+    packet << CMD_SET_ENGINEERING_CONTROL << false;
     sendClientCommand(packet);
 }
 

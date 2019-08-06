@@ -96,6 +96,11 @@ HotkeyConfig::HotkeyConfig()
         string systemName = getSystemName(ESystem(n));
         newKey(std::string("REPAIR_") + systemName, std::make_tuple(std::string("Auto-repair ") + systemName, ""));
     }
+    newKey("SET_CONTROL_BRIDGE", std::make_tuple("Set control of engineering to bridge", ""));
+    newKey("SET_CONTROL_ECR", std::make_tuple("Set control of engineering to ECR", ""));
+    newKey("WARP_CAL_INC", std::make_tuple("Increase warp frequency target", ""));
+    newKey("WARP_CAL_DEC", std::make_tuple("Decrease warp frequency target", ""));
+    newKey("WARP_CAL_START", std::make_tuple("Start warp calibration", ""));
 
     newCategory("TRACTOR_BEAM", "Tractor Beam");
     newKey("MODE", std::make_tuple("Toggle tractor beam mode", ""));
@@ -159,6 +164,16 @@ static std::vector<std::pair<string, sf::Keyboard::Key> > sfml_key_names = {
     {"Num7", sf::Keyboard::Num7},
     {"Num8", sf::Keyboard::Num8},
     {"Num9", sf::Keyboard::Num9},
+    {"0", sf::Keyboard::Num0},
+    {"1", sf::Keyboard::Num1},
+    {"2", sf::Keyboard::Num2},
+    {"3", sf::Keyboard::Num3},
+    {"4", sf::Keyboard::Num4},
+    {"5", sf::Keyboard::Num5},
+    {"6", sf::Keyboard::Num6},
+    {"7", sf::Keyboard::Num7},
+    {"8", sf::Keyboard::Num8},
+    {"9", sf::Keyboard::Num9},
     {"Escape", sf::Keyboard::Escape},
     {"LControl", sf::Keyboard::LControl},
     {"LShift", sf::Keyboard::LShift},
