@@ -182,7 +182,7 @@ void RepairCrew::update(float delta)
                 if (ship->systems[system].health > ship->systems[system].health_max)
                     ship->systems[system].health = ship->systems[system].health_max;
             }
-            else
+            else if (ship->docking_state == DS_Docked)
             {
                 float hull_old = ship->hull_strength / ship->hull_max;
                 ship->hull_strength += repair_per_second * delta * 20;
