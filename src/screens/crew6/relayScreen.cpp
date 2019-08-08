@@ -240,31 +240,31 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
 //    link_to_3D_port_button->setIcon("gui/icons/camera");
 
     // Station selector
-    station_selector = new GuiSelector(option_buttons, "SPACE_STATION_SELECTOR", [this](int index, string value) {
-        P<SpaceObject> obj = space_object_list[value.toInt()];
-        P<SpaceStation> station = obj;
-        if (station)
-        {
-            target = station;
-            radar->setViewPosition(station->getPosition());
-            targets.set(station);
-        }
-    });
-    station_selector->setSize(GuiElement::GuiSizeMax, 50);
-    station_selector->setLabel("Choix Station");
-
-    probe_selector = new GuiSelector(option_buttons, "PROBE_SELECTOR", [this](int index, string value) {
-        P<SpaceObject> obj = space_object_list[value.toInt()];
-        P<ScanProbe> probe = obj;
-        if (probe)
-        {
-            target = probe;
-            radar->setViewPosition(probe->getPosition());
-            targets.set(probe);
-        }
-    });
-    probe_selector->setSize(GuiElement::GuiSizeMax, 50);
-    probe_selector->setLabel("Choix Sonde");
+//    station_selector = new GuiSelector(option_buttons, "SPACE_STATION_SELECTOR", [this](int index, string value) {
+//        P<SpaceObject> obj = space_object_list[value.toInt()];
+//        P<SpaceStation> station = obj;
+//        if (station)
+//        {
+//            target = station;
+//            radar->setViewPosition(station->getPosition());
+//            targets.set(station);
+//        }
+//    });
+//    station_selector->setSize(GuiElement::GuiSizeMax, 50);
+//    station_selector->setLabel("Choix Station");
+//
+//    probe_selector = new GuiSelector(option_buttons, "PROBE_SELECTOR", [this](int index, string value) {
+//        P<SpaceObject> obj = space_object_list[value.toInt()];
+//        P<ScanProbe> probe = obj;
+//        if (probe)
+//        {
+//            target = probe;
+//            radar->setViewPosition(probe->getPosition());
+//            targets.set(probe);
+//        }
+//    });
+//    probe_selector->setSize(GuiElement::GuiSizeMax, 50);
+//    probe_selector->setLabel("Choix Sonde");
 
     // Reputation display.
     //info_reputation = new GuiKeyValueDisplay(option_buttons, "INFO_REPUTATION", 0.7, "Reputation:", "");
@@ -298,7 +298,7 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
         alert_level_buttons.push_back(alert_button);
     }
 
-    (new GuiCustomShipFunctions(this, relayOfficer, "", my_spaceship))->setPosition(-20, 270, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
+    (new GuiCustomShipFunctions(this, relayOfficer, "", my_spaceship))->setPosition(-20, 350, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
 
     //hacking_dialog = new GuiHackingDialog(this, "");
     hacking_dialog = new GuiHackDialog(this, "");
@@ -450,33 +450,33 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
         launch_probe_button->setText("Lancer sonde (" + string(my_spaceship->scan_probe_stock) + "/" + string(my_spaceship->max_scan_probes) + ")");
 
         // Add and remove entries from the CPU ship and space station list.
-        int n = 0;
-        foreach(SpaceObject, obj, space_object_list)
-        {
-            P<ScanProbe> probe = obj;
-            P<SpaceStation> station = obj;
-
-            if (station && my_spaceship->isFriendly(station) && station->isFriendly(my_spaceship) && station->getPosition() - my_spaceship->getPosition() < 1000000.0f)
-            {
-                if (station_selector->indexByValue(string(n)) == -1)
-                    station_selector->addEntry(station->getTypeName() + " " + station->getCallSign(), string(n));
-            }else{
-                probe_selector->show();
-                if (station_selector->indexByValue(string(n)) != -1)
-                    station_selector->removeEntry(station_selector->indexByValue(string(n)));
-            }
-            if (probe && probe->owner_id == my_spaceship->getMultiplayerId())
-            {
-                if (probe_selector->indexByValue(string(n)) == -1)
-                    probe_selector->addEntry(probe->getCallSign(), string(n));
-            }else{
-                if (probe_selector->indexByValue(string(n)) != -1)
-                    probe_selector->removeEntry(probe_selector->indexByValue(string(n)));
-            }
-        n += 1;
-        }
-        station_selector->setVisible(station_selector->entryCount()>0);
-        probe_selector->setVisible(probe_selector->entryCount()>0);
+//        int n = 0;
+//        foreach(SpaceObject, obj, space_object_list)
+//        {
+//            P<ScanProbe> probe = obj;
+//            P<SpaceStation> station = obj;
+//
+//            if (station && my_spaceship->isFriendly(station) && station->isFriendly(my_spaceship) && station->getPosition() - my_spaceship->getPosition() < 1000000.0f)
+//            {
+//                if (station_selector->indexByValue(string(n)) == -1)
+//                    station_selector->addEntry(station->getTypeName() + " " + station->getCallSign(), string(n));
+//            }else{
+//                probe_selector->show();
+//                if (station_selector->indexByValue(string(n)) != -1)
+//                    station_selector->removeEntry(station_selector->indexByValue(string(n)));
+//            }
+//            if (probe && probe->owner_id == my_spaceship->getMultiplayerId())
+//            {
+//                if (probe_selector->indexByValue(string(n)) == -1)
+//                    probe_selector->addEntry(probe->getCallSign(), string(n));
+//            }else{
+//                if (probe_selector->indexByValue(string(n)) != -1)
+//                    probe_selector->removeEntry(probe_selector->indexByValue(string(n)));
+//            }
+//        n += 1;
+//        }
+//        station_selector->setVisible(station_selector->entryCount()>0);
+//        probe_selector->setVisible(probe_selector->entryCount()>0);
     }
 
     if (targets.getWaypointIndex() >= 0)
