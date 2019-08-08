@@ -37,9 +37,6 @@ class DockMasterScreen : public GuiOverlay
     GuiAutoLayout *dronePanel;
 
     GuiAutoLayout* layout_move;
-    GuiAutoLayout* action_launch;
-    GuiAutoLayout* action_energy;
-    GuiAutoLayout* action_weapons;
 
     GuiAutoLayout* layout_actions;
     GuiListbox* actions;
@@ -49,20 +46,6 @@ class DockMasterScreen : public GuiOverlay
     std::vector<GuiKeyValueDisplay*> cargoInfoItems;
     std::vector<GuiKeyValueDisplay*> shipCargoInfoItems;
     GuiRotatingModelView* model;
-
-    GuiElement* energyControl;
-    GuiProgressbar *energy_bar;
-    GuiSlider *energy_slider;
-
-    GuiAutoLayout *table_weapons;
-    GuiAutoLayout *weapons_layout_label;
-
-    GuiAutoLayout *weapons_layout_p1;
-    GuiAutoLayout* weapons_layout[MW_Count];
-    GuiLabel* weapons_stock_ship[MW_Count];
-    GuiLabel* weapons_stock_cargo[MW_Count];
-    GuiButton* weapons_stock_p1[MW_Count];
-    GuiButton* weapons_stock_m1[MW_Count];
 
     GuiAutoLayout* dronePanel_col1;
     GuiAutoLayout* dronePanel_col2;

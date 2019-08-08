@@ -54,10 +54,6 @@ DockMasterScreen::DockMasterScreen(GuiContainer *owner)
     // the index in the button list is assumed to equal the index of the dock
     for (int n = 0; n < 3; n++)
         bays->addEntry("Baie-"+string(n+1), "Vide");
-    bays->addEntry("space", " ");
-    bays->addEntry("energy", "Energie");
-    bays->addEntry("weapons", "Missile");
-    bays->addEntry("repair", "Reparation");
 
     mainPanel = new GuiAutoLayout(rootLayout, "TOP_PANEL", GuiAutoLayout::LayoutHorizontalRows);
     mainPanel->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
@@ -93,21 +89,6 @@ DockMasterScreen::DockMasterScreen(GuiContainer *owner)
                     my_spaceship->addToShipLog("Transfert du vaisseau " + selected_ship->callsign + " Vers la baie d'amarrage " + string(index_bay+1),colorConfig.log_generic,"docks");
                     return;
                 }
-//                PVector<SpaceObject> list_objs = my_spaceship->getObjectsInRange(5000);
-//                foreach(SpaceObject, obj, list_objs)
-//                {
-//                    if (obj->callsign == docks->getEntryName(index_dock))
-//                    {
-//                        // Remove previous bay record
-//                        for (int n = 0; n < 3; n++)
-//                            if (bays->getEntryName(n) == obj->callsign)
-//                                bays->setEntryName(n,"Baie-"+string(n+1));
-//                        obj->id_dock = index_bay + 1;
-//                        bays->setEntryName(index_bay,obj->callsign);
-//                        my_spaceship->addToShipLog("Transfert du vaisseau " + obj->callsign + " Vers la baie d'amarrage " + string(index_bay+1),colorConfig.log_generic,"docks");
-//                        return;
-//                    }
-//                }
             }
     });
     action_move_button->setSize(COLUMN_WIDTH, 40);
@@ -127,93 +108,6 @@ DockMasterScreen::DockMasterScreen(GuiContainer *owner)
         ->setAlignment(ACenter)
         ->setPosition(0, 0, ATopCenter)
         ->setSize(GuiElement::GuiSizeMax, 50);
-
-    (new GuiLabel(topPanel, "SPACE", " ", 30))->setSize(GuiElement::GuiSizeMax, 50);
-
-    action_weapons = new GuiAutoLayout(topPanel, "ACTION_WEAPONS", GuiAutoLayout::LayoutVerticalColumns);
-//    action_weapons = new GuiAutoLayout(topPanel, "ACTION_WEAPONS", GuiAutoLayout::LayoutVerticalTopToBottom);
-    action_weapons->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax)->setPosition(0, 50, ATopCenter);
-    (new GuiLabel(action_weapons, "ACTION_WEAPONS_LABEL", "Transfert missiles :", 30))->setAlignment(ACenterRight)->setMargins(10, 10, 10, 10);
-
-    table_weapons = new GuiAutoLayout(action_weapons, "TABLE_WEAPONS", GuiAutoLayout::LayoutVerticalTopToBottom);
-    table_weapons->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
-
-    weapons_layout_label = new GuiAutoLayout(table_weapons, "WEAPONS_LAYOUT_LABEL", GuiAutoLayout::LayoutVerticalColumns);
-    weapons_layout_label -> setSize(GuiElement::GuiSizeMax, 40);
-    (new GuiLabel(weapons_layout_label, "", "Missile", 20));
-    (new GuiLabel(weapons_layout_label, "", "Station", 20));
-    (new GuiLabel(weapons_layout_label, "", "Vaisseau", 20));
-    (new GuiLabel(weapons_layout_label, "", " ", 20));
-    (new GuiLabel(weapons_layout_label, "", " ", 20));
-
-    for(int n=0; n<MW_Count; n++)
-    {
-//        weapons_layout[n] = new GuiElement(table_weapons, "WEAPONS_LAYOUT");
-        weapons_layout[n] = new GuiAutoLayout(table_weapons, "WEAPONS_LAYOUT", GuiAutoLayout::LayoutVerticalColumns);
-        weapons_layout[n]->setSize(GuiElement::GuiSizeMax, 40);
-
-        (new GuiLabel(weapons_layout[n], "", getMissileWeaponName(EMissileWeapons(n)), 20))->setSize(75, 30);
-
-        weapons_stock_ship[n] = new GuiLabel(weapons_layout[n],"","0/20",20);
-        weapons_stock_ship[n]->setPosition(75,0)->setSize(75, 30);
-        weapons_stock_cargo[n] = new GuiLabel(weapons_layout[n],"","0/20",20);
-        weapons_stock_cargo[n]->setPosition(150,0)->setSize(75, 30);
-
-        weapons_stock_p1[n] = new GuiButton(weapons_layout[n],"","+ 1", [this, n]() {
-            if (my_spaceship && selected_ship)
-            {
-                if (my_spaceship->getSystemEffectiveness(SYS_Docks) <= 0)
-                    return;
-
-                if (my_spaceship->weapon_storage[n] <= 0)
-                {
-                    my_spaceship->addToShipLog("Transfert de missile impossible. Aucun stock dans la station",colorConfig.log_generic,"docks");
-                    return;
-                }
-
-                if (selected_ship->getWeaponStorageMax(EMissileWeapons(n)) == selected_ship->getWeaponStorage(EMissileWeapons(n)))
-                {
-                    my_spaceship->addToShipLog("Transfert de missile impossible. Stock maximum dans le drone",colorConfig.log_generic,"docks");
-                    return;
-                }
-
-                my_spaceship->addToShipLog("Transfert de 1 " + getMissileWeaponName(EMissileWeapons(n)) + " Vers le drone",colorConfig.log_generic,"docks");
-
-                my_spaceship->weapon_storage[n] -= 1;
-                selected_ship->setWeaponStorage(EMissileWeapons(n), selected_ship->getWeaponStorage(EMissileWeapons(n)) + 1);
-            }
-        });
-        weapons_stock_p1[n]->setSize(75, 40);
-
-        weapons_stock_m1[n] = new GuiButton(weapons_layout[n],"","- 1", [this,n]() {
-            if (my_spaceship)
-            {
-                if (my_spaceship->getSystemEffectiveness(SYS_Docks) <= 0)
-                    return;
-
-                if (selected_ship->getWeaponStorage(EMissileWeapons(n)) <= 0)
-                {
-                    my_spaceship->addToShipLog("Transfert de missile impossible. Aucun stock dans le drone",colorConfig.log_generic,"docks");
-                    return;
-                }
-
-                if (my_spaceship->weapon_storage[n] == my_spaceship->weapon_storage_max[n])
-                {
-                    my_spaceship->addToShipLog("Transfert de missile impossible. Stock maximum dans la station",colorConfig.log_generic,"docks");
-                    return;
-                }
-
-                my_spaceship->addToShipLog("Transfert de 1 " + getMissileWeaponName(EMissileWeapons(n)) + " vers la station",colorConfig.log_generic,"docks");
-
-                my_spaceship->weapon_storage[n] += 1;
-                selected_ship->setWeaponStorage(EMissileWeapons(n), selected_ship->getWeaponStorage(EMissileWeapons(n)) - 1);
-            }
-        });
-        weapons_stock_m1[n]->setSize(75, 40);
-
-        (new GuiPowerDamageIndicator(weapons_stock_p1[n], "DOCKS_DPI", SYS_Docks, ACenter, my_spaceship))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
-        (new GuiPowerDamageIndicator(weapons_stock_m1[n], "DOCKS_DPI", SYS_Docks, ACenter, my_spaceship))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
-    }
 
     model = new GuiRotatingModelView(topPanel, "MODEL_VIEW", nullptr);
     model->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax)->setMargins(0, -100, 0, 0);
@@ -239,9 +133,6 @@ void DockMasterScreen::selectBay(int index_bay)
     this->index_bay = index_bay;
     bays->setSelectionIndex(index_bay);
     layout_move->setVisible(true);
-
-//    action_energy->setVisible(bays->getSelectionValue() == "energy");
-//    action_weapons->setVisible(bays->getSelectionValue() == "Missile");
 }
 
 void DockMasterScreen::onDraw(sf::RenderTarget &window)
@@ -283,35 +174,6 @@ void DockMasterScreen::onDraw(sf::RenderTarget &window)
                 mainPanel->setVisible(true);
                 return;
             }
-        }
-
-        // On récupère l'info sur le dock sélectionné
-//        P<SpaceShip> ship = list_ships[index];
-
-//        if (ship)
-//        {
-//            action_move_selector->setSelectionIndex(action_move_selector->indexByValue(string(dockData.move_target_index)));
-//            displayDroneDetails(dockData);
-//            cancel_move_button->setVisible(false);
-//            overlay->setVisible(false);
-//            mainPanel->setVisible(true);
-//        }else{
-//            model->setModel(nullptr);
-//            overlay->setVisible(true);
-//            overlay_label->setText("Vide");
-//            distance_bar->setVisible(false);
-//            cancel_move_button->setVisible(false);
-//            mainPanel->setVisible(false);
-//        }
-    }
-    if (my_spaceship && selected_ship)
-    {
-        for(int n = 0; n < MW_Count; n++)
-        {
-            weapons_stock_cargo[n]->setText(string(selected_ship->getWeaponStorage(EMissileWeapons(n))) + " / " + string(selected_ship->getWeaponStorageMax(EMissileWeapons(n))));
-            weapons_stock_ship[n]->setText(string(my_spaceship->getWeaponStorage(EMissileWeapons(n))) + " / " + string(my_spaceship->getWeaponStorageMax(EMissileWeapons(n))));
-            weapons_stock_m1[n]->setEnable(selected_ship->getWeaponStorageMax(EMissileWeapons(n)) > 0 && my_spaceship->getWeaponStorageMax(EMissileWeapons(n)) > 0);
-            weapons_stock_p1[n]->setEnable(selected_ship->getWeaponStorageMax(EMissileWeapons(n)) > 0 && my_spaceship->getWeaponStorageMax(EMissileWeapons(n)) > 0);
         }
     }
 }
