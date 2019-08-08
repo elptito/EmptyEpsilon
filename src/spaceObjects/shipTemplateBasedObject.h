@@ -20,6 +20,8 @@ public:
     string template_name;
     string type_name;
     string public_name;
+    string class_name;
+    string sub_class_name;
     int hack_diff;
     bool hack_protect;
     string radar_trace;
@@ -71,6 +73,9 @@ public:
     void setPublicName(string public_name) { this->public_name = public_name; }
     string getTypeName() { return type_name; }
     string getPublicName() { return public_name; }
+
+    string getClass() { return class_name; }
+    string getSubClass() { return sub_class_name; }
 
     void setHackDiff(int hack_diff) { this->hack_diff = hack_diff; }
     int getHackDiff() { return hack_diff; }

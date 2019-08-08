@@ -12,6 +12,8 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(ShipTemplateBasedObject, SpaceObject)
     /// Set the class name of this object. Normally the class name is copied from the template name (Ex "Cruiser") but you can override it with this function.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, setTypeName);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, getTypeName);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, getClass);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, getSubClass);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, getHackDiff);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, setHackDiff);
     /// Get the current amount of hull
@@ -318,6 +320,8 @@ void ShipTemplateBasedObject::setTemplate(string template_name)
     ship_template = new_ship_template;
     type_name = template_name;
     public_name = new_ship_template->getPublicName();
+    class_name = ship_template->getClass();
+    sub_class_name = ship_template->getSubClass();
 
     hull_strength = hull_max = ship_template->hull;
     shield_count = ship_template->shield_count;
