@@ -2,6 +2,7 @@
 #define RAW_SCANNER_DATA_RADAR_OVERLAY_H
 
 #include "gui/gui2_element.h"
+#include "spaceObjects/scanProbe.h"
 
 class GuiRadarView;
 
