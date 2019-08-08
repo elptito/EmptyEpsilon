@@ -14,6 +14,13 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
     if (!my_spaceship)
         return;
 
+    // If probe
+    P<ScanProbe> probe;
+    if (game_server)
+        probe = game_server->getObjectById(my_spaceship->linked_science_probe_id);
+    else
+        probe = game_client->getObjectById(my_spaceship->linked_science_probe_id);
+
     if (my_spaceship->getSystemEffectiveness(SYS_Drones) < 0.1)
         return;
 
@@ -34,6 +41,9 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
         if (my_spaceship && obj == my_spaceship)
             continue;
 
+        if (probe && obj == probe)
+            continue;
+
         if (my_spaceship && my_spaceship->id_galaxy != obj->id_galaxy)
             continue;
 
@@ -46,7 +56,7 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
 
         // If the object is more than twice as far away as the maximum radar
         // range, disregard it.
-        float distance_modif = distance * my_spaceship->getSystemEffectiveness(SYS_Drones);
+        float distance_modif = distance * std::pow(my_spaceship->getSystemEffectiveness(SYS_Drones),2)/2.0;
         if (dist > distance_modif * dist_max)
             continue;
 
