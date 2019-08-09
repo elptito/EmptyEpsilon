@@ -141,7 +141,11 @@ void EngineControlScreen::onDraw(sf::RenderTarget& window)
         front_shield_display->setValue(string(my_spaceship->getShieldPercentage(0)) + "%");
         rear_shield_display->setValue(string(my_spaceship->getShieldPercentage(1)) + "%");
         engineering_control_display->setValue(my_spaceship->engineering_control_from_bridge? "bridge" : "ECR");
-        warp_frequency_display->setValue(frequencyToString(my_spaceship->shield_frequency));
+        if(my_spaceship->warp_calibration_delay > 0.0f){
+            warp_frequency_display->setValue("calibrating");
+        } else {
+            warp_frequency_display->setValue(frequencyToString(my_spaceship->warp_frequency));
+        }
         new_warp_frequency_display->setValue(frequencyToString(new_warp_frequency));
 
         system_effects_index = 0;
@@ -214,6 +218,7 @@ void EngineControlScreen::onDraw(sf::RenderTarget& window)
                 break;
             case SYS_Warp:
                 addSystemEffect("Warp drive speed", string(int(my_spaceship->warp_boost_factor * effectiveness * 100)) + "%");
+                addSystemEffect("Warp Calibration speed", string(int(effectiveness * 100)) + "%");
                 break;
             case SYS_JumpDrive:
                 addSystemEffect("Jump drive recharge rate", string(int(my_spaceship->getJumpDriveRechargeRate() * 100)) + "%");
@@ -297,7 +302,8 @@ void EngineControlScreen::onHotkey(const HotkeyResult& key)
                     }
                 }
             }
-        } else if (my_spaceship && crew_position == engineControlScreen) {
+        } 
+        if (my_spaceship && crew_position == engineControlScreen) {
             if (key.hotkey == std::string("SET_CONTROL_ECR")) {
                 my_spaceship->commandSetEngineeringControlToECR();
             } else if (key.hotkey == std::string("WARP_CAL_INC")) {

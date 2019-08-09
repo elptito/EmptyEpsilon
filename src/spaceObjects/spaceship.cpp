@@ -167,6 +167,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     beam_frequency = irandom(0, max_frequency);
     beam_system_target = SYS_None;
     shield_frequency = irandom(0, max_frequency);
+    warp_frequency = irandom(0, max_frequency);
     docking_state = DS_NotDocking;
     impulse_acceleration = 20.0;
     energy_level = 1000;
@@ -420,16 +421,18 @@ void SpaceShip::handleClientCommand(int32_t client_id, int16_t command, sf::Pack
         }
         break;
     case CMD_SET_SHIELD_FREQUENCY:
-        int32_t new_frequency;
-        packet >> new_frequency;
-        if (new_frequency != shield_frequency)
         {
-            shield_frequency = new_frequency;
-            if (shield_frequency < 0)
-                shield_frequency = 0;
-            if (shield_frequency > SpaceShip::max_frequency)
-                shield_frequency = SpaceShip::max_frequency;
-            addToShipLog("Shields frequency changed : " + frequencyToString(new_frequency),sf::Color::Green,"intern");
+            int32_t new_frequency;
+            packet >> new_frequency;
+            if (new_frequency != shield_frequency)
+            {
+                shield_frequency = new_frequency;
+                if (shield_frequency < 0)
+                    shield_frequency = 0;
+                if (shield_frequency > SpaceShip::max_frequency)
+                    shield_frequency = SpaceShip::max_frequency;
+                addToShipLog("Shields frequency changed : " + frequencyToString(new_frequency),sf::Color::Green,"intern");
+            }
         }
         break;
     case CMD_COMBAT_MANEUVER_BOOST:
@@ -557,16 +560,18 @@ void SpaceShip::handleClientCommand(int32_t client_id, int16_t command, sf::Pack
         }
         break;
     case CMD_SET_WARP_FREQUENCY:
-        int32_t new_frequency;
-        packet >> new_frequency;
-        if (new_frequency != warp_frequency)
         {
-            warp_frequency = new_frequency;
-            if (warp_frequency < 0)
-                warp_frequency = 0;
-            if (warp_frequency > SpaceShip::max_frequency)
-                warp_frequency = SpaceShip::max_frequency;
-            addToShipLog("Warp frequency changed : " + frequencyToString(new_frequency),sf::Color::Green,"intern");
+            int32_t new_frequency;
+            packet >> new_frequency;
+            if (new_frequency != warp_frequency)
+            {
+                warp_frequency = new_frequency;
+                if (warp_frequency < 0)
+                    warp_frequency = 0;
+                if (warp_frequency > SpaceShip::max_frequency)
+                    warp_frequency = SpaceShip::max_frequency;
+                addToShipLog("Warp frequency changed : " + frequencyToString(new_frequency),sf::Color::Green,"intern");
+            }
         }
         break;
     }

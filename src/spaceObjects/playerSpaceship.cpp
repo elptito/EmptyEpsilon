@@ -119,6 +119,8 @@ float PlayerSpaceship::comms_channel_open_time = 0;
 float PlayerSpaceship::scan_probe_charge_time = 0;
 float PlayerSpaceship::max_scanning_delay = 0;
 float PlayerSpaceship::warp_terrain_cap = 0;
+float PlayerSpaceship::warp_calibration_time = 0;
+float PlayerSpaceship::warp_calibration_penalty_heat_factor = 0;
 float PlayerSpaceship::system_power_user_factor[] = {
     /*SYS_Reactor*/     -25.0 * 0.08,
     /*SYS_BeamWeapons*/   3.0 * 0.08,
@@ -159,6 +161,7 @@ PlayerSpaceship::PlayerSpaceship()
     comms_state = CS_Inactive;
     comms_open_delay = 0.0;
     shield_calibration_delay = 0.0;
+    warp_calibration_delay = 0.0;
     auto_repair_enabled = false;
     auto_coolant_enabled = false;
     activate_self_destruct = false;
@@ -195,6 +198,7 @@ PlayerSpaceship::PlayerSpaceship()
     registerMemberReplication(&scanning_depth);
     registerMemberReplication(&shields_active);
     registerMemberReplication(&shield_calibration_delay, 0.5);
+    registerMemberReplication(&warp_calibration_delay, 0.5);
     registerMemberReplication(&auto_repair_enabled);
     registerMemberReplication(&auto_coolant_enabled);
     registerMemberReplication(&beam_system_target);
@@ -279,6 +283,7 @@ void PlayerSpaceship::update(float delta)
     // subsystem effectiveness when determining the tick rate.
     if (warp_calibration_delay > 0)
     {
+        warp_request = 0;
         warp_calibration_delay -= delta * getSystemEffectiveness(SYS_Warp);
     }
 
@@ -1024,6 +1029,11 @@ void PlayerSpaceship::handleClientCommand(int32_t client_id, int16_t command, sf
 {
     switch(command)
     {
+    case CMD_WARP:
+        if (warp_calibration_delay <= 0.0){
+            packet >> warp_request;
+        }
+        break;
     case CMD_SET_SHIELDS:
         {
             bool active;
@@ -1381,7 +1391,6 @@ void PlayerSpaceship::handleClientCommand(int32_t client_id, int16_t command, sf
         }
         break;
     case CMD_SET_WARP_FREQUENCY:
-    {
         if (warp_calibration_delay <= 0.0)
         {
             int32_t new_frequency;
@@ -1389,6 +1398,14 @@ void PlayerSpaceship::handleClientCommand(int32_t client_id, int16_t command, sf
             if (new_frequency != warp_frequency)
             {
                 warp_frequency = new_frequency;
+                warp_calibration_delay = warp_calibration_time;
+                warp_request = 0;
+                if (current_warp > 0){
+                    // deal heat and/or damage
+                    addHeat(SYS_Warp, current_warp * my_spaceship->warp_calibration_penalty_heat_factor);
+                    current_warp = 0;
+                }
+                // TODO if active warp, turn it into heat
                 if (warp_frequency < 0)
                     warp_frequency = 0;
                 if (warp_frequency > SpaceShip::max_frequency)
@@ -1397,7 +1414,6 @@ void PlayerSpaceship::handleClientCommand(int32_t client_id, int16_t command, sf
             }
         }
         break;
-    }
     default:
         SpaceShip::handleClientCommand(client_id, command, packet);
     }

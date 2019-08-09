@@ -78,9 +78,11 @@ public:
         PlayerSpaceship::max_coolant = PreferencesManager::get("max_coolant", "10").toFloat();
         PlayerSpaceship::damage_per_second_on_overheat = PreferencesManager::get("damage_per_second_on_overheat", "0.08").toFloat();
         PlayerSpaceship::shield_calibration_time = PreferencesManager::get("shield_calibration_time", "25.0").toFloat();
+        PlayerSpaceship::warp_calibration_time = PreferencesManager::get("warp_calibration_time", "10.0").toFloat();
         PlayerSpaceship::comms_channel_open_time = PreferencesManager::get("comms_channel_open_time", "2.0").toFloat();
         PlayerSpaceship::scan_probe_charge_time = PreferencesManager::get("scan_probe_charge_time", "10.0").toFloat();
         PlayerSpaceship::max_scanning_delay = PreferencesManager::get("max_scanning_delay", "6.0").toFloat();
+        PlayerSpaceship::warp_calibration_penalty_heat_factor = PreferencesManager::get("warp_calibration_penalty_heat_factor", "1.0").toFloat();
     }
     // Power consumption and generation base rates
     static float energy_warp_per_second;
@@ -100,9 +102,11 @@ public:
     static float damage_per_second_on_overheat;
     // Base time it takes to perform an action
     static float shield_calibration_time;
+    static float warp_calibration_time;
     static float comms_channel_open_time;
     static float scan_probe_charge_time;
     static float max_scanning_delay;
+    static float warp_calibration_penalty_heat_factor;
     // Maximum number of self-destruction confirmation codes
     constexpr static int max_self_destruct_codes = 3;
 
