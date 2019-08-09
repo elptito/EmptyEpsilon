@@ -56,6 +56,7 @@ void GuiWarpControls::onDraw(sf::RenderTarget& window)
     if (target_spaceship)
     {
         label->setValue(string(target_spaceship->current_warp, 1));
+        slider->setValue(my_spaceship->warp_request);
 //        if (target_spaceship->current_warp > 0)
 //        {
 //            if (!launch_sound_played)
