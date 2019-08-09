@@ -215,24 +215,32 @@ GameMasterScreen::GameMasterScreen()
         gm_script_options->setSelectionIndex(-1);
         gameMasterActions->commandCallGmScript(index, getSelection());
     });
-    gm_script_options->setPosition(20, 200, ATopLeft)->setSize(250, 500);
+    gm_script_options->setPosition(20, 130, ATopLeft)->setSize(250, 500);
+    
+    order_layout = new GuiAutoLayout(this, "ORDER_LAYOUT", GuiAutoLayout::LayoutVerticalBottomToTop);
+    order_layout->setPosition(-20, -90, ABottomRight)->setSize(300, GuiElement::GuiSizeMax);
 
-    order_layout = new GuiAutoLayout(this, "ORDER_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
-    order_layout->setPosition(-20, 550, ATopRight)->setSize(300, GuiElement::GuiSizeMax);
-
-    (new GuiLabel(order_layout, "ORDERS_LABEL", "Ordres:", 20))->addBackground()->setSize(GuiElement::GuiSizeMax, 30);
-    (new GuiButton(order_layout, "ORDER_IDLE", "Repos", [this]() {
-        gameMasterActions->commandOrderShip(SO_Idle, getSelection());
-    }))->setTextSize(20)->setSize(GuiElement::GuiSizeMax, 30);
-    (new GuiButton(order_layout, "ORDER_ROAMING", "Errant", [this]() {
-        gameMasterActions->commandOrderShip(SO_Roaming, getSelection());
+    (new GuiButton(order_layout, "ORDER_DEFEND_LOCATION", "Defendre localisation", [this]() {
+        for(P<SpaceObject> obj : targets.getTargets())
+            if (P<CpuShip>(obj))
+                P<CpuShip>(obj)->orderDefendLocation(obj->getPosition());
     }))->setTextSize(20)->setSize(GuiElement::GuiSizeMax, 30);
     (new GuiButton(order_layout, "ORDER_STAND_GROUND", "En place", [this]() {
-        gameMasterActions->commandOrderShip(SO_StandGround, getSelection());
+        for(P<SpaceObject> obj : targets.getTargets())
+            if (P<CpuShip>(obj))
+                P<CpuShip>(obj)->orderStandGround();
     }))->setTextSize(20)->setSize(GuiElement::GuiSizeMax, 30);
-    (new GuiButton(order_layout, "ORDER_DEFEND_LOCATION", "Defendre localisation", [this]() {
-        gameMasterActions->commandOrderShip(SO_DefendLocation, getSelection());
+    (new GuiButton(order_layout, "ORDER_ROAMING", "Errant", [this]() {
+        for(P<SpaceObject> obj : targets.getTargets())
+            if (P<CpuShip>(obj))
+                P<CpuShip>(obj)->orderRoaming();
     }))->setTextSize(20)->setSize(GuiElement::GuiSizeMax, 30);
+    (new GuiButton(order_layout, "ORDER_IDLE", "Repos", [this]() {
+        for(P<SpaceObject> obj : targets.getTargets())
+            if (P<CpuShip>(obj))
+                P<CpuShip>(obj)->orderIdle();
+    }))->setTextSize(20)->setSize(GuiElement::GuiSizeMax, 30);
+    (new GuiLabel(order_layout, "ORDERS_LABEL", "Ordres:", 20))->addBackground()->setSize(GuiElement::GuiSizeMax, 30);
 
     chat_layer = new GuiElement(this, "");
     chat_layer->setPosition(0, 0)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
@@ -348,7 +356,6 @@ void GameMasterScreen::update(float delta)
     tweak_button->setVisible(has_object);
 
     order_layout->setVisible(has_cpu_ship);
-//    gm_script_options->setVisible(!has_cpu_ship);
     player_comms_hail->setVisible(has_player_ship);
 
     std::unordered_map<string, string> selection_info;
