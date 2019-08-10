@@ -106,10 +106,10 @@ NavigationScreen::NavigationScreen(GuiContainer *owner)
     layers_controls->setPosition(-20, 50, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
     
     //manage layers
-    for (int n = 0; n < GameGlobalInfo::max_terrain_layers; n++){
-        if (gameGlobalInfo->terrain[n].defined){
+    for (int n = 0; n < GameGlobalInfo::max_map_layers; n++){
+        if (gameGlobalInfo->layer[n].defined){
             // change its state on draw?
-            layerButtons[n] = new GuiButton(layers_controls, "LAYER_TOGGLE_" + string(n, 0), "Layer " + string(n, 0),  [this, n]() {
+            layerButtons[n] = new GuiButton(layers_controls, "LAYER_TOGGLE_" + string(n, 0), gameGlobalInfo->layer[n].title,  [this, n]() {
                 radar->toggleTerrainLayer(n);
             });
             layerButtons[n]->setSize(GuiElement::GuiSizeMax, 50);
@@ -167,7 +167,7 @@ void NavigationScreen::onDraw(sf::RenderTarget &window)
         delete_waypoint_button->disable();
     
     waypoint_place_button->setActive(placeWayPoints);
-    for (int n = 0; n < GameGlobalInfo::max_terrain_layers; n++){
+    for (int n = 0; n < GameGlobalInfo::max_map_layers; n++){
         if (layerButtons[n]){
             layerButtons[n]->setActive(radar->getTerrainLayer(n));
         }
@@ -185,7 +185,7 @@ void NavigationScreen::onHotkey(const HotkeyResult& key)
         } else if (key.hotkey == "WAYPOINT_DELETE" && my_spaceship && targets.getWaypointIndex() >= 0) {
             my_spaceship->commandRemoveWaypoint(targets.getWaypointIndex());
         } else {
-            for (int n = 0; n < GameGlobalInfo::max_terrain_layers; n++){
+            for (int n = 0; n < GameGlobalInfo::max_map_layers; n++){
                 if (layerButtons[n] && key.hotkey == "LAYER_TOGGLE_" + string(n, 0)){
                     radar->toggleTerrainLayer(n);
                 }

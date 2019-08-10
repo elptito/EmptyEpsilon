@@ -91,6 +91,7 @@ public:
     static void load(){
         SpaceShip::heat_per_warp = PreferencesManager::get("heat_per_warp", "0.02").toFloat();
         SpaceShip::max_frequency = PreferencesManager::get("max_frequency", "20").toInt();
+        SpaceShip::max_warp_frequency = PreferencesManager::get("max_warp_frequency", "5").toInt();
         SpaceShip::combat_maneuver_charge_time = PreferencesManager::get("combat_maneuver_charge_time", "20.0").toFloat();
         SpaceShip::combat_maneuver_boost_max_time = PreferencesManager::get("combat_maneuver_boost_max_time", "3.0").toFloat();
         SpaceShip::combat_maneuver_strafe_max_time = PreferencesManager::get("combat_maneuver_strafe_max_time", "3.0").toFloat();
@@ -106,6 +107,7 @@ public:
     }
     static float heat_per_warp;
     static int max_frequency;
+    static int max_warp_frequency;
     static float combat_maneuver_charge_time; /*< Amount of time it takes to fully charge the combat maneuver system */
     static float combat_maneuver_boost_max_time; /*< Amount of time we can boost with a fully charged combat maneuver system */
     static float combat_maneuver_strafe_max_time; /*< Amount of time we can strafe with a fully charged combat maneuver system */
@@ -187,7 +189,7 @@ public:
     float max_warp;
 
     /*!
-     * [output] Current warp boost factor from terrain, from 0.0 to infinity
+     * [output] Current warp boost factor from layer, from 0.0 to infinity
      */
     float warp_boost_factor;
 
@@ -459,7 +461,7 @@ public:
     int getShieldsFrequency(void){ return shield_frequency; }
     void setShieldsFrequency(float freq) { if ((freq > SpaceShip::max_frequency) || (freq < 0)) return; shield_frequency = freq;}
     int getWarpFrequency(void){ return warp_frequency; }
-    void setWarpFrequency(float freq) { if ((freq > SpaceShip::max_frequency) || (freq < 0)) return; warp_frequency = freq;}
+    void setWarpFrequency(float freq) { if ((freq > SpaceShip::max_warp_frequency) || (freq < 0)) return; warp_frequency = freq;}
     
     int getBeamsFrequency(void){ return beam_frequency; }
 

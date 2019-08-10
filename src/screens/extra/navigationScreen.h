@@ -28,7 +28,7 @@ private:
     TargetsContainer targets;
     int drag_waypoint_index;
     NavigationView* radar;
-    GuiButton* layerButtons[GameGlobalInfo::max_terrain_layers];
+    GuiButton* layerButtons[GameGlobalInfo::max_map_layers];
     GuiButton* waypoint_place_button;
     GuiButton* delete_waypoint_button;
 

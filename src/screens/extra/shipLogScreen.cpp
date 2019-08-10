@@ -16,7 +16,6 @@ ShipLogScreen::ShipLogScreen(GuiContainer* owner, string station)
     new_line = new GuiTextEntry(this, "", "");
     new_line->setPosition(0, 0, EGuiAlign::ABottomLeft)->setSize(GuiElement::GuiSizeMax, 50);
     new_line->enterCallback([this](string text){
-        // TODO extract command
         my_spaceship->commandAddLogLine(text, this->station);
         new_line->setText("");
     });

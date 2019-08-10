@@ -12,6 +12,7 @@
 #include "scanProbe.h"
 #include "gui/colorConfig.h"
 #include "preferenceManager.h"
+#include "script.h"
 
 #include "scriptInterface.h"
 
@@ -33,6 +34,8 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setWeaponStorageMax);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getShieldsFrequency);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setShieldsFrequency);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getWarpFrequency);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setWarpFrequency);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getMaxEnergy);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setMaxEnergy);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getEnergy);
@@ -115,6 +118,7 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
 
 float SpaceShip::heat_per_warp = 0;
 int SpaceShip::max_frequency = 0;
+int SpaceShip::max_warp_frequency = 0;
 float SpaceShip::combat_maneuver_charge_time = 0;
 float SpaceShip::combat_maneuver_boost_max_time = 0;
 float SpaceShip::combat_maneuver_strafe_max_time = 0; 
@@ -167,7 +171,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     beam_frequency = irandom(0, max_frequency);
     beam_system_target = SYS_None;
     shield_frequency = irandom(0, max_frequency);
-    warp_frequency = irandom(0, max_frequency);
+    warp_frequency = irandom(0, max_warp_frequency);
     docking_state = DS_NotDocking;
     impulse_acceleration = 20.0;
     energy_level = 1000;
@@ -568,8 +572,8 @@ void SpaceShip::handleClientCommand(int32_t client_id, int16_t command, sf::Pack
                 warp_frequency = new_frequency;
                 if (warp_frequency < 0)
                     warp_frequency = 0;
-                if (warp_frequency > SpaceShip::max_frequency)
-                    warp_frequency = SpaceShip::max_frequency;
+                if (warp_frequency > SpaceShip::max_warp_frequency)
+                    warp_frequency = SpaceShip::max_warp_frequency;
                 addToShipLog("Warp frequency changed : " + frequencyToString(new_frequency),sf::Color::Green,"intern");
             }
         }
@@ -1988,6 +1992,18 @@ string frequencyToString(int frequency)
 {
     return string(400 + (frequency * 20)) + "THz";
 }
+
+int getFrequencyDisplayName(lua_State *L){
+    int idx = 1;
+    int frequency = luaL_checkinteger(L, idx++);
+    string res = frequencyToString(frequency);
+    lua_pushstring(L, res.c_str());
+    return 1;
+}
+
+/// getFrequencyDisplayName(frequency)
+/// Return the display name of the frequency integer;
+REGISTER_SCRIPT_FUNCTION(getFrequencyDisplayName);
 
 #ifndef _MSC_VER
 #include "spaceship.hpp"

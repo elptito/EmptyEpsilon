@@ -34,13 +34,13 @@ GameGlobalInfo::GameGlobalInfo()
         registerMemberReplication(&nebula_info[n].vector);
         registerMemberReplication(&nebula_info[n].textureName);
     }
-    for(int n=0; n<max_terrain_layers; n++)
+    for(int n=0; n<max_map_layers; n++)
     {
-        registerMemberReplication(&terrain[n].textureName);
-        registerMemberReplication(&terrain[n].scale);
-        registerMemberReplication(&terrain[n].coordinates);
-        registerMemberReplication(&terrain[n].defined);
-        terrain[n].defined = false;
+        registerMemberReplication(&layer[n].textureName);
+        registerMemberReplication(&layer[n].scale);
+        registerMemberReplication(&layer[n].coordinates);
+        registerMemberReplication(&layer[n].defined);
+        layer[n].defined = false;
     }
     global_message_timeout = 0.0;
     player_warp_jump_drive_setting = PWJ_ShipDefault;
@@ -203,48 +203,52 @@ void GameGlobalInfo::destroy()
 
 string GameGlobalInfo::getExportLine(){
     string ret = "";
-    for(int n=0; n<max_terrain_layers; n++)
+    for(int n=0; n<max_map_layers; n++)
     {
-        if (terrain[n].defined){
-            ret += string("setTerrain(")+
+        if (layer[n].defined){
+            ret += string("setMapLayer(")+
             string(n, 0) + ", "+
-            "\"" + terrain[n].textureName + "\", "+
-            string(terrain[n].coordinates.x, 0) + ", "+
-            string(terrain[n].coordinates.y, 0) + ", "+
-            string(terrain[n].scale) + ")\n";
+            "\"" + layer[n].textureName + "\", "+
+            string(layer[n].coordinates.x, 0) + ", "+
+            string(layer[n].coordinates.y, 0) + ", "+
+            string(layer[n].scale) + 
+            "\"" + layer[n].title + "\")\n";
         }
     }
     return ret;
 }
 
-void GameGlobalInfo::setTerrain(int terrainId, string textureName, sf::Vector2f coordinates, float scale){
+void GameGlobalInfo::setMapLayer(int terrainId, string textureName, sf::Vector2f coordinates, float scale, string title){
     if (game_server){
-        TerrainInfo &terrain = this->terrain[terrainId];
+        MapLayer &layer = this->layer[terrainId];
         // only server can effectively load terrainImage data
         P<ResourceStream> stream = getResourceStream(textureName);
         if (!stream) stream = getResourceStream(textureName + ".png");
-        if (stream && terrain.image.loadFromStream(**stream)){
-            terrain.defined = true;
-            terrain.textureName = textureName;
-            terrain.coordinates = coordinates;
-            terrain.scale = scale;
+        if (stream && layer.image.loadFromStream(**stream)){
+            layer.defined = true;
+            layer.textureName = textureName;
+            layer.coordinates = coordinates;
+            layer.scale = scale;
+            layer.title = title;
         } else {
-            LOG(WARNING) << "Failed to load terrain texture image: " << textureName;
+            LOG(WARNING) << "Failed to load layer texture image: " << textureName;
         }
     } else {
-        LOG(ERROR) << "GameGlobalInfo::setTerrain can only be called locally on the server";
+        LOG(ERROR) << "GameGlobalInfo::setMapLayer can only be called locally on the server";
     }
 }
 
 sf::Color GameGlobalInfo::getTerrainPixel(int terrainId, sf::Vector2f coordinates){ 
-    TerrainInfo &terrain = this->terrain[terrainId];
-    coordinates = (sf::Vector2f(terrain.image.getSize()) * 0.5f) + ((coordinates + terrain.coordinates) / terrain.scale);
-    if (coordinates.x < 0 || coordinates.x > terrain.image.getSize().x || 
-        coordinates.y < 0 || coordinates.y > terrain.image.getSize().y)
-        // outside of image boundaries
-        return sf::Color::Transparent;
-     else 
-        return terrain.image.getPixel(coordinates.x, coordinates.y);
+    if (terrainId >= 0 && terrainId < max_map_layers){
+        MapLayer &layer = this->layer[terrainId];
+        if (layer.defined){
+            coordinates = (sf::Vector2f(layer.image.getSize()) * 0.5f) + ((coordinates + layer.coordinates) / layer.scale);
+            if (coordinates.x > 0 && coordinates.x < layer.image.getSize().x && 
+                coordinates.y > 0 && coordinates.y < layer.image.getSize().y)
+                return layer.image.getPixel(coordinates.x, coordinates.y);
+        }
+    }
+    return sf::Color::Transparent;
 }
 
 string playerWarpJumpDriveToString(EPlayerWarpJumpDrive player_warp_jump_drive)
@@ -521,7 +525,7 @@ static int playSoundFile(lua_State* L)
 /// Note that the sound is only played on the server. Not on any of the clients.
 REGISTER_SCRIPT_FUNCTION(playSoundFile);
 
-static int setTerrain(lua_State *L)
+static int setMapLayer(lua_State *L)
 {
     int idx = 1;
     float id = luaL_checknumber(L, idx++);
@@ -529,14 +533,14 @@ static int setTerrain(lua_State *L)
     sf::Vector2f position;
     convert<sf::Vector2f>::param(L, idx, position);
     float scale = luaL_checknumber(L, idx++);
-    gameGlobalInfo->setTerrain(id, textureName, position, scale);
+    string title = luaL_checkstring(L, idx++);
+    gameGlobalInfo->setMapLayer(id, textureName, position, scale, title);
     return 0;
 }
-/// setTerrain(id, textureName, x, y, scale)
-/// set the terrain texture of the map
-REGISTER_SCRIPT_FUNCTION(setTerrain);
+/// setMapLayer(id, textureName, x, y, scale, title)
+/// set the layer texture of the map
+REGISTER_SCRIPT_FUNCTION(setMapLayer);
 
-// TODO get vector like in SpaceObject:setPosition(sf::Vector2f v)
 static int getTerrainValueAtPosition(lua_State *L){
     int idx = 1;
     float id = luaL_checknumber(L, idx++);

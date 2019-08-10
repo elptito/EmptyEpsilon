@@ -1405,7 +1405,6 @@ void PlayerSpaceship::handleClientCommand(int32_t client_id, int16_t command, sf
                     addHeat(SYS_Warp, current_warp * my_spaceship->warp_calibration_penalty_heat_factor);
                     current_warp = 0;
                 }
-                // TODO if active warp, turn it into heat
                 if (warp_frequency < 0)
                     warp_frequency = 0;
                 if (warp_frequency > SpaceShip::max_frequency)

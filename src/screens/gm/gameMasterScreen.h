@@ -46,7 +46,7 @@ private:
     bool position_text_custom;
     bool managing_layers;
     GuiButton* manageLayersButton;
-    GuiButton* layerButtons[GameGlobalInfo::max_terrain_layers];
+    GuiButton* layerButtons[GameGlobalInfo::max_map_layers];
     GuiTextEntry* position_text;
     GuiAutoLayout* info_layout;
     std::vector<GuiKeyValueDisplay*> info_items;

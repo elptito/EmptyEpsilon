@@ -19,7 +19,7 @@ private:
   sf::Vector2f view_position;
 
   TargetsContainer *targets;
-  bool terrainLayers[GameGlobalInfo::max_terrain_layers];
+  bool terrainLayers[GameGlobalInfo::max_map_layers];
   func_t mouse_down_func;
   func_t mouse_drag_func;
   func_t mouse_up_func;

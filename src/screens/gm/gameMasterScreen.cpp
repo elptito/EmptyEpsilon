@@ -192,10 +192,10 @@ GameMasterScreen::GameMasterScreen()
     layers_layout->setPosition(20, 130, ATopLeft)->setSize(250, GuiElement::GuiSizeMax);
 
     //manage layers
-    for (int n = 0; n < GameGlobalInfo::max_terrain_layers; n++){
-        if (gameGlobalInfo->terrain[n].defined){
+    for (int n = 0; n < GameGlobalInfo::max_map_layers; n++){
+        if (gameGlobalInfo->layer[n].defined){
             // change its state on draw?
-            layerButtons[n] = new GuiButton(layers_layout, "LAYER_TOGGLE_" + string(n, 0), "Layer " + string(n, 0),  [this, n]() {
+            layerButtons[n] = new GuiButton(layers_layout, "LAYER_TOGGLE_" + string(n, 0), gameGlobalInfo->layer[n].title,  [this, n]() {
                 main_radar->toggleTerrainLayer(n);
             });
             layerButtons[n]->setSize(GuiElement::GuiSizeMax, 50);
@@ -325,7 +325,7 @@ void GameMasterScreen::update(float delta)
     layers_layout->setVisible(managing_layers);
 
     manageLayersButton->setActive(managing_layers);
-    for (int n = 0; n < GameGlobalInfo::max_terrain_layers; n++){
+    for (int n = 0; n < GameGlobalInfo::max_map_layers; n++){
         if (layerButtons[n]){
             layerButtons[n]->setActive(main_radar->getTerrainLayer(n));
         }
@@ -548,7 +548,7 @@ void GameMasterScreen::onHotkey(const HotkeyResult& key)
             managing_layers = !managing_layers;
         }
     } else if(key.category == "NAVIGATION"){
-        for (int n = 0; n < GameGlobalInfo::max_terrain_layers; n++){
+        for (int n = 0; n < GameGlobalInfo::max_map_layers; n++){
             if (layerButtons[n] && key.hotkey == "LAYER_TOGGLE_" + string(n, 0)){
                 main_radar->toggleTerrainLayer(n);
             }

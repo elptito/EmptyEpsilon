@@ -7,6 +7,7 @@
 -- Variation[Extreme]: Places many enemies. You're pretty surely overwhelmed.
 
 require("utils.lua")
+require("helios.lua")
 -- For this scenario, utils.lua provides:
 --   vectorFromAngle(angle, length)
 --      Returns a relative vector (x, y coordinates)
@@ -70,16 +71,7 @@ function setWaveDistance(enemy_group_count)
 end
 
 function init()
-	setTerrain(0, "space dilation_00004_00000.png", 0, 0, 7000)
-	setTerrain(1, "space dilation_00004_00001.png", 0, 0, 7000)
-	setTerrain(2, "space dilation_00004_00002.png", 0, 0, 7000)
-	setTerrain(3, "space dilation_00004_00003.png", 0, 0, 7000)
-	setTerrain(4, "space dilation_00004_00004.png", 0, 0, 7000)
-	setTerrain(5, "space dilation_00004_00005.png", 0, 0, 7000)
-	setTerrain(6, "space dilation_00004_00006.png", 0, 0, 7000)
-	setTerrain(7, "space dilation_00004_00007.png", 0, 0, 7000)
-	setTerrain(8, "space dilation_00004_00008.png", 0, 0, 7000)
-	setTerrain(9, "space dilation_00004_00009.png", 0, 0, 7000)
+	initLayers()
 	-- Spawn a player Atlantis.
 	player = PlayerSpaceship():setFaction("Human Navy"):setTemplate("Atlantis")
 
@@ -257,41 +249,8 @@ function init()
 	Script():run("util_random_transports.lua")
 end
 
-local warp_boost_terrain_min_factor = tonumber(getPreference("warp_boost_terrain_min_factor", "1.0"))
-local warp_boost_terrain_range_factor = tonumber(getPreference("warp_boost_terrain_max_factor", "10.0")) - warp_boost_terrain_min_factor
-local warp_terrain_cap = tonumber(getPreference("warp_terrain_cap", "2.0"))
-local heat_per_warp = tonumber(getPreference("heat_per_warp", "0.02"))
-local systems = {"warp", "rearshield", "docks", "impulse", "beamweapons", "drones", "frontshield", "maneuver", "reactor", "missilesystem"}
 function update(delta)
-	local ships = getAllShips()
-	for _, ship in ipairs(ships) do
-		local x, y = ship:getPosition()
-
-		-- set max warp for ship
-		local warpCapLayer = 6
-		local maxWarpFactor = getTerrainValueAtPosition(warpCapLayer, x, y)
-		local maxWarp = warp_terrain_cap + maxWarpFactor * (4 - warp_terrain_cap)
-		ship:setMaxWarp(maxWarp)
-
-		-- set warp boost for ship
-		local warpBoostLayer = 7
-		local warpBoostFactor = warp_boost_terrain_min_factor + warp_boost_terrain_range_factor * getTerrainValueAtPosition(warpBoostLayer, x, y)
-		ship:setWarpBoostFactor(warpBoostFactor)
-
-		-- set warp danger effect on ship
-		local currWarp = ship:getCurrentWarp()
-		if (currWarp > 0) then
-			local warpDangerLayer = 0
-			local warpDangerFactor = getTerrainValueAtPosition(warpDangerLayer, x, y)
-			if (warpDangerFactor > 0) then
-				-- local system = systems[irandom(1,#systems)]
-				local systemIdx = 1 + math.floor(math.abs(math.fmod((x + y + irandom(1,30000)) / 50000, #systems)))
-				print("systemIdx", systemIdx)
-				local system = systems[systemIdx]
-				ship:setSystemHeat(system, ship:getSystemHeat(system) + currWarp * warpDangerFactor * delta * heat_per_warp)
-			end
-		end
-	end
+	updateHelios(delta)
 
 	enemy_count = 0
 	friendly_count = 0

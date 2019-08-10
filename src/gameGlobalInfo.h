@@ -16,10 +16,11 @@ public:
     string textureName;
 };
 
-class TerrainInfo
+class MapLayer
 {
 public:
     bool defined;
+    string title;
     string textureName;
     sf::Vector2f coordinates;
     float scale; 
@@ -62,9 +63,9 @@ public:
      */
     static const int max_nebulas = 32;    
     /*!
-     * \brief Maximum number of terrain layers.
+     * \brief Maximum number of map layers.
      */
-    static const int max_terrain_layers = 10;
+    static const int max_map_layers = 10;
     /*!
      * \size of a sector.
      */
@@ -106,7 +107,7 @@ public:
     //When active, all comms request goto the GM as chat, and normal scripted converstations are disabled. This does not disallow player<->player ship comms.
     ECommsGmInterception intercept_all_comms_to_gm;
 
-    TerrainInfo terrain[max_terrain_layers];
+    MapLayer layer[max_map_layers];
     GameGlobalInfo();
 
     P<PlayerSpaceship> getPlayerShip(int index);
@@ -134,8 +135,8 @@ public:
     virtual void destroy();
 
     string getNextShipCallsign();
-    void setTerrain(int terrainId, string textureName, sf::Vector2f coordinates, float scale);
-    // get export line of terrain data
+    void setMapLayer(int terrainId, string textureName, sf::Vector2f coordinates, float scale, string title);
+    // get export line of layer data
     string getExportLine();
     sf::Color getTerrainPixel(int terrainId, sf::Vector2f coordinates);
 };

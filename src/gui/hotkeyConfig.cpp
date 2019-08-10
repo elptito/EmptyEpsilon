@@ -121,7 +121,7 @@ HotkeyConfig::HotkeyConfig()
     newCategory("NAVIGATION", "Navigation");
     newKey("PLACE_WAYPOINTS", std::make_tuple("Place waypoints using mouse", "Q"));
     newKey("WAYPOINT_PLACE_AT_CENTER", std::make_tuple("Place waypoint at center of the screen", "W"));
-    for (int n = 0; n < GameGlobalInfo::max_terrain_layers; n++){
+    for (int n = 0; n < GameGlobalInfo::max_map_layers; n++){
         newKey("LAYER_TOGGLE_" + string(n, 0), std::make_tuple("toggle layer "+ string(n, 0), "Num" + string(n, 0)));
     }
     newKey("WAYPOINT_DELETE", std::make_tuple("Delete selected waypoint", "Delete"));
