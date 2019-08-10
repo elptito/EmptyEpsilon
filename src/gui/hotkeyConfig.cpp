@@ -92,6 +92,7 @@ HotkeyConfig::HotkeyConfig()
     newKey("SELF_DESTRUCT_START", std::make_tuple("Start self-destruct", ""));
     newKey("SELF_DESTRUCT_CONFIRM", std::make_tuple("Confirm self-destruct", ""));
     newKey("SELF_DESTRUCT_CANCEL", std::make_tuple("Cancel self-destruct", ""));
+    newKey("REPAIR_NONE", std::make_tuple("Stop Auto-repair", ""));
     for(int n=0; n<SYS_COUNT; n++) {
         string systemName = getSystemName(ESystem(n));
         newKey(std::string("REPAIR_") + systemName, std::make_tuple(std::string("Auto-repair ") + systemName, ""));
