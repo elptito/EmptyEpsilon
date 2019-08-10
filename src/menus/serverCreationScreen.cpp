@@ -29,7 +29,7 @@ ServerCreationScreen::ServerCreationScreen()
     gameGlobalInfo->scanning_complexity = EScanningComplexity(PreferencesManager::get("server_config_scanning_complexity", "2").toInt());
     gameGlobalInfo->use_beam_shield_frequencies = PreferencesManager::get("server_config_use_beam_shield_frequencies", "1").toInt();
     gameGlobalInfo->use_system_damage = PreferencesManager::get("server_config_use_system_damage", "1").toInt();
-    gameGlobalInfo->use_repair_crew = PreferencesManager::get("server_config_use_repair_crew", "1").toInt();
+    gameGlobalInfo->use_repair_crew = PreferencesManager::get("server_config_use_repair_crew", "0").toInt();
     gameGlobalInfo->intercept_all_comms_to_gm = ECommsGmInterception(PreferencesManager::get("server_config_intercept_all_comms_to_gm", "0").toInt());
     gameGlobalInfo->allow_main_screen_tactical_radar = PreferencesManager::get("server_config_allow_main_screen_tactical_radar", "1").toInt();
     gameGlobalInfo->allow_main_screen_long_range_radar = PreferencesManager::get("server_config_allow_main_screen_long_range_radar", "1").toInt();

@@ -121,6 +121,7 @@ float PlayerSpaceship::max_scanning_delay = 0;
 float PlayerSpaceship::warp_terrain_cap = 0;
 float PlayerSpaceship::warp_calibration_time = 0;
 float PlayerSpaceship::warp_calibration_penalty_heat_factor = 0;
+float PlayerSpaceship::over_fix_heat_factor = 0;
 float PlayerSpaceship::system_power_user_factor[] = {
     /*SYS_Reactor*/     -25.0 * 0.08,
     /*SYS_BeamWeapons*/   3.0 * 0.08,
@@ -412,8 +413,10 @@ void PlayerSpaceship::update(float delta)
             if (system > SYS_None && system < SYS_COUNT && hasSystem(system))
             {
                 systems[system].health += repair_per_second * delta;
-                if (systems[system].health > 1.0)
+                if (systems[system].health > 1.0){
+                    addHeat(system, over_fix_heat_factor * (systems[system].health - 1));
                     systems[system].health = 1.0;
+                }
             }
             if (auto_repair_enabled && (system == SYS_None || !hasSystem(system) || systems[system].health == 1.0))
             {

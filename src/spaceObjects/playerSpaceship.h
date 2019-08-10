@@ -83,6 +83,7 @@ public:
         PlayerSpaceship::scan_probe_charge_time = PreferencesManager::get("scan_probe_charge_time", "10.0").toFloat();
         PlayerSpaceship::max_scanning_delay = PreferencesManager::get("max_scanning_delay", "6.0").toFloat();
         PlayerSpaceship::warp_calibration_penalty_heat_factor = PreferencesManager::get("warp_calibration_penalty_heat_factor", "1.0").toFloat();
+        PlayerSpaceship::over_fix_heat_factor = PreferencesManager::get("over_fix_heat_factor", "4").toFloat();
     }
     // Power consumption and generation base rates
     static float energy_warp_per_second;
@@ -107,6 +108,7 @@ public:
     static float scan_probe_charge_time;
     static float max_scanning_delay;
     static float warp_calibration_penalty_heat_factor;
+    static float over_fix_heat_factor;
     // Maximum number of self-destruction confirmation codes
     constexpr static int max_self_destruct_codes = 3;
 
