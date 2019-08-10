@@ -294,13 +294,6 @@ void EngineControlScreen::onHotkey(const HotkeyResult& key)
                 my_spaceship->commandSetEngineeringControlToBridge();
             } else if (key.hotkey == std::string("SET_CONTROL_ECR")) {
                 my_spaceship->commandSetEngineeringControlToECR();
-            } else {
-                for(int n=0; n<SYS_COUNT; n++) {
-                    ESystem system = ESystem(n);
-                    if (key.hotkey == std::string("REPAIR_") + getSystemName(system)) {
-                        my_spaceship->commandSetAutoRepairSystemTarget(system);
-                    }
-                }
             }
         } 
         if (my_spaceship && crew_position == engineControlScreen) {
@@ -312,6 +305,12 @@ void EngineControlScreen::onHotkey(const HotkeyResult& key)
                 new_warp_frequency = (new_warp_frequency + SpaceShip::max_frequency - 1) % SpaceShip::max_frequency;
             } else if (key.hotkey == std::string("WARP_CAL_START")) {
                 my_spaceship->commandSetWarpFrequency(new_warp_frequency);
+            }
+            for(int n=0; n<SYS_COUNT; n++) {
+                ESystem system = ESystem(n);
+                if (key.hotkey == std::string("REPAIR_") + getSystemName(system)) {
+                    my_spaceship->commandSetAutoRepairSystemTarget(system);
+                }
             }
         }
     }
