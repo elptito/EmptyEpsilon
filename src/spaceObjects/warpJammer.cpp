@@ -2,6 +2,7 @@
 #include "playerInfo.h"
 #include "spaceObjects/playerSpaceship.h"
 #include "explosionEffect.h"
+#include "gameGlobalInfo.h"
 #include "main.h"
 
 #include "scriptInterface.h"
@@ -101,6 +102,17 @@ bool WarpJammer::isWarpJammed(sf::Vector2f position)
     {
         if (wj->getPosition() - position < wj->range)
             return true;
+    }
+    if (gameGlobalInfo->everything_jams_warp > 0.0){
+        float radius = gameGlobalInfo->everything_jams_warp;
+        PVector<Collisionable> objectList = CollisionManager::queryArea(position - sf::Vector2f(radius, radius), position + sf::Vector2f(radius, radius));
+        foreach(Collisionable, obj, objectList)
+        {
+            P<SpaceObject> sobj = obj;
+            // if exact same position, assume it's the subject of test
+            if (sobj && sobj->getPosition() != position && (sobj->getPosition() - position) < radius)
+                return true;
+        }
     }
     return false;
 }

@@ -90,6 +90,7 @@ protected:
 public:
     static void load(){
         SpaceShip::heat_per_warp = PreferencesManager::get("heat_per_warp", "0.02").toFloat();
+        SpaceShip::heat_per_jammed_warp = PreferencesManager::get("heat_per_jammed_warp", "0.1").toFloat();
         SpaceShip::max_frequency = PreferencesManager::get("max_frequency", "20").toInt();
         SpaceShip::max_warp_frequency = PreferencesManager::get("max_warp_frequency", "5").toInt();
         SpaceShip::combat_maneuver_charge_time = PreferencesManager::get("combat_maneuver_charge_time", "20.0").toFloat();
@@ -106,6 +107,7 @@ public:
         SpaceShip::unhack_time = PreferencesManager::get("unhack_time", "180.0").toFloat();
     }
     static float heat_per_warp;
+    static float heat_per_jammed_warp;
     static int max_frequency;
     static int max_warp_frequency;
     static float combat_maneuver_charge_time; /*< Amount of time it takes to fully charge the combat maneuver system */

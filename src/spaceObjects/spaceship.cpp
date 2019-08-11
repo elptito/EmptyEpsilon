@@ -117,6 +117,7 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
 }
 
 float SpaceShip::heat_per_warp = 0;
+float SpaceShip::heat_per_jammed_warp = 0;
 int SpaceShip::max_frequency = 0;
 int SpaceShip::max_warp_frequency = 0;
 float SpaceShip::combat_maneuver_charge_time = 0;
@@ -912,6 +913,8 @@ void SpaceShip::update(float delta)
         {
             jump_delay = 0;
             warp_request = 0.0f;
+            // Add extra heat based on warp factor.
+            addHeat(SYS_Warp, std::min(warp_terrain_cap, current_warp) * delta * heat_per_jammed_warp);
         }
     }
     if (has_jump_drive && jump_delay > 0)

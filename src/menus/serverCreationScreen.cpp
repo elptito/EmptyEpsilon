@@ -30,6 +30,7 @@ ServerCreationScreen::ServerCreationScreen()
     gameGlobalInfo->use_beam_shield_frequencies = PreferencesManager::get("server_config_use_beam_shield_frequencies", "1").toInt();
     gameGlobalInfo->use_system_damage = PreferencesManager::get("server_config_use_system_damage", "1").toInt();
     gameGlobalInfo->use_repair_crew = PreferencesManager::get("server_config_use_repair_crew", "0").toInt();
+    gameGlobalInfo->everything_jams_warp = PreferencesManager::get("server_config_everything_jams_warp", "2").toInt();
     gameGlobalInfo->intercept_all_comms_to_gm = ECommsGmInterception(PreferencesManager::get("server_config_intercept_all_comms_to_gm", "0").toInt());
     gameGlobalInfo->allow_main_screen_tactical_radar = PreferencesManager::get("server_config_allow_main_screen_tactical_radar", "1").toInt();
     gameGlobalInfo->allow_main_screen_long_range_radar = PreferencesManager::get("server_config_allow_main_screen_long_range_radar", "1").toInt();
@@ -136,13 +137,11 @@ ServerCreationScreen::ServerCreationScreen()
     // Frequency and system damage row.
     row = new GuiAutoLayout(left_panel, "", GuiAutoLayout::LayoutHorizontalLeftToRight);
     row->setSize(GuiElement::GuiSizeMax, 50);
-    (new GuiToggleButton(row, "GAME_FREQUENCIES_TOGGLE", "Beam/shield frequencies", [](bool value) {
-        gameGlobalInfo->use_beam_shield_frequencies = value == 1;
-    }))->setValue(gameGlobalInfo->use_beam_shield_frequencies)->setSize(275, GuiElement::GuiSizeMax)->setPosition(0, 0, ACenterLeft);
+    (new GuiLabel(row, "EVERYTHING_JAMS_WARP_LABEL", "objects jam radius: ", 30))->setAlignment(ACenterRight)->setSize(250, GuiElement::GuiSizeMax);
+    (new GuiSelector(row, "EVERYTHING_JAMS_WARP_RADIUS", [](int index, string value) {
+        gameGlobalInfo->everything_jams_warp = index * 10000;
+    }))->setOptions({"OFF", "10U", "20U", "30U", "40U", "50U", "60U", "70U", "80U", "90U", "100U"})->setSelectionIndex(gameGlobalInfo->everything_jams_warp / 10000.0)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
-    (new GuiToggleButton(row, "GAME_SYS_DAMAGE_TOGGLE", "Per-system damage", [](bool value) {
-        gameGlobalInfo->use_system_damage = value == 1;
-    }))->setValue(gameGlobalInfo->use_system_damage)->setSize(275, GuiElement::GuiSizeMax)->setPosition(0, 0, ACenterRight);
     // repair crew
     row = new GuiAutoLayout(left_panel, "", GuiAutoLayout::LayoutHorizontalLeftToRight);
     row->setSize(GuiElement::GuiSizeMax, 50);
@@ -255,6 +254,7 @@ void ServerCreationScreen::startScenario()
     PreferencesManager::set("server_config_use_beam_shield_frequencies", string(int(gameGlobalInfo->use_beam_shield_frequencies)));
     PreferencesManager::set("server_config_use_system_damage", string(int(gameGlobalInfo->use_system_damage)));
     PreferencesManager::set("server_config_use_repair_crew", string(int(gameGlobalInfo->use_repair_crew)));
+    PreferencesManager::set("server_config_everything_jams_warp", string(gameGlobalInfo->everything_jams_warp, 0));
     PreferencesManager::set("server_config_intercept_all_comms_to_gm", string(int(gameGlobalInfo->intercept_all_comms_to_gm)));
     PreferencesManager::set("server_config_allow_main_screen_tactical_radar", string(int(gameGlobalInfo->allow_main_screen_tactical_radar)));
     PreferencesManager::set("server_config_allow_main_screen_long_range_radar", string(int(gameGlobalInfo->allow_main_screen_long_range_radar)));

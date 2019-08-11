@@ -94,6 +94,7 @@ public:
     bool use_beam_shield_frequencies;
     bool use_system_damage;
     bool use_repair_crew;
+    float everything_jams_warp;
     bool allow_main_screen_tactical_radar;
     bool allow_main_screen_long_range_radar;
     bool allow_main_screen_global_range_radar;
