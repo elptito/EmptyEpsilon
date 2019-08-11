@@ -178,6 +178,7 @@ PlayerSpaceship::PlayerSpaceship()
     control_code = "";
     warp_indicator = 0;
     auto_repairing_system = SYS_None;
+    engineering_control_from_bridge = false;
     setFactionId(1);
 
     extern_log_size = (uint8)1000;
@@ -218,6 +219,8 @@ PlayerSpaceship::PlayerSpaceship()
     registerMemberReplication(&control_code);
     registerMemberReplication(&custom_functions);
     registerMemberReplication(&auto_repairing_system);
+    registerMemberReplication(&warp_calibration_delay);
+    registerMemberReplication(&engineering_control_from_bridge);
 
     // Determine which stations must provide self-destruct confirmation codes.
     for(int n = 0; n < max_self_destruct_codes; n++)
@@ -1675,7 +1678,10 @@ void PlayerSpaceship::drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f posit
 
 string PlayerSpaceship::getExportLine()
 {
-    return "PlayerSpaceship():setTemplate(\"" + template_name + "\"):setPosition(" + string(getPosition().x, 0) + ", " + string(getPosition().y, 0) + ")" + getScriptExportModificationsOnTemplate();;
+    return std::string("PlayerSpaceship()") + 
+        ":setTemplate(\"" + template_name + "\")" + 
+        ":setPosition(" + string(getPosition().x, 0) + ", " + string(getPosition().y, 0) + ")" + 
+        getScriptExportModificationsOnTemplate();
 }
 
 #ifndef _MSC_VER

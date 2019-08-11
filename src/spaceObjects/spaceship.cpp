@@ -214,6 +214,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     registerMemberReplication(&radar_trace);
     registerMemberReplication(&ships_log_extern);
     registerMemberReplication(&ships_log_intern);
+    registerMemberReplication(&warp_frequency);
 
     for(int n=0; n<SYS_COUNT; n++)
     {
@@ -1704,6 +1705,7 @@ string SpaceShip::getScriptExportModificationsOnTemplate()
     {
         ret += ":setTractorBeam(" + getTractorBeamModeName(tractor_beam.getMode()) + ", " + string(tractor_beam.getArc(), 0) + ", " + string(tractor_beam.getDirection(), 0) + ", " + string(tractor_beam.getRange(), 0) + ", " + string(tractor_beam.getMaxArea(), 0) + ", " + string(tractor_beam.getDragPerSecond(), 0) + ")";
     }
+    ret += ":setWarpFrequency(" + string(getWarpFrequency()) + ")";
     return ret;
 }
 
