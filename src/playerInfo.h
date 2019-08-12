@@ -32,8 +32,8 @@ enum ECrewPosition
     externLog,
     internLog,
     // helios
-    engineControlScreen,
-    bridgeEngineeringScreen,
+    engineControlHeliosScreen,
+    bridgeEngineeringHeliosScreen,
     max_crew_positions
 };
 

@@ -43,8 +43,12 @@ EngineControlScreen::EngineControlScreen(GuiContainer* owner, ECrewPosition crew
     engineering_control_display->setIcon("gui/icons/station-engineering")->setTextSize(20)->setSize(GuiElement::GuiSizeMax, 40);
     warp_frequency_display = new GuiKeyValueDisplay(global_info_layout, "WARP_FREQUENCY_DISPLAY", 0.45, "Frequency", "");
     warp_frequency_display->setIcon("gui/icons/system_warpdrive")->setTextSize(20)->setSize(GuiElement::GuiSizeMax, 40);
-    new_warp_frequency_display = new GuiKeyValueDisplay(global_info_layout, "new_warp_frequency_DISPLAY", 0.45, "Next Frequency", "");
-    new_warp_frequency_display->setTextSize(20)->setSize(GuiElement::GuiSizeMax, 40);
+    if (crew_position == engineControlHeliosScreen) {
+        new_warp_frequency_display = new GuiKeyValueDisplay(global_info_layout, "new_warp_frequency_DISPLAY", 0.45, "Next Frequency", "");
+        new_warp_frequency_display->setTextSize(20)->setSize(GuiElement::GuiSizeMax, 40);
+    } else {
+        new_warp_frequency_display = nullptr;
+    }
 
     (new GuiCustomShipFunctions(this, crew_position, "CUSTOM_FUNCTIONS", my_spaceship))
         ->setPosition(340, 40, ATopLeft)->setSize(250, 200);
@@ -146,8 +150,9 @@ void EngineControlScreen::onDraw(sf::RenderTarget& window)
         } else {
             warp_frequency_display->setValue(frequencyToString(my_spaceship->warp_frequency));
         }
-        new_warp_frequency_display->setValue(frequencyToString(new_warp_frequency));
-
+        if (new_warp_frequency_display) {
+            new_warp_frequency_display->setValue(frequencyToString(new_warp_frequency));
+        }
         system_effects_index = 0;
         for(int n=0; n<SYS_COUNT; n++)
         {
@@ -288,7 +293,7 @@ bool EngineControlScreen::onJoystickAxis(const AxisAction& axisAction){
 
 void EngineControlScreen::onHotkey(const HotkeyResult& key)
 {
-    if (key.category == "ENGINEERING") {
+    if (my_spaceship && key.category == "ENGINEERING") {
         if (hasControl()){
             if (key.hotkey == "SET_CONTROL_BRIDGE") {
                 my_spaceship->commandSetEngineeringControlToBridge();
@@ -296,15 +301,18 @@ void EngineControlScreen::onHotkey(const HotkeyResult& key)
                 my_spaceship->commandSetEngineeringControlToECR();
             }
         } 
-        if (my_spaceship && crew_position == engineControlScreen) {
-            if (key.hotkey == "SET_CONTROL_ECR") {
-                my_spaceship->commandSetEngineeringControlToECR();
-            } else if (key.hotkey == "WARP_CAL_INC") {
+        if (new_warp_frequency_display){
+            if (key.hotkey == "WARP_CAL_INC") {
                 new_warp_frequency = (new_warp_frequency + 1) % SpaceShip::max_frequency;
             } else if (key.hotkey == "WARP_CAL_DEC") {
                 new_warp_frequency = (new_warp_frequency + SpaceShip::max_frequency - 1) % SpaceShip::max_frequency;
             } else if (key.hotkey == "WARP_CAL_START") {
                 my_spaceship->commandSetWarpFrequency(new_warp_frequency);
+            }
+        }
+        if (crew_position == engineControlHeliosScreen) {
+            if (key.hotkey == "SET_CONTROL_ECR") {
+                my_spaceship->commandSetEngineeringControlToECR();
             } else if (key.hotkey == "REPAIR_NONE") {
                 my_spaceship->commandSetAutoRepairSystemTarget(ESystem::SYS_None);
             }
@@ -322,8 +330,8 @@ void EngineControlScreen::onHotkey(const HotkeyResult& key)
 
 bool EngineControlScreen::hasControl(){
     return my_spaceship && 
-        ((crew_position == bridgeEngineeringScreen && my_spaceship->engineering_control_from_bridge) ||
-        (crew_position == engineControlScreen && !my_spaceship->engineering_control_from_bridge));
+        ((crew_position == bridgeEngineeringHeliosScreen && my_spaceship->engineering_control_from_bridge) ||
+        (crew_position == engineControlHeliosScreen && !my_spaceship->engineering_control_from_bridge));
 }
 
 void EngineControlScreen::addSystemEffect(string key, string value)
