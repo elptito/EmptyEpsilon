@@ -105,7 +105,6 @@ class DocumentationGenerator(object):
         self._files.add(filename)
         ext = os.path.splitext(filename)[1].lower()
         if ext == '.c' or ext == '.cpp' or ext == '.h':
-            print("File : " + filename)
             for line in open(filename, "r", errors="ignore"): #encoding issues
                 m = re.match('^# *include *[<"](.*)[>"]$', line)
                 if m is not None:
