@@ -269,6 +269,20 @@ GameMasterScreen::GameMasterScreen()
         object_creation_view->hide();
     });
     object_creation_view->hide();
+
+    message_frame = new GuiPanel(this, "");
+    message_frame->setPosition(0, 0, ATopCenter)->setSize(900, 230)->hide();
+
+    message_text = new GuiScrollText(message_frame, "", "");
+    message_text->setTextSize(20)->setPosition(20, 20, ATopLeft)->setSize(900 - 40, 200 - 40);
+    message_close_button = new GuiButton(message_frame, "", "Close", [this]() {
+        if (!gameGlobalInfo->gm_messages.empty())
+        {
+            gameGlobalInfo->gm_messages.pop_front();
+        }
+
+    });
+    message_close_button->setTextSize(30)->setPosition(-20, -20, ABottomRight)->setSize(300, 30);
 }
 
 void GameMasterScreen::update(float delta)
@@ -432,6 +446,14 @@ void GameMasterScreen::update(float delta)
     pause_button->setValue(engine->getGameSpeed());
     if (gameGlobalInfo->intercept_all_comms_to_gm < CGI_Always)
         intercept_comms_button->setValue(gameGlobalInfo->intercept_all_comms_to_gm);
+    if (!gameGlobalInfo->gm_messages.empty())
+    {
+        GMMessage* message = &gameGlobalInfo->gm_messages.front();
+        message_text->setText(message->text);
+        message_frame->show();
+    } else {
+        message_frame->hide();
+    }
 }
 
 void GameMasterScreen::onMouseDown(sf::Vector2f position)
