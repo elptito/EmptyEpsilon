@@ -38,9 +38,9 @@ private:
     struct CrewTabInfo {
         GuiToggleButton* button;
         GuiElement* element;
-        ECrewPosition position;
+        ECrewPosition position; // used to update current_position 
     };
-    ECrewPosition current_position;
+    ECrewPosition current_position; // used to load the right CustomShipFunction
     std::vector<CrewTabInfo> tabs;
     string keyboard_general = "";
     void showNextTab(int offset=1);
