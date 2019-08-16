@@ -59,6 +59,8 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setWarpSpeed);
     /// Set if this ship shares energy with docked ships. Example: template:setSharesEnergyWithDocked(false)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setSharesEnergyWithDocked);
+    /// Set if this ship restocks scan probes on docked ships. Example: template:setRestocksScanProbes(false)
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setRestocksScanProbes);
     /// Set if this ship has a jump drive. Example: template:setJumpDrive(true)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setJumpDrive);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setJumpDriveRange);
@@ -86,6 +88,7 @@ ShipTemplate::ShipTemplate()
     class_name = "No sub-class";
     shares_energy_with_docked = true;
     repair_docked = false;
+    restocks_scan_probes = false;
     energy_storage_amount = 1000;
     repair_crew_count = 3;
     weapon_tube_count = 0;
@@ -380,6 +383,11 @@ void ShipTemplate::setHasReactor(bool hasReactor)
     has_reactor = hasReactor;
 }
 
+void ShipTemplate::setRestocksScanProbes(bool enabled)
+{
+    restocks_scan_probes = enabled;
+}
+
 void ShipTemplate::setJumpDrive(bool enabled)
 {
     has_jump_drive = enabled;
@@ -462,11 +470,12 @@ P<ShipTemplate> ShipTemplate::copy(string new_name)
     result->impulse_speed = impulse_speed;
     result->turn_speed = turn_speed;
     result->warp_speed = warp_speed;
-    result->impulse_acceleration;
-    result->combat_maneuver_boost_speed;
-    result->combat_maneuver_strafe_speed;
+    result->impulse_acceleration = impulse_acceleration;
+    result->combat_maneuver_boost_speed = combat_maneuver_boost_speed;
+    result->combat_maneuver_strafe_speed = combat_maneuver_strafe_speed;
     result->shares_energy_with_docked = shares_energy_with_docked;
     result->repair_docked = repair_docked;
+    result->restocks_scan_probes = restocks_scan_probes;
     result->has_jump_drive = has_jump_drive;
     result->has_cloaking = has_cloaking;
     for(int n=0; n<MW_Count; n++)

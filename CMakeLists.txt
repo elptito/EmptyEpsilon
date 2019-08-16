@@ -104,6 +104,7 @@ set(SOURCES
 	src/mesh.cpp
 	src/scenarioInfo.cpp
 	src/repairCrew.cpp
+	src/GMMessage.cpp
 	src/tutorialGame.cpp
 	src/menus/joinServerMenu.cpp
 	src/menus/serverBrowseMenu.cpp
@@ -207,6 +208,7 @@ set(SOURCES
 	src/gui/gui2_arrowbutton.cpp
 	src/gui/gui2_entrylist.cpp
 	src/gui/gui2_progressbar.cpp
+	src/gui/gui2_progressslider.cpp
 	src/gui/gui2_scrolltext.cpp
 	src/gui/gui2_advancedscrolltext.cpp
 	src/gui/gui2_button.cpp
@@ -391,7 +393,11 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -framework OpenGL -framework Foundation")
 endif()
 
-add_executable(${EXECUTABLE_NAME} MACOSX_BUNDLE ${SOURCES})
+if(ANDROID)
+    add_library(${EXECUTABLE_NAME} SHARED ${SOURCES})
+else()
+    add_executable(${EXECUTABLE_NAME} MACOSX_BUNDLE ${SOURCES})
+endif()
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${SERIOUS_PROTON_DIR}/src)
@@ -407,9 +413,13 @@ message(STATUS "EXECUTABLE: ${EXECUTABLE_NAME}")
 target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES})
 
 # Setup OpenGl
-find_package(OpenGL REQUIRED)
-include_directories(${OPENGL_INCLUDE_DIR})
-target_link_libraries(${EXECUTABLE_NAME} ${OPENGL_LIBRARIES})
+if(ANDROID)
+  target_link_libraries(${EXECUTABLE_NAME} GLESv1_CM)
+else()
+  find_package(OpenGL REQUIRED)
+  include_directories(${OPENGL_INCLUDE_DIR})
+  target_link_libraries(${EXECUTABLE_NAME} ${OPENGL_LIBRARIES})
+endif()
 
 # Some magical Win 32 stuff
 if(WIN32)
@@ -418,6 +428,9 @@ if(WIN32)
     include_directories(${DRMINGW_ROOT}/include/)
     target_link_libraries(${EXECUTABLE_NAME} exchndl)
   endif()
+elseif(ANDROID)
+  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--whole-archive ${SFML_INSTALL_PATH}/lib/${ANDROID_ABI}/libsfml-main.a -Wl,--no-whole-archive")
+  target_link_libraries(${EXECUTABLE_NAME} log android EGL)
 elseif(APPLE)
   set_target_properties(${EXECUTABLE_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/osx/MacOSXBundleInfo.plist.in)
   set_target_properties(${EXECUTABLE_NAME} PROPERTIES MACOSX_BUNDLE_ICON_FILE "${EXECUTABLE_NAME}.icns")
@@ -467,6 +480,8 @@ elseif(APPLE)
   install(DIRECTORY resources DESTINATION "EmptyEpsilon.app/Contents/Resources")
   install(DIRECTORY scripts DESTINATION "EmptyEpsilon.app/Contents/Resources")
   install(DIRECTORY packs DESTINATION "EmptyEpsilon.app/Contents/Resources")
+elseif(ANDROID)
+  android_apk(EmptyEpsilon)
 else()
   include(GNUInstallDirs)
   install(DIRECTORY resources DESTINATION "${CMAKE_INSTALL_FULL_DATAROOTDIR}/emptyepsilon/")
@@ -477,7 +492,12 @@ endif()
 
 find_package(PythonInterp)
 if(PYTHONINTERP_FOUND)
-  add_custom_target(scriptdoc ALL ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/compile_script_docs.py ${CMAKE_BINARY_DIR}/script_reference.html WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} COMMENT "Building script reference documentation.")
+  add_custom_command(
+        OUTPUT ${CMAKE_BINARY_DIR}/script_reference.html
+        ALL
+        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/compile_script_docs.py ${CMAKE_BINARY_DIR}/script_reference.html
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Building script reference documentation.")
   install(FILES ${CMAKE_BINARY_DIR}/script_reference.html DESTINATION .)
 endif()
 

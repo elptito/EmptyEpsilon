@@ -3,9 +3,9 @@
 
 #include "spaceObjects/playerSpaceship.h"
 #include "script.h"
+#include "GMMessage.h"
 #include "gameStateLogger.h"
 
-class GameStateLogger;
 class GameGlobalInfo;
 extern P<GameGlobalInfo> gameGlobalInfo;
 
@@ -105,6 +105,7 @@ public:
     std::vector<ScriptSimpleCallback> gm_callback_functions;
     //List of names of gm_callback_functions scripts (replicated to clients)
     std::vector<string> gm_callback_names;
+    std::list<GMMessage> gm_messages;
     //When active, all comms request goto the GM as chat, and normal scripted converstations are disabled. This does not disallow player<->player ship comms.
     ECommsGmInterception intercept_all_comms_to_gm;
 

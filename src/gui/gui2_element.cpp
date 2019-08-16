@@ -194,7 +194,7 @@ void GuiElement::setFocus()
     //Find the owning canvas, which owns the focus
     GuiCanvas* canvas = dynamic_cast<GuiCanvas*>(getTopLevelContainer());
     if (canvas)
-        canvas->focusElement(this);
+        canvas->focus(this);
 }
 
 GuiContainer* GuiElement::getTopLevelContainer()

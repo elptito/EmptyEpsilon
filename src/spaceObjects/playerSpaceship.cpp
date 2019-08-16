@@ -49,7 +49,11 @@ REGISTER_SCRIPT_SUBCLASS(PlayerSpaceship, SpaceShip)
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setEnergyLevelMax);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getEnergyLevel);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getEnergyLevelMax);
-    
+
+    /// Set the maximum coolant available to engineering. Default is 10.
+    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setMaxCoolant);
+    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getMaxCoolant);
+
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setScanProbeCount);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getScanProbeCount);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setMaxScanProbeCount);
@@ -112,7 +116,7 @@ float PlayerSpaceship::heat_transfer_per_second = 0;
 float PlayerSpaceship::repair_per_second = 0;
 float PlayerSpaceship::cargo_repair_per_second = 0;
 float PlayerSpaceship::system_coolant_level_change_per_second = 0;
-float PlayerSpaceship::max_coolant = 0;
+float PlayerSpaceship::max_coolant_per_system = 0;
 float PlayerSpaceship::damage_per_second_on_overheat = 0;
 float PlayerSpaceship::shield_calibration_time = 0;
 float PlayerSpaceship::comms_channel_open_time = 0;
@@ -165,6 +169,7 @@ PlayerSpaceship::PlayerSpaceship()
     warp_calibration_delay = 0.0;
     auto_repair_enabled = false;
     auto_coolant_enabled = false;
+    max_coolant = max_coolant_per_system;
     activate_self_destruct = false;
     self_destruct_countdown = 0.0;
     scanning_delay = 0.0;
@@ -202,6 +207,7 @@ PlayerSpaceship::PlayerSpaceship()
     registerMemberReplication(&shield_calibration_delay, 0.5);
     registerMemberReplication(&warp_calibration_delay, 0.5);
     registerMemberReplication(&auto_repair_enabled);
+    registerMemberReplication(&max_coolant);
     registerMemberReplication(&auto_coolant_enabled);
     registerMemberReplication(&beam_system_target);
     registerMemberReplication(&comms_state);
@@ -316,18 +322,19 @@ void PlayerSpaceship::update(float delta)
                 if (!docked_with_ship || docked_with_ship->useEnergy(energy_request))
                     energy_level += energy_request;
             }
-
-            // If a shipTemplateBasedObject isn't a ship and is allowed to share
-            // energy with docked ships, also resupply docked ships' scan probes.
-            // A bit hackish for now.
-            if (docked_with_template_based && docked_with_template_based->shares_energy_with_docked && !docked_with_ship)
+            // If a shipTemplateBasedObject and is allowed to restock
+            // scan probes with docked ships.
+            if (docked_with_template_based && docked_with_template_based->restocks_scan_probes && scan_probe_stock < max_scan_probes)
             {
-                if (scan_probe_stock < max_scan_probes)
+                scan_probe_recharge += delta;
+                if (scan_probe_recharge > scan_probe_charge_time)
                 {
-                    scan_probe_recharge += delta;
-
-                    if (scan_probe_recharge > scan_probe_charge_time)
-                    {
+                    P<PlayerSpaceship> docked_with_player_ship = docked_with_template_based;
+                    if (docked_with_player_ship && docked_with_player_ship->scan_probe_stock > 0){
+                        docked_with_player_ship->scan_probe_stock -=1;
+                        scan_probe_stock += 1;
+                        scan_probe_recharge = 0.0;
+                    } else {
                         scan_probe_stock += 1;
                         scan_probe_recharge = 0.0;
                     }
@@ -665,8 +672,41 @@ void PlayerSpaceship::takeHullDamage(float damage_amount, DamageInfo& info)
     addToShipLog(system_damage,sf::Color::Red,"intern");
 }
 
+void PlayerSpaceship::setMaxCoolant(float coolant)
+{
+    max_coolant = std::max(coolant, 0.0f);
+    float total_coolant = 0;
+
+    for(int n = 0; n < SYS_COUNT; n++)
+    {
+        if (!hasSystem(ESystem(n))) continue;
+
+        total_coolant += systems[n].coolant_request;
+    }
+
+    if (total_coolant > max_coolant)
+    {
+        for(int n = 0; n < SYS_COUNT; n++)
+        {
+            if (!hasSystem(ESystem(n))) continue;
+
+            systems[n].coolant_request *= max_coolant / total_coolant;
+        }
+    } else {
+        if (total_coolant > 0)
+        {
+            for(int n = 0; n < SYS_COUNT; n++)
+            {
+                if (!hasSystem(ESystem(n))) continue;
+                systems[n].coolant_request = std::min(systems[n].coolant_request * max_coolant / total_coolant, (float) max_coolant_per_system);
+            }
+        }
+    }
+}
+
 void PlayerSpaceship::setSystemCoolantRequest(ESystem system, float request)
 {
+    request = std::max(0.0f, std::min(request, std::min((float) max_coolant_per_system, max_coolant)));
     // Set coolant levels on a system.
     float total_coolant = 0;
     int cnt = 0;
@@ -695,7 +735,7 @@ void PlayerSpaceship::setSystemCoolantRequest(ESystem system, float request)
                 if (!hasSystem(ESystem(n))) continue;
                 if (n == system) continue;
 
-                systems[n].coolant_request *= (max_coolant - request) / total_coolant;
+                systems[n].coolant_request = std::min(systems[n].coolant_request * (max_coolant - request) / total_coolant, (float) max_coolant_per_system);
             }
         }
     }

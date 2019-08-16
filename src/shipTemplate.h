@@ -98,6 +98,7 @@ public:
     bool shares_energy_with_docked;
     bool repair_docked;
     bool has_reactor;
+    bool restocks_scan_probes;
     
     float energy_storage_amount;
     int repair_crew_count;
@@ -139,6 +140,7 @@ public:
     void setSharesEnergyWithDocked(bool enabled);
     void setRepairDocked(bool enabled);
     void setHasReactor(bool hasReactor);
+    void setRestocksScanProbes(bool enabled);
     void setMesh(string model, string color_texture, string specular_texture, string illumination_texture);
     void setEnergyStorage(float energy_amount);
     void setRepairCrewCount(int amount);

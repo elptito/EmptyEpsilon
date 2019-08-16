@@ -185,8 +185,8 @@ GameMasterScreen::GameMasterScreen()
     });
     gm_script_options->setPosition(20, 130, ATopLeft)->setSize(250, 500);
     
-    order_layout = new GuiAutoLayout(this, "ORDER_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
-    order_layout->setPosition(20, 130, ATopLeft)->setSize(250, GuiElement::GuiSizeMax);
+    order_layout = new GuiAutoLayout(this, "ORDER_LAYOUT", GuiAutoLayout::LayoutVerticalBottomToTop);
+    order_layout->setPosition(-20, -90, ABottomRight)->setSize(300, GuiElement::GuiSizeMax);
 
     layers_layout = new GuiAutoLayout(this, "LAYERS_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
     layers_layout->setPosition(20, 130, ATopLeft)->setSize(250, GuiElement::GuiSizeMax);
@@ -204,7 +204,6 @@ GameMasterScreen::GameMasterScreen()
         }
     }
 
-    (new GuiLabel(order_layout, "ORDERS_LABEL", "Orders:", 20))->addBackground()->setSize(GuiElement::GuiSizeMax, 30);
     (new GuiButton(order_layout, "ORDER_IDLE", "Idle", [this]() {
         gameMasterActions->commandOrderShip(SO_Idle, getSelection());
     }))->setTextSize(20)->setSize(GuiElement::GuiSizeMax, 30);
@@ -217,6 +216,7 @@ GameMasterScreen::GameMasterScreen()
     (new GuiButton(order_layout, "ORDER_DEFEND_LOCATION", "Defend location", [this]() {
         gameMasterActions->commandOrderShip(SO_DefendLocation, getSelection());
     }))->setTextSize(20)->setSize(GuiElement::GuiSizeMax, 30);
+    (new GuiLabel(order_layout, "ORDERS_LABEL", "Orders:", 20))->addBackground()->setSize(GuiElement::GuiSizeMax, 30);
 
     chat_layer = new GuiElement(this, "");
     chat_layer->setPosition(0, 0)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
@@ -245,6 +245,20 @@ GameMasterScreen::GameMasterScreen()
     object_creation_view->hide();
     selected_posessed_tube = 0;
     managing_layers = false;
+
+    message_frame = new GuiPanel(this, "");
+    message_frame->setPosition(0, 0, ATopCenter)->setSize(900, 230)->hide();
+
+    message_text = new GuiScrollText(message_frame, "", "");
+    message_text->setTextSize(20)->setPosition(20, 20, ATopLeft)->setSize(900 - 40, 200 - 40);
+    message_close_button = new GuiButton(message_frame, "", "Close", [this]() {
+        if (!gameGlobalInfo->gm_messages.empty())
+        {
+            gameGlobalInfo->gm_messages.pop_front();
+        }
+
+    });
+    message_close_button->setTextSize(30)->setPosition(-20, -20, ABottomRight)->setSize(300, 30);
 }
 
 void GameMasterScreen::update(float delta)
@@ -319,7 +333,7 @@ void GameMasterScreen::update(float delta)
     tweak_button->setVisible(has_object);
     possess_button->setVisible(possess_button->isActive() || has_cpu_ship);
 
-    order_layout->setVisible(!managing_layers && has_cpu_ship);
+    order_layout->setVisible(has_cpu_ship);
     gm_script_options->setVisible(!managing_layers && !has_cpu_ship);
     player_comms_hail->setVisible(!managing_layers && has_player_ship);
     layers_layout->setVisible(managing_layers);
@@ -417,6 +431,15 @@ void GameMasterScreen::update(float delta)
     }
     pause_button->setValue(engine->getGameSpeed() == 0.0f);
     intercept_comms_button->setValue(gameGlobalInfo->intercept_all_comms_to_gm);
+
+    if (!gameGlobalInfo->gm_messages.empty())
+    {
+        GMMessage* message = &gameGlobalInfo->gm_messages.front();
+        message_text->setText(message->text);
+        message_frame->show();
+    } else {
+        message_frame->hide();
+    }
 }
 
 void GameMasterScreen::onMouseDown(sf::Vector2f position)
@@ -489,14 +512,33 @@ void GameMasterScreen::onMouseUp(sf::Vector2f position)
         break;
     case CD_BoxSelect:
         {
+            bool shift_down = InputHandler::keyboardIsDown(sf::Keyboard::LShift) || InputHandler::keyboardIsDown(sf::Keyboard::RShift);
+            //Using sf::Keyboard::isKeyPressed, as CTRL does not seem to generate keydown/key up events in SFML.
+            bool ctrl_down = sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) || sf::Keyboard::isKeyPressed(sf::Keyboard::RControl);
+            bool alt_down = InputHandler::keyboardIsDown(sf::Keyboard::LAlt) || InputHandler::keyboardIsDown(sf::Keyboard::RAlt);
             PVector<Collisionable> objects = CollisionManager::queryArea(drag_start_position, position);
             PVector<SpaceObject> space_objects;
             foreach(Collisionable, c, objects)
             {
-                if (!P<Zone>(c))
-                    space_objects.push_back(c);
+                if (P<Zone>(c))
+                    continue;
+                if (ctrl_down && !P<ShipTemplateBasedObject>(c))
+                    continue;
+                if (alt_down && (!P<SpaceObject>(c) || (int)(P<SpaceObject>(c))->getFactionId() != faction_selector->getSelectionIndex()))
+                    continue;
+                space_objects.push_back(c);
             }
-            targets.set(space_objects);
+            if (shift_down)
+            {
+                foreach(SpaceObject, s, space_objects)
+                {
+                    targets.add(s);
+                }
+            } else {
+                targets.set(space_objects);
+            }
+
+
             if (space_objects.size() > 0)
                 faction_selector->setSelectionIndex(space_objects[0]->getFactionId());
         }

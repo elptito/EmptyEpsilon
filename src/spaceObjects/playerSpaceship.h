@@ -75,7 +75,7 @@ public:
         PlayerSpaceship::repair_per_second = PreferencesManager::get("repair_per_second", "0.007").toFloat();
         PlayerSpaceship::cargo_repair_per_second = PreferencesManager::get("cargo_repair_per_second", "0.1").toFloat();
         PlayerSpaceship::system_coolant_level_change_per_second = PreferencesManager::get("system_coolant_level_change_per_second", "1.2").toFloat();
-        PlayerSpaceship::max_coolant = PreferencesManager::get("max_coolant", "10").toFloat();
+        PlayerSpaceship::max_coolant_per_system = PreferencesManager::get("max_coolant_per_system ", "10").toFloat();
         PlayerSpaceship::damage_per_second_on_overheat = PreferencesManager::get("damage_per_second_on_overheat", "0.08").toFloat();
         PlayerSpaceship::shield_calibration_time = PreferencesManager::get("shield_calibration_time", "25.0").toFloat();
         PlayerSpaceship::warp_calibration_time = PreferencesManager::get("warp_calibration_time", "10.0").toFloat();
@@ -98,7 +98,8 @@ public:
     // Coolant change rate
     static float system_coolant_level_change_per_second;
     // Total coolant
-    static float max_coolant;
+    static float max_coolant_per_system;
+    float max_coolant;
     // Overheat subsystem damage rate
     static float damage_per_second_on_overheat;
     // Base time it takes to perform an action
@@ -285,6 +286,8 @@ public:
     virtual void executeJump(float distance) override;
     virtual void takeHullDamage(float damage_amount, DamageInfo& info) override;
     void setSystemCoolantRequest(ESystem system, float request);
+    void setMaxCoolant(float coolant);
+    float getMaxCoolant() { return max_coolant; }
     void setAutoCoolant(bool active) { auto_coolant_enabled = active; }
     int getRepairCrewCount();
     void setRepairCrewCount(int amount);

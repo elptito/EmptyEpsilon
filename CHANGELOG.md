@@ -19,6 +19,11 @@
 - add docks and drones systems: dockmaster, drone pilot, tractor beam
 - factions control in GM screen
 - GM can posess CPU ships
+- Mission scripts can modify the total coolant available to engineering
+- GM screen allows modifier keys
+  - `Shift` adds objects to the current selection
+  - `Ctrl` only selects stations and ships
+  - `Alt` only selects objects from the same faction as the faction selector
 
 ### Changed
 
@@ -33,6 +38,11 @@
 - delete zoom slider for relay and navigator
 - fix unclickable buttons in position selection menu when longer than 8 items
 - fix crash when opening main screen control menu from position that is not relay, operation or single-pilot.
+
+
+### Changed
+
+- Nothing
 
 ## [2018-02-15]
 
