@@ -30,6 +30,10 @@ private:
     sf::RenderTexture background_texture;
     sf::RenderTexture forground_texture;
     sf::RenderTexture mask_texture;
+    void orient();
+    void deOrient();
+    sf::Vector2f orientVector(sf::Vector2f input);
+    void rotateTexture(sf::RenderTexture& texture, float rotation);
 
     class GhostDot
     {
@@ -55,6 +59,8 @@ private:
     bool show_heading_indicators;
     bool show_game_master_data;
     bool auto_center_on_my_ship;
+    bool auto_orient;
+    bool show_sectors;
     float range_indicator_step_size;
     ERadarStyle style;
     EFogOfWarStyle fog_style;
@@ -87,6 +93,10 @@ public:
     GuiRadarView* setFogOfWarStyle(EFogOfWarStyle style) { this->fog_style = style; return this; }
     bool getAutoCentering() { return auto_center_on_my_ship; }
     GuiRadarView* setAutoCentering(bool value) { this->auto_center_on_my_ship = value; return this; }
+    bool getAutoOrient() { return auto_orient; }
+    GuiRadarView* setAutoOrient(bool value) { this->auto_orient = value; return this; }
+    bool getShowSectors() { return show_sectors; }
+    GuiRadarView* setShowSectors(bool value) { this->show_sectors = value; return this; }
     virtual GuiRadarView* setCallbacks(func_t mouse_down_func, func_t mouse_drag_func, func_t mouse_up_func) { SectorsView::setCallbacks(mouse_down_func, mouse_drag_func, mouse_up_func); return this; }
     virtual GuiRadarView* setViewPosition(sf::Vector2f view_position) { SectorsView::setViewPosition(view_position); return this; }
     virtual bool onMouseDown(sf::Vector2f position);
