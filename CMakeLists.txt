@@ -157,6 +157,7 @@ set(SOURCES
 	src/screenComponents/shieldsEnableButton.cpp
 	src/screenComponents/selfDestructButton.cpp
 	src/screenComponents/shieldFreqencySelect.cpp
+	src/screenComponents/systemStatus.cpp
 	src/screenComponents/jumpControls.cpp
 	src/screenComponents/impulseControls.cpp
 	src/screenComponents/frequencyCurve.cpp

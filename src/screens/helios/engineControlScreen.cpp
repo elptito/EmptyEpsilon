@@ -7,6 +7,7 @@
 #include "screenComponents/alertOverlay.h"
 #include "screenComponents/customShipFunctions.h"
 #include "screenComponents/shipsLogControl.h"
+#include "screenComponents/systemStatus.h"
 
 #include "gui/gui2_keyvaluedisplay.h"
 #include "gui/gui2_autolayout.h"
@@ -188,7 +189,7 @@ void EngineControlScreen::onDraw(sf::RenderTarget& window)
             info.coolant_bar->setValue(system.coolant_level);
             
             float effectiveness = my_spaceship->getSystemEffectiveness(selected_system);
-            info.effectiveness_bar->setValue(effectiveness);
+            info.effectiveness_bar->setValue(effectiveness)->setColor(GuiSystemStatus::getSystemEffectivenessColor(effectiveness));
 
             switch(selected_system)
             {
