@@ -28,6 +28,7 @@
 #include "screens/extra/radarScreen.h"
 
 #include "screens/helios/engineControlScreen.h"
+#include "screens/helios/helmsHeliosScreen.h"
 
 #include "screenComponents/mainScreenControls.h"
 #include "screenComponents/selfDestructEntry.h"
@@ -133,7 +134,9 @@ void PlayerInfo::spawnUI()
             screen->addStationTab(new EngineControlScreen(screen, engineControlHeliosScreen), engineControlHeliosScreen, getCrewPositionName(engineControlHeliosScreen), getCrewPositionIcon(engineControlHeliosScreen));
         if (crew_position[bridgeEngineeringHeliosScreen])
             screen->addStationTab(new EngineControlScreen(screen, bridgeEngineeringHeliosScreen), bridgeEngineeringHeliosScreen, getCrewPositionName(bridgeEngineeringHeliosScreen), getCrewPositionIcon(bridgeEngineeringHeliosScreen));
-        
+        if (crew_position[helmsHeliosScreen]){
+            screen->addStationTab(new HelmsHeliosScreen(screen), helmsHeliosScreen, getCrewPositionName(helmsHeliosScreen), getCrewPositionIcon(helmsHeliosScreen));
+        }
         //Crew 6/5
         if (crew_position[helmsOfficer])
             screen->addStationTab(new HelmsScreen(screen), helmsOfficer, getCrewPositionName(helmsOfficer), getCrewPositionIcon(helmsOfficer));
@@ -242,6 +245,7 @@ string getCrewPositionName(ECrewPosition position)
     case internLog: return "Internal Log";
     case engineControlHeliosScreen: return "ECR";
     case bridgeEngineeringHeliosScreen: return "Bridge Engineering";
+    case helmsHeliosScreen: return "Helms";
     default: return "ErrUnk: " + string(position);
     }
 }
@@ -288,6 +292,8 @@ template<> void convert<ECrewPosition>::param(lua_State* L, int& idx, ECrewPosit
         cp = engineControlHeliosScreen;
     if (str == "bridge engineering")
         cp = bridgeEngineeringHeliosScreen;
+    if (str == "helmsHelios")
+        cp = helmsHeliosScreen;
     //6/5 player crew
     else if (str == "helms" || str == "helmsofficer")
         cp = helmsOfficer;

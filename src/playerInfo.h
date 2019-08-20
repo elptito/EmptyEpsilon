@@ -34,6 +34,7 @@ enum ECrewPosition
     // helios
     engineControlHeliosScreen,
     bridgeEngineeringHeliosScreen,
+    helmsHeliosScreen,
     max_crew_positions
 };
 

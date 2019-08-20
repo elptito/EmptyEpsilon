@@ -146,6 +146,7 @@ set(SOURCES
 	src/screens/extra/droneOperatorScreen.cpp
 	src/screens/extra/dockMasterScreen.cpp
 	src/screens/helios/engineControlScreen.cpp
+	src/screens/helios/helmsHeliosScreen.cpp
 	src/screenComponents/aimLock.cpp
 	src/screenComponents/alertOverlay.cpp
 	src/screenComponents/helpOverlay.cpp

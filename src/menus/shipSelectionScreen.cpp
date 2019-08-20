@@ -447,6 +447,7 @@ void ShipSelectionScreen::updateCrewTypeOptions()
     switch(crew_type_selector->getSelectionIndex())
     {
     case 0: // Helios
+        crew_position_button[helmsHeliosScreen]->show();
         crew_position_button[engineControlHeliosScreen]->show();
         crew_position_button[bridgeEngineeringHeliosScreen]->show();
         break;
@@ -483,7 +484,7 @@ void ShipSelectionScreen::updateCrewTypeOptions()
         cinematic_view_button->setVisible(canDoMainScreen());
         break;
     case 5: // Systems - Tactical
-        crew_position_button[helmsOfficer]->show();
+        crew_position_button[helmsHeliosScreen]->show();
         crew_position_button[weaponsOfficer]->show();
         crew_position_button[dronePilot]->show();
         crew_position_button[tacticalRadar]->show();
