@@ -25,6 +25,7 @@ public:
     GuiLabel* removeBackground();
     GuiLabel* setVertical();
     GuiLabel* setBold(bool bold=true);
+    GuiLabel* setTextColor(sf::Color color);
 };
 
 #endif//GUI2_LABEL_H
