@@ -65,6 +65,7 @@ public:
     static float system_power_user_factor[];
     
     static void load(){
+        PlayerSpaceship::weapons_radar_range = PreferencesManager::get("weapons_radar_range", "10000.0").toFloat();
         PlayerSpaceship::warp_terrain_cap = PreferencesManager::get("warp_terrain_cap", "2.0").toFloat();
         PlayerSpaceship::energy_warp_per_second = PreferencesManager::get("energy_warp_per_second", "1.2").toFloat();
         PlayerSpaceship::energy_shield_use_per_second = PreferencesManager::get("energy_shield_use_per_second", "1.5").toFloat();
@@ -86,6 +87,7 @@ public:
         PlayerSpaceship::over_fix_heat_factor = PreferencesManager::get("over_fix_heat_factor", "4").toFloat();
     }
     // Power consumption and generation base rates
+    static float weapons_radar_range;
     static float energy_warp_per_second;
     static float energy_shield_use_per_second;
     static float system_heatup_per_second;

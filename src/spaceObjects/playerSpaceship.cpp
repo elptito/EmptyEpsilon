@@ -107,6 +107,7 @@ REGISTER_SCRIPT_SUBCLASS(PlayerSpaceship, SpaceShip)
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setControlCode);
 }
 
+float PlayerSpaceship::weapons_radar_range = 0;
 float PlayerSpaceship::energy_warp_per_second = 0;
 float PlayerSpaceship::energy_shield_use_per_second = 0;
 float PlayerSpaceship::system_heatup_per_second = 0;
