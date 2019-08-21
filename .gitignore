@@ -46,3 +46,4 @@ logs/*.json
 *.log
 .vs/*
 CMakeSettings.json
+cmake/_win32
