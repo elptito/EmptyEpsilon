@@ -143,6 +143,7 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
         }
     }
 
+    sf::Texture::bind(NULL);
     {
         float lightpos1[4] = {0, 0, 0, 1.0};
         glLightfv(GL_LIGHT1, GL_POSITION, lightpos1);
@@ -177,11 +178,12 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
         if (my_spaceship && obj && my_spaceship == obj && first_person)
             continue;
         float depth = sf::dot(viewVector, obj->getPosition() - sf::Vector2f(camera_position.x, camera_position.y));
-        if (depth + obj->getRadius() < depth_cutoff_back)
+        float distance = sf::length(obj->getPosition() - my_spaceship->getPosition());
+        if (depth + obj->getRadius() < depth_cutoff_back && distance > obj->getRadius()*3)
             continue;
-        if (depth - obj->getRadius() > depth_cutoff_front)
+        if (depth - obj->getRadius() > depth_cutoff_front && distance > obj->getRadius()*3)
             continue;
-        if (depth > 0 && obj->getRadius() / depth < 1.0 / 500)
+        if (depth > 0 && obj->getRadius() / depth < 1.0 / 500 && distance > obj->getRadius()*3)
             continue;
         int render_list_index = std::max(0, int((depth + obj->getRadius()) / 25000));
         while(render_list_index >= int(render_lists.size()))
@@ -204,7 +206,6 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
 
         glColor4f(1,1,1,1);
         glDisable(GL_BLEND);
-        sf::Texture::bind(NULL);
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
         for(auto info : render_list)
