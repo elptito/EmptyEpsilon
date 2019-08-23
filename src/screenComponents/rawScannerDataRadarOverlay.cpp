@@ -65,7 +65,7 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
             scale = scale - (dist - distance_modif) / (distance_modif * dist_max - distance_modif);
 
         // If we're adjacent to the object ...
-        if (dist <= obj->getRadius())
+        if (dist <= 2*obj->getRadius())
         {
             // ... affect all angles of the radar.
             a_0 = 0.0f;
