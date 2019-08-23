@@ -24,10 +24,11 @@ void ShipsLog::onDraw(sf::RenderTarget& window)
     if (!my_spaceship)
         return;
 
-    const std::vector<PlayerSpaceship::ShipLogEntry>& logs = my_spaceship->getShipsLog(station);
+//    const std::vector<PlayerSpaceship::ShipLogEntry>& logs = my_spaceship->getShipsLog(station);
 
     if (open)
     {
+        log_text->setMargins(15, 15, 15, 0);
         drawStretchedHV(window, sf::FloatRect(rect.left, rect.top, rect.width, rect.height + 100), 25.0f, "gui/PanelBackground");
         const std::vector<PlayerSpaceship::ShipLogEntry>& logs = my_spaceship->getShipsLog(station);
         if (log_text->getEntryCount() > 0 && logs.size() == 0)
@@ -61,7 +62,8 @@ void ShipsLog::onDraw(sf::RenderTarget& window)
             log_text->addEntry(logs[n].prefix, logs[n].text, logs[n].color);
         }
     }else{
-        drawStretchedHV(window, sf::FloatRect(rect.left, rect.top, rect.width, rect.height + 100), 25.0f, "gui/ButtonBackground.disabled");
+        log_text->setMargins(15, 12, 15, 0);
+        drawStretchedHV(window, sf::FloatRect(rect.left, rect.top, rect.width, rect.height), 50.0f, "gui/ButtonBackground.disabled");
         const std::vector<PlayerSpaceship::ShipLogEntry>& logs = my_spaceship->getShipsLog(station);
         if (log_text->getEntryCount() > 0 && logs.size() == 0)
             log_text->clearEntries();
@@ -71,7 +73,8 @@ void ShipsLog::onDraw(sf::RenderTarget& window)
                 log_text->clearEntries();
         }
         if (log_text->getEntryCount() == 0 && logs.size() > 0)
-            log_text->addEntry(logs.back().prefix, logs.back().text, logs.back().color);
+            log_text->addEntry("LOG : ", logs.back().text, logs.back().color);
+//            log_text->addEntry(logs.back().prefix, logs.back().text, logs.back().color);
     }
 }
 
