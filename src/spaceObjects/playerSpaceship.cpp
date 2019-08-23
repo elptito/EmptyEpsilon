@@ -447,7 +447,7 @@ void PlayerSpaceship::update(float delta)
             for(int n = 0; n < SYS_COUNT; n++)
             {
                 if (!hasSystem(ESystem(n))) continue;
-                systems[n].coolant_request = max_coolant * systems[n].heat_level / total_heat;
+                systems[n].coolant_request = std::min(systems[n].coolant_max,max_coolant * systems[n].heat_level / total_heat);
             }
         }
     }
@@ -557,13 +557,13 @@ void PlayerSpaceship::update(float delta)
             if (system > SYS_None && system < SYS_COUNT && hasSystem(system))
             {
                 systems[system].health += repair_per_second * delta;
-                if (systems[system].health > 1.0)
-                    systems[system].health = 1.0;
+                if (systems[system].health > systems[system].health_max)
+                    systems[system].health = systems[system].health_max;
             }
-            if (auto_repair_enabled && (system == SYS_None || !hasSystem(system) || systems[system].health == 1.0))
+            if (auto_repair_enabled && (system == SYS_None || !hasSystem(system) || systems[system].health == systems[system].health_max))
             {
                 int n=irandom(0, SYS_COUNT - 1);
-                 if (hasSystem(ESystem(n)) && systems[n].health < 1.0)
+                 if (hasSystem(ESystem(n)) && systems[n].health < systems[n].health_max)
                 {
                     auto_repairing_system = ESystem(n);
                 }
