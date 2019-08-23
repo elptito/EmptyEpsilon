@@ -22,6 +22,8 @@ REGISTER_SCRIPT_SUBCLASS(Artifact, SpaceObject)
     /// First argument given to the function will be the playerSpaceShip, the second the artifact.
     REGISTER_SCRIPT_CLASS_FUNCTION(Artifact, onPickUp);
     REGISTER_SCRIPT_CLASS_FUNCTION(Artifact, setOrbit);
+    REGISTER_SCRIPT_CLASS_FUNCTION(Artifact, setOrbitDistance);
+    REGISTER_SCRIPT_CLASS_FUNCTION(Artifact, setHull);
 }
 
 REGISTER_MULTIPLAYER_CLASS(Artifact, "Artifact");
@@ -80,6 +82,11 @@ void Artifact::setOrbit(P<SpaceObject> target, float orbit_time)
     this->orbit_time = orbit_time;
 }
 
+void Artifact::setOrbitDistance(float orbit_distance)
+{
+    this->orbit_distance = orbit_distance;
+}
+
 void Artifact::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range)
 {
     sf::Sprite object_sprite;
@@ -104,7 +111,7 @@ void Artifact::collide(Collisionable* target, float force)
     {
         if (on_pickup_callback.isSet())
         {
-            on_pickup_callback.call(player, P<Artifact>(this));
+            //on_pickup_callback.call(player, P<Artifact>(this));
         }
         destroy();
         player->addToShipLog("Objet recupere en soute",sf::Color::White,"extern");

@@ -27,6 +27,8 @@ public:
     void explode();
     void allowPickup(bool allow);
     void setOrbit(P<SpaceObject> target, float orbit_time);
+    void setOrbitDistance(float orbit_distance);
+    void setHull(float hull) {this->hull = hull;}
 
     virtual string getExportLine();
     void onPickUp(ScriptSimpleCallback callback);
