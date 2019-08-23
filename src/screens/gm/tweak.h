@@ -228,6 +228,8 @@ private:
     GuiSlider* energy_level_slider;
     GuiSlider* max_energy_level_slider;
     GuiSlider* max_coolant_slider;
+    GuiToggleButton* auto_repair_toogle;
+    GuiToggleButton* auto_coolant_toogle;
     GuiToggleButton* gravity_toggle;
     GuiToggleButton* electrical_toggle;
     GuiToggleButton* biological_toggle;

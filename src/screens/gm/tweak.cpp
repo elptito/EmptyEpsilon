@@ -943,6 +943,11 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
     });
     repair_team_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
+    auto_repair_toogle = new GuiToggleButton(left_col, "", "Reparation auto", [this](bool value) {
+        target->auto_repair_enabled = value;
+    });
+    auto_repair_toogle->setSize(GuiElement::GuiSizeMax, 40);
+
     // Edit oxygen.
 //    (new GuiLabel(left_col, "", "Oxygen:", 30))->setSize(GuiElement::GuiSizeMax, 50);
 //     oxygen_point_slider = new GuiSlider(left_col, "", 0.0, 500.0, 0.0, [this](float value) {
@@ -991,6 +996,11 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
     max_coolant_slider->addSnapValue(200.0, 1.0);
     max_coolant_slider->addSnapValue(250.0, 1.0);
     max_coolant_slider->addSnapValue(300.0, 1.0);
+
+    auto_coolant_toogle = new GuiToggleButton(left_col, "", "Refroidissement auto", [this](bool value) {
+        target->auto_coolant_enabled = value;
+    });
+    auto_coolant_toogle->setSize(GuiElement::GuiSizeMax, 40);
 
     // Right column
 
@@ -1073,6 +1083,9 @@ void GuiShipTweakPlayer::open(P<SpaceObject> target)
         gravity_toggle->setValue(player->has_gravity_sensor);
         electrical_toggle->setValue(player->has_electrical_sensor);
         biological_toggle->setValue(player->has_biological_sensor);
+
+        auto_repair_toogle->setValue(player->auto_repair_enabled);
+        auto_coolant_toogle->setValue(player->auto_coolant_enabled);
     }
 }
 
@@ -1097,7 +1110,7 @@ GuiShipTweakOxygen::GuiShipTweakOxygen(GuiContainer* owner)
         // (new GuiLabel(left_col, "", "Zone : " + string(n + 1), 30))->setSize(GuiElement::GuiSizeMax, 50);
 
         // Edit oxygen max
-        oxygen_max_slider[n] = new GuiSlider(left_col, "", 0.0, 5000.0, 0.0, [this, n](float value) {
+        oxygen_max_slider[n] = new GuiSlider(left_col, "", 0, 5000, 0, [this, n](int value) {
             target->oxygen_max[n] = value;
             target->oxygen_points[n] = std::min(target->oxygen_points[n], target->oxygen_max[n]);
             int actual_zones_count = 0;
@@ -1109,20 +1122,22 @@ GuiShipTweakOxygen::GuiShipTweakOxygen(GuiContainer* owner)
         oxygen_max_slider[n]->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
         // Edit oxygen.
-         oxygen_point_slider[n] = new GuiSlider(center_col, "", 0.0, 5000.0, 0.0, [this, n](float value) {
-            target->oxygen_points[n] = std::min(value, target->oxygen_max[n]);
+         oxygen_point_slider[n] = new GuiSlider(center_col, "", 0, 5000, 0, [this, n](int value) {
+            target->oxygen_points[n] = std::min(float(value), target->oxygen_max[n]);
         });
         oxygen_point_slider[n]->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
         // Edit oxygen rate.
-         oxygen_rate_slider[n] = new GuiSlider(right_col, "", -100.0, 0.0, 0.0, [this, n](float value) {
+         oxygen_rate_slider[n] = new GuiSlider(right_col, "", -15, 0, 0, [this, n](int value) {
             target->oxygen_rate[n] = value;
         });
         oxygen_rate_slider[n]->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
-        oxygen_rate_slider[n]->addSnapValue(-80.0, 0.01);
-        oxygen_rate_slider[n]->addSnapValue(-60.0, 0.01);
-        oxygen_rate_slider[n]->addSnapValue(-40.0, 0.01);
-        oxygen_rate_slider[n]->addSnapValue(-20.0, 0.01);
+        oxygen_rate_slider[n]->addSnapValue(-15, 0.05);
+        oxygen_rate_slider[n]->addSnapValue(-10, 0.05);
+        oxygen_rate_slider[n]->addSnapValue(-9, 0.05);
+        oxygen_rate_slider[n]->addSnapValue(-8, 0.05);
+        oxygen_rate_slider[n]->addSnapValue(-6, 0.05);
+        oxygen_rate_slider[n]->addSnapValue(0, 0.05);
     }
 
     (new GuiLabel(left_col, "", "Passagers:", 30))->setSize(GuiElement::GuiSizeMax, 50);
