@@ -36,6 +36,8 @@ REGISTER_SCRIPT_SUBCLASS(PlayerSpaceship, SpaceShip)
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, hasPlayerAtPosition);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setTexture);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setTextureColor);
+    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setTacticalRadarRange);
+    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getTacticalRadarRange);
 
     // Comms functions return Boolean values if true.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, isCommsInactive);
@@ -232,6 +234,7 @@ PlayerSpaceship::PlayerSpaceship()
     texture_g = 1.0;
     texture_b = 1.0;
     texture_a = 1.0;
+    tactical_radar_range = 5000.0;
 
     hull_damage_indicator = 0.0;
     jump_indicator = 0.0;
