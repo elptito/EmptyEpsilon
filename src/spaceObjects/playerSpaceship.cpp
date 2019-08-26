@@ -317,6 +317,7 @@ PlayerSpaceship::PlayerSpaceship()
     registerMemberReplication(&texture_g);
     registerMemberReplication(&texture_b);
     registerMemberReplication(&texture_a);
+    registerMemberReplication(&tactical_radar_range);
 
     // Determine which stations must provide self-destruct confirmation codes.
     for(int n = 0; n < max_self_destruct_codes; n++)
@@ -2133,8 +2134,8 @@ void PlayerSpaceship::drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f posit
         radar_radius.setOutlineThickness(3.0);
         window.draw(radar_radius);
 
-        sf::CircleShape short_radar_radius(5000 * scale);
-        short_radar_radius.setOrigin(5000 * scale, 5000 * scale);
+        sf::CircleShape short_radar_radius(tactical_radar_range * scale);
+        short_radar_radius.setOrigin(tactical_radar_range * scale, tactical_radar_range * scale);
         short_radar_radius.setPosition(position);
         short_radar_radius.setFillColor(sf::Color::Transparent);
         short_radar_radius.setOutlineColor(sf::Color(255, 255, 255, 64));
