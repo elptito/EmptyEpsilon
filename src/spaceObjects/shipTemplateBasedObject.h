@@ -32,6 +32,7 @@ public:
     
     bool shares_energy_with_docked;       //[config]
     bool repair_docked;                   //[config]
+    float radar_range;
     bool restocks_scan_probes;
 
     ScriptSimpleCallback on_destruction;
@@ -44,7 +45,8 @@ public:
 #endif
     virtual void drawShieldsOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, float sprite_scale, bool show_levels);
     virtual void update(float delta) override;
-
+    virtual float getRadarRange() override { return radar_range; }
+    void setRadarRange(float range) { radar_range = range; }
     virtual std::unordered_map<string, string> getGMInfo() override;
     virtual bool canBeTargetedBy(P<SpaceObject> other) override { return true; }
     virtual bool hasShield() override;

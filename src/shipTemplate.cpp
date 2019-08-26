@@ -1,6 +1,7 @@
 #include "shipTemplate.h"
 #include "spaceObjects/spaceObject.h"
 #include "mesh.h"
+#include "preferenceManager.h"
 
 #include "scriptInterface.h"
 
@@ -59,6 +60,8 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setWarpSpeed);
     /// Set if this ship shares energy with docked ships. Example: template:setSharesEnergyWithDocked(false)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setSharesEnergyWithDocked);
+    /// Set range of this ship's radar (U is 1000). Example: template:setRadarRange(30 * 1000)
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setRadarRange);
     /// Set if this ship restocks scan probes on docked ships. Example: template:setRestocksScanProbes(false)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setRestocksScanProbes);
     /// Set if this ship has a jump drive. Example: template:setJumpDrive(true)
@@ -88,6 +91,7 @@ ShipTemplate::ShipTemplate()
     class_name = "No sub-class";
     shares_energy_with_docked = true;
     repair_docked = false;
+    radar_range = PreferencesManager::get("server_config_long_range_radar_range", "30000").toFloat();
     restocks_scan_probes = false;
     energy_storage_amount = 1000;
     repair_crew_count = 3;
@@ -378,6 +382,11 @@ void ShipTemplate::setRepairDocked(bool enabled)
     repair_docked = enabled;
 }
 
+void ShipTemplate::setRadarRange(float range)
+{
+    radar_range = range;
+}
+
 void ShipTemplate::setHasReactor(bool hasReactor)
 {
     has_reactor = hasReactor;
@@ -475,6 +484,7 @@ P<ShipTemplate> ShipTemplate::copy(string new_name)
     result->combat_maneuver_strafe_speed = combat_maneuver_strafe_speed;
     result->shares_energy_with_docked = shares_energy_with_docked;
     result->repair_docked = repair_docked;
+    result->radar_range = radar_range;
     result->restocks_scan_probes = restocks_scan_probes;
     result->has_jump_drive = has_jump_drive;
     result->has_cloaking = has_cloaking;

@@ -21,6 +21,7 @@ public:
     virtual void takeDamage(float damage_amount, DamageInfo info) override;
 
     virtual void drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range) override;
+    virtual float getRadarRange() override { return 5000.0f; }
 
     void setTarget(sf::Vector2f target) { target_position = target; }
     sf::Vector2f getTarget() { return target_position; }

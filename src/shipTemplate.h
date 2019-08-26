@@ -97,6 +97,7 @@ public:
     std::unordered_set<string> can_be_docked_by_class;
     bool shares_energy_with_docked;
     bool repair_docked;
+    float radar_range;
     bool has_reactor;
     bool restocks_scan_probes;
     
@@ -139,6 +140,7 @@ public:
     void setDockClasses(std::vector<string> classes);
     void setSharesEnergyWithDocked(bool enabled);
     void setRepairDocked(bool enabled);
+    void setRadarRange(float range);
     void setHasReactor(bool hasReactor);
     void setRestocksScanProbes(bool enabled);
     void setMesh(string model, string color_texture, string specular_texture, string illumination_texture);

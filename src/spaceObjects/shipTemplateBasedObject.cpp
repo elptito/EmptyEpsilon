@@ -335,6 +335,7 @@ void ShipTemplateBasedObject::setTemplate(string template_name)
 
     shares_energy_with_docked = ship_template->shares_energy_with_docked;
     repair_docked = ship_template->repair_docked;
+    radar_range = ship_template->radar_range;
 
     ship_template->setCollisionData(this);
     model_info.setData(ship_template->model_data);
