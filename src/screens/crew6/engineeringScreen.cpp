@@ -297,6 +297,7 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
                 break;
             case SYS_MissileSystem:
                 addSystemEffect("Vitesse de rechargement", string(int(effectiveness * 100)) + "%");
+                addSystemEffect("Vitesse des missiles", string(int(effectiveness * 100)) + "%");
                 break;
             case SYS_Maneuver:
                 addSystemEffect("Vitesse de rotation", string(int(effectiveness * 100)) + "%");
