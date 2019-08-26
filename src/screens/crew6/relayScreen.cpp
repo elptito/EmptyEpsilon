@@ -118,6 +118,7 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
     position_text_custom = false;
     position_text = new GuiTextEntry(view_controls, "SECTOR_NAME_TEXT", "");
     position_text->setSize(GuiElement::GuiSizeMax, 50);
+    position_text->setTextFont(bold_font);
     position_text->callback([this](string text){
         position_text_custom = true;
     });

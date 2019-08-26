@@ -12,6 +12,7 @@ public:
 protected:
     string text;
     float text_size;
+    sf::Font* text_font;
     func_t func;
     func_t enter_func;
     sf::Clock blink_clock;
@@ -28,6 +29,7 @@ public:
     string getText() const;
     GuiTextEntry* setText(string text);
     GuiTextEntry* setTextSize(float size);
+    GuiTextEntry* setTextFont(sf::Font* font);
     GuiTextEntry* callback(func_t func);
     GuiTextEntry* enterCallback(func_t func);
     GuiTextEntry* validator(Validator func);

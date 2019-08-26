@@ -4,6 +4,7 @@
 GuiTextEntry::GuiTextEntry(GuiContainer* owner, string id, string text)
 : GuiElement(owner, id), text(text), text_size(30), func(nullptr), enter_func(nullptr), validator_func(nullptr), valid(true)
 {
+    text_font = main_font;
 }
 
 void GuiTextEntry::onDraw(sf::RenderTarget& window)
@@ -19,7 +20,7 @@ void GuiTextEntry::onDraw(sf::RenderTarget& window)
     if (blink_clock.getElapsedTime().asSeconds() > blink_rate * 2.0f)
         blink_clock.restart();
     sf::Color textColor = (valid || !validator_func) ? selectColor(colorConfig.text_entry.forground) : colorConfig.text_entry_invalid;
-    drawText(window, sf::FloatRect(rect.left + 16, rect.top, rect.width, rect.height), text + (typing_indicator ? "_" : ""), ACenterLeft, text_size, main_font, textColor);
+    drawText(window, sf::FloatRect(rect.left + 16, rect.top, rect.width, rect.height), text + (typing_indicator ? "_" : ""), ACenterLeft, text_size, text_font, textColor);
 }
 
 bool GuiTextEntry::onMouseDown(sf::Vector2f position)
@@ -114,6 +115,12 @@ GuiTextEntry* GuiTextEntry::setText(string text)
 GuiTextEntry* GuiTextEntry::setTextSize(float size)
 {
     this->text_size = size;
+    return this;
+}
+
+GuiTextEntry* GuiTextEntry::setTextFont(sf::Font* font)
+{
+    this->text_font = font;
     return this;
 }
 
