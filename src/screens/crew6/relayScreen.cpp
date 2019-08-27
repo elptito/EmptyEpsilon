@@ -208,7 +208,7 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
     (new GuiLabel(option_buttons, "", " ", 30))->setSize(GuiElement::GuiSizeMax, 50);
 
     // Launch probe button.
-    launch_probe_button = new GuiButton(option_buttons, "LAUNCH_PROBE_BUTTON", "sonde", [this]() {
+    launch_probe_button = new GuiButton(option_buttons, "LAUNCH_PROBE_BUTTON", "Sonde", [this]() {
         mode = LaunchProbe;
         option_buttons->hide();
     });
@@ -221,7 +221,7 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
     progress_probe->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
     // Link probe to science button.
-    link_to_science_button = new GuiToggleButton(option_buttons, "LINK_TO_SCIENCE", " Lier a Analyste", [this](bool value){
+    link_to_science_button = new GuiToggleButton(option_buttons, "LINK_TO_SCIENCE", "Lier a Analyste", [this](bool value){
         if (value)
             my_spaceship->commandSetScienceLink(targets.get()->getMultiplayerId());
         else
@@ -448,7 +448,7 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
     if (my_spaceship)
     {
         //info_reputation->setValue(string(my_spaceship->getReputationPoints(), 0));
-        launch_probe_button->setText("Lancer sonde (" + string(my_spaceship->scan_probe_stock) + "/" + string(my_spaceship->max_scan_probes) + ")");
+        launch_probe_button->setText("Sonde (" + string(my_spaceship->scan_probe_stock) + "/" + string(my_spaceship->max_scan_probes) + ")");
 
         // Add and remove entries from the CPU ship and space station list.
 //        int n = 0;
