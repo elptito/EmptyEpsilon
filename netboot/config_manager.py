@@ -13,7 +13,7 @@ class Client:
         "damageControl", "powerManagement", "databaseView", 
 		"commsView","tacticalRadar","scienceRadar","relayRadar","navigation"
 		"logview","internlogview",
-        "dronePilot", "dockMaster",
+        "dronePilot", "droneMaster", "dockMaster",
 		"oxygenView"		
     ]
 

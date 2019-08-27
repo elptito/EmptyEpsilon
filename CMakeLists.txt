@@ -142,6 +142,7 @@ set(SOURCES
 	src/screens/gm/tweak.cpp
 	src/screens/extra/droneOperatorScreen.cpp
 	src/screens/extra/dockMasterScreen.cpp
+	src/screens/extra/droneMasterScreen.cpp
 	src/screenComponents/aimLock.cpp
 	src/screenComponents/alertOverlay.cpp
 	src/screenComponents/helpOverlay.cpp
