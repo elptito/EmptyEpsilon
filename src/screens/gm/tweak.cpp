@@ -938,7 +938,7 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
 
     // Edit reputation.
     (new GuiLabel(left_col, "", "Nombre de droides:", 30))->setSize(GuiElement::GuiSizeMax, 50);
-     repair_team_slider = new GuiSlider(left_col, "", 0.0, 15, 0.0, [this](float value) {
+     repair_team_slider = new GuiSlider(left_col, "", 0, 15, 0, [this](int value) {
         target->setRepairCrewCount(value);
     });
     repair_team_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
@@ -1019,6 +1019,12 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
     });
     biological_toggle->setSize(GuiElement::GuiSizeMax, 40);
 
+    (new GuiLabel(right_col, "", "Nombre de sondes max:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    probe_max_slider = new GuiSlider(right_col, "", 0, 20, 0, [this](int value) {
+        target->setMaxScanProbeCount(value);
+    });
+    probe_max_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
     // Count and list ship positions and whether they're occupied.
 //    position_count = new GuiLabel(right_col, "", "Postes occupes: ", 30);
 //    position_count->setSize(GuiElement::GuiSizeMax, 50);
@@ -1064,6 +1070,7 @@ void GuiShipTweakPlayer::onDraw(sf::RenderTarget& window)
 
     // Update reputation points.
     repair_team_slider->setValue(target->getRepairCrewCount());
+    probe_max_slider->setValue(target->getMaxScanProbeCount());
 
     // Update oxygen points.
 //    oxygen_point_slider->setValue(target->getOxygenPoints());
