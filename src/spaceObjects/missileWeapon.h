@@ -17,6 +17,7 @@ public:
     P<SpaceObject> owner; //Only valid on server.
     int32_t target_id;
     float target_angle;
+    float speed;
 
     MissileWeapon(string multiplayerName, const MissileWeaponData& data);
 

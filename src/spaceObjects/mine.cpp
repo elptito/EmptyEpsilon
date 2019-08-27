@@ -6,6 +6,7 @@
 #include "pathPlanner.h"
 
 #include "scriptInterface.h"
+#include "spaceObjects/spaceship.h"
 
 /// A mine object. Simple, effective, deadly.
 REGISTER_SCRIPT_SUBCLASS(Mine, SpaceObject)
@@ -23,6 +24,7 @@ Mine::Mine()
     particleTimeout = 0.0;
     setRadarSignatureInfo(0.0, 0.05, 0.0);
     hull = 5;
+    speed = 0;
 
     PathPlannerManager::getInstance()->addAvoidObject(this, trigger_range * 1.2f);
 }
@@ -73,7 +75,7 @@ void Mine::update(float delta)
     if (ejectTimeout > 0.0)
     {
         ejectTimeout -= delta;
-        setVelocity(sf::vector2FromAngle(getRotation()) * data.speed);
+        setVelocity(sf::vector2FromAngle(getRotation()) * speed);
     }else{
         setVelocity(sf::Vector2f(0, 0));
     }
@@ -88,9 +90,12 @@ void Mine::update(float delta)
 
 void Mine::collide(Collisionable* target, float force)
 {
-    if (!game_server || triggered || ejectTimeout > 0.0)
-        return;
     P<SpaceObject> hitObject = P<Collisionable>(target);
+    if (!game_server || triggered)
+        return;
+    P<SpaceShip> hitShip = hitObject;
+    if (ejectTimeout > 0.0 && (hitShip->isDockedWith(owner) || hitShip == owner))
+        return;
     if (!hitObject || !hitObject->canBeTargetedBy(nullptr))
         return;
 

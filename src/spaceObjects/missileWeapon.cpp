@@ -9,6 +9,7 @@ MissileWeapon::MissileWeapon(string multiplayerName, const MissileWeaponData& da
     target_angle = 0;
     lifetime = data.lifetime;
     hull = 5;
+    speed = 0;
 
     registerMemberReplication(&target_id);
     registerMemberReplication(&target_angle);
@@ -58,11 +59,7 @@ void MissileWeapon::update(float delta)
         lifeEnded();
         destroy();
     }
-    P<SpaceShip> ship = owner;
-    if (ship)
-        setVelocity(sf::vector2FromAngle(getRotation()) * data.speed * ship->getSystemEffectiveness(SYS_MissileSystem));
-    else
-        setVelocity(sf::vector2FromAngle(getRotation()) * data.speed);
+    setVelocity(sf::vector2FromAngle(getRotation()) * speed);
 
     if (delta > 0)
         ParticleEngine::spawn(sf::Vector3f(getPosition().x, getPosition().y, translate_z), sf::Vector3f(getPosition().x, getPosition().y, translate_z), sf::Vector3f(1, 0.8, 0.8), sf::Vector3f(0, 0, 0), 5, 20, 5.0);
@@ -74,6 +71,9 @@ void MissileWeapon::collide(Collisionable* target, float force)
         return;
     P<SpaceObject> object = P<Collisionable>(target);
     if (!object || object == owner || !object->canBeTargetedBy(owner))
+        return;
+    P<SpaceShip> ship = object;
+    if (ship->isDockedWith(owner))
         return;
 
     hitObject(object);

@@ -17,6 +17,7 @@ public:
     float triggerTimeout; //Only valid on server.
     float ejectTimeout;   //Only valid on server.
     float particleTimeout;
+    float speed;
 
     Mine();
 

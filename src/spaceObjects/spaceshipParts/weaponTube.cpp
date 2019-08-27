@@ -106,6 +106,7 @@ void WeaponTube::spawnProjectile(float target_angle)
 {
 //    sf::Vector2f fireLocation = parent->getPosition() + sf::rotateVector(parent->ship_template->model_data->getTubePosition2D(tube_index), parent->getRotation());
     sf::Vector2f fireLocation = parent->getPosition() + sf::rotateVector(sf::Vector2f(parent->getRadius()/2,parent->getRadius()/2),parent->getRotation()+direction-45);
+    const MissileWeaponData& data = MissileWeaponData::getDataFor(type_loaded);
     switch(type_loaded)
     {
     case MW_Homing:
@@ -118,6 +119,7 @@ void WeaponTube::spawnProjectile(float target_angle)
             missile->translate_z = parent->translate_z;
             missile->setRotation(parent->getRotation() + direction);
             missile->target_angle = target_angle;
+            missile->speed = data.speed * parent->getSystemEffectiveness(SYS_MissileSystem);
         }
         break;
     case MW_Nuke:
@@ -130,6 +132,7 @@ void WeaponTube::spawnProjectile(float target_angle)
 			missile->translate_z = parent->translate_z;
             missile->setRotation(parent->getRotation() + direction);
             missile->target_angle = target_angle;
+            missile->speed = data.speed * parent->getSystemEffectiveness(SYS_MissileSystem);
         }
         break;
     case MW_Mine:
@@ -140,6 +143,7 @@ void WeaponTube::spawnProjectile(float target_angle)
             missile->setPosition(fireLocation);
 			missile->translate_z = parent->translate_z;
             missile->setRotation(parent->getRotation() + direction);
+            missile->speed = data.speed * parent->getSystemEffectiveness(SYS_MissileSystem);
             missile->eject();
         }
         break;
@@ -152,6 +156,7 @@ void WeaponTube::spawnProjectile(float target_angle)
 			missile->translate_z = parent->translate_z;
             missile->setRotation(parent->getRotation() + direction);
             missile->target_angle = parent->getRotation() + direction;
+            missile->speed = data.speed * parent->getSystemEffectiveness(SYS_MissileSystem);
         }
         break;
     case MW_EMP:
@@ -164,6 +169,7 @@ void WeaponTube::spawnProjectile(float target_angle)
 			missile->translate_z = parent->translate_z;
             missile->setRotation(parent->getRotation() + direction);
             missile->target_angle = target_angle;
+            missile->speed = data.speed * parent->getSystemEffectiveness(SYS_MissileSystem);
         }
         break;
     default:
