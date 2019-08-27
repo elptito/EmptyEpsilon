@@ -63,7 +63,17 @@ void ShipsLog::onDraw(sf::RenderTarget& window)
         }
     }else{
         log_text->setMargins(15, 12, 15, 0);
-        drawStretchedHV(window, sf::FloatRect(rect.left, rect.top, rect.width, rect.height), 50.0f, "gui/ButtonBackground.disabled");
+
+        string background = "gui/ButtonBackground.disabled";
+        if (my_spaceship &&
+            (station == "intern" && my_spaceship->timer_log_intern > 0 && int(my_spaceship->timer_log_intern) % 2 == 0)
+            || (station == "extern" && my_spaceship->timer_log_extern > 0 && int(my_spaceship->timer_log_extern) % 2 == 0)
+            || (station == "docks" && my_spaceship->timer_log_docks > 0 && int(my_spaceship->timer_log_docks) % 2 == 0)
+            || (station == "science" && my_spaceship->timer_log_science > 0 && int(my_spaceship->timer_log_science) % 2 == 0)
+        )
+            background = "gui/ButtonBackground.hover";
+
+        drawStretchedHV(window, sf::FloatRect(rect.left, rect.top, rect.width, rect.height), 50.0f, background);
         const std::vector<PlayerSpaceship::ShipLogEntry>& logs = my_spaceship->getShipsLog(station);
         if (log_text->getEntryCount() > 0 && logs.size() == 0)
             log_text->clearEntries();

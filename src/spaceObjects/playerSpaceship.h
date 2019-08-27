@@ -181,6 +181,11 @@ public:
     float tactical_radar_range;
     float science_radar_range;
 
+    float timer_log_intern;
+	float timer_log_extern;
+	float timer_log_docks;
+	float timer_log_science;
+
     bool activate_self_destruct;
     uint32_t self_destruct_code[max_self_destruct_codes];
     bool self_destruct_code_confirmed[max_self_destruct_codes];

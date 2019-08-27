@@ -264,6 +264,10 @@ PlayerSpaceship::PlayerSpaceship()
 	has_electrical_sensor = false;
 	has_biological_sensor = false;
 	max_coolant = 1;
+	timer_log_intern = 0.0;
+	timer_log_extern = 0.0;
+	timer_log_docks = 0.0;
+	timer_log_science = 0.0;
 
     setFactionId(1);
 
@@ -322,6 +326,10 @@ PlayerSpaceship::PlayerSpaceship()
     registerMemberReplication(&texture_a);
     registerMemberReplication(&tactical_radar_range);
     registerMemberReplication(&science_radar_range);
+    registerMemberReplication(&timer_log_intern);
+    registerMemberReplication(&timer_log_extern);
+    registerMemberReplication(&timer_log_docks);
+    registerMemberReplication(&timer_log_science);
 
     // Determine which stations must provide self-destruct confirmation codes.
     for(int n = 0; n < max_self_destruct_codes; n++)
@@ -368,6 +376,16 @@ void PlayerSpaceship::update(float delta)
     // Si hack, lancement d'un delay
     if (hack_time > 0)
         hack_time += delta;
+
+    // si log, clignotement durant 5 secondes
+    if (timer_log_intern > 0)
+        timer_log_intern -= delta;
+    if (timer_log_extern > 0)
+        timer_log_extern -= delta;
+    if (timer_log_docks > 0)
+        timer_log_docks -= delta;
+    if (timer_log_science > 0)
+        timer_log_science -= delta;
 
     // If shields are calibrating, tick the calibration delay. Factor shield
     // subsystem effectiveness when determining the tick rate.
@@ -912,6 +930,7 @@ void PlayerSpaceship::addToShipLog(string message, sf::Color color, string stati
             ships_log_extern.erase(ships_log_extern.begin());
         // Timestamp a log entry, color it, and add it to the end of the log.
         ships_log_extern.emplace_back(string(engine->getElapsedTime(), 1) + string(": "), message, color, station);
+        timer_log_extern = 5;
     }
     else if (station == "intern")
     {
@@ -919,6 +938,7 @@ void PlayerSpaceship::addToShipLog(string message, sf::Color color, string stati
             ships_log_intern.erase(ships_log_intern.begin());
         // Timestamp a log entry, color it, and add it to the end of the log.
         ships_log_intern.emplace_back(string(engine->getElapsedTime(), 1) + string(": "), message, color, station);
+        timer_log_intern = 5;
     }
     else if (station == "docks")
     {
@@ -926,6 +946,7 @@ void PlayerSpaceship::addToShipLog(string message, sf::Color color, string stati
             ships_log_docks.erase(ships_log_docks.begin());
         // Timestamp a log entry, color it, and add it to the end of the log.
         ships_log_docks.emplace_back(string(engine->getElapsedTime(), 1) + string(": "), message, color, station);
+        timer_log_docks = 5;
     }
     else if (station == "science")
     {
@@ -933,6 +954,7 @@ void PlayerSpaceship::addToShipLog(string message, sf::Color color, string stati
             ships_log_science.erase(ships_log_science.begin());
         // Timestamp a log entry, color it, and add it to the end of the log.
         ships_log_science.emplace_back(string(engine->getElapsedTime(), 1) + string(": "), message, color, station);
+        timer_log_science = 5;
     }
 }
 
@@ -1478,9 +1500,14 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
             packet >> message;
 
             addCommsOutgoingMessage(message);
-            P<PlayerSpaceship> playership = comms_target;
-            if (comms_state == CS_ChannelOpenPlayer && playership)
-                playership->addCommsIncommingMessage(message);
+            if (comms_target)
+            {
+                P<PlayerSpaceship> playership = comms_target;
+                if (comms_state == CS_ChannelOpenPlayer && playership)
+                    playership->addCommsIncommingMessage(message);
+            }else{
+                addBroadcast(2,message);
+            }
         }
         break;
     case CMD_SET_AUTO_REPAIR:
