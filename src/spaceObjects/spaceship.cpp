@@ -1330,7 +1330,7 @@ void SpaceShip::addBroadcast(int threshold, string message)
                 addtolog = 1;
             }
 
-            if (addtolog)
+            if (addtolog && id_galaxy == ship->id_galaxy)
             {
                 ship->addToShipLog(message, color, "extern");
             }
