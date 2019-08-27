@@ -38,6 +38,8 @@ REGISTER_SCRIPT_SUBCLASS(PlayerSpaceship, SpaceShip)
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setTextureColor);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setTacticalRadarRange);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getTacticalRadarRange);
+    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setScienceRadarRange);
+    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getScienceRadarRange);
 
     // Comms functions return Boolean values if true.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, isCommsInactive);
@@ -235,6 +237,7 @@ PlayerSpaceship::PlayerSpaceship()
     texture_b = 1.0;
     texture_a = 1.0;
     tactical_radar_range = 5000.0;
+    science_radar_range = 30000.0;
 
     hull_damage_indicator = 0.0;
     jump_indicator = 0.0;
@@ -318,6 +321,7 @@ PlayerSpaceship::PlayerSpaceship()
     registerMemberReplication(&texture_b);
     registerMemberReplication(&texture_a);
     registerMemberReplication(&tactical_radar_range);
+    registerMemberReplication(&science_radar_range);
 
     // Determine which stations must provide self-destruct confirmation codes.
     for(int n = 0; n < max_self_destruct_codes; n++)
@@ -2126,8 +2130,8 @@ void PlayerSpaceship::drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f posit
     SpaceShip::drawOnGMRadar(window, position, scale, long_range);
     if (long_range)
     {
-        sf::CircleShape radar_radius(gameGlobalInfo->long_range_radar_range * scale);
-        radar_radius.setOrigin(gameGlobalInfo->long_range_radar_range * scale, gameGlobalInfo->long_range_radar_range * scale);
+        sf::CircleShape radar_radius(science_radar_range * scale);
+        radar_radius.setOrigin(science_radar_range * scale, science_radar_range * scale);
         radar_radius.setPosition(position);
         radar_radius.setFillColor(sf::Color::Transparent);
         radar_radius.setOutlineColor(sf::Color(255, 255, 255, 64));

@@ -148,7 +148,7 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner, ECrewPosition crew_pos
 
     (new GuiShipInternalView(system_row_layouts, "SHIP_INTERNAL_VIEW", 48.0f))->setShip(my_spaceship)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
-    (new GuiCustomShipFunctions(this, crew_position, "", my_spaceship))->setPosition(-20, 120, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
+    (new GuiCustomShipFunctions(this, crew_position, "", my_spaceship))->setPosition(-20, 100, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
 
     new ShipsLog(this,"intern");
 
@@ -353,7 +353,7 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
             case SYS_Drones:
                 addSystemEffect("Controle des drones", string(my_spaceship->getDronesControlRange() / 1000.0f,1) + "U");
                 addSystemEffect("Radar relai et sondes", string(5000.0 * my_spaceship->getSystemEffectiveness(SYS_Drones)  / 1000.0f,1) + "U");
-                addSystemEffect("Capteurs Analyste", string( gameGlobalInfo->long_range_radar_range * 50.0 * std::pow(my_spaceship->getSystemEffectiveness(SYS_Drones),2) / (2.0 *  1000.0f),0) + "U");
+                addSystemEffect("Capteurs Analyste", string( my_spaceship->science_radar_range * 50.0 * std::pow(my_spaceship->getSystemEffectiveness(SYS_Drones),2) / (2.0 *  1000.0f),0) + "U");
                 break;
             case SYS_Door:
                 addSystemEffect("Resistance du sas exterieur", string(int(my_spaceship->getSystemEffectiveness(SYS_Door) * 100))+ "%");

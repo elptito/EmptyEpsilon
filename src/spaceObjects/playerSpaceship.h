@@ -179,6 +179,7 @@ public:
     float texture_a;
 
     float tactical_radar_range;
+    float science_radar_range;
 
     bool activate_self_destruct;
     uint32_t self_destruct_code[max_self_destruct_codes];
@@ -316,6 +317,9 @@ public:
 
     void setTacticalRadarRange(float range){tactical_radar_range = range;}
     float getTacticalRadarRange(){return tactical_radar_range;}
+
+    void setScienceRadarRange(float range){science_radar_range = range;}
+    float getScienceRadarRange(){return science_radar_range;}
 
     virtual void onReceiveServerCommand(sf::Packet& packet) override;
 

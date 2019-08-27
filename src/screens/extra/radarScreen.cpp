@@ -21,7 +21,7 @@ RadarScreen::RadarScreen(GuiContainer* owner,string type)
     }
 
     if (type == "science" && my_spaceship){
-      science_radar = new GuiRadarView(this, "SCIENCE", gameGlobalInfo->long_range_radar_range, nullptr, my_spaceship);
+      science_radar = new GuiRadarView(this, "SCIENCE", my_spaceship->science_radar_range, nullptr, my_spaceship);
       science_radar->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
       science_radar->setRangeIndicatorStepSize(5000.0f)->longRange()->enableCallsigns()->show();
       science_radar->setFogOfWarStyle(GuiRadarView::NebulaFogOfWar);
