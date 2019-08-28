@@ -37,7 +37,7 @@ void GuiOpenCommsButton::onDraw(sf::RenderTarget& window)
             if (targets->get())
                 setText("Comms : " + targets->get()->getCallSign());
             else
-                setText("Comms libre");
+                setText("Diffusion large");
         }else
         {
             disable();

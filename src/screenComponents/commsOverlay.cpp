@@ -99,7 +99,7 @@ GuiCommsOverlay::GuiCommsOverlay(GuiContainer* owner)
     });
     chat_comms_close_button->setTextSize(20)->setPosition(-10, 10, ATopRight)->setSize(60, 30);
 
-    chat_minimize_button = new GuiToggleButton(chat_comms_title, "", "_", [this](bool value)
+    chat_minimize_button = new GuiToggleButton(chat_comms_title, "", "-", [this](bool value)
     {
         minimize(value);
     });
@@ -124,7 +124,7 @@ GuiCommsOverlay::GuiCommsOverlay(GuiContainer* owner)
     chat_comms_text->enableAutoScrollDown()->setPosition(20, 30, ATopLeft)->setSize(760, 500);
 
     // Button to send a message.
-    chat_comms_send_button = new GuiButton(chat_comms_box, "SEND_BUTTON", "Send", [this]() {
+    chat_comms_send_button = new GuiButton(chat_comms_box, "SEND_BUTTON", "Envoyer", [this]() {
         if (my_spaceship)
             my_spaceship->commandSendCommPlayer(chat_comms_message_entry->getText());
         chat_comms_message_entry->setText("");
@@ -186,7 +186,6 @@ void GuiCommsOverlay::onDraw(sf::RenderTarget& window)
             chat_label->setText("Communication");
         chat_comms_box->setVisible(my_spaceship->isCommsChatOpen() && !minimized);
         chat_comms_text->setText(my_spaceship->getCommsIncommingMessage());
-
 //        chat_comms_message_entry->setFocus(chat_comms_box -> isVisible());
 //        chat_comms_message_entry->setActive(chat_comms_box -> isVisible());
 //        chat_comms_message_entry->setEnable(chat_comms_box -> isVisible());

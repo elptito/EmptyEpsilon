@@ -930,7 +930,7 @@ void PlayerSpaceship::addToShipLog(string message, sf::Color color, string stati
             ships_log_extern.erase(ships_log_extern.begin());
         // Timestamp a log entry, color it, and add it to the end of the log.
         ships_log_extern.emplace_back(string(engine->getElapsedTime(), 1) + string(": "), message, color, station);
-        timer_log_extern = 5;
+        timer_log_extern = 6;
     }
     else if (station == "intern")
     {
@@ -938,7 +938,7 @@ void PlayerSpaceship::addToShipLog(string message, sf::Color color, string stati
             ships_log_intern.erase(ships_log_intern.begin());
         // Timestamp a log entry, color it, and add it to the end of the log.
         ships_log_intern.emplace_back(string(engine->getElapsedTime(), 1) + string(": "), message, color, station);
-        timer_log_intern = 5;
+        timer_log_intern = 6;
     }
     else if (station == "docks")
     {
@@ -946,7 +946,7 @@ void PlayerSpaceship::addToShipLog(string message, sf::Color color, string stati
             ships_log_docks.erase(ships_log_docks.begin());
         // Timestamp a log entry, color it, and add it to the end of the log.
         ships_log_docks.emplace_back(string(engine->getElapsedTime(), 1) + string(": "), message, color, station);
-        timer_log_docks = 5;
+        timer_log_docks = 6;
     }
     else if (station == "science")
     {
@@ -954,7 +954,7 @@ void PlayerSpaceship::addToShipLog(string message, sf::Color color, string stati
             ships_log_science.erase(ships_log_science.begin());
         // Timestamp a log entry, color it, and add it to the end of the log.
         ships_log_science.emplace_back(string(engine->getElapsedTime(), 1) + string(": "), message, color, station);
-        timer_log_science = 5;
+        timer_log_science = 6;
     }
 }
 
@@ -1393,7 +1393,7 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
                 comms_state = CS_OpeningChannel;
                 comms_open_delay = comms_channel_open_time;
                 comms_target_name = "";
-                comms_incomming_message = "Ouvrir communication generique";
+                comms_incomming_message = "Ces messages seront diffuses largement sur toutes les frequences";
                 addToShipLog("Lancement des communications", colorConfig.log_generic);
             }
         }
@@ -1506,7 +1506,8 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
                 if (comms_state == CS_ChannelOpenPlayer && playership)
                     playership->addCommsIncommingMessage(message);
             }else{
-                addBroadcast(2,message);
+                if (!message.upper().startswith("ORGA"))
+                    addBroadcast(2,message);
             }
         }
         break;
