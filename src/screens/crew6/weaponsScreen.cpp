@@ -106,7 +106,11 @@ void WeaponsScreen::onDraw(sf::RenderTarget& window)
 {
     if (my_spaceship)
     {
-        energy_display->setValue(string(int(my_spaceship->energy_level)));
+        energy_display->setValue(string(int(my_spaceship->energy_level/my_spaceship->max_energy_level * 100)) + "%");
+        if (my_spaceship->energy_level < 100)
+            energy_display->setColor(sf::Color::Red);
+        else
+            energy_display->setColor(sf::Color::White);
 
         lock_aim->setVisible(my_spaceship->getWeaponTubeCount() > 0);
 
