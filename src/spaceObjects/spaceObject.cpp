@@ -113,6 +113,9 @@ REGISTER_SCRIPT_CLASS_NO_CREATE(SpaceObject)
     /// Sets the description of this object in scanned and unscanned states. First parameter is the description in unscanned state, while the 2nd parameter is in scanned state.
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setDescriptions);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, addInfos);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getInfosLabel);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getInfosValue);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getInfosValueByLabel);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, removeInfos);
     /// Set the radar signature of this object. Objects' signatures create noise
     /// on the Science station's raw radar signal ring.

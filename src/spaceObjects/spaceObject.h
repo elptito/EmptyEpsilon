@@ -198,6 +198,30 @@ public:
         infos_value[index] = value;
     }
 
+    string getInfosLabel(int index)
+    {
+        if (index < 0 || index > 9)
+            return "";
+        return infos_label[index];
+    }
+
+    string getInfosValue(int index)
+    {
+        if (index < 0 || index > 9)
+            return "";
+        return infos_value[index];
+    }
+
+    string getInfosValueByLabel(string label)
+    {
+        for(int n = 0; n < 10; n++)
+        {
+            if (infos_label[n] == label)
+                return infos_value[n];
+        }
+        return "";
+    }
+
     void removeInfos(int index)
     {
         if (index < 0 || index > 9)
