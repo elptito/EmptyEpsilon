@@ -1135,7 +1135,7 @@ GuiShipTweakOxygen::GuiShipTweakOxygen(GuiContainer* owner)
         oxygen_point_slider[n]->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
         // Edit oxygen rate.
-         oxygen_rate_slider[n] = new GuiSlider(right_col, "", -15, 0, 0, [this, n](int value) {
+         oxygen_rate_slider[n] = new GuiSlider(right_col, "", -15, 2, 0, [this, n](int value) {
             target->oxygen_rate[n] = value;
         });
         oxygen_rate_slider[n]->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
@@ -1145,6 +1145,7 @@ GuiShipTweakOxygen::GuiShipTweakOxygen(GuiContainer* owner)
         oxygen_rate_slider[n]->addSnapValue(-8, 0.05);
         oxygen_rate_slider[n]->addSnapValue(-6, 0.05);
         oxygen_rate_slider[n]->addSnapValue(0, 0.05);
+        oxygen_rate_slider[n]->addSnapValue(2, 0.05);
     }
 
     (new GuiLabel(left_col, "", "Passagers:", 30))->setSize(GuiElement::GuiSizeMax, 50);
