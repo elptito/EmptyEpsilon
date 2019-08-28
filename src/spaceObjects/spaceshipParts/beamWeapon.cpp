@@ -217,7 +217,7 @@ void BeamWeapon::update(float delta)
             // down, and the beam can consume enough energy to fire ...
             P<SpaceShip> ship = target;
 
-            if (parent->lock_fire && distance < range + target->getRadius() && cooldown <= 0.0 && fabsf(angle_diff) < arc / 2.0 && parent->useEnergy(energy_per_beam_fire) && (!ship || ship->docking_target != parent))
+            if (parent->lock_fire && distance < range + target->getRadius()/4 && cooldown <= 0.0 && fabsf(angle_diff) < arc / 2.0 && parent->useEnergy(energy_per_beam_fire) && (!ship || ship->docking_target != parent))
             {
                 // ... add heat to the beam and zap the target.
                 parent->addHeat(SYS_BeamWeapons, heat_per_beam_fire);
