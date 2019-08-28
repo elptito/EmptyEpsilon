@@ -298,6 +298,12 @@ int main(int argc, char** argv)
     if (PreferencesManager::get("music_enabled").empty())
         PreferencesManager::set("music_enabled", "2");
 
+    //Set the default for autoconnect option
+    if (PreferencesManager::get("automainscreen").empty())
+        PreferencesManager::set("automainscreen", "");
+    if (PreferencesManager::get("autostationslist").empty())
+        PreferencesManager::set("autostationslist", "");
+
     // Set shaders to default.
     PreferencesManager::set("disable_shaders", PostProcessor::isEnabled() ? 0 : 1);
 
@@ -343,7 +349,7 @@ void returnToMainMenu()
         int crew_position = PreferencesManager::get("autoconnect").toInt() - 1;
         if (crew_position < 0) crew_position = 0;
         if (crew_position > max_crew_positions) crew_position = max_crew_positions;
-        new AutoConnectScreen(ECrewPosition(crew_position), PreferencesManager::get("auto_mainscreen").toInt(), PreferencesManager::get("autocontrolmainscreen").toInt(), PreferencesManager::get("autoconnectship", "solo"));
+        new AutoConnectScreen(ECrewPosition(crew_position), PreferencesManager::get("automainscreen").toInt(), PreferencesManager::get("autocontrolmainscreen").toInt(), PreferencesManager::get("autoconnectship", "solo"));
     }
     else if (PreferencesManager::get("touchcalib").toInt())
     {

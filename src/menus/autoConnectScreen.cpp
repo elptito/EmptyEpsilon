@@ -196,6 +196,19 @@ void AutoConnectScreen::connectToShip(int index)
     {
         my_player_info->commandSetCrewPosition(crew_position, true);
         my_player_info->commandSetMainScreenControl(control_main_screen);
+
+        // Add more screen
+        if (PreferencesManager::get("autostationslist") != "")
+        {
+            LOG(WARNING) << "Unknown color definition: ";
+            for(string station : PreferencesManager::get("autostationslist").split(";"))
+            {
+                int crew_position_sup = station.toInt() - 1;
+                if (crew_position_sup < 0) crew_position_sup = 0;
+                if (crew_position_sup > max_crew_positions) crew_position_sup = max_crew_positions;
+                my_player_info->commandSetCrewPosition(ECrewPosition(crew_position_sup), true);
+            }
+        }
     }
     my_player_info->commandSetShipId(ship->getMultiplayerId());
 }
