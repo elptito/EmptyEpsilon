@@ -12,10 +12,10 @@ void EMPMissile::hitObject(P<SpaceObject> object)
 {
     DamageInfo info(owner, damage_type, getPosition());
     //Tdelc/Tsht : damage_multiplier (qui fait doublon avec la categorie)
-    SpaceObject::damageArea(getPosition(), category_modifier * blastRange, category_modifier* damageAtEdge * damage_multiplier, category_modifier * damageAtCenter * damage_multiplier, info, getRadius());
+    SpaceObject::damageArea(getPosition(), category_modifier * blast_range, category_modifier* damage_at_edge * damage_multiplier, category_modifier * damage_at_center * damage_multiplier, info, getRadius());
 
     P<ElectricExplosionEffect> e = new ElectricExplosionEffect();
-    e->setSize(category_modifier * blastRange);
+    e->setSize(category_modifier * blast_range);
     e->setPosition(getPosition());
     e->setOnRadar(true);
 }
