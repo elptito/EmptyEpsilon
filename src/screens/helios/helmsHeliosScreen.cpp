@@ -32,10 +32,10 @@ HelmsHeliosScreen::HelmsHeliosScreen(GuiContainer* owner)
     // Render the alert level color overlay.
     (new AlertLevelOverlay(this));
 
-    GuiRadarView* radar = new GuiRadarView(this, "HELMS_RADAR", 5000.0, nullptr, my_spaceship);
+    radar = new GuiRadarView(this, "HELMS_RADAR", 5000.0, nullptr, my_spaceship);
     radar->setPosition(0, 0, ACenter)->setSize(GuiElement::GuiSizeMatchHeight, 800);
     radar->setRangeIndicatorStepSize(1000.0)->shortRange()->enableGhostDots()->enableWaypoints()->enableCallsigns()->enableHeadingIndicators()->setStyle(GuiRadarView::Circular);
-    radar->enableMissileTubeIndicators()->setFogOfWarStyle(GuiRadarView::FriendlysShortRangeFogOfWar)->setAutoOrient(true)->setShowSectors(false);
+    radar->enableMissileTubeIndicators()->setFogOfWarStyle(GuiRadarView::RadarRangeAndLineOfSight)->setAutoOrient(true)->setShowSectors(false);
 
     heading_hint = new GuiLabel(this, "HEADING_HINT", "", 30);
     heading_hint->setAlignment(ACenter)->setSize(0, 0);
@@ -101,6 +101,11 @@ void HelmsHeliosScreen::onDraw(sf::RenderTarget& window)
         case DS_Docked:
             docking_indicator->setText("Undock")->setTextColor(sf::Color::Yellow);
             break;
+        }
+        if (my_spaceship->current_warp >= 1.f){
+            radar->setDistance(35000.f)->setRangeIndicatorStepSize(5000.0)->longRange()->setStyle(GuiRadarView::CircularSector);
+        } else {
+            radar->setDistance(5000.f)->setRangeIndicatorStepSize(1000.0)->shortRange()->setStyle(GuiRadarView::Circular);
         }
     }
     GuiOverlay::onDraw(window);

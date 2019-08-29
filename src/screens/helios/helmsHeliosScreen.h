@@ -7,11 +7,13 @@ class GuiKeyValueDisplay;
 class GuiLabel;
 class GuiProgressbar;
 class SpaceObject;
+class GuiRadarView;
 
 class HelmsHeliosScreen : public GuiOverlay
 {
 private:
 
+    GuiRadarView* radar;
     GuiKeyValueDisplay* energy_display;
     GuiKeyValueDisplay* heading_display;
     GuiKeyValueDisplay* velocity_display;

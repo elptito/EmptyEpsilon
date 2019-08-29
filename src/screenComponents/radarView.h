@@ -14,14 +14,14 @@ public:
     {
         Rectangular,
         Circular,
-        CircularMasked
+        CircularMasked,
+        CircularSector
     };
     enum EFogOfWarStyle
     {
-        NoFogOfWar,
-        NebulaFogOfWar,
-        FriendlysShortRangeFogOfWar,
-        NoObjects
+        NoFogOfWar, // draw everything
+        RadarRangeAndLineOfSight, // draw everything in range of friendly that is not hidden by nebula
+        NoObjects // draw only and all nebulas / black holes
     };
 
     typedef std::function<void(sf::Vector2f position)> func_t;
@@ -30,11 +30,7 @@ private:
     sf::RenderTexture background_texture;
     sf::RenderTexture forground_texture;
     sf::RenderTexture mask_texture;
-    void orient();
-    void deOrient();
-    sf::Vector2f orientVector(sf::Vector2f input);
-    void rotateTexture(sf::RenderTexture& texture, float rotation);
-
+    sf::RenderTexture temp;
     class GhostDot
     {
     public:
@@ -102,12 +98,13 @@ public:
     virtual bool onMouseDown(sf::Vector2f position);
     GuiRadarView* setTargetSpaceship(P<SpaceShip> targetSpaceship){target_spaceship = targetSpaceship; return this;}
 
+protected:
+    virtual float getScale() override;
+    virtual sf::Vector2f getCenterPosition() override;
 private:
     void updateGhostDots();
     void drawBackground(sf::RenderTarget& window);
-    void drawNebulaBlockedAreas(sf::RenderTarget& window);
-    void drawNoneFriendlyBlockedAreas(sf::RenderTarget& window);
-    void drawFriendlyNotVisibleAreas(sf::RenderTarget& window);
+    void drawFogOfWarBlockedAreas(sf::RenderTarget& window);
     void drawGhostDots(sf::RenderTarget& window);
     void drawWaypoints(sf::RenderTarget& window);
     void drawRangeIndicators(sf::RenderTarget& window);
@@ -116,7 +113,11 @@ private:
     void drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget& window_alpha);
     void drawObjectsGM(sf::RenderTarget& window);
     void drawHeadingIndicators(sf::RenderTarget& window);
-    void drawRadarCutoff(sf::RenderTarget& window);
+    void orient();
+    void deOrient();
+    sf::Vector2f orientVector(sf::Vector2f input);
+    void rotateTexture(sf::RenderTexture& texture, float rotation);
+    float getRadius();
 };
 
 #endif//RADAR_VIEW_H

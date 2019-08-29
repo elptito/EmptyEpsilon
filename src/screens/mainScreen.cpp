@@ -34,12 +34,12 @@ ScreenMainScreen::ScreenMainScreen()
     long_range_radar = new GuiRadarView(this, "TACTICAL", gameGlobalInfo->long_range_radar_range, nullptr, my_spaceship);
     long_range_radar->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
     long_range_radar->setRangeIndicatorStepSize(5000.0f)->longRange()->enableCallsigns()->hide();
-    long_range_radar->setFogOfWarStyle(GuiRadarView::NebulaFogOfWar);
+    long_range_radar->setFogOfWarStyle(GuiRadarView::RadarRangeAndLineOfSight);
 
     global_range_radar = new GuiRadarView(this, "GLOBAL", 50000.0f, nullptr, my_spaceship);
     global_range_radar->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
     global_range_radar->setAutoCentering(true);
-    global_range_radar->longRange()->enableWaypoints()->enableCallsigns()->setStyle(GuiRadarView::Rectangular)->setFogOfWarStyle(GuiRadarView::FriendlysShortRangeFogOfWar);
+    global_range_radar->longRange()->enableWaypoints()->enableCallsigns()->setStyle(GuiRadarView::Rectangular)->setFogOfWarStyle(GuiRadarView::RadarRangeAndLineOfSight);
     global_range_radar->hide();
         
     onscreen_comms = new GuiCommsOverlay(this);

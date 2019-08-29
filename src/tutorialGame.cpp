@@ -65,7 +65,7 @@ void TutorialGame::createScreens()
     long_range_radar = new GuiRadarView(this, "TACTICAL", 30000.0f, nullptr, my_spaceship);
     long_range_radar->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
     long_range_radar->setRangeIndicatorStepSize(5000.0f)->longRange()->enableCallsigns()->hide();
-    long_range_radar->setFogOfWarStyle(GuiRadarView::NebulaFogOfWar);
+    long_range_radar->setFogOfWarStyle(GuiRadarView::RadarRangeAndLineOfSight);
 
     station_screen[0] = new HelmsScreen(this);
     station_screen[1] = new WeaponsScreen(this);

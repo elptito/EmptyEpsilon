@@ -30,16 +30,18 @@ SectorsView::SectorsView(GuiContainer *owner, string id, float distance, Targets
     }
 }
 
+sf::Vector2f SectorsView::getCenterPosition(){
+    return sf::Vector2f(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f);
+}
+
 sf::Vector2f SectorsView::worldToScreen(sf::Vector2f world_position)
 {
-    sf::Vector2f radar_screen_center(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f);
-    return radar_screen_center + (world_position - view_position) * getScale();
+    return getCenterPosition() + (world_position - view_position) * getScale();
 }
 
 sf::Vector2f SectorsView::screenToWorld(sf::Vector2f screen_position)
 {
-    sf::Vector2f radar_screen_center(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f);
-    return view_position + (screen_position - radar_screen_center) / getScale();
+    return view_position + (screen_position - getCenterPosition()) / getScale();
 }
 
 int SectorsView::calcGridScaleMagnitude(int scale_magnitude, int position)
@@ -56,7 +58,7 @@ int SectorsView::calcGridScaleMagnitude(int scale_magnitude, int position)
 
 void SectorsView::drawSectorGrid(sf::RenderTarget &window)
 {
-    sf::Vector2f radar_screen_center(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f);
+    sf::Vector2f radar_screen_center = getCenterPosition();
     const float scale = getScale();
     const float factor = std::floor(std::log10(GameGlobalInfo::sector_size * scale));
     const int scale_magnitude = 2 - std::min(2.f, factor);
@@ -124,15 +126,13 @@ void SectorsView::drawTargets(sf::RenderTarget& window)
 {
     if (!targets)
         return;
-
-    sf::Vector2f radar_screen_center(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f);
-
+        
     sf::Sprite target_sprite;
     textureManager.setTexture(target_sprite, "redicule.png");
 
     for(P<SpaceObject> obj : targets->getTargets())
     {
-        sf::Vector2f object_position_on_screen = radar_screen_center + (obj->getPosition() - getViewPosition()) * getScale();
+        sf::Vector2f object_position_on_screen = getCenterPosition() + (obj->getPosition() - getViewPosition()) * getScale();
         float r = obj->getRadius() * getScale();
         sf::FloatRect object_rect(object_position_on_screen.x - r, object_position_on_screen.y - r, r * 2, r * 2);
         if (obj != my_spaceship && rect.intersects(object_rect))
@@ -144,12 +144,13 @@ void SectorsView::drawTargets(sf::RenderTarget& window)
 
     if (my_spaceship && targets->getWaypointIndex() > -1 && targets->getWaypointIndex() < my_spaceship->getWaypointCount())
     {
-        sf::Vector2f object_position_on_screen = radar_screen_center + (my_spaceship->waypoints[targets->getWaypointIndex()] - getViewPosition()) * getScale();
+        sf::Vector2f object_position_on_screen = getCenterPosition() + (my_spaceship->waypoints[targets->getWaypointIndex()] - getViewPosition()) * getScale();
 
         target_sprite.setPosition(object_position_on_screen - sf::Vector2f(0, 10));
         window.draw(target_sprite);
     }
 }
+
 void SectorsView::drawTerrain(sf::RenderTarget &window){
     for (int n = 0; n < GameGlobalInfo::max_map_layers; n++){
         if (terrainLayers[n] && gameGlobalInfo->layer[n].defined){

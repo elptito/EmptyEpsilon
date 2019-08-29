@@ -45,7 +45,7 @@ public:
   sf::Vector2f getViewPosition() { return view_position; }
   sf::Vector2f worldToScreen(sf::Vector2f world_position);
   sf::Vector2f screenToWorld(sf::Vector2f screen_position);
-  float getScale() { return std::min(rect.width, rect.height) / 2.0f / distance; };
+  virtual float getScale() { return std::min(rect.width, rect.height) / 2.0f / distance; };
 
   void toggleTerrainLayer(int id) { terrainLayers[id] = !terrainLayers[id]; }
   bool getTerrainLayer(int id) { return terrainLayers[id]; }
@@ -65,6 +65,7 @@ public:
     TargetsContainer * getTargets(){return targets;};
     void drawTargets(sf::RenderTarget &window);
     void drawTerrain(sf::RenderTarget &window);
+    virtual sf::Vector2f getCenterPosition();
 private:
   int calcGridScaleMagnitude(int scale_magnitude, int position);
 };
