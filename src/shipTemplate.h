@@ -33,6 +33,7 @@ enum ESystem
     SYS_Cloaking,
     SYS_COUNT
 };
+
 /* Define script conversion function for the ESystem enum. */
 template<> void convert<ESystem>::param(lua_State* L, int& idx, ESystem& es);
 class DroneTemplate {
@@ -76,6 +77,7 @@ public:
         float load_time;
         uint32_t type_allowed_mask;
         float direction;
+        EMissileSizes size;
     };
 private:
     static std::unordered_map<string, P<ShipTemplate> > templateMap;
@@ -188,6 +190,8 @@ public:
     void weaponTubeAllowMissle(int index, EMissileWeapons type);
     void weaponTubeDisallowMissle(int index, EMissileWeapons type);
     void setWeaponTubeExclusiveFor(int index, EMissileWeapons type);
+    void setTubeSize(int index, EMissileSizes size);
+    
     void setTubeDirection(int index, float direction);
     void setHull(float amount) { hull = amount; }
     void setShields(std::vector<float> values);

@@ -44,6 +44,7 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setBeamTexture);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setBeamWeaponEnergyPerFire);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setBeamWeaponHeatPerFire);
+    
     /// Set the amount of missile tubes, limited to a maximum of 16.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setTubes);
     /// set the amount of docks (launcher, energy, weapon, thermic, mainteance, stock)
@@ -54,6 +55,10 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setWeaponTubeExclusiveFor);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setTubeDirection);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setReactor);
+    ///Set tube size, this will increase damage and blast radius.
+    ///Possible values are : Small, Medium or Large
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setTubeSize);
+    
     /// Set the amount of starting hull
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setHull);
     /// Set the shield levels, amount of parameters defines the amount of shields. (Up to a maximum of 8 shields)
@@ -79,6 +84,10 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCloaking);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setWeaponStorage);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCustomWeaponStorage);
+    ///Set a custom weapon based on a regular one.
+    ///6 mandatory Arguments : base name (Homing, HVLI etc.), new weapon name, damage multiplier, speed, number of shots successively fired, type of damage
+    // Damage multiplier and speed are ratio from base missile (1 is the same as the base missile). It will not increase blast radius.
+    // Damage type is Kinetic, EMP, Energy
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCustomWeapon);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCustomWeaponColor);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, addRoom);
@@ -136,6 +145,7 @@ ShipTemplate::ShipTemplate()
         weapon_tube[n].load_time = 8.0;
         weapon_tube[n].type_allowed_mask = (1 << MW_Count) - 1;
         weapon_tube[n].direction = 0;
+        weapon_tube[n].size = MS_Medium;
     }
     hull = 70;
     shield_count = 0;
@@ -220,6 +230,13 @@ void ShipTemplate::setTubeDirection(int index, float direction)
     if (index < 0 || index >= max_weapon_tubes)
         return;
     weapon_tube[index].direction = direction;
+}
+
+void ShipTemplate::setTubeSize(int index, EMissileSizes size)
+{
+    if (index < 0 || index >= max_weapon_tubes)
+        return;
+    weapon_tube[index].size = size;
 }
 
 void ShipTemplate::setType(TemplateType type)

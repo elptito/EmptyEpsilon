@@ -491,10 +491,13 @@ public:
     void setWeaponTubeCount(int amount);
     int getWeaponTubeCount();
     string getWeaponTubeLoadType(int index);
+    EMissileSizes getWeaponTubeSize(int index);
+    
     void weaponTubeAllowMissle(int index, EMissileWeapons type);
     void weaponTubeDisallowMissle(int index, EMissileWeapons type);
     void setWeaponTubeExclusiveFor(int index, EMissileWeapons type);
     void setWeaponTubeDirection(int index, float direction);
+    void setWeaponTubeSize(int index, EMissileSizes size);
 
     void setRadarTrace(string trace) { radar_trace = trace; }
 
