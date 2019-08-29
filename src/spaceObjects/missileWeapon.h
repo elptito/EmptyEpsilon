@@ -23,7 +23,7 @@ public:
     EDamageType damage_type;
     sf::Color color;
 
-    MissileWeapon(string multiplayerName, const MissileWeaponData& data, const EDamageType &i_damage_type);
+    MissileWeapon(string multiplayer_name, const MissileWeaponData& data, const EDamageType &i_damage_type);
 
     virtual void drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range);
     virtual void update(float delta);
