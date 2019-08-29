@@ -19,9 +19,15 @@ public:
     int32_t target_id;
     float target_angle;
     float speed;
+    sf::Color color;
+    // Damage modifier for this missile which indicates it's size. (eg; Missiles by fighters have a low modifier), missiles from
+    // capital ships have a high modifier.
+    float category_modifier;  
+    //Tdelc/Tsht : damage_multiplier est principalement la meme chose que category_modifier (mais fait avant). 
+    //Les deux sont cumulables, et damage_multiplier est finement customisable
     float damage_multiplier;
     EDamageType damage_type;
-    sf::Color color;
+    //
 
     MissileWeapon(string multiplayer_name, const MissileWeaponData& data, const EDamageType &i_damage_type);
 

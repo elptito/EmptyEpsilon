@@ -13,9 +13,9 @@ void HVLI::hitObject(P<SpaceObject> object)
     DamageInfo info(owner, damage_type, getPosition());
     float alive_for = MissileWeaponData::getDataFor(MW_HVLI).lifetime - lifetime;
     if (alive_for > 2.0)
-        object->takeDamage(6 * damage_multiplier, info);
+        object->takeDamage(category_modifier * 6 * damage_multiplier, info);
     else
-        object->takeDamage(6 * damage_multiplier * (alive_for / 2.0), info);
+        object->takeDamage(category_modifier * 6 * damage_multiplier * (alive_for / 2.0), info);
     P<ExplosionEffect> e = new ExplosionEffect();
     e->setSize(20);
     e->setPosition(getPosition());
