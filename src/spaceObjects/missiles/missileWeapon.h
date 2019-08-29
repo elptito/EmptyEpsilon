@@ -1,7 +1,7 @@
 #ifndef MISSILE_WEAPON_H
 #define MISSILE_WEAPON_H
 
-#include "spaceObject.h"
+#include "spaceObjects/spaceObject.h"
 #include "spaceship.h"
 
 /* Base class for all the missile weapons. Handles missile generic stuff like targeting, lifetime, etc... */
