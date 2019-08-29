@@ -3,6 +3,7 @@
 #include "spaceObjects/spaceship.h"
 #include "spaceObjects/spaceObject.h"
 #include "shipCargo.h"
+#include "gameGlobalInfo.h"
 
 #include "gui/gui2_listbox.h"
 #include "gui/gui2_autolayout.h"
@@ -1258,9 +1259,25 @@ GuiShipTweakMessages::GuiShipTweakMessages(GuiContainer* owner)
     log_selector->addEntry("science", "science");
     log_selector->setSelectionIndex(0);
 
+    // Send to all player
+    message_all_toggle = new GuiToggleButton(left_col, "", "Message a tous", [this](bool value) {
+
+   });
+   message_all_toggle->setSize(GuiElement::GuiSizeMax, 40);
+
     // Send the message
     send_message_log = new GuiButton(left_col, "", "Envoyer message", [this]() {
-       target -> addToShipLog(message,color_message,type_log);
+       if (message_all_toggle->getValue())
+       {
+            for(int n=0; n<GameGlobalInfo::max_player_ships; n++)
+            {
+                P<PlayerSpaceship> ship = gameGlobalInfo->getPlayerShip(n);
+                if (ship)
+                    ship -> addToShipLog(message,color_message,type_log);
+            }
+       }
+        else
+            target -> addToShipLog(message,color_message,type_log);
     });
     send_message_log->setSize(GuiElement::GuiSizeMax, 40);
 

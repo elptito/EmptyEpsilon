@@ -277,6 +277,7 @@ private:
     GuiSelector* log_selector;
     GuiTextEntry* message_entry;
     GuiButton* send_message_log;
+    GuiToggleButton* message_all_toggle;
 
 public:
     GuiShipTweakMessages(GuiContainer* owner);
