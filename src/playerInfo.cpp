@@ -29,6 +29,7 @@
 
 #include "screens/helios/engineControlScreen.h"
 #include "screens/helios/helmsHeliosScreen.h"
+#include "screens/helios/weaponsHeliosScreen.h"
 
 #include "screenComponents/mainScreenControls.h"
 #include "screenComponents/selfDestructEntry.h"
@@ -134,9 +135,10 @@ void PlayerInfo::spawnUI()
             screen->addStationTab(new EngineControlScreen(screen, engineControlHeliosScreen), engineControlHeliosScreen, getCrewPositionName(engineControlHeliosScreen), getCrewPositionIcon(engineControlHeliosScreen));
         if (crew_position[bridgeEngineeringHeliosScreen])
             screen->addStationTab(new EngineControlScreen(screen, bridgeEngineeringHeliosScreen), bridgeEngineeringHeliosScreen, getCrewPositionName(bridgeEngineeringHeliosScreen), getCrewPositionIcon(bridgeEngineeringHeliosScreen));
-        if (crew_position[helmsHeliosScreen]){
+        if (crew_position[helmsHeliosScreen])
             screen->addStationTab(new HelmsHeliosScreen(screen), helmsHeliosScreen, getCrewPositionName(helmsHeliosScreen), getCrewPositionIcon(helmsHeliosScreen));
-        }
+        if (crew_position[weaponsHeliosScreen])
+            screen->addStationTab(new WeaponsHeliosScreen(screen), weaponsHeliosScreen, getCrewPositionName(weaponsHeliosScreen), getCrewPositionIcon(weaponsHeliosScreen));
         //Crew 6/5
         if (crew_position[helmsOfficer])
             screen->addStationTab(new HelmsScreen(screen), helmsOfficer, getCrewPositionName(helmsOfficer), getCrewPositionIcon(helmsOfficer));
@@ -221,8 +223,8 @@ string getCrewPositionName(ECrewPosition position)
 {
     switch(position)
     {
-    case helmsOfficer: return "Helms";
-    case weaponsOfficer: return "Weapons";
+    case helmsOfficer: case helmsHeliosScreen: return "Helms";
+    case weaponsOfficer: case weaponsHeliosScreen: return "Weapons";
     case engineering: return "Engineering";
     case scienceOfficer: return "Science";
     case relayOfficer: return "Relay";
@@ -245,7 +247,6 @@ string getCrewPositionName(ECrewPosition position)
     case internLog: return "Internal Log";
     case engineControlHeliosScreen: return "ECR";
     case bridgeEngineeringHeliosScreen: return "Bridge Engineering";
-    case helmsHeliosScreen: return "Helms";
     default: return "ErrUnk: " + string(position);
     }
 }
@@ -254,8 +255,8 @@ string getCrewPositionIcon(ECrewPosition position)
 {
     switch(position)
     {
-    case helmsOfficer: return "gui/icons/station-helm";
-    case weaponsOfficer: return "gui/icons/station-weapons";
+    case helmsOfficer: case helmsHeliosScreen: return "gui/icons/station-helm";
+    case weaponsOfficer: case weaponsHeliosScreen: return "gui/icons/station-weapons";
     case engineering: return "gui/icons/station-engineering";
     case scienceOfficer: return "gui/icons/station-science";
     case relayOfficer: return "gui/icons/station-relay";
@@ -294,6 +295,8 @@ template<> void convert<ECrewPosition>::param(lua_State* L, int& idx, ECrewPosit
         cp = bridgeEngineeringHeliosScreen;
     if (str == "helmsHelios")
         cp = helmsHeliosScreen;
+    if (str == "weaponsHelios")
+        cp = weaponsHeliosScreen;
     //6/5 player crew
     else if (str == "helms" || str == "helmsofficer")
         cp = helmsOfficer;
