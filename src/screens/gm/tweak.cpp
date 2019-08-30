@@ -685,6 +685,11 @@ GuiShipTweakBeamweapons::GuiShipTweakBeamweapons(GuiContainer* owner)
         index_selector->addEntry("Laser: " + string(n + 1), "");
     index_selector->setSelectionIndex(0);
 
+    valid_toggle = new GuiToggleButton(left_col, "", "Valide", [this](bool value) {
+        target->beam_weapons[beam_index].setIsValid(value);
+    });
+    valid_toggle->setSize(GuiElement::GuiSizeMax, 40);
+
     (new GuiLabel(right_col, "", "Arc de tir:", 20))->setSize(GuiElement::GuiSizeMax, 30);
     arc_slider = new GuiSlider(right_col, "", 0.0, 360.0, 0.0, [this](float value) {
         target->beam_weapons[beam_index].setArc(roundf(value));
@@ -770,6 +775,7 @@ void GuiShipTweakBeamweapons::onDraw(sf::RenderTarget& window)
     damage_slider->setValue(target->beam_weapons[beam_index].getDamage());
     heat_slider->setValue(target->beam_weapons[beam_index].getHeatPerFire() * 100.0f);
     energy_slider->setValue(target->beam_weapons[beam_index].getEnergyPerFire());
+    valid_toggle->setValue(target->beam_weapons[beam_index].getIsValid());
 }
 
 void GuiShipTweakBeamweapons::open(P<SpaceObject> target)

@@ -274,6 +274,7 @@ void SpaceShip::applyTemplateValues()
         beam_weapons[n].setBeamTexture(ship_template->beams[n].getBeamTexture());
         beam_weapons[n].setEnergyPerFire(ship_template->beams[n].getEnergyPerFire());
         beam_weapons[n].setHeatPerFire(ship_template->beams[n].getHeatPerFire());
+        beam_weapons[n].setIsValid(true);
     }
     weapon_tube_count = ship_template->weapon_tube_count;
     energy_level = max_energy_level = ship_template->energy_storage_amount;

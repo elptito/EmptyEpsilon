@@ -173,6 +173,7 @@ private:
     P<SpaceShip> target;
 
     int beam_index;
+    GuiToggleButton* valid_toggle;
     GuiSlider* arc_slider;
     GuiSlider* direction_slider;
     GuiSlider* range_slider;
