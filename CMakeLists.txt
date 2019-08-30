@@ -453,12 +453,12 @@ if(WIN32)
   install(FILES ${MINGW_STDCPP_DLL} ${MINGW_LIBGCC_DLL} ${MINGW_PTHREAD_DLL} DESTINATION .)
   install(FILES /usr/i686-w64-mingw32/lib/libwinpthread-1.dll DESTINATION .)
   install(FILES ${SFML_ROOT}/bin/OpenAL32.dll DESTINATION .)
-  install(FILES ${SFML_ROOT}/bin/libFLAC-8.dll DESTINATION .)
-  install(FILES ${SFML_ROOT}/bin/libjpeg-62.dll DESTINATION .)
-  install(FILES ${SFML_ROOT}/bin/libogg-0.dll DESTINATION .)
-  install(FILES ${SFML_ROOT}/bin/libvorbis-0.dll DESTINATION .)
-  install(FILES ${SFML_ROOT}/bin/libvorbisenc-2.dll DESTINATION .)
-  install(FILES ${SFML_ROOT}/bin/libvorbisfile-3.dll DESTINATION .)
+  #install(FILES ${SFML_ROOT}/bin/libFLAC-8.dll DESTINATION .)
+  #install(FILES ${SFML_ROOT}/bin/libjpeg-62.dll DESTINATION .)
+  #install(FILES ${SFML_ROOT}/bin/libogg-0.dll DESTINATION .)
+  #install(FILES ${SFML_ROOT}/bin/libvorbis-0.dll DESTINATION .)
+  #install(FILES ${SFML_ROOT}/bin/libvorbisenc-2.dll DESTINATION .)
+  #install(FILES ${SFML_ROOT}/bin/libvorbisfile-3.dll DESTINATION .)
   install(FILES ${SFML_ROOT}/bin/sfml-audio-2.dll DESTINATION .)
   install(FILES ${SFML_ROOT}/bin/sfml-graphics-2.dll DESTINATION .)
   install(FILES ${SFML_ROOT}/bin/sfml-network-2.dll DESTINATION .)
@@ -496,10 +496,10 @@ find_package(PythonInterp)
 if(PYTHONINTERP_FOUND)
   add_custom_command(
         OUTPUT ${CMAKE_BINARY_DIR}/script_reference.html
-        ALL
         COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/compile_script_docs.py ${CMAKE_BINARY_DIR}/script_reference.html
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         COMMENT "Building script reference documentation.")
+  add_custom_target(script_reference ALL DEPENDS ${CMAKE_BINARY_DIR}/script_reference.html)
   install(FILES ${CMAKE_BINARY_DIR}/script_reference.html DESTINATION .)
 endif()
 
