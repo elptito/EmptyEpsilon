@@ -5,7 +5,7 @@
 #include "sectorsView.h"
 #include "spaceObjects/playerSpaceship.h"
 
-class GuiMissileTubeControls;
+class MissileAim;
 
 class GuiRadarView : public SectorsView
 {
@@ -43,7 +43,7 @@ private:
     };
     std::vector<GhostDot> ghost_dots;
     float next_ghost_dot_update;
-    GuiMissileTubeControls* missile_tube_controls;
+    MissileAim* missile_tube_controls;
 
     P<SpaceShip> target_spaceship;
     bool long_range;
@@ -76,7 +76,7 @@ public:
     GuiRadarView* disableGhostDots() { show_ghost_dots = false; return this; }
     GuiRadarView* enableWaypoints() { show_waypoints = true; return this; }
     GuiRadarView* disableWaypoints() { show_waypoints = false; return this; }
-    GuiRadarView* enableTargetProjections(GuiMissileTubeControls* missile_tube_controls) { show_target_projection = true; this->missile_tube_controls = missile_tube_controls; return this; }
+    GuiRadarView* enableTargetProjections(MissileAim* missile_tube_controls) { show_target_projection = true; this->missile_tube_controls = missile_tube_controls; return this; }
     GuiRadarView* disableTargetProjections() { show_target_projection = false; return this; }
     GuiRadarView* enableMissileTubeIndicators() { show_missile_tubes = true; return this; }
     GuiRadarView* disableMissileTubeIndicators() { show_missile_tubes = false; return this; }

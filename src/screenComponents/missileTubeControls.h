@@ -3,6 +3,7 @@
 
 #include "gui/gui2_autolayout.h"
 #include "missileWeaponData.h"
+#include "missileAim.h"
 #include "spaceObjects/playerSpaceship.h"
 
 class GuiButton;
@@ -11,7 +12,7 @@ class GuiLabel;
 class GuiToggleButton;
 class GuiPowerDamageIndicator;
 
-class GuiMissileTubeControls : public GuiAutoLayout
+class GuiMissileTubeControls : public GuiAutoLayout, public MissileAim
 {
 private:
     struct TubeRow {
@@ -40,10 +41,10 @@ public:
     virtual void onHotkey(const HotkeyResult& key) override;
     
     void setMissileTargetAngle(float angle);
-    float getMissileTargetAngle();
+    virtual float getMissileTargetAngle() override;
     
     void setManualAim(bool manual);
-    bool getManualAim();
+    virtual bool getManualAim() override;
     void setTargetSpaceship(P<PlayerSpaceship> targetSpaceship);
 
 private:
