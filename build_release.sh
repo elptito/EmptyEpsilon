@@ -10,8 +10,8 @@
 # ------
 # assuming ~/workspace contains `EmptyEpsilon` and `SeriousProton` src projects
 cd ~/workspace/EmptyEpsilon
-rm -rf _build_win32
-mkdir _build_win32
-cd _build_win32
+rm -rf "_build_win32"
+mkdir "_build_win32"
+cd "_build_win32"
 sudo cmake .. -DCMAKE_TOOLCHAIN_FILE=../cmake/mingw.toolchain -DSERIOUS_PROTON_DIR=../../SeriousProton
 sudo make -j $(grep -c ^processor /proc/cpuinfo) package
