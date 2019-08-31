@@ -17,7 +17,6 @@ private:
     GuiKeyValueDisplay* energy_display;
     GuiKeyValueDisplay* heading_display;
     GuiKeyValueDisplay* velocity_display;
-    GuiLabel* heading_hint;
     GuiProgressbar* impulse_bar;
     GuiProgressbar* warp_bar;
     GuiProgressbar* maneuver_charge_bar;

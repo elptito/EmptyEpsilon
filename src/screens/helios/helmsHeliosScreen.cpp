@@ -3,10 +3,6 @@
 #include "helmsHeliosScreen.h"
 
 #include "screenComponents/radarView.h"
-#include "screenComponents/impulseControls.h"
-#include "screenComponents/warpControls.h"
-#include "screenComponents/jumpControls.h"
-#include "screenComponents/dockingButton.h"
 #include "screenComponents/alertOverlay.h"
 #include "screenComponents/customShipFunctions.h"
 #include "screenComponents/systemStatus.h"
@@ -36,9 +32,6 @@ HelmsHeliosScreen::HelmsHeliosScreen(GuiContainer* owner)
     radar->setPosition(0, 0, ACenter)->setSize(GuiElement::GuiSizeMatchHeight, 800);
     radar->setRangeIndicatorStepSize(1000.0)->shortRange()->enableGhostDots()->enableWaypoints()->enableCallsigns()->enableHeadingIndicators()->setStyle(GuiRadarView::Circular);
     radar->enableMissileTubeIndicators()->setFogOfWarStyle(GuiRadarView::RadarRangeAndLineOfSight)->setAutoOrient(true)->setShowSectors(false);
-
-    heading_hint = new GuiLabel(this, "HEADING_HINT", "", 30);
-    heading_hint->setAlignment(ACenter)->setSize(0, 0);
 
     energy_display = new GuiKeyValueDisplay(this, "ENERGY_DISPLAY", 0.45, "Energy", "");
     energy_display->setIcon("gui/icons/energy")->setTextSize(20)->setPosition(20, 20, ATopLeft)->setSize(240, 40);
