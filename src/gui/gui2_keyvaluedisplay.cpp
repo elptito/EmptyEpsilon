@@ -2,7 +2,7 @@
 #include "gui2_keyvaluedisplay.h"
 
 GuiKeyValueDisplay::GuiKeyValueDisplay(GuiContainer* owner, string id, float div_distance, string key, string value)
-: GuiElement(owner, id), div_distance(div_distance), key(key), value(value), text_size(20), color(sf::Color::White)
+: GuiElement(owner, id), div_distance(div_distance), key(key), value(value), text_size(20), bgColor(sf::Color::White), contentColor(sf::Color::White)
 {
 }
 
@@ -10,11 +10,11 @@ void GuiKeyValueDisplay::onDraw(sf::RenderTarget& window)
 {
     float div_size = 5.0;
     
-    drawStretched(window, rect, "gui/KeyValueBackground", color);
+    drawStretched(window, rect, "gui/KeyValueBackground", bgColor);
     if (rect.width >= rect.height)
     {
-        drawText(window, sf::FloatRect(rect.left, rect.top, rect.width * div_distance - div_size, rect.height), key, ACenterRight, text_size);
-        drawText(window, sf::FloatRect(rect.left + rect.width * div_distance + div_size, rect.top, rect.width * (1.0 - div_distance), rect.height), value, ACenterLeft, text_size, bold_font);
+        drawText(window, sf::FloatRect(rect.left, rect.top, rect.width * div_distance - div_size, rect.height), key, ACenterRight, text_size, main_font, contentColor);
+        drawText(window, sf::FloatRect(rect.left + rect.width * div_distance + div_size, rect.top, rect.width * (1.0 - div_distance), rect.height), value, ACenterLeft, text_size, bold_font, contentColor);
         if (icon_texture != "")
         {
             sf::Sprite icon;
@@ -22,6 +22,7 @@ void GuiKeyValueDisplay::onDraw(sf::RenderTarget& window)
             float scale = rect.height / icon.getTextureRect().height * 0.8;
             icon.setScale(scale, scale);
             icon.setPosition(rect.left + rect.height / 2, rect.top + rect.height / 2);
+            icon.setColor(contentColor);
             window.draw(icon);
         }
     }
@@ -52,7 +53,13 @@ GuiKeyValueDisplay* GuiKeyValueDisplay::setTextSize(float text_size)
 
 GuiKeyValueDisplay* GuiKeyValueDisplay::setColor(sf::Color color)
 {
-    this->color = color;
+    this->bgColor = color;
+    return this;
+}
+
+GuiKeyValueDisplay* GuiKeyValueDisplay::setContentColor(sf::Color color)
+{
+    this->contentColor = color;
     return this;
 }
 
