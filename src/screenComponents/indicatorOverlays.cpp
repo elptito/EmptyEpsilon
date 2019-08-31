@@ -14,7 +14,7 @@ GuiIndicatorOverlays::GuiIndicatorOverlays(GuiContainer* owner)
     setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
     shield_hit_overlay = new GuiOverlay(this, "SHIELD_HIT", sf::Color(64, 64, 128, 0));
-    hull_hit_overlay = new GuiOverlay(this, "HULL_HIT", sf::Color(255, 0, 0, 0));
+//    hull_hit_overlay = new GuiOverlay(this, "HULL_HIT", sf::Color(255, 0, 0, 0));
     shield_low_warning_overlay = new GuiOverlay(this, "SHIELD_LOW", sf::Color(255, 0, 0, 0));
     pause_overlay = new GuiOverlay(this, "PAUSE", sf::Color(0, 0, 0, 255));
     (new GuiPanel(pause_overlay, "PAUSE_BOX"))->setPosition(0, 0, ACenter)->setSize(500, 100);
@@ -67,11 +67,11 @@ void GuiIndicatorOverlays::onDraw(sf::RenderTarget& window)
             shield_low_warning_overlay->setAlpha(0);
         }
 
-        hull_hit_overlay->setAlpha(128 * (my_spaceship->hull_damage_indicator / 1.5));
+//        hull_hit_overlay->setAlpha(128 * (my_spaceship->hull_damage_indicator / 1.5));
     }else{
         shield_hit_overlay->setAlpha(0);
         shield_low_warning_overlay->setAlpha(0);
-        hull_hit_overlay->setAlpha(0);
+//        hull_hit_overlay->setAlpha(0);
     }
 
     if (my_spaceship)

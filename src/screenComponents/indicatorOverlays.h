@@ -18,7 +18,7 @@ class GuiIndicatorOverlays : public GuiElement
 {
 private:
     GuiOverlay* shield_hit_overlay;
-    GuiOverlay* hull_hit_overlay;
+//    GuiOverlay* hull_hit_overlay;
     GuiOverlay* shield_low_warning_overlay;
     GuiOverlay* pause_overlay;
     GuiOverlay* victory_overlay;
@@ -26,9 +26,9 @@ private:
 public:
     GuiIndicatorOverlays(GuiContainer* owner);
     virtual ~GuiIndicatorOverlays();
-    
+
     virtual void onDraw(sf::RenderTarget& window);
-    
+
     virtual bool onMouseDown(sf::Vector2f position);
 private:
     void drawAlertLevel(sf::RenderTarget& window);
