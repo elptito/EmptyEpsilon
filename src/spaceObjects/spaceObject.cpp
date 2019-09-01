@@ -268,6 +268,15 @@ void SpaceObject::setScanningParameters(int complexity, int depth)
     scanned_by_faction.clear();
 }
 
+bool SpaceObject::isKnownEnemy(P<SpaceObject> obj)
+{
+    if (obj && obj->getScannedStateFor(this) >= SS_FriendOrFoeIdentified) {
+        return factionInfo[faction_id]->states[obj->faction_id] == FVF_Enemy;
+    } else {
+        return false;
+    }
+}
+
 bool SpaceObject::isEnemy(P<SpaceObject> obj)
 {
     if (obj)
