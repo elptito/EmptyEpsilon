@@ -30,6 +30,7 @@
 #include "screens/helios/engineControlScreen.h"
 #include "screens/helios/helmsHeliosScreen.h"
 #include "screens/helios/weaponsHeliosScreen.h"
+#include "screens/helios/databaseHeliosScreen.h"
 
 #include "screenComponents/mainScreenControls.h"
 #include "screenComponents/selfDestructEntry.h"
@@ -139,7 +140,9 @@ void PlayerInfo::spawnUI()
             screen->addStationTab(new HelmsHeliosScreen(screen), helmsHeliosScreen, getCrewPositionName(helmsHeliosScreen), getCrewPositionIcon(helmsHeliosScreen));
         if (crew_position[weaponsHeliosScreen])
             screen->addStationTab(new WeaponsHeliosScreen(screen), weaponsHeliosScreen, getCrewPositionName(weaponsHeliosScreen), getCrewPositionIcon(weaponsHeliosScreen));
-        //Crew 6/5
+        if (crew_position[databaseHeliosScreen])
+            screen->addStationTab(new DatabaseHeliosScreen(screen), databaseHeliosScreen, getCrewPositionName(databaseHeliosScreen), getCrewPositionIcon(databaseHeliosScreen));
+      	//Crew 6/5
         if (crew_position[helmsOfficer])
             screen->addStationTab(new HelmsScreen(screen), helmsOfficer, getCrewPositionName(helmsOfficer), getCrewPositionIcon(helmsOfficer));
         if (crew_position[weaponsOfficer])
@@ -235,7 +238,7 @@ string getCrewPositionName(ECrewPosition position)
     case singlePilot: return "Single Pilot";
     case damageControl: return "Damage Control";
     case powerManagement: return "Power Management";
-    case databaseView: return "Database";
+    case databaseView: case databaseHeliosScreen: return "Database";
     case commsView: return "Comms View";
     case tacticalRadar: return "Tactical Radar";
     case scienceRadar: return "Science Radar";
@@ -267,7 +270,7 @@ string getCrewPositionIcon(ECrewPosition position)
     case singlePilot: return "";
     case damageControl: return "";
     case powerManagement: return "";
-    case databaseView: return "";
+    case databaseView: case databaseHeliosScreen: return "";
     case commsView: return "";
     case tacticalRadar: return "";
     case scienceRadar: return "";
@@ -291,12 +294,14 @@ template<> void convert<ECrewPosition>::param(lua_State* L, int& idx, ECrewPosit
     // helios     
     if (str == "ecr")
         cp = engineControlHeliosScreen;
-    if (str == "bridge engineering")
+    else if (str == "bridge engineering")
         cp = bridgeEngineeringHeliosScreen;
-    if (str == "helmsHelios")
+    else if (str == "helmsHelios")
         cp = helmsHeliosScreen;
-    if (str == "weaponsHelios")
+    else if (str == "weaponsHelios")
         cp = weaponsHeliosScreen;
+    else if (str == "databaseHelios")
+        cp = databaseHeliosScreen;
     //6/5 player crew
     else if (str == "helms" || str == "helmsofficer")
         cp = helmsOfficer;

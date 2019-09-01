@@ -36,6 +36,7 @@ enum ECrewPosition
     bridgeEngineeringHeliosScreen,
     helmsHeliosScreen,
     weaponsHeliosScreen,
+    databaseHeliosScreen,
     max_crew_positions
 };
 

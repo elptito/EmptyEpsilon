@@ -451,6 +451,7 @@ void ShipSelectionScreen::updateCrewTypeOptions()
         crew_position_button[weaponsHeliosScreen]->show();
         crew_position_button[engineControlHeliosScreen]->show();
         crew_position_button[bridgeEngineeringHeliosScreen]->show();
+        crew_position_button[databaseHeliosScreen]->show();
         break;
     case 1: // 6/5 player crew
         for(int n = helmsOfficer; n <= relayOfficer; n++)
@@ -491,11 +492,11 @@ void ShipSelectionScreen::updateCrewTypeOptions()
         crew_position_button[tacticalRadar]->show();
         break;
     case 6: // Systems - Signal
+        crew_position_button[databaseHeliosScreen]->show();
         crew_position_button[scienceOfficer]->show();
         crew_position_button[relayOfficerNC]->show();
         crew_position_button[commsView]->show();
-        crew_position_button[navigation]->show();
-        crew_position_button[databaseView]->show();
+        crew_position_button[navigation]->show();        
         crew_position_button[scienceRadar]->show();
         crew_position_button[relayRadar]->show();
         crew_position_button[externLog]->show();
