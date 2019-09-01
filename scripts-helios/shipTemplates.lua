@@ -151,7 +151,7 @@ template:setTubeDirection(1, 1)
 template:setWarpSpeed(150)
 
 
-template = ShipTemplate():setName("Havoc MK3"):setClass("Corvette", "Cruiser"):setModel("small_frigate_2")
+template = ShipTemplate():setName("Centurion"):setClass("Corvette", "Cruiser"):setModel("small_frigate_2")
 template:setDescription([[Gen2 Corvette]])
 template:setDockClasses("Drone")
 template:setHull(120)
