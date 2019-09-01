@@ -2,6 +2,23 @@
 	Everything in the science database files is just readable data for the science officer.
 	This data does not affect the game in any other way and just contributes to the lore.
 --]]
+space_objects = ScienceDatabase():setName('People')
+item = space_objects:addEntry('John Trooper')
+item:setLongDescription([[
+John F Trooper is a 24-year-old tradesperson's assistant who enjoys watching television, repressing minorities and camping. He is brave and not an idiot, but can also be very idiot and a bit selfish.
+
+He is FSN who defines himself as straight. He didn't finish school. He is obsessed with cats.
+
+Physically, John is slightly overweight but otherwise in good shape. He is average-height with olive skin, brown hair and blue eyes.
+
+He grew up in a middle class neighbourhood. He was raised by his mother, his father having left when he was young.
+
+He is currently in a relationship with Beatrix Primrose Ellis. Beatrix is the same age as him and works as a student.
+
+John's best friend is a tradesperson's assistant called Jodie Sullivan. They are inseparable. He also hangs around with Trevor Owen and Annabella Reid. They enjoy social card games together.
+]])
+item:setImage('db/trooper')
+
 space_objects = ScienceDatabase():setName('Natural')
 item = space_objects:addEntry('Asteroid')
 item:setLongDescription([[Asteroids are minor planets, usually smaller than a few kilometers. Larger variants are sometimes refered to as planetoids.]])

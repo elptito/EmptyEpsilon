@@ -26,6 +26,7 @@ public:
     string name;
     std::vector<ScienceDatabaseKeyValue> keyValuePairs;
     string longDescription;
+    string image_name;
     P<ModelData> model_data;
 
     ScienceDatabase();
@@ -34,6 +35,7 @@ public:
 
     void addKeyValue(string key, string value);
     void setLongDescription(string text);
+    void setImage(string text);
 
     void setName(string name) { this->name = name; }
     P<ScienceDatabase> addEntry(string name);

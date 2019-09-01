@@ -6,6 +6,7 @@
 #include "gui/gui2_autolayout.h"
 #include "gui/gui2_keyvaluedisplay.h"
 #include "gui/gui2_scrolltext.h"
+#include "gui/gui2_image.h"
 #include "screenComponents/rotatingModelView.h"
 
 #define MARGIN 20
@@ -98,8 +99,11 @@ void DatabaseHeliosScreen::display(P<ScienceDatabase> entry)
             (new GuiKeyValueDisplay(vLayout, "", 0.37, entry->keyValuePairs[n].key, entry->keyValuePairs[n].value))->setSize(GuiElement::GuiSizeMax, 40);
         }
     }
-    if (entry->model_data || entry->longDescription.length() > 0){
+    if (entry->model_data || entry->image_name.length() > 0 || entry->longDescription.length() > 0){
         GuiAutoLayout* hLayout = new GuiAutoLayout(database_entry, "DATABASE_ENTRY_H_LAYOUT", GuiAutoLayout::LayoutHorizontalRows);
+        if (entry->image_name.length() > 0) {
+            (new GuiImage(hLayout, "DATABASE_IMAGE", entry->image_name));
+        }
         if (entry->model_data) {
             (new GuiRotatingModelView(hLayout, "DATABASE_MODEL_VIEW", entry->model_data))->setMargins(MARGIN);
         }

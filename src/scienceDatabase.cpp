@@ -11,6 +11,7 @@ REGISTER_SCRIPT_CLASS(ScienceDatabase)
     REGISTER_SCRIPT_CLASS_FUNCTION(ScienceDatabase, addEntry);
     REGISTER_SCRIPT_CLASS_FUNCTION(ScienceDatabase, addKeyValue);
     REGISTER_SCRIPT_CLASS_FUNCTION(ScienceDatabase, setLongDescription);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ScienceDatabase, setImage);
 }
 
 
@@ -48,6 +49,11 @@ void ScienceDatabase::addKeyValue(string key, string value)
 void ScienceDatabase::setLongDescription(string text)
 {
     longDescription = text;
+}
+
+void ScienceDatabase::setImage(string text)
+{
+    image_name = text;
 }
 
 void fillDefaultDatabaseData()
