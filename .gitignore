@@ -48,4 +48,5 @@ logs/*.json
 CMakeSettings.json
 cmake/_win32
 _build_win32
+_build_win32
 scripts/*_dev.lua
