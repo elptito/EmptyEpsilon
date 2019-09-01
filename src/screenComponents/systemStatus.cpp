@@ -80,6 +80,13 @@ void GuiSystemStatus::onDraw(sf::RenderTarget& window)
         } else {
             drawText(window, iconRect, "OK" , ACenter, text_size, font, colorConfig.overlay_ok);
         }
+    } else if (system == SYS_FrontShield || system == SYS_RearShield){
+        iconRect.left -= icon_size;
+        if (target_spaceship->shield_calibration_delay > 0.0) {
+            drawIcon(window, iconRect, "gui/icons/status_jammed", colorConfig.overlay_jammed);
+        } else {
+            drawText(window, iconRect, "OK" , ACenter, text_size, font, colorConfig.overlay_ok);
+        }
     }
 }
 
