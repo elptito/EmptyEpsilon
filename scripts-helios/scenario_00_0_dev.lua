@@ -4,6 +4,14 @@
 
 function init()
         PlayerSpaceship():setTemplate("Gravitas"):setFaction("FSN"):setPosition(0, 0):setWarpFrequency(5)
+        -- tactical()
+end
+
+function update(delta)
+	--No victory condition
+end
+
+function tactical()
         SpaceStation():setTemplate("Small Station"):setFaction("FSN"):setCallSign("DS13"):setPosition(14110, 411)
         SpaceStation():setTemplate("Medium Station"):setFaction("FSN"):setCallSign("DS14"):setPosition(-4115, 949)
         SpaceStation():setTemplate("Large Station"):setFaction("FSN"):setCallSign("DS15"):setPosition(-4517, -3638)
@@ -656,8 +664,4 @@ function init()
         Mine():setPosition(-18730, 26836)
         Mine():setPosition(-17848, 26432)
         Mine():setPosition(-16872, 26013)
-end
-
-function update(delta)
-	--No victory condition
 end
