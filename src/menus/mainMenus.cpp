@@ -27,17 +27,24 @@ public:
         (new GuiOverlay(this, "", sf::Color::White))->setTextureTiled("gui/BackgroundCrosses");
 
         std::vector<string> names = ModelData::getModelDataNames();
-        names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name.startswith("transport_"); }), names.end());
-        names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name.startswith("artifact"); }), names.end());
-        names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name.startswith("SensorBuoyMK"); }), names.end());
-        names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name.startswith("space_station_"); }), names.end());
-        names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name == "ammo_box"; }), names.end());
-        names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name == "shield_generator"; }), names.end());
-        names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name.endswith("Blue"); }), names.end());
-        names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name.endswith("Green"); }), names.end());
-        names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name.endswith("Grey"); }), names.end());
-        names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name.endswith("Red"); }), names.end());
-        names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name.endswith("White"); }), names.end());
+        names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name.lower().startswith("transport_"); }), names.end());
+        names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name.lower().startswith("artifact"); }), names.end());
+        names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name.lower().startswith("sensorbuoymk"); }), names.end());
+        names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name.lower().startswith("space_station_"); }), names.end());
+        names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name.lower().startswith("sci_fi_alien_"); }), names.end());
+        // names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name.lower().startswith("dark_fighter_"); }), names.end());
+        // names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name.lower().startswith("small_"); }), names.end());
+        // names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name.lower().startswith("space_"); }), names.end());
+        // names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name.lower().startswith("ender "); }), names.end());
+        names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name.lower() == "ammo_box"; }), names.end());
+        names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name.lower() == "shield_generator"; }), names.end());
+        names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name.lower().endswith("blue"); }), names.end());
+        names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name.lower().endswith("green"); }), names.end());
+        names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name.lower().endswith("grey"); }), names.end());
+        // names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name.lower().endswith("red"); }), names.end());
+        names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name.lower().endswith("white"); }), names.end());
+        names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name.lower().endswith("yellow"); }), names.end());
+        // names.erase(std::remove_if(names.begin(), names.end(), [](const string& name) { return name.lower().endswith("upgraded"); }), names.end());
         int col_count = sqrtf(names.size()) + 1;
         int row_count = ceil(names.size() / col_count) + 1;
         int x = 0;
@@ -46,7 +53,7 @@ public:
         float h = 900 / row_count;
         for(string name : names)
         {
-            (new GuiRotatingModelView(this, "", ModelData::getModel(name)))->setPosition(x * w, y * h, ATopLeft)->setSize(w, h);
+            (new GuiRotatingModelView(this, name, ModelData::getModel(name)))->setPosition(x * w, y * h, ATopLeft)->setSize(w, h);
             x++;
             if (x == col_count)
             {
