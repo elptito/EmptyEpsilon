@@ -1,20 +1,13 @@
 
 local densityLayer = 0
-local firstHighway = 5
+local firstHighway = densityLayer + 1
 -- initialize map layers
 function initLayers()
-    setMapLayer(densityLayer, "space dilation_00004_00000.png", 0, 0, 7000, "Density")
-	-- setMapLayer(1, "space dilation_00004_00001.png", 0, 0, 7000, "clouds 2")
-	-- setMapLayer(2, "space dilation_00004_00002.png", 0, 0, 7000, "clouds 3")
-	-- setMapLayer(3, "space dilation_00004_00003.png", 0, 0, 7000, "clouds 4")
-	-- setMapLayer(4, "space dilation_00004_00004.png", 0, 0, 7000, "clouds 5")
-	setMapLayer(firstHighway, "space dilation_00004_00005.png", 0, 0, 7000, "Highways " .. getFrequencyDisplayName(0))
-	setMapLayer(firstHighway + 1, "space dilation_00004_00006.png", 0, 0, 7000, "Highways " .. getFrequencyDisplayName(2))
-	setMapLayer(firstHighway + 2, "space dilation_00004_00007.png", 0, 0, 7000, "Highways " .. getFrequencyDisplayName(2))
-	setMapLayer(firstHighway + 3, "space dilation_00004_00008.png", 0, 0, 7000, "Highways " .. getFrequencyDisplayName(3))
-	setMapLayer(firstHighway + 4, "space dilation_00004_00009.png", 0, 0, 7000, "Highways " .. getFrequencyDisplayName(4))
+	setMapLayer(densityLayer, "space dilation_00004_00000.png", 0, 0, 7000, "Density")
+	for i=firstHighway, (10 - firstHighway) do 
+		setMapLayer(i, "space dilation_00004_000" .. string.format("%02d", i) .. ".png", 0, 0, 7000, "Highways " .. getFrequencyDisplayName(i))
+	end
 end
-
 
 local warp_boost_terrain_min_factor = tonumber(getPreference("warp_boost_terrain_min_factor", "1.0"))
 local warp_boost_terrain_range_factor = tonumber(getPreference("warp_boost_terrain_max_factor", "10.0")) - warp_boost_terrain_min_factor
