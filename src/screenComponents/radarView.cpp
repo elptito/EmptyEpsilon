@@ -495,26 +495,22 @@ void GuiRadarView::drawMissileTubes(sf::RenderTarget& window)
     }
 }
 
-void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget& window_alpha)
-{
-    std::set<SpaceObject*> visible_objects;
+PVector<SpaceObject> GuiRadarView::getVisibleObjects(){
+    PVector<SpaceObject> visible_objects;
     switch(fog_style)
     {
     case NoFogOfWar:
-        foreach(SpaceObject, obj, space_object_list)
-        {
-            visible_objects.insert(*obj);
-        }
+        visible_objects = PVector<SpaceObject>(space_object_list);
         break;
     case RadarRangeAndLineOfSight:
-        if (!my_spaceship)
-            return;
+        if (!target_spaceship)
+            return visible_objects;
         foreach(SpaceObject, obj, space_object_list)
         {
             if (!obj->canHideInNebula())
-                visible_objects.insert(*obj);
+                visible_objects.push_back(obj);
             float range = obj->getRadarRange();
-            if (range > 0.0f && obj->isFriendly(my_spaceship))
+            if (range > 0.0f && obj->isFriendly(target_spaceship))
             {
                 sf::Vector2f position = obj->getPosition();
                 PVector<Collisionable> obj_list = CollisionManager::queryArea(position - sf::Vector2f(range, range), position + sf::Vector2f(range, range));
@@ -525,7 +521,7 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
                         && (obj->getPosition() - obj2->getPosition()) < range + obj2->getRadius()
                         && !(obj->canHideInNebula() && Nebula::blockedByNebula(obj->getPosition(), obj2->getPosition())))
                     {
-                        visible_objects.insert(*obj2);
+                        visible_objects.push_back(obj2);
                     }
                 }
             }
@@ -535,12 +531,17 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
         foreach(SpaceObject, obj, space_object_list)
         {
             if (P<Nebula>(obj) || P<BlackHole>(obj))
-                visible_objects.insert(*obj);
+                visible_objects.push_back(obj);
         }
         break;
     }
+    return visible_objects;
+}
 
-    for(SpaceObject* obj : visible_objects)
+void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget& window_alpha)
+{
+    PVector<SpaceObject> visible_objects = getVisibleObjects();
+    foreach(SpaceObject, obj, visible_objects)
     {
         sf::Vector2f object_position_on_screen = worldToScreen(obj->getPosition());
         float r = obj->getRadius() * getScale();

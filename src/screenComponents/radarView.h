@@ -97,7 +97,8 @@ public:
     virtual GuiRadarView* setViewPosition(sf::Vector2f view_position) { SectorsView::setViewPosition(view_position); return this; }
     virtual bool onMouseDown(sf::Vector2f position);
     GuiRadarView* setTargetSpaceship(P<SpaceShip> targetSpaceship){target_spaceship = targetSpaceship; return this;}
-
+    PVector<SpaceObject> getVisibleObjects();
+    
 protected:
     virtual float getScale() override;
     virtual sf::Vector2f getCenterPosition() override;
