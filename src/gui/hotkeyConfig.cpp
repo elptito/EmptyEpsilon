@@ -55,6 +55,8 @@ HotkeyConfig::HotkeyConfig()
         newKey(std::string("FIRE_TUBE_") + string(n+1), std::make_tuple(std::string("Fire tube ") + string(n+1), ""));
     newKey("NEXT_ENEMY_TARGET", std::make_tuple("Select next target", ""));
     newKey("NEXT_TARGET", std::make_tuple("Select next target (any)", ""));
+    newKey("PREV_ENEMY_TARGET", std::make_tuple("Select previous target", ""));
+    newKey("PREV_TARGET", std::make_tuple("Select previous target (any)", ""));
     newKey("TOGGLE_SHIELDS", std::make_tuple("Toggle shields", "S"));
     newKey("ENABLE_SHIELDS", std::make_tuple("Enable shields", ""));
     newKey("DISABLE_SHIELDS", std::make_tuple("Disable shields", ""));
