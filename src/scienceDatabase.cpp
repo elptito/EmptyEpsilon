@@ -52,27 +52,28 @@ void ScienceDatabase::setLongDescription(string text)
 
 void fillDefaultDatabaseData()
 {
-    P<ScienceDatabase> factionDatabase = new ScienceDatabase();
-    factionDatabase->setName("Factions");
-    for(unsigned int n=0; n<factionInfo.size(); n++)
-    {
-        P<ScienceDatabase> entry = factionDatabase->addEntry(factionInfo[n]->getName());
-        for(unsigned int m=0; m<factionInfo.size(); m++)
+    if (PreferencesManager::get("factionDatabase", "1").toInt()){
+        P<ScienceDatabase> factionDatabase = new ScienceDatabase();
+        factionDatabase->setName("Factions");
+        for(unsigned int n=0; n<factionInfo.size(); n++)
         {
-            if (n == m) continue;
-
-            string stance = "Neutral";
-            switch(factionInfo[n]->states[m])
+            P<ScienceDatabase> entry = factionDatabase->addEntry(factionInfo[n]->getName());
+            for(unsigned int m=0; m<factionInfo.size(); m++)
             {
-                case FVF_Neutral: stance = "Neutral"; break;
-                case FVF_Enemy: stance = "Enemy"; break;
-                case FVF_Friendly: stance = "Friendly"; break;
-            }
-            entry->addKeyValue(factionInfo[m]->getName(), stance);
-        }
-        entry->setLongDescription(factionInfo[n]->getDescription());
-    }
+                if (n == m) continue;
 
+                string stance = "Neutral";
+                switch(factionInfo[n]->states[m])
+                {
+                    case FVF_Neutral: stance = "Neutral"; break;
+                    case FVF_Enemy: stance = "Enemy"; break;
+                    case FVF_Friendly: stance = "Friendly"; break;
+                }
+                entry->addKeyValue(factionInfo[m]->getName(), stance);
+            }
+            entry->setLongDescription(factionInfo[n]->getDescription());
+        }
+    }
     P<ScienceDatabase> shipDatabase = new ScienceDatabase();
     shipDatabase->setName("Ships");
 
