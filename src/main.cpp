@@ -131,18 +131,21 @@ int main(int argc, char** argv)
 
 #ifdef RESOURCE_BASE_DIR
     new DirectoryResourceProvider(RESOURCE_BASE_DIR "resources/");
-    new DirectoryResourceProvider(RESOURCE_BASE_DIR "scripts/");
+    // new DirectoryResourceProvider(RESOURCE_BASE_DIR "scripts/");
+    new DirectoryResourceProvider(RESOURCE_BASE_DIR "scripts-helios/");
     new DirectoryResourceProvider(RESOURCE_BASE_DIR "packs/SolCommand/");
     PackResourceProvider::addPackResourcesForDirectory(RESOURCE_BASE_DIR "packs");
 #endif
     if (getenv("HOME"))
     {
         new DirectoryResourceProvider(string(getenv("HOME")) + "/.emptyepsilon/resources/");
-        new DirectoryResourceProvider(string(getenv("HOME")) + "/.emptyepsilon/scripts/");
+        // new DirectoryResourceProvider(string(getenv("HOME")) + "/.emptyepsilon/scripts/");
+        new DirectoryResourceProvider(string(getenv("HOME")) + "/.emptyepsilon/scripts-helios/");
         new DirectoryResourceProvider(string(getenv("HOME")) + "/.emptyepsilon/packs/SolCommand/");
     }
     new DirectoryResourceProvider("./resources/");
-    new DirectoryResourceProvider("./scripts/");
+    // new DirectoryResourceProvider("./scripts/");
+    new DirectoryResourceProvider("./scripts-helios/");
     new DirectoryResourceProvider("./packs/SolCommand/");
     PackResourceProvider::addPackResourcesForDirectory("packs");
     textureManager.setDefaultSmooth(true);
