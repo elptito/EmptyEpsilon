@@ -2,23 +2,22 @@
 #define WEAPONS_HELIOS_SCREEN_H
 
 #include "gui/gui2_overlay.h"
-#include "screenComponents/radarView.h"
-#include "screenComponents/targetsContainer.h"
 #include "screenComponents/missileAim.h"
 #include "gui/joystickConfig.h"
+#include "screenComponents/targetsContainer.h"
 
 // class GuiMissileTubeControls;
 class GuiKeyValueDisplay;
 class GuiRotationDial;
 class GuiProgressbar;
 class GuiLabel;
+class GuiRadarView;
 
 class WeaponsHeliosScreen : public GuiOverlay, public MissileAim
 {
 private:
 
     GuiRadarView* radar;
-    TargetsContainer targets;
     GuiRotationDial* missile_aim;
 
     GuiKeyValueDisplay* energy_display;
@@ -26,14 +25,16 @@ private:
     GuiKeyValueDisplay* rear_shield_display;
     GuiLabel* beams_display;
     GuiProgressbar* shields_display;
-    GuiKeyValueDisplay* new_shields_frequency_display;
+    GuiKeyValueDisplay* next_shields_frequency_display;
 
     GuiKeyValueDisplay* load_type_rows[MW_Count];
     GuiProgressbar* tube_rows[max_weapon_tubes];
 
+    TargetsContainer targets;
     EMissileWeapons load_type;
     bool manual_aim;
     float missile_target_angle;
+    int next_shields_frequency;
 public:
     WeaponsHeliosScreen(GuiContainer* owner);
     
@@ -43,6 +44,7 @@ public:
 
     virtual float getMissileTargetAngle() override;
     virtual bool getManualAim() override;
+    void iterateTagrets(bool forward, bool enemiesOnly);
 };
 
 #endif//WEAPONS_HELIOS_SCREEN_H

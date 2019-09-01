@@ -2,23 +2,19 @@
 #include "gameGlobalInfo.h"
 #include "weaponsHeliosScreen.h"
 
-#include "screenComponents/beamFrequencySelector.h"
-#include "screenComponents/beamTargetSelector.h"
-#include "screenComponents/powerDamageIndicator.h"
-#include "screenComponents/shieldFreqencySelect.h"
-#include "screenComponents/shieldsEnableButton.h"
 #include "screenComponents/alertOverlay.h"
 #include "screenComponents/customShipFunctions.h"
 #include "screenComponents/systemStatus.h"
+#include "screenComponents/radarView.h"
 
 #include "gui/gui2_rotationdial.h"
 #include "gui/gui2_label.h"
 #include "gui/gui2_keyvaluedisplay.h"
 #include "gui/gui2_progressbar.h"
 
-sf::Color grey(128, 128, 128);
+sf::Color grey(96, 96, 96);
 WeaponsHeliosScreen::WeaponsHeliosScreen(GuiContainer* owner)
-: GuiOverlay(owner, "WEAPONS_SCREEN", colorConfig.background), load_type(MW_None), manual_aim(false), missile_target_angle(0)
+: GuiOverlay(owner, "WEAPONS_SCREEN", colorConfig.background), load_type(MW_None), manual_aim(false), missile_target_angle(0), next_shields_frequency(0)
 {
     // Render the radar shadow and background decorations.
     GuiOverlay* background_gradient = new GuiOverlay(this, "BACKGROUND_GRADIENT", sf::Color::White);
@@ -73,19 +69,16 @@ WeaponsHeliosScreen::WeaponsHeliosScreen(GuiContainer* owner)
     }
 
     if (gameGlobalInfo->use_beam_shield_frequencies || gameGlobalInfo->use_system_damage) {
-        beams_display = new GuiLabel(this, "BEAMS_DISPLAY", "Beams", 20);
-        beams_display->setBold()->addBackground()->setPosition(-20, 180, ATopRight)->setSize(350, 40);
+        beams_display = new GuiLabel(this, "BEAMS_DISPLAY", "Beams", 30);
+        beams_display->addBackground()->setPosition(-20, 180, ATopRight)->setSize(350, 40);
     }
 
-    if (gameGlobalInfo->use_beam_shield_frequencies) {
-        //The shield frequency selection includes a shield enable button.
-        // TODO: 
-        // shields_display = new GuiProgressbar()
-        // new_shields_frequency_display = GuiKeyValueDisplay()
+    shields_display = new GuiProgressbar(this, "SHIELDS", PlayerSpaceship::shield_calibration_time, 0.f, PlayerSpaceship::shield_calibration_time);
+    shields_display->setPosition(-20, 220, ATopRight)->setSize(350, 40);
 
-        (new GuiShieldFrequencySelect(this, "SHIELD_FREQ"))->setPosition(-20, -20, ABottomRight)->setSize(280, 100);
-    }else{
-        (new GuiShieldsEnableButton(this, "SHIELDS_ENABLE", my_spaceship))->setPosition(-20, -20, ABottomRight)->setSize(280, 50);
+    if (gameGlobalInfo->use_beam_shield_frequencies) {
+        next_shields_frequency_display = new GuiKeyValueDisplay(this, "NEW_SHIELDS_FREQ", 0.55, "Calibrate Shields", "");
+        next_shields_frequency_display->setPosition(-20, 260, ATopRight)->setSize(350, 40);
     }
 
     (new GuiCustomShipFunctions(this, weaponsOfficer, "", my_spaceship))->setPosition(-20, 120, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
@@ -100,6 +93,21 @@ void WeaponsHeliosScreen::onDraw(sf::RenderTarget& window)
         rear_shield_display->setValue(string(my_spaceship->getShieldPercentage(1)) + "%");
         string beamsSystemName = my_spaceship->beam_system_target == SYS_None? "Hull" : getSystemName(ESystem(my_spaceship->beam_system_target));
         beams_display->setText(frequencyToString(my_spaceship->beam_frequency) + " Beams: " + beamsSystemName);
+        string shieldsPrefix = "";
+        if (gameGlobalInfo->use_beam_shield_frequencies){
+            shieldsPrefix = frequencyToString(my_spaceship->shield_frequency) + " ";
+            next_shields_frequency_display->setValue(frequencyToString(next_shields_frequency));
+        }
+        if (my_spaceship->shield_calibration_delay > 0.0) {
+            shields_display->setValue(my_spaceship->shield_calibration_delay);
+            shields_display->setText(shieldsPrefix + "Calibrating")->setColor(grey)->setTextColor(sf::Color::White);
+        } else if (my_spaceship->shields_active){
+            shields_display->setValue(0);
+            shields_display->setText(shieldsPrefix + "Shields: ON")->setColor(sf::Color::White)->setTextColor(sf::Color::Black);
+        } else {
+            shields_display->setValue(0);
+            shields_display->setText(shieldsPrefix + "Shields: OFF")->setColor(grey)->setTextColor(sf::Color::White);
+        }
         targets.set(my_spaceship->getTarget());
         for (int n = 0; n < MW_Count; n++)
         {
@@ -144,69 +152,73 @@ void WeaponsHeliosScreen::onDraw(sf::RenderTarget& window)
     }
     GuiOverlay::onDraw(window);
 }
+// Compares two intervals according to staring times. 
+bool compareSpaceObjects(P<SpaceObject> o1, P<SpaceObject> o2) 
+{ 
+    return (vector2ToAngle(o1->getPosition() - my_spaceship->getPosition()) - my_spaceship->getRotation())
+        < (vector2ToAngle(o2->getPosition() - my_spaceship->getPosition()) - my_spaceship->getRotation()); 
+} 
 
-//         targets.setToClosestTo(position, 250, TargetsContainer::Targetable);
+void WeaponsHeliosScreen::iterateTagrets(bool forward, bool enemiesOnly){
+    bool current_found = false;
+    P<SpaceObject> lastSeen = nullptr;
+    P<SpaceObject> firstSeen = nullptr;
+    PVector<SpaceObject> potentialTargets = radar->getVisibleObjects();
+    std::sort(potentialTargets.begin(), potentialTargets.end(), compareSpaceObjects); 
+    foreach(SpaceObject, obj, potentialTargets)
+    {
+        if (obj == targets.get()) {
+            // current target
+            if (forward) {
+                current_found = true;
+            } else if (lastSeen){
+                // found! one before current
+                my_spaceship->commandSetTarget(lastSeen);
+                return;
+            }
+        } else if (obj != my_spaceship &&
+            obj->canBeTargetedBy(my_spaceship) &&
+            (!enemiesOnly || my_spaceship->isKnownEnemy(obj)) &&
+            (sf::length(obj->getPosition() - my_spaceship->getPosition()) < radar->getDistance()))
+        {
+            // qualified for targeting
+            if (forward) {
+                if (current_found) {
+                    // found! one after current
+                    my_spaceship->commandSetTarget(obj);
+                    return;
+                } else if(!firstSeen){
+                    // track first target seen
+                    firstSeen = obj;
+                }
+            } else {
+                // track last target seen
+                lastSeen = obj;
+            }
+        }
+    } // end of loop
+    if (forward && firstSeen){
+        // found! first target
+        my_spaceship->commandSetTarget(firstSeen);
+        return;
+    } else if (!forward && lastSeen){
+        // found! last target
+        my_spaceship->commandSetTarget(lastSeen);
+        return;
+    }
+}
+
 void WeaponsHeliosScreen::onHotkey(const HotkeyResult& key)
 {
     if (key.category == "WEAPONS" && my_spaceship) {
         if (key.hotkey == "NEXT_ENEMY_TARGET") {
-            bool current_found = false;
-            foreach(SpaceObject, obj, space_object_list)
-            {
-                if (obj == targets.get())
-                {
-                    current_found = true;
-                    continue;
-                }
-                if (current_found && sf::length(obj->getPosition() - my_spaceship->getPosition()) < 5000 && my_spaceship->isEnemy(obj) && my_spaceship->getScannedStateFor(obj) >= SS_FriendOrFoeIdentified && obj->canBeTargetedBy(my_spaceship))
-                {
-                    targets.set(obj);
-                    my_spaceship->commandSetTarget(targets.get());
-                    return;
-                }
-            }
-            foreach(SpaceObject, obj, space_object_list)
-            {
-                if (obj == targets.get())
-                {
-                    continue;
-                }
-                if (my_spaceship->isEnemy(obj) && sf::length(obj->getPosition() - my_spaceship->getPosition()) < 5000 && my_spaceship->getScannedStateFor(obj) >= SS_FriendOrFoeIdentified && obj->canBeTargetedBy(my_spaceship))
-                {
-                    targets.set(obj);
-                    my_spaceship->commandSetTarget(targets.get());
-                    return;
-                }
-            }
+            iterateTagrets(true, true);
         } else if (key.hotkey == "NEXT_TARGET") {
-            bool current_found = false;
-            foreach(SpaceObject, obj, space_object_list)
-            {
-                if (obj == targets.get())
-                {
-                    current_found = true;
-                    continue;
-                }
-                if (obj == my_spaceship)
-                    continue;
-                if (current_found && sf::length(obj->getPosition() - my_spaceship->getPosition()) < 5000 && obj->canBeTargetedBy(my_spaceship))
-                {
-                    targets.set(obj);
-                    my_spaceship->commandSetTarget(targets.get());
-                    return;
-                }
-            }
-            foreach(SpaceObject, obj, space_object_list)
-            {
-                if (obj == targets.get() || obj == my_spaceship)
-                    continue;
-                if (sf::length(obj->getPosition() - my_spaceship->getPosition()) < 5000 && obj->canBeTargetedBy(my_spaceship))
-                {
-                    targets.set(obj);
-                    my_spaceship->commandSetTarget(targets.get());
-                    return;
-                }
-            }
+            iterateTagrets(true, false);
+        } else if (key.hotkey == "PREV_ENEMY_TARGET") {
+            iterateTagrets(false, true);
+        } else if (key.hotkey == "PREV_TARGET") {
+            iterateTagrets(false, false);
         } else if (key.hotkey == "SELECT_MISSILE_TYPE_HOMING") {
             load_type = MW_Homing;
         } else if (key.hotkey == "SELECT_MISSILE_TYPE_NUKE") {
@@ -221,24 +233,23 @@ void WeaponsHeliosScreen::onHotkey(const HotkeyResult& key)
             my_spaceship->commandSetBeamFrequency((my_spaceship->beam_frequency + 1) % SpaceShip::max_frequency);
         } else if (key.hotkey == "BEAM_FREQUENCY_DECREASE") {
             my_spaceship->commandSetBeamFrequency((SpaceShip::max_frequency + my_spaceship->beam_frequency - 1) % SpaceShip::max_frequency);
-        }
-        if (gameGlobalInfo->use_system_damage){
+        } else if (gameGlobalInfo->use_system_damage){
             // const int targetSysCount = SYS_COUNT +1;
             if (key.hotkey == "BEAM_SUBSYSTEM_TARGET_NEXT") {
                 // ESystem system = ESystem(((my_spaceship->beam_system_target +2) % targetSysCount) -1);
                 int system = my_spaceship->beam_system_target + 1;
-                if (system == SYS_JumpDrive && gameGlobalInfo->player_warp_jump_drive_setting == PWJ_WarpDrive) {
-                    system = ESystem(system + 1);
+                if (system == SYS_JumpDrive) {
+                    system = ESystem(SYS_JumpDrive + 1);
                 } else if (system >= SYS_COUNT) {
-                    system = -1;
+                    system = SYS_None;
                 }
                 my_spaceship->commandSetBeamSystemTarget(ESystem(system));
             } else if (key.hotkey == "BEAM_SUBSYSTEM_TARGET_PREV") {
                 // ESystem system = ESystem(((targetSysCount + my_spaceship->beam_system_target) % targetSysCount) -1);
                 int system = my_spaceship->beam_system_target - 1;
-                if (system == SYS_JumpDrive && gameGlobalInfo->player_warp_jump_drive_setting == PWJ_WarpDrive) {
-                    system = ESystem(system - 1);
-                } else if (system <= -2) {
+                if (system == SYS_JumpDrive) {
+                    system = ESystem(SYS_JumpDrive - 1);
+                } else if (system < SYS_None) {
                     system = SYS_COUNT -1;
                 }
                 my_spaceship->commandSetBeamSystemTarget(ESystem(system));
@@ -274,6 +285,14 @@ void WeaponsHeliosScreen::onHotkey(const HotkeyResult& key)
                 my_spaceship->commandFireTube(n, target_angle);
             }
         }
+    } else if (key.category == "ENGINEERING" && my_spaceship){
+        if (key.hotkey == "SHIELD_CAL_INC") {
+            next_shields_frequency = (next_shields_frequency + 1) % SpaceShip::max_frequency;
+        } else if (key.hotkey == "SHIELD_CAL_DEC") {
+            next_shields_frequency = (SpaceShip::max_frequency + next_shields_frequency - 1) % SpaceShip::max_frequency;
+        } else if (key.hotkey == "SHIELD_CAL_START") {
+            my_spaceship->commandSetShieldFrequency(next_shields_frequency);
+        } 
     }
 }
 
