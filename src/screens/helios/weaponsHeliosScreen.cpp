@@ -152,11 +152,9 @@ void WeaponsHeliosScreen::onDraw(sf::RenderTarget& window)
     }
     GuiOverlay::onDraw(window);
 }
-// Compares two intervals according to staring times. 
-bool compareSpaceObjects(P<SpaceObject> o1, P<SpaceObject> o2) 
-{ 
-    return (vector2ToAngle(o1->getPosition() - my_spaceship->getPosition()) - my_spaceship->getRotation())
-        < (vector2ToAngle(o2->getPosition() - my_spaceship->getPosition()) - my_spaceship->getRotation()); 
+
+bool compareSpaceObjects(P<SpaceObject> o1, P<SpaceObject> o2) { 
+    return (o1->getPosition() - my_spaceship->getPosition()) < (o2->getPosition() - my_spaceship->getPosition());
 } 
 
 void WeaponsHeliosScreen::iterateTagrets(bool forward, bool enemiesOnly){
