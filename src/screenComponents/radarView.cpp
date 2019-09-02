@@ -10,6 +10,8 @@
 #include "missileTubeControls.h"
 #include "targetsContainer.h"
 
+#define MAX_OBJ_RADIUS 5000
+
 sf::Color neutralMaskColor(255, 255, 255, 0);
 sf::Color blockedMaskColor(0, 0, 0, 255);
 sf::Color visibleMaskColor(255, 255, 255, 255);
@@ -495,38 +497,48 @@ void GuiRadarView::drawMissileTubes(sf::RenderTarget& window)
     }
 }
 
-PVector<SpaceObject> GuiRadarView::getVisibleObjects(){
+PVector<SpaceObject> GuiRadarView::getVisibleObjects(P<SpaceObject> pov, EFogOfWarStyle fog_style, float radius){
     PVector<SpaceObject> visible_objects;
     switch(fog_style)
     {
     case NoFogOfWar:
         visible_objects = PVector<SpaceObject>(space_object_list);
         break;
-    case RadarRangeAndLineOfSight:
-        if (!target_spaceship)
+    case RadarRangeAndLineOfSight: {
+        if (!pov)
             return visible_objects;
-        foreach(SpaceObject, obj, space_object_list)
-        {
-            if (!obj->canHideInNebula())
-                visible_objects.push_back(obj);
-            float range = obj->getRadarRange();
-            if (range > 0.0f && obj->isFriendly(target_spaceship))
-            {
+
+        sf::Vector2f pov_position = pov->getPosition();
+        sf::Vector2f pov_query_margin = sf::Vector2f(radius + MAX_OBJ_RADIUS, radius + MAX_OBJ_RADIUS);
+        sf::Vector2f pov_lowerBound = pov_position - pov_query_margin;
+        sf::Vector2f pov_upperBound = pov_position + pov_query_margin;
+        std::unordered_set<P<SpaceObject>> result_set = std::unordered_set<P<SpaceObject>>();
+        foreach(SpaceObject, obj, space_object_list) {
+            if (!obj->canHideInNebula() && (pov->getPosition() - obj->getPosition()) < radius + obj->getRadius())
+                result_set.insert(obj);
+            float obj_range = obj->getRadarRange();
+            if (obj_range > 0.0f && obj->isFriendly(pov)) {
+                float obj_query_range = obj_range + MAX_OBJ_RADIUS;
                 sf::Vector2f position = obj->getPosition();
-                PVector<Collisionable> obj_list = CollisionManager::queryArea(position - sf::Vector2f(range, range), position + sf::Vector2f(range, range));
-                foreach(Collisionable, c_obj, obj_list)
-                {
-                    P<SpaceObject> obj2 = c_obj;
-                    if (obj2 
-                        && (obj->getPosition() - obj2->getPosition()) < range + obj2->getRadius()
-                        && !(obj->canHideInNebula() && Nebula::blockedByNebula(obj->getPosition(), obj2->getPosition())))
-                    {
-                        visible_objects.push_back(obj2);
+                sf::Vector2f lowerBound(std::max(pov_lowerBound.x, position.x - obj_query_range), std::max(pov_lowerBound.y, position.y - obj_query_range));
+                sf::Vector2f upperBound(std::min(pov_upperBound.x, position.x + obj_query_range), std::max(pov_upperBound.y, position.y + obj_query_range));
+                if (lowerBound.x < upperBound.x && lowerBound.y < upperBound.y){
+                    PVector<Collisionable> obj_list = CollisionManager::queryArea(lowerBound, upperBound);
+                    foreach(Collisionable, c_obj, obj_list) {
+                        P<SpaceObject> obj2 = c_obj;
+                        if (obj2 
+                            && (pov->getPosition() - obj2->getPosition()) < radius + obj2->getRadius()
+                            && (obj->getPosition() - obj2->getPosition()) < obj_range + obj2->getRadius()
+                            && !(obj->canHideInNebula() && Nebula::blockedByNebula(obj->getPosition(), obj2->getPosition()))) {
+                            result_set.insert(obj2);
+                        }
                     }
                 }
             }
         }
+        visible_objects.assign( result_set.begin(), result_set.end() );
         break;
+    }
     case NoObjects: 
         foreach(SpaceObject, obj, space_object_list)
         {
@@ -536,6 +548,10 @@ PVector<SpaceObject> GuiRadarView::getVisibleObjects(){
         break;
     }
     return visible_objects;
+}
+
+PVector<SpaceObject> GuiRadarView::getVisibleObjects(){
+    return GuiRadarView::getVisibleObjects(target_spaceship, fog_style, getDistance());
 }
 
 void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget& window_alpha)
