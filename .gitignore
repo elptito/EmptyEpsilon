@@ -35,7 +35,7 @@ thumbs.db
 # vim
 *.swp
 
-options.ini
+# options.ini
 
 .idea
 *.html
