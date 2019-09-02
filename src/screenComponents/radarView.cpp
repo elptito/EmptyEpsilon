@@ -206,7 +206,8 @@ void GuiRadarView::updateGhostDots()
     if (next_ghost_dot_update < engine->getElapsedTime())
     {
         next_ghost_dot_update = engine->getElapsedTime() + 5.0;
-        foreach(SpaceObject, obj, space_object_list)
+        PVector<SpaceObject> objects = getVisibleObjects();
+        foreach(SpaceObject, obj, objects)
         {
             P<SpaceShip> ship = obj;
             if (ship && sf::length(obj->getPosition() - getViewPosition()) < getDistance())
