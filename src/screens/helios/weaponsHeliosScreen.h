@@ -12,6 +12,7 @@ class GuiRotationDial;
 class GuiProgressbar;
 class GuiLabel;
 class GuiRadarView;
+class GuiAutoLayout;
 
 class WeaponsHeliosScreen : public GuiOverlay, public MissileAim
 {
@@ -29,6 +30,10 @@ private:
 
     GuiKeyValueDisplay* load_type_rows[MW_Count];
     GuiProgressbar* tube_rows[max_weapon_tubes];
+
+    GuiLabel* target_callsign;
+    GuiKeyValueDisplay* target_distance;
+    GuiKeyValueDisplay* target_direction;
 
     TargetsContainer targets;
     EMissileWeapons load_type;

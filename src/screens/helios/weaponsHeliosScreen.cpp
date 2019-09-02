@@ -70,16 +70,26 @@ WeaponsHeliosScreen::WeaponsHeliosScreen(GuiContainer* owner)
 
     if (gameGlobalInfo->use_beam_shield_frequencies || gameGlobalInfo->use_system_damage) {
         beams_display = new GuiLabel(this, "BEAMS_DISPLAY", "Beams", 30);
-        beams_display->addBackground()->setPosition(-20, 180, ATopRight)->setSize(350, 40);
+        beams_display->addBackground()->setPosition(-20, -100, ABottomRight)->setSize(350, 40);
     }
 
     shields_display = new GuiProgressbar(this, "SHIELDS", PlayerSpaceship::shield_calibration_time, 0.f, PlayerSpaceship::shield_calibration_time);
-    shields_display->setPosition(-20, 220, ATopRight)->setSize(350, 40);
+    shields_display->setPosition(-20, -60, ABottomRight)->setSize(350, 40);
 
     if (gameGlobalInfo->use_beam_shield_frequencies) {
         next_shields_frequency_display = new GuiKeyValueDisplay(this, "NEW_SHIELDS_FREQ", 0.55, "Calibrate Shields", "");
-        next_shields_frequency_display->setPosition(-20, 260, ATopRight)->setSize(350, 40);
+        next_shields_frequency_display->setPosition(-20, -20, ABottomRight)->setSize(350, 40);
     }
+
+    GuiAutoLayout* targetInfoLayout = new GuiAutoLayout(this, "TUBES", GuiAutoLayout::LayoutVerticalTopToBottom);
+    targetInfoLayout->setPosition(-20, 0, ACenterRight)->setSize(150, 40 * 4);
+
+    target_callsign = new GuiLabel(targetInfoLayout, "TARGET_CALLSIGN", "", 30);
+    target_callsign->addBackground()->setSize(GuiAutoLayout::GuiSizeMax, 40);
+    target_distance = new GuiKeyValueDisplay(targetInfoLayout, "TARGET_DISTANCE", 0.45, "Distance", "");
+    target_distance->setSize(GuiAutoLayout::GuiSizeMax, 40);
+    target_direction = new GuiKeyValueDisplay(targetInfoLayout, "TARGET_DIRECTION", 0.45, "Direction", "");
+    target_direction->setSize(GuiAutoLayout::GuiSizeMax, 40);
 
     (new GuiCustomShipFunctions(this, weaponsOfficer, "", my_spaceship))->setPosition(-20, 120, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
 }
@@ -108,7 +118,20 @@ void WeaponsHeliosScreen::onDraw(sf::RenderTarget& window)
             shields_display->setValue(0);
             shields_display->setText(shieldsPrefix + "Shields: OFF")->setColor(grey)->setTextColor(sf::Color::White);
         }
-        targets.set(my_spaceship->getTarget());
+        P<SpaceObject> target = my_spaceship->getTarget();
+        if (target){
+            targets.set(target);
+            target_callsign->setText(target->getCallSign());
+            target_distance->setValue(string(sf::length(target->getPosition()-my_spaceship->getPosition()) / 1000));
+            float angle = std::fmod(450 + vector2ToAngle(target->getPosition()-my_spaceship->getPosition()), 360); // add 90 deg and normalize
+            target_direction->setValue(string(angle));
+        } else {
+            targets.clear();
+            target_callsign->setText("-");
+            target_distance->setValue("-");
+            target_direction->setValue("-");
+        }
+
         for (int n = 0; n < MW_Count; n++)
         {
             sf::Color color = n == load_type? sf::Color::Yellow :  sf::Color::White ;
@@ -148,7 +171,7 @@ void WeaponsHeliosScreen::onDraw(sf::RenderTarget& window)
         }
         for(int n=my_spaceship->weapon_tube_count; n<max_weapon_tubes; n++)
             tube_rows[n]->hide();
-        missile_aim->setValue(missile_target_angle - my_spaceship->getRotation());
+        missile_aim->setValue(missile_target_angle - my_spaceship->getRotation())->setVisible(manual_aim);
     }
     GuiOverlay::onDraw(window);
 }
@@ -259,6 +282,7 @@ void WeaponsHeliosScreen::onHotkey(const HotkeyResult& key)
             } else if (key.hotkey == "AIM_MISSILE_RIGHT") {
                 missile_target_angle = missile_target_angle + 5.0f;
             } else if (key.hotkey == "ENABLE_AIM_LOCK") {
+                missile_target_angle = 0;
                 manual_aim = false;
             } else if (key.hotkey == "DISABLE_AIM_LOCK") {
                 manual_aim = true;
