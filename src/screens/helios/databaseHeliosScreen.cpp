@@ -29,7 +29,9 @@ DatabaseHeliosScreen::DatabaseHeliosScreen(GuiContainer* owner)
             entry = ScienceDatabase::science_databases[index];
         }
         if (entry && entry->password.length() > 0){
-            password->challange("Enter code to read " + entry->getName(), entry->password, [this, entry](){
+            item_list->setSelectionIndex(-1);
+            password->challange("Enter code to read " + entry->getName(), entry->password, [this, entry, index](){
+                item_list->setSelectionIndex(index);
                 display(entry);
             });
         } else {

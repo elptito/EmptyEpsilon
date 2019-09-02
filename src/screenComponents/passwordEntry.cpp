@@ -20,7 +20,7 @@ PasswordEntry::PasswordEntry(GuiContainer *owner)
         // Reset the dialog.
         password_label->setText(prompt);
         password_entry->setText("");
-        
+        this->hide();
     });
     password_cancel->setPosition(0, -20, ABottomCenter)->setSize(300, 50);
 
@@ -62,6 +62,7 @@ PasswordEntry::PasswordEntry(GuiContainer *owner)
             onSuccess();
     });
     password_confirmation->setPosition(0, -20, ABottomCenter)->setSize(250, 50)->hide();
+    this->setBlocking(true);
     this->hide();
 }
 
@@ -70,4 +71,5 @@ void PasswordEntry::challange(string prompt, string control_code, func_t onSucce
     this->control_code = control_code.lower();
     this->onSuccess = onSuccess;
     this->show();
+    this->password_entry->setFocus();
 }
