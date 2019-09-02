@@ -8,6 +8,7 @@
 #include "gui/gui2_scrolltext.h"
 #include "gui/gui2_image.h"
 #include "screenComponents/rotatingModelView.h"
+#include "screenComponents/passwordEntry.h"
 
 #define MARGIN 20
 DatabaseHeliosScreen::DatabaseHeliosScreen(GuiContainer* owner)
@@ -27,11 +28,18 @@ DatabaseHeliosScreen::DatabaseHeliosScreen(GuiContainer* owner)
         } else {
             entry = ScienceDatabase::science_databases[index];
         }
-        display(entry);
+        if (entry->password.length() > 0){
+            password->challange("Enter code to read " + entry->getName(), entry->password, [this, entry](){
+                display(entry);
+            });
+        } else {
+            display(entry);
+        }
     });
     item_list->setPosition(0, 0, ATopLeft)->setMargins(20, 20, 20, 130)->setSize(400, GuiElement::GuiSizeMax);
     fillListBox();
 
+    password = new PasswordEntry(this);
     (new GuiCustomShipFunctions(this, databaseView, "", my_spaceship))->setPosition(-20, 120, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
 }
 
@@ -52,10 +60,19 @@ bool DatabaseHeliosScreen::findAndDisplayEntry(string name, P<ScienceDatabase> p
     {
         if (sd->getName() == name)
         {
-            selected_entry = parent;
-            fillListBox();
-            display(sd);
-            item_list->setSelectionIndex(item_list->indexByValue(name));
+            if (sd->password.length() > 0){
+                password->challange("Enter code to read " + sd->getName(), sd->password, [this, parent, sd, name](){
+                    selected_entry = parent;
+                    fillListBox();
+                    display(sd);
+                    item_list->setSelectionIndex(item_list->indexByValue(name));
+                });
+            } else {
+                selected_entry = parent;
+                fillListBox();
+                display(sd);
+                item_list->setSelectionIndex(item_list->indexByValue(name));
+            }
             return true;
         }
         if (findAndDisplayEntry(name, sd))

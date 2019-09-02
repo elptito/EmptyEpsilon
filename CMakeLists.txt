@@ -194,6 +194,7 @@ set(SOURCES
 	src/screenComponents/customShipFunctions.cpp
 	src/screenComponents/scrollingBanner.cpp
 	src/screenComponents/navigationView.cpp
+	src/screenComponents/passwordEntry.cpp
 	src/gui/colorConfig.cpp
 	src/gui/hotkeyConfig.cpp
 	src/gui/joystickConfig.cpp

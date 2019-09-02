@@ -7,12 +7,15 @@
 class ScienceDatabase;
 class GuiListbox;
 class GuiElement;
+class PasswordEntry;
 
 class DatabaseHeliosScreen : public GuiOverlay
 {
     P<ScienceDatabase> selected_entry;
     GuiListbox* item_list;
     GuiElement* database_entry;
+    PasswordEntry* password;
+    
 public:
     DatabaseHeliosScreen(GuiContainer* owner);
     bool findAndDisplayEntry(string name);

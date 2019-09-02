@@ -2,6 +2,7 @@
 #include "factionInfo.h"
 #include "shipTemplate.h"
 #include "spaceObjects/spaceship.h"
+#include "screenComponents/passwordEntry.h"
 
 #include "scriptInterface.h"
 
@@ -12,6 +13,7 @@ REGISTER_SCRIPT_CLASS(ScienceDatabase)
     REGISTER_SCRIPT_CLASS_FUNCTION(ScienceDatabase, addKeyValue);
     REGISTER_SCRIPT_CLASS_FUNCTION(ScienceDatabase, setLongDescription);
     REGISTER_SCRIPT_CLASS_FUNCTION(ScienceDatabase, setImage);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ScienceDatabase, setPassword);
 }
 
 
@@ -54,6 +56,11 @@ void ScienceDatabase::setLongDescription(string text)
 void ScienceDatabase::setImage(string text)
 {
     image_name = text;
+}
+
+void ScienceDatabase::setPassword(string text)
+{
+    password = text;
 }
 
 void fillDefaultDatabaseData()

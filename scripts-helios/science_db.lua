@@ -18,6 +18,7 @@ He is currently in a relationship with Beatrix Primrose Ellis. Beatrix is the sa
 John's best friend is a tradesperson's assistant called Jodie Sullivan. They are inseparable. He also hangs around with Trevor Owen and Annabella Reid. They enjoy social card games together.
 ]])
 item:setImage('db/trooper')
+item:setPassword('123')
 
 space_objects = ScienceDatabase():setName('Natural')
 item = space_objects:addEntry('Asteroid')
