@@ -31,15 +31,19 @@ private:
     GuiKeyValueDisplay* load_type_rows[MW_Count];
     GuiProgressbar* tube_rows[max_weapon_tubes];
 
+    GuiLabel* target_mode_near_display;
+    GuiLabel* target_mode_enemy_display;
     GuiLabel* target_callsign;
     GuiKeyValueDisplay* target_distance;
     GuiKeyValueDisplay* target_direction;
 
     TargetsContainer targets;
     EMissileWeapons load_type;
-    bool manual_aim;
     float missile_target_angle;
     int next_shields_frequency;
+    bool manual_aim;
+    bool target_mode_near;
+    bool target_mode_enemy;
 public:
     WeaponsHeliosScreen(GuiContainer* owner);
     
@@ -49,7 +53,7 @@ public:
 
     virtual float getMissileTargetAngle() override;
     virtual bool getManualAim() override;
-    void iterateTagrets(bool forward, bool enemiesOnly);
+    void iterateTagrets(bool forward, bool enemiesOnly, bool nearOnly);
 };
 
 #endif//WEAPONS_HELIOS_SCREEN_H

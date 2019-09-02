@@ -1,14 +1,14 @@
 #include "gui2_label.h"
 
 GuiLabel::GuiLabel(GuiContainer* owner, string id, string text, float text_size)
-: GuiElement(owner, id), text(text), text_size(text_size), text_color(selectColor(colorConfig.label.forground)), text_alignment(ACenter), background(false), bold(false), vertical(false)
+: GuiElement(owner, id), text(text), text_size(text_size), text_color(selectColor(colorConfig.label.forground)), bgColor(selectColor(colorConfig.label.background)),text_alignment(ACenter), background(false), bold(false), vertical(false)
 {
 }
 
 void GuiLabel::onDraw(sf::RenderTarget& window)
 {
     if (background)
-        drawStretched(window, rect, "gui/LabelBackground", selectColor(colorConfig.label.background));
+        drawStretched(window, rect, "gui/LabelBackground", bgColor);
     sf::Font* font = main_font;
     if (bold)
         font = bold_font;
@@ -57,7 +57,14 @@ GuiLabel* GuiLabel::setBold(bool bold)
     return this;
 }
 
+
+GuiLabel* GuiLabel::setColor(sf::Color color)
+{
+    this->bgColor = color;
+    return this;
+}
+
 GuiLabel* GuiLabel::setTextColor(sf::Color color){
     this->text_color = color; 
     return this;
-    };
+};

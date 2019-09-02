@@ -8,6 +8,7 @@ class GuiLabel : public GuiElement
 protected:
     string text;
     float text_size;
+    sf::Color bgColor;
     sf::Color text_color;
     EGuiAlign text_alignment;
     bool background;
@@ -25,6 +26,7 @@ public:
     GuiLabel* removeBackground();
     GuiLabel* setVertical();
     GuiLabel* setBold(bool bold=true);
+    GuiLabel* setColor(sf::Color color);
     GuiLabel* setTextColor(sf::Color color);
 };
 

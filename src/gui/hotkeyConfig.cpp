@@ -53,10 +53,14 @@ HotkeyConfig::HotkeyConfig()
         newKey(std::string("UNLOAD_TUBE_") + string(n+1), std::make_tuple(std::string("Unload tube ") + string(n+1), ""));
     for(int n=0; n<max_weapon_tubes; n++)
         newKey(std::string("FIRE_TUBE_") + string(n+1), std::make_tuple(std::string("Fire tube ") + string(n+1), ""));
-    newKey("NEXT_ENEMY_TARGET", std::make_tuple("Select next target", ""));
-    newKey("NEXT_TARGET", std::make_tuple("Select next target (any)", ""));
-    newKey("PREV_ENEMY_TARGET", std::make_tuple("Select previous target", ""));
-    newKey("PREV_TARGET", std::make_tuple("Select previous target (any)", ""));
+    newKey("NEXT_ENEMY_TARGET", std::make_tuple("Select next enemy target", ""));
+    newKey("NEXT_TARGET", std::make_tuple("Select next target", ""));
+    newKey("PREV_ENEMY_TARGET", std::make_tuple("Select previous enemy target", ""));
+    newKey("PREV_TARGET", std::make_tuple("Select previous target", ""));
+    newKey("TARGET_NEAR_ON", std::make_tuple("select only near targets", ""));
+    newKey("TARGET_NEAR_OFF", std::make_tuple("Selselect targets at any range", ""));
+    newKey("TARGET_ENEMY_ON", std::make_tuple("select only enemy targets", ""));
+    newKey("TARGET_ENEMY_OFF", std::make_tuple("select any target in range", ""));
     newKey("TOGGLE_SHIELDS", std::make_tuple("Toggle shields", "S"));
     newKey("ENABLE_SHIELDS", std::make_tuple("Enable shields", ""));
     newKey("DISABLE_SHIELDS", std::make_tuple("Disable shields", ""));

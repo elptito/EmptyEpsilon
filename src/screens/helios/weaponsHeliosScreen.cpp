@@ -14,7 +14,8 @@
 
 sf::Color grey(96, 96, 96);
 WeaponsHeliosScreen::WeaponsHeliosScreen(GuiContainer* owner)
-: GuiOverlay(owner, "WEAPONS_SCREEN", colorConfig.background), load_type(MW_None), manual_aim(false), missile_target_angle(0), next_shields_frequency(0)
+: GuiOverlay(owner, "WEAPONS_SCREEN", colorConfig.background), load_type(MW_None), missile_target_angle(0)
+    , next_shields_frequency(0), manual_aim(false), target_mode_near(true), target_mode_enemy(true)
 {
     // Render the radar shadow and background decorations.
     GuiOverlay* background_gradient = new GuiOverlay(this, "BACKGROUND_GRADIENT", sf::Color::White);
@@ -81,8 +82,16 @@ WeaponsHeliosScreen::WeaponsHeliosScreen(GuiContainer* owner)
         next_shields_frequency_display->setPosition(-20, -20, ABottomRight)->setSize(350, 40);
     }
 
-    GuiAutoLayout* targetInfoLayout = new GuiAutoLayout(this, "TUBES", GuiAutoLayout::LayoutVerticalTopToBottom);
-    targetInfoLayout->setPosition(-20, 0, ACenterRight)->setSize(150, 40 * 4);
+    GuiAutoLayout* targetInfoLayout = new GuiAutoLayout(this, "TARGET_INFO", GuiAutoLayout::LayoutVerticalTopToBottom);
+    targetInfoLayout->setPosition(-20, 0, ACenterRight)->setSize(150, 40 * 5);
+
+    GuiAutoLayout* targetModeLayout = new GuiAutoLayout(targetInfoLayout, "TARGET_MODE", GuiAutoLayout::LayoutVerticalColumns);
+    targetModeLayout->setSize(GuiAutoLayout::GuiSizeMax, 40);
+
+    target_mode_enemy_display = new GuiLabel(targetModeLayout, "TARGET_ENEMY", "Enemy", 30);
+    target_mode_enemy_display->addBackground()->setMargins(10, 0)->setSize(GuiAutoLayout::GuiSizeMax, 40);
+    target_mode_near_display = new GuiLabel(targetModeLayout, "TARGET_NEAR", "Near", 30);
+    target_mode_near_display->addBackground()->setMargins(10, 0)->setSize(GuiAutoLayout::GuiSizeMax, 40);
 
     target_callsign = new GuiLabel(targetInfoLayout, "TARGET_CALLSIGN", "", 30);
     target_callsign->addBackground()->setSize(GuiAutoLayout::GuiSizeMax, 40);
@@ -172,6 +181,11 @@ void WeaponsHeliosScreen::onDraw(sf::RenderTarget& window)
         for(int n=my_spaceship->weapon_tube_count; n<max_weapon_tubes; n++)
             tube_rows[n]->hide();
         missile_aim->setValue(missile_target_angle - my_spaceship->getRotation())->setVisible(manual_aim);
+
+        sf::Color color = target_mode_near? sf::Color::Yellow : grey;
+        target_mode_near_display->setColor(color)->setTextColor(color);
+        color = target_mode_enemy? sf::Color::Yellow : grey;
+        target_mode_enemy_display->setColor(color)->setTextColor(color);
     }
     GuiOverlay::onDraw(window);
 }
@@ -180,34 +194,31 @@ bool compareSpaceObjects(P<SpaceObject> o1, P<SpaceObject> o2) {
     return (o1->getPosition() - my_spaceship->getPosition()) < (o2->getPosition() - my_spaceship->getPosition());
 } 
 
-void WeaponsHeliosScreen::iterateTagrets(bool forward, bool enemiesOnly){
-    bool current_found = false;
+void WeaponsHeliosScreen::iterateTagrets(bool forward, bool enemiesOnly, bool nearOnly){
+    bool current_reached = false;
     P<SpaceObject> lastSeen = nullptr;
     P<SpaceObject> firstSeen = nullptr;
-    PVector<SpaceObject> potentialTargets = radar->getVisibleObjects();
+    float range = nearOnly? radar->getDistance() : gameGlobalInfo->long_range_radar_range;
+    PVector<SpaceObject> potentialTargets = GuiRadarView::getVisibleObjects(my_spaceship, GuiRadarView::RadarRangeAndLineOfSight, range);
     std::sort(potentialTargets.begin(), potentialTargets.end(), compareSpaceObjects); 
-    foreach(SpaceObject, obj, potentialTargets)
-    {
-        if (obj == targets.get()) {
-            // current target
+    P<SpaceObject> found = nullptr;
+    foreach(SpaceObject, obj, potentialTargets) {
+        if (found){
+            break;
+        } else if (obj == targets.get()) {
+            // reached current target
             if (forward) {
-                current_found = true;
+                current_reached = true;
             } else if (lastSeen){
-                // found! one before current
-                my_spaceship->commandSetTarget(lastSeen);
-                return;
+                found = lastSeen;
             }
         } else if (obj != my_spaceship &&
             obj->canBeTargetedBy(my_spaceship) &&
-            (!enemiesOnly || my_spaceship->isKnownEnemy(obj)) &&
-            (sf::length(obj->getPosition() - my_spaceship->getPosition()) < radar->getDistance()))
-        {
+            (!enemiesOnly || my_spaceship->isKnownEnemy(obj))) {
             // qualified for targeting
             if (forward) {
-                if (current_found) {
-                    // found! one after current
-                    my_spaceship->commandSetTarget(obj);
-                    return;
+                if (current_reached) {
+                    found = obj;
                 } else if(!firstSeen){
                     // track first target seen
                     firstSeen = obj;
@@ -218,28 +229,30 @@ void WeaponsHeliosScreen::iterateTagrets(bool forward, bool enemiesOnly){
             }
         }
     } // end of loop
-    if (forward && firstSeen){
-        // found! first target
+    if (found){
+        my_spaceship->commandSetTarget(found);
+    } else if (forward && firstSeen){
         my_spaceship->commandSetTarget(firstSeen);
-        return;
     } else if (!forward && lastSeen){
-        // found! last target
         my_spaceship->commandSetTarget(lastSeen);
-        return;
     }
 }
 
 void WeaponsHeliosScreen::onHotkey(const HotkeyResult& key)
 {
     if (key.category == "WEAPONS" && my_spaceship) {
-        if (key.hotkey == "NEXT_ENEMY_TARGET") {
-            iterateTagrets(true, true);
-        } else if (key.hotkey == "NEXT_TARGET") {
-            iterateTagrets(true, false);
-        } else if (key.hotkey == "PREV_ENEMY_TARGET") {
-            iterateTagrets(false, true);
+        if (key.hotkey == "NEXT_TARGET") {
+            iterateTagrets(true, target_mode_enemy, target_mode_near);
         } else if (key.hotkey == "PREV_TARGET") {
-            iterateTagrets(false, false);
+            iterateTagrets(false, target_mode_enemy, target_mode_near);
+        } else if (key.hotkey == "TARGET_NEAR_ON") {
+            target_mode_near = true;
+        } else if (key.hotkey == "TARGET_NEAR_OFF") {
+            target_mode_near = false;
+        } else if (key.hotkey == "TARGET_ENEMY_ON") {
+            target_mode_enemy = true;
+        } else if (key.hotkey == "TARGET_ENEMY_OFF") {
+            target_mode_enemy = false;
         } else if (key.hotkey == "SELECT_MISSILE_TYPE_HOMING") {
             load_type = MW_Homing;
         } else if (key.hotkey == "SELECT_MISSILE_TYPE_NUKE") {
