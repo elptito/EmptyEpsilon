@@ -67,7 +67,7 @@ PasswordEntry::PasswordEntry(GuiContainer *owner)
 
 void PasswordEntry::challange(string prompt, string control_code, func_t onSuccess){
     this->prompt = prompt;
-    this->control_code = control_code;
+    this->control_code = control_code.lower();
     this->onSuccess = onSuccess;
     this->show();
 }

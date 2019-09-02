@@ -3,6 +3,13 @@
 	This data does not affect the game in any other way and just contributes to the lore.
 --]]
 space_objects = ScienceDatabase():setName('People')
+space_objects:setLongDescription([[
+	welcome to the people secret place. 
+	John's password is ...
+	
+	123
+]])
+space_objects:setPassword('people')
 item = space_objects:addEntry('John Trooper')
 item:setLongDescription([[
 John F Trooper is a 24-year-old tradesperson's assistant who enjoys watching television, repressing minorities and camping. He is brave and not an idiot, but can also be very idiot and a bit selfish.
