@@ -1,6 +1,7 @@
 #include "spaceObject.h"
 #include "factionInfo.h"
 #include "gameGlobalInfo.h"
+#include "spaceship.h"
 
 #include "scriptInterface.h"
 /// The SpaceObject is the base for every object which can be seen in space.
@@ -202,6 +203,8 @@ void SpaceObject::setScannedStateFor(P<SpaceObject> other, EScannedState state)
 
 EScannedState SpaceObject::getScannedStateForFaction(int faction_id)
 {
+    if (!P<SpaceShip>(P<SpaceObject>(this)))
+        return SS_FullScan;
     if (int(scanned_by_faction.size()) <= faction_id)
         return SS_NotScanned;
     return scanned_by_faction[faction_id];

@@ -240,7 +240,9 @@ set(SOURCES
 	src/spaceObjects/EMPMissile.cpp
 	src/spaceObjects/playerSpaceship.cpp
 	src/spaceObjects/beamEffect.cpp
-	src/spaceObjects/homingMissile.cpp
+	src/spaceObjects/torpedo.cpp
+	src/spaceObjects/cruiseMissile.cpp
+	src/spaceObjects/heavyMissile.cpp
 	src/spaceObjects/hvli.cpp
 	src/spaceObjects/electricExplosionEffect.cpp
 	src/spaceObjects/supplyDrop.cpp

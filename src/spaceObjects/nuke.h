@@ -5,9 +5,9 @@
 
 class Nuke : public MissileWeapon
 {
-    constexpr static float blastRange = 1000.0f;
-    constexpr static float damageAtCenter = 160.0f;
-    constexpr static float damageAtEdge = 30.0f;
+    constexpr static float blastRange = 5000.0f;
+    constexpr static float damageAtCenter = 300.0f;
+    constexpr static float damageAtEdge = 70.0f;
 public:
     Nuke();
 

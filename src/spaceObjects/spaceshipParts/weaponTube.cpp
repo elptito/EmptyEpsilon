@@ -1,6 +1,8 @@
 #include "weaponTube.h"
 #include "spaceObjects/EMPMissile.h"
-#include "spaceObjects/homingMissile.h"
+#include "spaceObjects/heavyMissile.h"
+#include "spaceObjects/cruiseMissile.h"
+#include "spaceObjects/torpedo.h"
 #include "spaceObjects/mine.h"
 #include "spaceObjects/nuke.h"
 #include "spaceObjects/hvli.h"
@@ -105,32 +107,32 @@ void WeaponTube::fire(float target_angle)
 void WeaponTube::spawnProjectile(float target_angle)
 {
     sf::Vector2f fireLocation = parent->getPosition() + sf::rotateVector(parent->ship_template->model_data->getTubePosition2D(tube_index), parent->getRotation());
+    P<MissileWeapon> baseMissile;
+    int32_t target_id = parent->target_id;
     switch(type_loaded)
     {
-    case MW_Homing:
-        {
-            P<HomingMissile> missile = new HomingMissile();
-            missile->owner = parent;
-            missile->setFactionId(parent->getFactionId());
-            missile->target_id = parent->target_id;
-            missile->setPosition(fireLocation);
-            missile->setRotation(parent->getRotation() + direction);
-            missile->target_angle = target_angle;
+    case MW_Cruise: 
+            baseMissile = new CruiseMissile();
+        break;
+    case MW_Torpedo: 
+            baseMissile = new Torpedo();
+        break;
+    case MW_Heavy: 
+            baseMissile = new HeavyMissile();
+        break;
+    case MW_EMP: 
+            baseMissile = new EMPMissile();
+        break;
+    case MW_Nuke: 
+            baseMissile = new Nuke();
+        break;
+    case MW_HVLI: {
+            target_angle = parent->getRotation() + direction; // reset angle to rotation
+            target_id = -1; // dont set target;
+            baseMissile = new HVLI();
         }
         break;
-    case MW_Nuke:
-        {
-            P<Nuke> missile = new Nuke();
-            missile->owner = parent;
-            missile->setFactionId(parent->getFactionId());
-            missile->target_id = parent->target_id;
-            missile->setPosition(fireLocation);
-            missile->setRotation(parent->getRotation() + direction);
-            missile->target_angle = target_angle;
-        }
-        break;
-    case MW_Mine:
-        {
+    case MW_Mine: {
             P<Mine> missile = new Mine();
             missile->owner = parent;
             missile->setFactionId(parent->getFactionId());
@@ -139,29 +141,16 @@ void WeaponTube::spawnProjectile(float target_angle)
             missile->eject();
         }
         break;
-    case MW_HVLI:
-        {
-            P<HVLI> missile = new HVLI();
-            missile->owner = parent;
-            missile->setFactionId(parent->getFactionId());
-            missile->setPosition(fireLocation);
-            missile->setRotation(parent->getRotation() + direction);
-            missile->target_angle = parent->getRotation() + direction;
-        }
-        break;
-    case MW_EMP:
-        {
-            P<EMPMissile> missile = new EMPMissile();
-            missile->owner = parent;
-            missile->setFactionId(parent->getFactionId());
-            missile->target_id = parent->target_id;
-            missile->setPosition(fireLocation);
-            missile->setRotation(parent->getRotation() + direction);
-            missile->target_angle = target_angle;
-        }
-        break;
     default:
         break;
+    }
+    if (baseMissile){
+        baseMissile->owner = parent;
+        baseMissile->setFactionId(parent->getFactionId());
+        baseMissile->setPosition(fireLocation);
+        baseMissile->setRotation(parent->getRotation() + direction);
+        baseMissile->target_angle = target_angle;
+        baseMissile->target_id = parent->target_id;
     }
 }
 

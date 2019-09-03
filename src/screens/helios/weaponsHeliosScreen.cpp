@@ -55,7 +55,9 @@ WeaponsHeliosScreen::WeaponsHeliosScreen(GuiContainer* owner)
         load_type_rows[n] = new GuiKeyValueDisplay(missileLoadLayout, "MISSILE_LOAD_" + string(n), 0.45, getMissileWeaponName(EMissileWeapons(n)), "");
         load_type_rows[n]->setTextSize(20)->setSize(GuiElement::GuiSizeMax, 40);
     }
-    load_type_rows[MW_Homing]->setIcon("gui/icons/weapon-homing.png");
+    load_type_rows[MW_Cruise]->setIcon("gui/icons/weapon-homing.png");
+    load_type_rows[MW_Torpedo]->setIcon("gui/icons/weapon-homing.png");
+    load_type_rows[MW_Heavy]->setIcon("gui/icons/weapon-homing.png");
     load_type_rows[MW_Mine]->setIcon("gui/icons/weapon-mine.png");
     load_type_rows[MW_EMP]->setIcon("gui/icons/weapon-emp.png");
     load_type_rows[MW_Nuke]->setIcon("gui/icons/weapon-nuke.png");
@@ -245,24 +247,10 @@ void WeaponsHeliosScreen::onHotkey(const HotkeyResult& key)
             iterateTagrets(true, target_mode_enemy, target_mode_near);
         } else if (key.hotkey == "PREV_TARGET") {
             iterateTagrets(false, target_mode_enemy, target_mode_near);
-        } else if (key.hotkey == "TARGET_NEAR_ON") {
-            target_mode_near = true;
-        } else if (key.hotkey == "TARGET_NEAR_OFF") {
-            target_mode_near = false;
-        } else if (key.hotkey == "TARGET_ENEMY_ON") {
-            target_mode_enemy = true;
-        } else if (key.hotkey == "TARGET_ENEMY_OFF") {
-            target_mode_enemy = false;
-        } else if (key.hotkey == "SELECT_MISSILE_TYPE_HOMING") {
-            load_type = MW_Homing;
-        } else if (key.hotkey == "SELECT_MISSILE_TYPE_NUKE") {
-            load_type = MW_Nuke;
-        } else if (key.hotkey == "SELECT_MISSILE_TYPE_MINE") {
-            load_type = MW_Mine;
-        } else if (key.hotkey == "SELECT_MISSILE_TYPE_EMP") {
-            load_type = MW_EMP;
-        } else if (key.hotkey == "SELECT_MISSILE_TYPE_HVLI") {
-            load_type = MW_HVLI;
+        } else if (key.hotkey == "TARGET_NEAR_TOGGLE") {
+            target_mode_near = !target_mode_near;
+        } else if (key.hotkey == "TARGET_ENEMY_TOGGLE") {
+            target_mode_enemy = !target_mode_enemy;
         } else if (key.hotkey == "BEAM_FREQUENCY_INCREASE") {
             my_spaceship->commandSetBeamFrequency((my_spaceship->beam_frequency + 1) % SpaceShip::max_frequency);
         } else if (key.hotkey == "BEAM_FREQUENCY_DECREASE") {
@@ -299,6 +287,11 @@ void WeaponsHeliosScreen::onHotkey(const HotkeyResult& key)
                 manual_aim = false;
             } else if (key.hotkey == "DISABLE_AIM_LOCK") {
                 manual_aim = true;
+            }
+        }
+        for(int n=0; n<MW_Count; n++){
+            if (key.hotkey == "SELECT_MISSILE_TYPE_" + getMissileWeaponName(EMissileWeapons(n)).upper()) {
+                load_type = EMissileWeapons(n);
             }
         }
         for(int n=0; n<my_spaceship->weapon_tube_count; n++)

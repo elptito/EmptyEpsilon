@@ -1,14 +1,14 @@
-#include "homingMissile.h"
+#include "heavyMissile.h"
 #include "particleEffect.h"
 #include "explosionEffect.h"
 
-REGISTER_MULTIPLAYER_CLASS(HomingMissile, "HomingMissile");
-HomingMissile::HomingMissile()
-: MissileWeapon("HomingMissile", MissileWeaponData::getDataFor(MW_Homing))
+REGISTER_MULTIPLAYER_CLASS(HeavyMissile, "HeavyMissile");
+HeavyMissile::HeavyMissile()
+: MissileWeapon("HeavyMissile", MissileWeaponData::getDataFor(MW_Heavy))
 {
 }
 
-void HomingMissile::hitObject(P<SpaceObject> object)
+void HeavyMissile::hitObject(P<SpaceObject> object)
 {
     DamageInfo info(owner, DT_Kinetic, getPosition());
     object->takeDamage(35, info);

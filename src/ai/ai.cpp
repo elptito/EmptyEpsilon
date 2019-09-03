@@ -90,6 +90,8 @@ static float getMissileWeaponStrength(EMissileWeapons type)
         return 150;
     case MW_HVLI:
         return 20;
+    case MW_Cruise:
+        return 50;
     default:
         return 35;
     }
@@ -117,8 +119,12 @@ void ShipAI::updateWeaponState(float delta)
             tube.startLoad(MW_EMP);
         else if (tube.isEmpty() && owner->weapon_storage[MW_Nuke] > 0 && tube.canLoad(MW_Nuke))
             tube.startLoad(MW_Nuke);
-        else if (tube.isEmpty() && owner->weapon_storage[MW_Homing] > 0 && tube.canLoad(MW_Homing))
-            tube.startLoad(MW_Homing);
+        else if (tube.isEmpty() && owner->weapon_storage[MW_Cruise] > 0 && tube.canLoad(MW_Cruise))
+            tube.startLoad(MW_Cruise);
+        else if (tube.isEmpty() && owner->weapon_storage[MW_Torpedo] > 0 && tube.canLoad(MW_Torpedo))
+            tube.startLoad(MW_Torpedo);
+        else if (tube.isEmpty() && owner->weapon_storage[MW_Heavy] > 0 && tube.canLoad(MW_Heavy))
+            tube.startLoad(MW_Heavy);
         else if (tube.isEmpty() && owner->weapon_storage[MW_HVLI] > 0 && tube.canLoad(MW_HVLI))
             tube.startLoad(MW_HVLI);
 
