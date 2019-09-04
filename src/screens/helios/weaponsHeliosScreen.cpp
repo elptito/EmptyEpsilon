@@ -201,7 +201,7 @@ void WeaponsHeliosScreen::iterateTagrets(bool forward, bool enemiesOnly, bool ne
     P<SpaceObject> lastSeen = nullptr;
     P<SpaceObject> firstSeen = nullptr;
     float range = nearOnly? radar->getDistance() : gameGlobalInfo->long_range_radar_range;
-    PVector<SpaceObject> potentialTargets = GuiRadarView::getVisibleObjects(my_spaceship, GuiRadarView::RadarRangeAndLineOfSight, range);
+    PVector<SpaceObject> potentialTargets = GuiRadarView::getVisibleObjects(my_spaceship->getPosition(), my_spaceship->getFactionId(), GuiRadarView::RadarRangeAndLineOfSight, range);
     std::sort(potentialTargets.begin(), potentialTargets.end(), compareSpaceObjects); 
     P<SpaceObject> found = nullptr;
     foreach(SpaceObject, obj, potentialTargets) {

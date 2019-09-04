@@ -26,7 +26,7 @@ public:
 
     typedef std::function<void(sf::Vector2f position)> func_t;
     typedef std::function<void(float position)>        ffunc_t;
-    static PVector<SpaceObject> getVisibleObjects(P<SpaceObject> pov, EFogOfWarStyle fog_style, float radius);
+    static PVector<SpaceObject> getVisibleObjects(sf::Vector2f pov_position, unsigned int pov_faction, EFogOfWarStyle fog_style, float radius_x, float radius_y = -1.f);
 private:
     sf::RenderTexture background_texture;
     sf::RenderTexture forground_texture;
