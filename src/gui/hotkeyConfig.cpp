@@ -111,10 +111,10 @@ HotkeyConfig::HotkeyConfig()
 
     newCategory("TRACTOR_BEAM", "Tractor Beam");
     newKey("MODE", std::make_tuple("Toggle tractor beam mode", ""));
-    newKey("MODE_OFF", std::make_tuple("Switch tractor beam off", ""));
-    newKey("MODE_PULL", std::make_tuple("Switch tractor beam to pull mode", ""));
-    newKey("MODE_PUSH", std::make_tuple("Switch tractor beam to push mode", ""));
-    newKey("MODE_HOLD", std::make_tuple("Switch tractor beam to hold mode", ""));
+    newKey("MODE_OFF", std::make_tuple("Switch tractor beam off", "1"));
+    newKey("MODE_PULL", std::make_tuple("Switch tractor beam to pull mode", "2"));
+    newKey("MODE_PUSH", std::make_tuple("Switch tractor beam to push mode", "3"));
+    newKey("MODE_HOLD", std::make_tuple("Switch tractor beam to hold mode", "4"));
 
     newCategory("GM", "Game Master");
     newKey("DESTROY", std::make_tuple("Destroy delected targets", "Delete"));

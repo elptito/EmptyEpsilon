@@ -38,7 +38,9 @@ JoystickConfig::JoystickConfig()
     }
 
     newCategory("TRACTOR_BEAM", "Tractor Beam");
-    newAxis("ARC", std::make_tuple("Change arc of tractor beam", ""));
+    newAxis("X", std::make_tuple("Change horizontal aim of tractor beam", "X"));
+    newAxis("Y", std::make_tuple("Change vertical aim of tractor beam", "Y"));
+    newAxis("ARC", std::make_tuple("Change arc of tractor beam", "Z"));
     newAxis("DIRECTION", std::make_tuple("Change direction of tractor beam", ""));
     newAxis("RANGE", std::make_tuple("Change range of tractor beam", ""));
 }

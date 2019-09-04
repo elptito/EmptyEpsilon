@@ -451,7 +451,8 @@ void ShipSelectionScreen::updateCrewTypeOptions()
         crew_position_button[weaponsHeliosScreen]->show();
         crew_position_button[engineControlHeliosScreen]->show();
         crew_position_button[bridgeEngineeringHeliosScreen]->show();
-        crew_position_button[databaseHeliosScreen]->show();
+        crew_position_button[databaseHeliosScreen]->show();        
+        crew_position_button[tractorBeamHeliosScreen]->show();
         break;
     case 1: // 6/5 player crew
         for(int n = helmsOfficer; n <= relayOfficer; n++)

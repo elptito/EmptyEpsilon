@@ -81,7 +81,7 @@ void GuiTractorBeamControl::onHotkey(const HotkeyResult& key){
         else if (key.hotkey == "MODE_HOLD")
             my_spaceship->commandSetTractorBeamMode(ETractorBeamMode::TBM_Hold);
         else if (key.hotkey == "MODE")
-            my_spaceship->commandSetTractorBeamMode(ETractorBeamMode((my_spaceship->tractor_beam.getMode() + 1) % ETractorBeamMode::TBM_Max));
+            my_spaceship->commandSetTractorBeamMode(ETractorBeamMode((my_spaceship->tractor_beam.getMode() + 1) % ETractorBeamMode::TBM_Count));
     }
 }
 

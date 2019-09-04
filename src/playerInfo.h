@@ -37,6 +37,7 @@ enum ECrewPosition
     helmsHeliosScreen,
     weaponsHeliosScreen,
     databaseHeliosScreen,
+    tractorBeamHeliosScreen,
     max_crew_positions
 };
 

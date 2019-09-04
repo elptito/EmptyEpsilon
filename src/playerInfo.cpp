@@ -31,6 +31,7 @@
 #include "screens/helios/helmsHeliosScreen.h"
 #include "screens/helios/weaponsHeliosScreen.h"
 #include "screens/helios/databaseHeliosScreen.h"
+#include "screens/helios/tractorBeamScreen.h"
 
 #include "screenComponents/mainScreenControls.h"
 #include "screenComponents/selfDestructEntry.h"
@@ -142,6 +143,8 @@ void PlayerInfo::spawnUI()
             screen->addStationTab(new WeaponsHeliosScreen(screen), weaponsHeliosScreen, getCrewPositionName(weaponsHeliosScreen), getCrewPositionIcon(weaponsHeliosScreen));
         if (crew_position[databaseHeliosScreen])
             screen->addStationTab(new DatabaseHeliosScreen(screen), databaseHeliosScreen, getCrewPositionName(databaseHeliosScreen), getCrewPositionIcon(databaseHeliosScreen));
+        if (crew_position[tractorBeamHeliosScreen])
+            screen->addStationTab(new TractorBeamScreen(screen), tractorBeamHeliosScreen, getCrewPositionName(tractorBeamHeliosScreen), getCrewPositionIcon(tractorBeamHeliosScreen));
       	//Crew 6/5
         if (crew_position[helmsOfficer])
             screen->addStationTab(new HelmsScreen(screen), helmsOfficer, getCrewPositionName(helmsOfficer), getCrewPositionIcon(helmsOfficer));
@@ -250,6 +253,7 @@ string getCrewPositionName(ECrewPosition position)
     case internLog: return "Internal Log";
     case engineControlHeliosScreen: return "ECR";
     case bridgeEngineeringHeliosScreen: return "Bridge Engineering";
+    case tractorBeamHeliosScreen: return "Tractor Beam";
     default: return "ErrUnk: " + string(position);
     }
 }
@@ -282,6 +286,7 @@ string getCrewPositionIcon(ECrewPosition position)
     case internLog: return "";
     case engineControlHeliosScreen: return "";
     case bridgeEngineeringHeliosScreen: return "";
+    case tractorBeamHeliosScreen: return "";
     default: return "ErrUnk: " + string(position);
     }
 }
@@ -302,6 +307,8 @@ template<> void convert<ECrewPosition>::param(lua_State* L, int& idx, ECrewPosit
         cp = weaponsHeliosScreen;
     else if (str == "databaseHelios")
         cp = databaseHeliosScreen;
+    else if (str == "tractorBeamHelios")
+        cp = tractorBeamHeliosScreen;
     //6/5 player crew
     else if (str == "helms" || str == "helmsofficer")
         cp = helmsOfficer;
