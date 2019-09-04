@@ -51,6 +51,10 @@ GuiProgressbar* GuiProgressbar::setValue(float value)
     return this;
 }
 
+float GuiProgressbar::getValue(){
+    return this->value;
+}
+
 GuiProgressbar* GuiProgressbar::setRange(float min_value, float max_value)
 {
     this->min_value = min_value;
