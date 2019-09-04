@@ -122,6 +122,7 @@ void TractorBeam::update(float delta)
                         sf::Vector2f destination;
                         switch(mode) {
                             case TBM_Off : 
+                            case TBM_Max : 
                                 // do nothing. here to avoid compiler -Wswitch warning
                                 break;
                             case TBM_Pull : 

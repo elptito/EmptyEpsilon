@@ -150,7 +150,7 @@ void WeaponTube::spawnProjectile(float target_angle)
         baseMissile->setPosition(fireLocation);
         baseMissile->setRotation(parent->getRotation() + direction);
         baseMissile->target_angle = target_angle;
-        baseMissile->target_id = parent->target_id;
+        baseMissile->target_id = target_id;
     }
 }
 
