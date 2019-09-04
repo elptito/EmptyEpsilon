@@ -240,7 +240,7 @@ void GuiRadarView::drawFogOfWarBlockedAreas(sf::RenderTarget& window){
         {
             sf::Vector2f scan_center = obj->getPosition();
             float range = obj->getRadarRange() * getScale();
-            if (range > 0.0f && obj->isFriendly(my_spaceship))
+            if (range > 0.0f &&  obj->getFactionId() == my_spaceship->getFactionId())
             {
                 temp.clear(blockedMaskColor);
                 sf::CircleShape circle(range, 50);
@@ -518,7 +518,7 @@ PVector<SpaceObject> GuiRadarView::getVisibleObjects(P<SpaceObject> pov, EFogOfW
             if (!obj->canHideInNebula() && (pov->getPosition() - obj->getPosition()) < radius + obj->getRadius())
                 result_set.insert(obj);
             float obj_range = obj->getRadarRange();
-            if (obj_range > 0.0f && obj->isFriendly(pov)) {
+            if (obj_range > 0.0f && obj->getFactionId() == pov->getFactionId()){
                 float obj_query_range = obj_range + MAX_OBJ_RADIUS;
                 sf::Vector2f position = obj->getPosition();
                 sf::Vector2f lowerBound(std::max(pov_lowerBound.x, position.x - obj_query_range), std::max(pov_lowerBound.y, position.y - obj_query_range));
@@ -569,6 +569,19 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
             if (!obj->canHideInNebula())
                 window = &window_alpha; // draw on background
             obj->drawOnRadar(*window, object_position_on_screen, getScale(), long_range);
+            if (long_range && obj->getRadarRange() && 
+                !(my_spaceship && obj->getScannedStateFor(my_spaceship) < SS_FullScan) &&
+                (my_spaceship || gameGlobalInfo->isPlayerFaction(obj->getFactionId()))
+                ) {
+                float radius = obj->getRadarRange() * getScale();
+                sf::CircleShape radar_radius(radius);
+                radar_radius.setOrigin(radius, radius);
+                radar_radius.setPosition(object_position_on_screen);
+                radar_radius.setFillColor(sf::Color::Transparent);
+                radar_radius.setOutlineColor(sf::Color(255, 255, 255, 64));
+                radar_radius.setOutlineThickness(3.0);
+                window->draw(radar_radius);
+            }
             if (show_callsigns && obj->getCallSign() != ""){
                 deOrient();
                 sf::Vector2f object_position_on_screen_oriented = orientVector(worldToScreen(obj->getPosition()));

@@ -92,6 +92,7 @@ ShipTemplate::ShipTemplate()
     shares_energy_with_docked = true;
     repair_docked = false;
     radar_range = PreferencesManager::get("server_config_long_range_radar_range", "30000").toFloat();
+    // same as : radar_range = gameGlobalInfo->long_range_radar_range;
     restocks_scan_probes = false;
     energy_storage_amount = 1000;
     repair_crew_count = 3;

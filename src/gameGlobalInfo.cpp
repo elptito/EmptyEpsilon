@@ -180,6 +180,15 @@ void GameGlobalInfo::reset()
         factionInfo[n]->reset();
 }
 
+bool GameGlobalInfo::isPlayerFaction(unsigned int faction_id){
+    for(int n=0; n<max_player_ships; n++){
+        P<PlayerSpaceship> ship = getPlayerShip(n);
+        if(ship && ship->getFactionId() == faction_id)
+           return true;
+    }
+    return false;
+}
+
 void GameGlobalInfo::startScenario(string filename)
 {
     reset();

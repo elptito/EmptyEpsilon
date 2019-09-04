@@ -157,7 +157,7 @@ string alertLevelToString(EAlertLevel level)
 
 REGISTER_MULTIPLAYER_CLASS(PlayerSpaceship, "PlayerSpaceship");
 PlayerSpaceship::PlayerSpaceship()
-: SpaceShip("PlayerSpaceship", 5000)
+: SpaceShip("PlayerSpaceship", 10000)
 {
     // Initialize ship settings
     main_screen_setting = MSS_Front;
@@ -1691,29 +1691,6 @@ void PlayerSpaceship::onReceiveServerCommand(sf::Packet& packet)
             }
         }
         break;
-    }
-}
-
-void PlayerSpaceship::drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range)
-{
-    SpaceShip::drawOnGMRadar(window, position, scale, long_range);
-    if (long_range)
-    {
-        sf::CircleShape radar_radius(gameGlobalInfo->long_range_radar_range * scale);
-        radar_radius.setOrigin(gameGlobalInfo->long_range_radar_range * scale, gameGlobalInfo->long_range_radar_range * scale);
-        radar_radius.setPosition(position);
-        radar_radius.setFillColor(sf::Color::Transparent);
-        radar_radius.setOutlineColor(sf::Color(255, 255, 255, 64));
-        radar_radius.setOutlineThickness(3.0);
-        window.draw(radar_radius);
-
-        sf::CircleShape short_radar_radius(5000 * scale);
-        short_radar_radius.setOrigin(5000 * scale, 5000 * scale);
-        short_radar_radius.setPosition(position);
-        short_radar_radius.setFillColor(sf::Color::Transparent);
-        short_radar_radius.setOutlineColor(sf::Color(255, 255, 255, 64));
-        short_radar_radius.setOutlineThickness(3.0);
-        window.draw(short_radar_radius);
     }
 }
 

@@ -321,9 +321,6 @@ public:
     // Ship control code/password setter
     void setControlCode(string code) { control_code = code; }
 
-    // Radar function
-    virtual void drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range) override;
-
     // Script export function
     virtual string getExportLine();
 };

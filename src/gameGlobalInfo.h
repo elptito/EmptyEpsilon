@@ -117,6 +117,7 @@ public:
 
     int findPlayerShip(P<PlayerSpaceship> ship);
     int insertPlayerShip(P<PlayerSpaceship> ship);
+    bool isPlayerFaction(unsigned int faction_id);
     /*!
      * \brief Set a faction to victorious.
      * \param string Name of the faction that won.

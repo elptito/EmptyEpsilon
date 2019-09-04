@@ -270,7 +270,7 @@ void ShipAI::updateTarget()
     if (orders == AI_FlyFormation && order_target)
     {
         P<SpaceShip> ship = order_target;
-        if (ship && ship->getTarget() && (ship->getTarget()->getPosition() - position) < 5000.0f)
+        if (ship && ship->getTarget() && (ship->getTarget()->getPosition() - position) < owner->getRadarRange())
             new_target = ship->getTarget();
     }
     if (orders == AI_DefendTarget)
@@ -601,10 +601,10 @@ float ShipAI::targetScore(P<SpaceObject> target)
     if (P<ScanProbe>(target))
     {
         score -= 10000;
-        if (distance > 5000)
+        if (distance > owner->getRadarRange())
             return std::numeric_limits<float>::min();
     }
-    if (distance < 5000 && has_missiles)
+    if (distance < owner->getRadarRange() && has_missiles)
         score += 500;
 
     if (distance < beam_weapon_range)
