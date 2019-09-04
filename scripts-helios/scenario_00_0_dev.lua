@@ -24,9 +24,9 @@ function update(delta)
 end
 
 function targets()
-        SpaceStation():setTemplate("Small Station"):setFaction("Free Miners"):setCallSign("DS665"):setPosition(-16949, 18366)
-        SpaceStation():setTemplate("Small Station"):setFaction("Free Miners"):setCallSign("DS666"):setPosition(-17659, 17780)
-        SpaceStation():setTemplate("Small Station"):setFaction("Free Miners"):setCallSign("DS667"):setPosition(-12743, 18683)
+        SpaceStation():setTemplate("Small Station"):setFaction("FSN"):setCallSign("DS665"):setPosition(-16949, 18366)
+        SpaceStation():setTemplate("Small Station"):setFaction("FSN"):setCallSign("DS666"):setPosition(-17659, 17780)
+        SpaceStation():setTemplate("Small Station"):setFaction("FSN"):setCallSign("DS667"):setPosition(-12743, 18683)
         SpaceStation():setTemplate("Medium Station"):setFaction("MCF Extreme"):setCallSign("target_UN_HIDDEN"):setPosition(-14967, 17975)
         SpaceStation():setTemplate("Medium Station"):setFaction("MCF Extreme"):setCallSign("target_HIDDEN_1"):setPosition(12410, 18687)
         SpaceStation():setTemplate("Medium Station"):setFaction("MCF Extreme"):setCallSign("target_3"):setPosition(0, 15000)
