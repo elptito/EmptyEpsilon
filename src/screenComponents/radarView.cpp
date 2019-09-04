@@ -569,18 +569,20 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
             if (!obj->canHideInNebula())
                 window = &window_alpha; // draw on background
             obj->drawOnRadar(*window, object_position_on_screen, getScale(), long_range);
-            if (long_range && obj->getRadarRange() && 
-                !(my_spaceship && obj->getScannedStateFor(my_spaceship) < SS_FullScan) &&
-                (my_spaceship || gameGlobalInfo->isPlayerFaction(obj->getFactionId()))
-                ) {
-                float radius = obj->getRadarRange() * getScale();
-                sf::CircleShape radar_radius(radius);
-                radar_radius.setOrigin(radius, radius);
-                radar_radius.setPosition(object_position_on_screen);
-                radar_radius.setFillColor(sf::Color::Transparent);
-                radar_radius.setOutlineColor(sf::Color(255, 255, 255, 64));
-                radar_radius.setOutlineThickness(3.0);
-                window->draw(radar_radius);
+            if (long_range && obj->getRadarRange()){
+                bool scanned = obj->getScannedStateFor(my_spaceship) == SS_FullScan;
+                bool player = show_game_master_data && gameGlobalInfo->isPlayerFaction(obj->getFactionId());
+                if (scanned || player){
+                    // bool bold = player || (my_spaceship && obj->getFactionId() == my_spaceship->getFactionId());
+                    float radius = obj->getRadarRange() * getScale();
+                    sf::CircleShape radar_radius(radius);
+                    radar_radius.setOrigin(radius, radius);
+                    radar_radius.setPosition(object_position_on_screen);
+                    radar_radius.setFillColor(sf::Color::Transparent);
+                    radar_radius.setOutlineColor(sf::Color(255, 255, 255, 128));
+                    radar_radius.setOutlineThickness(3.0);
+                    window->draw(radar_radius);
+                }
             }
             if (show_callsigns && obj->getCallSign() != ""){
                 deOrient();
@@ -594,6 +596,16 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
     {
         sf::Vector2f object_position_on_screen = worldToScreen(my_spaceship->getPosition());
         my_spaceship->drawOnRadar(window_normal, object_position_on_screen, getScale(), long_range);
+        if (long_range){
+            float radius = my_spaceship->getRadarRange() * getScale();
+            sf::CircleShape radar_radius(radius);
+            radar_radius.setOrigin(radius, radius);
+            radar_radius.setPosition(object_position_on_screen);
+            radar_radius.setFillColor(sf::Color::Transparent);
+            radar_radius.setOutlineColor(sf::Color(255, 255, 255, 128));
+            radar_radius.setOutlineThickness(5.0);
+            window_normal.draw(radar_radius);
+        }
     }
 }
 
