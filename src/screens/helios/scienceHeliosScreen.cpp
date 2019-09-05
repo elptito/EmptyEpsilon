@@ -17,7 +17,7 @@
 #include "gui/gui2_keyvaluedisplay.h"
 #include "gui/gui2_togglebutton.h"
 #include "gui/gui2_selector.h"
-#include "gui/gui2_scrolltext.h"
+#include "gui/gui2_text.h"
 #include "gui/gui2_listbox.h"
 #include "gui/gui2_label.h"
 #include "gui/gui2_progressbar.h"
@@ -102,8 +102,8 @@ ScienceHeliosScreen::ScienceHeliosScreen(GuiContainer* owner, ECrewPosition crew
     });
     info_type_button->setSize(GuiElement::GuiSizeMax, 50);
     // Simple scan data.
-    info_callsign = new GuiKeyValueDisplay(middle_column, "SCIENCE_CALLSIGN", 0.4, "Callsign", "");
-    info_callsign->setSize(GuiElement::GuiSizeMax, 30);
+    info_callsign = new GuiLabel(middle_column, "SCIENCE_CALLSIGN", "", 30);
+    info_callsign->addBackground()->setSize(GuiAutoLayout::GuiSizeMax, 40);
     info_distance = new GuiKeyValueDisplay(middle_column, "SCIENCE_DISTANCE", 0.4, "Distance", "");
     info_distance->setSize(GuiElement::GuiSizeMax, 30);
     info_heading = new GuiKeyValueDisplay(middle_column, "SCIENCE_HEADING", 0.4, "Heading", "");
@@ -122,8 +122,8 @@ ScienceHeliosScreen::ScienceHeliosScreen(GuiContainer* owner, ECrewPosition crew
 
 
     // Prep the description text area.
-    info_description = new GuiScrollText(middle_column, "SCIENCE_DESC", "");
-    info_description->setTextSize(28)->setMargins(0, 20, 0, 0)->setSize(GuiElement::GuiSizeMax, 400);
+    info_description = new GuiText(middle_column, "SCIENCE_DESC", "");
+    info_description->setTextSize(28)->setMargins(0, 20, 0, 0)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
     // Prep the frequency graphs.
     info_shield_frequency = new GuiFrequencyCurve(right_column, "SCIENCE_SHIELD_FREQUENCY", false, true);
@@ -188,8 +188,7 @@ void ScienceHeliosScreen::onDraw(sf::RenderTarget& window)
 
     // Handle mouse wheel
     float mouse_wheel_delta = InputHandler::getMouseWheelDelta();
-    if (mouse_wheel_delta != 0.0)
-    {
+    if (mouse_wheel_delta != 0.0) {
         float view_distance = science_radar->getDistance() * (1.0 - (mouse_wheel_delta * 0.1f));
         if (view_distance > gameGlobalInfo->long_range_radar_range)
             view_distance = gameGlobalInfo->long_range_radar_range;
@@ -223,7 +222,7 @@ void ScienceHeliosScreen::onDraw(sf::RenderTarget& window)
     
     // sidebar_selector->setVisible(sidebar_selector->getSelectionIndex() > 0 || custom_function_sidebar->hasEntries());
 
-    info_callsign->setValue("-");
+    info_callsign->setText("-");
     info_distance->setValue("-");
     info_heading->setValue("-");
     info_relspeed->setValue("-");
@@ -233,9 +232,7 @@ void ScienceHeliosScreen::onDraw(sf::RenderTarget& window)
     info_hull->setValue("-");
     info_shield_frequency->setFrequency(-1);
     info_beam_frequency->setFrequency(-1);
-    info_description->setText("-");
-    // info_type_button->hide();
-    // sidebar_pager->hide();
+    info_description->setText("");
 
     for(int n = 0; n < SYS_COUNT; n++) {
         info_system[n]->setValue("-");
@@ -274,26 +271,20 @@ void ScienceHeliosScreen::onDraw(sf::RenderTarget& window)
                 int minutes = seconds / 60;
                 int hours = minutes / 60;
                 int days = hours / 24;
-
-                duration += " (";
-                duration += string(days);
-                duration += ":";
+                duration += " (" + string(days) + ":";
                 if (hours < 10)
                     duration += "0";
-                duration += string(hours%24);
-                duration += ":";
+                duration += string(hours%24) + ":";
                 if (minutes < 10)
                     duration += "0";
-                duration += string(minutes%60);
-                duration += ":";
+                duration += string(minutes%60) + ":";
                 if (seconds%60 < 10)
                     duration += "0";
-                duration += string(seconds%60);
-                duration += ")";
+                duration += string(seconds%60) + ")";
             }
         }
 
-        info_callsign->setValue(obj->getCallSign());
+        info_callsign->setText(obj->getCallSign());
         info_distance->setValue(string(distance / 1000.0f, 1) + DISTANCE_UNIT_1K);
         info_heading->setValue(string(int(heading)));
         info_relspeed->setValue(string(rel_velocity / 1000.0f * 60.0f, 1) + DISTANCE_UNIT_1K + "/min" + duration);
@@ -312,7 +303,7 @@ void ScienceHeliosScreen::onDraw(sf::RenderTarget& window)
                 info_shields->setValue(ship->getShieldDataString());
                 info_hull->setValue(int(ship->getHull()));
             }
-
+            if (ship->getScannedStateFor(my_spaceship) >= SS_FullScan) {
                 // If beam and shield frequencies are enabled on the server,
                 // populate their graphs.
                 if (gameGlobalInfo->use_beam_shield_frequencies) {
@@ -325,6 +316,7 @@ void ScienceHeliosScreen::onDraw(sf::RenderTarget& window)
                     float system_health = ship->systems[n].health;
                     info_system[n]->setValue(string(int(system_health * 100.0f)) + "%")->setColor(sf::Color(255, 127.5 * (system_health + 1), 127.5 * (system_health + 1), 255));
                 }
+            }
             // }
         } else {
         // If the target isn't a ship, show basic info.

@@ -6,44 +6,26 @@
 #include "spaceObjects/scanProbe.h"
 #include "playerInfo.h"
 
-class GuiListbox;
 class GuiRadarView;
 class GuiKeyValueDisplay;
 class GuiFrequencyCurve;
-class GuiScrollText;
+class GuiText;
 class GuiAutoLayout;
 class GuiButton;
 class GuiScanTargetButton;
 class GuiToggleButton;
-class GuiSelector;
-class GuiSlider;
 class GuiLabel;
-class DatabaseViewComponent;
-class GuiCustomShipFunctions;
 class GuiProgressbar;
 
 class ScienceHeliosScreen : public GuiOverlay
 {
 public:
-    // GuiOverlay* background_gradient;
-    // GuiOverlay* background_crosses;
-
-    // GuiElement* radar_view;
-    // DatabaseViewComponent* database_view;
-
     TargetsContainer targets;
     GuiRadarView* science_radar;
     GuiRadarView* probe_radar;
-    // GuiSlider* zoom_slider;
     GuiProgressbar* zoom_bar;
-    // GuiLabel* zoom_label;
-
-    // GuiSelector* sidebar_selector;
-    // GuiAutoLayout* sidebar;
-    // GuiCustomShipFunctions* custom_function_sidebar;
-    // GuiSelector* sidebar_pager;
     GuiScanTargetButton* scan_button;
-    GuiKeyValueDisplay* info_callsign;
+    GuiLabel* info_callsign;
     GuiKeyValueDisplay* info_distance;
     GuiKeyValueDisplay* info_heading;
     GuiKeyValueDisplay* info_relspeed;
@@ -54,14 +36,13 @@ public:
     GuiButton* info_type_button;
     GuiKeyValueDisplay* info_shields;
     GuiKeyValueDisplay* info_hull;
-    GuiScrollText* info_description;
+    GuiText* info_description;
     GuiFrequencyCurve* info_shield_frequency;
     GuiFrequencyCurve* info_beam_frequency;
     GuiKeyValueDisplay* info_system[SYS_COUNT];
 
     GuiToggleButton* probe_view_button;
     P<ScanProbe> observation_point;
-    // GuiListbox* view_mode_selection;
 public:
     ScienceHeliosScreen(GuiContainer* owner, ECrewPosition crew_position=scienceHeliosScreen);
 
