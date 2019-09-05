@@ -35,7 +35,7 @@ private:
     GuiLabel* target_mode_enemy_display;
     GuiLabel* target_callsign;
     GuiKeyValueDisplay* target_distance;
-    GuiKeyValueDisplay* target_direction;
+    GuiKeyValueDisplay* target_heading;
 
     TargetsContainer targets;
     EMissileWeapons load_type;

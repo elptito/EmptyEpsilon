@@ -99,8 +99,8 @@ WeaponsHeliosScreen::WeaponsHeliosScreen(GuiContainer* owner)
     target_callsign->addBackground()->setSize(GuiAutoLayout::GuiSizeMax, 40);
     target_distance = new GuiKeyValueDisplay(targetInfoLayout, "TARGET_DISTANCE", 0.45, "Distance", "");
     target_distance->setSize(GuiAutoLayout::GuiSizeMax, 40);
-    target_direction = new GuiKeyValueDisplay(targetInfoLayout, "TARGET_DIRECTION", 0.45, "Direction", "");
-    target_direction->setSize(GuiAutoLayout::GuiSizeMax, 40);
+    target_heading = new GuiKeyValueDisplay(targetInfoLayout, "TARGET_HEADING", 0.45, "Heading", "");
+    target_heading->setSize(GuiAutoLayout::GuiSizeMax, 40);
 
     (new GuiCustomShipFunctions(this, weaponsOfficer, "", my_spaceship))->setPosition(-20, 120, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
 }
@@ -135,12 +135,12 @@ void WeaponsHeliosScreen::onDraw(sf::RenderTarget& window)
             target_callsign->setText(target->getCallSign());
             target_distance->setValue(string(sf::length(target->getPosition()-my_spaceship->getPosition()) / 1000));
             float angle = std::fmod(450 + vector2ToAngle(target->getPosition()-my_spaceship->getPosition()), 360); // add 90 deg and normalize
-            target_direction->setValue(string(angle));
+            target_heading->setValue(string(angle));
         } else {
             targets.clear();
             target_callsign->setText("-");
             target_distance->setValue("-");
-            target_direction->setValue("-");
+            target_heading->setValue("-");
         }
 
         for (int n = 0; n < MW_Count; n++)
