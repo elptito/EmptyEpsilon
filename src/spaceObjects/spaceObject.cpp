@@ -203,7 +203,7 @@ void SpaceObject::setScannedStateFor(P<SpaceObject> other, EScannedState state)
 
 EScannedState SpaceObject::getScannedStateForFaction(int faction_id)
 {
-    if (!P<SpaceShip>(P<SpaceObject>(this)))
+    if (!P<SpaceShip>(P<SpaceObject>(this)) || this->faction_id == faction_id)
         return SS_FullScan;
     if (int(scanned_by_faction.size()) <= faction_id)
         return SS_NotScanned;
