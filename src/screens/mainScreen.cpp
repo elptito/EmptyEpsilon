@@ -97,6 +97,16 @@ void ScreenMainScreen::update(float delta)
 
     if (my_spaceship)
     {
+        if (my_spaceship->id_dock != PreferencesManager::get("id_dock"))
+        {
+            destroy();
+            soundManager->stopMusic();
+            soundManager->stopSound(impulse_sound);
+            soundManager->stopSound(warp_sound);
+            disconnectFromServer();
+            returnToMainMenu();
+            return;
+        }
         P<SpaceObject> target_ship = my_spaceship->getTarget();
         float target_camera_yaw = my_spaceship->getRotation();
         switch(my_spaceship->main_screen_setting)

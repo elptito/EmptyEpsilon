@@ -45,6 +45,8 @@ REGISTER_SCRIPT_CLASS_NO_CREATE(SpaceObject)
     /// Can be used in combination with setFactionId to make sure two objects have the same faction.
     /// Example: other:setFactionId(obj:getFactionId())
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getFactionId);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getDockId);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setDockId);
 
 	/// Sets the personality of an object. Requires a index in the personality list.
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setPersonalityId);

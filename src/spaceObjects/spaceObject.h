@@ -286,6 +286,9 @@ public:
     string getPersonality();
     unsigned int getPersonalityId() { return personality_id; }
 
+    void setDockId(string id_dock){this->id_dock = id_dock;}
+    string getDockId() { return id_dock; }
+
     void setReputationPoints(float amount);
     int getReputationPoints();
     bool takeReputationPoints(float amount);

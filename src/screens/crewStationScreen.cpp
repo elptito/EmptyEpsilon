@@ -134,6 +134,14 @@ void CrewStationScreen::update(float delta)
     }
     if (my_spaceship)
     {
+        if (my_spaceship->id_dock != PreferencesManager::get("id_dock"))
+        {
+            destroy();
+            soundManager->stopMusic();
+            disconnectFromServer();
+            returnToMainMenu();
+            return;
+        }
         message_frame->hide();
         for(PlayerSpaceship::CustomShipFunction& csf : my_spaceship->custom_functions)
         {
