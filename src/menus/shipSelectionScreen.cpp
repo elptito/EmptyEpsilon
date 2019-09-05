@@ -45,14 +45,13 @@ ShipSelectionScreen::ShipSelectionScreen()
         updateCrewTypeOptions();
     });
     crew_type_selector->setOptions({
-        "Helios", 
+        "Helios GM / tests",
+        "Helios Bridge",
+        "Helios Ship",
         "6/5 player crew", 
         "4/3 player crew", 
         "1 player crew/extras", 
-        "Alternative options",
-        "Systems - Tactical",
-        "Systems - Signal",
-        "Systems - Engineering"
+        "Alternative options"
     })->setSize(GuiElement::GuiSizeMax, 50);
 
     // Main screen button
@@ -65,6 +64,15 @@ ShipSelectionScreen::ShipSelectionScreen()
     });
     main_screen_button->setSize(GuiElement::GuiSizeMax, 50);
 
+    // Game master button
+    game_master_button = new GuiToggleButton(stations_layout, "GAME_MASTER_BUTTON", "Game master", [this](bool value) {
+        window_button->setValue(false);
+		probe_button->setValue(false);
+        topdown_button->setValue(false);
+        cinematic_view_button->setValue(false);
+    });
+    game_master_button->setSize(GuiElement::GuiSizeMax, 50);
+    
     // Crew position buttons, with icons if they have them
     for(int n = 0; n < max_crew_positions; n++)
     {
@@ -81,15 +89,6 @@ ShipSelectionScreen::ShipSelectionScreen()
         my_player_info->commandSetMainScreenControl(value);
     });
     main_screen_controls_button->setValue(my_player_info->main_screen_control)->setSize(GuiElement::GuiSizeMax, 50);
-    
-    // Game master button
-    game_master_button = new GuiToggleButton(stations_layout, "GAME_MASTER_BUTTON", "Game master", [this](bool value) {
-        window_button->setValue(false);
-		probe_button->setValue(false);
-        topdown_button->setValue(false);
-        cinematic_view_button->setValue(false);
-    });
-    game_master_button->setSize(GuiElement::GuiSizeMax, 50);
 
     // Ship window button and angle slider
     window_button_row = new GuiAutoLayout(stations_layout, "", GuiAutoLayout::LayoutHorizontalLeftToRight);
@@ -446,25 +445,44 @@ void ShipSelectionScreen::updateCrewTypeOptions()
     // Choose which set of screens to list from the crew type selector index.
     switch(crew_type_selector->getSelectionIndex())
     {
-    case 0: // Helios
+    case 0: // Helios GM  / tests
+        game_master_button->show();
+        crew_position_button[scienceOfficer]->show();
         crew_position_button[helmsHeliosScreen]->show();
-        crew_position_button[weaponsHeliosScreen]->show();
-        crew_position_button[engineControlHeliosScreen]->show();
-        crew_position_button[bridgeEngineeringHeliosScreen]->show();
         crew_position_button[databaseHeliosScreen]->show();        
         crew_position_button[tractorBeamHeliosScreen]->show();
         break;
-    case 1: // 6/5 player crew
+    case 1: // Helios Bridge
+        crew_position_button[helmsHeliosScreen]->show();
+        crew_position_button[weaponsHeliosScreen]->show();
+        crew_position_button[tractorBeamHeliosScreen]->show();  
+        crew_position_button[bridgeEngineeringHeliosScreen]->show();
+        crew_position_button[relayOfficerNC]->show();
+        crew_position_button[commsView]->show();      
+        crew_position_button[externLog]->show();
+        crew_position_button[tacticalRadar]->show();
+        crew_position_button[scienceRadar]->show();
+        crew_position_button[relayRadar]->show();
+        break;
+    case 2: // Helios Ship
+        crew_position_button[engineControlHeliosScreen]->show();
+        crew_position_button[navigation]->show();  
+        crew_position_button[dockMaster]->show();
+        crew_position_button[dronePilot]->show();
+        crew_position_button[databaseHeliosScreen]->show();    
+        crew_position_button[internLog]->show();
+        break;
+    case 3: // 6/5 player crew
         for(int n = helmsOfficer; n <= relayOfficer; n++)
         {
             crew_position_button[n]->show();
         }
         break;
-    case 2: // 4/3 player crew
+    case 4: // 4/3 player crew
         for(int n = tacticalOfficer; n <= operationsOfficer; n++)
             crew_position_button[n]->show();
         break;
-    case 3: // 1 player crew/extras
+    case 5: // 1 player crew/extras
         crew_position_button[singlePilot]->show();
         crew_position_button[damageControl]->show();
         crew_position_button[powerManagement]->show();
@@ -477,7 +495,7 @@ void ShipSelectionScreen::updateCrewTypeOptions()
         crew_position_button[dronePilot]->show();
         crew_position_button[dockMaster]->show();
         break;
-    case 4: // Alternative options
+    case 6: // Alternative options
         main_screen_button->hide();
         game_master_button->show();
         window_button->setVisible(canDoMainScreen());
@@ -486,30 +504,8 @@ void ShipSelectionScreen::updateCrewTypeOptions()
         topdown_button->setVisible(canDoMainScreen());
         cinematic_view_button->setVisible(canDoMainScreen());
         break;
-    case 5: // Systems - Tactical
-        crew_position_button[helmsHeliosScreen]->show();
-        crew_position_button[weaponsHeliosScreen]->show();
-        crew_position_button[dronePilot]->show();
-        crew_position_button[tacticalRadar]->show();
-        break;
-    case 6: // Systems - Signal
-        crew_position_button[databaseHeliosScreen]->show();
-        crew_position_button[scienceOfficer]->show();
-        crew_position_button[relayOfficerNC]->show();
-        crew_position_button[commsView]->show();
-        crew_position_button[navigation]->show();        
-        crew_position_button[scienceRadar]->show();
-        crew_position_button[relayRadar]->show();
-        crew_position_button[externLog]->show();
-        break;
-    case 7: // Systems - Engineering
-        crew_position_button[damageControl]->show();
-        crew_position_button[powerManagement]->show();
-        crew_position_button[dockMaster]->show();
-        crew_position_button[internLog]->show();
-        crew_position_button[engineControlHeliosScreen]->show();
-        crew_position_button[bridgeEngineeringHeliosScreen]->show();
-        break;
+
+
     }
 
     // For each crew position, unselect the position if the button is hidden
