@@ -226,6 +226,7 @@ set(SOURCES
 	src/gui/gui2_keyvaluedisplay.cpp
 	src/gui/gui2_listbox.cpp
 	src/gui/gui2_scrollbar.cpp
+	src/gui/gui2_text.cpp
 	src/gui/gui2_container.cpp
 	src/gui/gui2_panel.cpp
 	src/gui/gui2_overlay.cpp
