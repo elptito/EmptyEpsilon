@@ -38,6 +38,9 @@ void MissileWeapon::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position,
 void MissileWeapon::update(float delta)
 {
     updateMovement();
+    
+    // Small missiles have a larger speed & rotational speed, large ones are slower and turn less fast
+    float size_speed_modifier = 1 / category_modifier;
 
     P<SpaceObject> target;
     if (game_server)
@@ -58,13 +61,15 @@ void MissileWeapon::update(float delta)
         soundManager->playSound(data.fire_sound, getPosition(), 200.0, 1.0, 1.0f + random(-0.2f, 0.2f));
         launch_sound_played = true;
     }
-    lifetime -= delta;
+    
+    // Since we do want the range to remain the same, ensure that slow missiles don't die down as fast.
+    lifetime -= delta * size_speed_modifier;
     if (lifetime < 0)
     {
         lifeEnded();
         destroy();
     }
-    setVelocity(sf::vector2FromAngle(getRotation()) * speed);
+    setVelocity(sf::vector2FromAngle(getRotation()) * speed * size_speed_modifier);
 
     if (delta > 0)
     {
@@ -134,14 +139,16 @@ void MissileWeapon::updateMovement()
                 target_angle = sf::vector2ToAngle(target->getPosition() - getPosition());
             }
         }
+        // Small missiles have a larger speed & rotational speed, large ones are slower and turn less fast
+        float size_speed_modifier = 1 / category_modifier;
 
         float angle_diff = sf::angleDifference(getRotation(), target_angle);
 
         if (angle_diff > 1.0)
-            setAngularVelocity(data.turnrate);
+            setAngularVelocity(data.turnrate * size_speed_modifier);
         else if (angle_diff < -1.0)
-            setAngularVelocity(data.turnrate * -1.0f);
+            setAngularVelocity(data.turnrate * -1.0f * size_speed_modifier);
         else
-            setAngularVelocity(angle_diff * data.turnrate);
+            setAngularVelocity(angle_diff * data.turnrate * size_speed_modifier);
     }
 }
