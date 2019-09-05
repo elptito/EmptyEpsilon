@@ -34,6 +34,8 @@ function targets()
         SpaceStation():setTemplate("Medium Station"):setFaction("MCF Extreme"):setCallSign("Target_1"):setPosition(481, 3000)
         SpaceStation():setTemplate("Medium Station"):setFaction("MCF Extreme"):setCallSign("target_HIDDEN_2"):setPosition(-13261, 8980)
         Nebula():setPosition(-12869, 11876)
+        CpuShip():setFaction("Free Miners"):setTemplate("Adder MK5"):setCallSign("CSS9"):setPosition(2014, 42):setWeaponStorage("HVLI", 6):setWarpFrequency(0)
+
 end
 
 function enemyShips()
