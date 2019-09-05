@@ -16,6 +16,7 @@ function init()
         PlayerSpaceship():setTemplate("Gravitas"):setFaction("FSN"):setPosition(0, 0):setWarpFrequency(5)
         -- enemyShips()
         -- tactical()
+        -- enemyTargets()
         targets()
 end
 
@@ -27,14 +28,17 @@ function targets()
         SpaceStation():setTemplate("Small Station"):setFaction("FSN"):setCallSign("DS665"):setPosition(-16949, 18366)
         SpaceStation():setTemplate("Small Station"):setFaction("FSN"):setCallSign("DS666"):setPosition(-17659, 17780)
         SpaceStation():setTemplate("Small Station"):setFaction("FSN"):setCallSign("DS667"):setPosition(-12743, 18683)
-        SpaceStation():setTemplate("Medium Station"):setFaction("MCF Extreme"):setCallSign("target_UN_HIDDEN"):setPosition(-14967, 17975)
+        CpuShip():setFaction("Free Miners"):setTemplate("Adder MK5"):setCallSign("CSS9"):setPosition(2014, 42):setWeaponStorage("HVLI", 6):setWarpFrequency(0)
+        CpuShip():setFaction("FSN"):setTemplate("Atlantis X23"):setCallSign("CV10"):setPosition(-1222, -194):orderRoaming():setWeaponStorage("EMP", 2):setWarpFrequency(5)
+end
+function enemyTargets()
+       SpaceStation():setTemplate("Medium Station"):setFaction("MCF Extreme"):setCallSign("target_UN_HIDDEN"):setPosition(-14967, 17975)
         SpaceStation():setTemplate("Medium Station"):setFaction("MCF Extreme"):setCallSign("target_HIDDEN_1"):setPosition(12410, 18687)
         SpaceStation():setTemplate("Medium Station"):setFaction("MCF Extreme"):setCallSign("target_3"):setPosition(0, 15000)
         SpaceStation():setTemplate("Medium Station"):setFaction("MCF Extreme"):setCallSign("target_2"):setPosition(0, 7500)
         SpaceStation():setTemplate("Medium Station"):setFaction("MCF Extreme"):setCallSign("Target_1"):setPosition(481, 3000)
         SpaceStation():setTemplate("Medium Station"):setFaction("MCF Extreme"):setCallSign("target_HIDDEN_2"):setPosition(-13261, 8980)
         Nebula():setPosition(-12869, 11876)
-        CpuShip():setFaction("Free Miners"):setTemplate("Adder MK5"):setCallSign("CSS9"):setPosition(2014, 42):setWeaponStorage("HVLI", 6):setWarpFrequency(0)
 
 end
 

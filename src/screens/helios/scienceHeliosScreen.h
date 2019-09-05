@@ -20,26 +20,28 @@ class GuiSlider;
 class GuiLabel;
 class DatabaseViewComponent;
 class GuiCustomShipFunctions;
+class GuiProgressbar;
 
 class ScienceHeliosScreen : public GuiOverlay
 {
 public:
-    GuiOverlay* background_gradient;
-    GuiOverlay* background_crosses;
+    // GuiOverlay* background_gradient;
+    // GuiOverlay* background_crosses;
 
-    GuiElement* radar_view;
-    DatabaseViewComponent* database_view;
+    // GuiElement* radar_view;
+    // DatabaseViewComponent* database_view;
 
     TargetsContainer targets;
     GuiRadarView* science_radar;
     GuiRadarView* probe_radar;
-    GuiSlider* zoom_slider;
-    GuiLabel* zoom_label;
+    // GuiSlider* zoom_slider;
+    GuiProgressbar* zoom_bar;
+    // GuiLabel* zoom_label;
 
-    GuiSelector* sidebar_selector;
-    GuiAutoLayout* info_sidebar;
-    GuiCustomShipFunctions* custom_function_sidebar;
-    GuiSelector* sidebar_pager;
+    // GuiSelector* sidebar_selector;
+    // GuiAutoLayout* sidebar;
+    // GuiCustomShipFunctions* custom_function_sidebar;
+    // GuiSelector* sidebar_pager;
     GuiScanTargetButton* scan_button;
     GuiKeyValueDisplay* info_callsign;
     GuiKeyValueDisplay* info_distance;
@@ -59,7 +61,7 @@ public:
 
     GuiToggleButton* probe_view_button;
     P<ScanProbe> observation_point;
-    GuiListbox* view_mode_selection;
+    // GuiListbox* view_mode_selection;
 public:
     ScienceHeliosScreen(GuiContainer* owner, ECrewPosition crew_position=scienceHeliosScreen);
 
