@@ -150,6 +150,8 @@ set(SOURCES
 	src/screens/helios/weaponsHeliosScreen.cpp
 	src/screens/helios/databaseHeliosScreen.cpp
 	src/screens/helios/TractorBeamScreen.cpp
+	src/screens/helios/scienceHeliosScreen.cpp
+	src/screens/helios/scanHeliosScreen.cpp
 	src/screenComponents/aimLock.cpp
 	src/screenComponents/alertOverlay.cpp
 	src/screenComponents/helpOverlay.cpp

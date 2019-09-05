@@ -38,6 +38,8 @@ enum ECrewPosition
     weaponsHeliosScreen,
     databaseHeliosScreen,
     tractorBeamHeliosScreen,
+    scienceHeliosScreen,
+    scanHeliosScreen,
     max_crew_positions
 };
 

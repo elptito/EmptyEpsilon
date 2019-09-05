@@ -448,6 +448,8 @@ void ShipSelectionScreen::updateCrewTypeOptions()
     case 0: // Helios GM  / tests
         game_master_button->show();
         crew_position_button[scienceOfficer]->show();
+        crew_position_button[scienceHeliosScreen]->show();
+        crew_position_button[scanHeliosScreen]->show();
         crew_position_button[helmsHeliosScreen]->show();
         crew_position_button[databaseHeliosScreen]->show();        
         crew_position_button[tractorBeamHeliosScreen]->show();
