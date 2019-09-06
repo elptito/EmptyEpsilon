@@ -74,6 +74,14 @@ GameGlobalInfo::GameGlobalInfo()
     registerMemberReplication(&intercept_all_comms_to_gm);
 
 }
+P<SpaceObject> GameGlobalInfo::getObjectByCallSign(string callsign){
+    foreach(SpaceObject, obj, space_object_list){
+        if (obj->getCallSign() == callsign){
+            return obj;
+        }
+    }
+    return nullptr;
+}
 
 P<PlayerSpaceship> GameGlobalInfo::getPlayerShip(int index)
 {
@@ -419,6 +427,18 @@ static int getPlayerShip(lua_State* L)
 /// getPlayerShip(index)
 /// Return the player's ship, use -1 to get the first active player ship.
 REGISTER_SCRIPT_FUNCTION(getPlayerShip);
+
+static int getObjectByCallSign(lua_State* L)
+{
+    string callsign = luaL_checkstring(L, 1);
+    P<SpaceObject> obj = gameGlobalInfo->getObjectByCallSign(callsign);
+    if (!obj)
+        return 0;
+    return convert<P<SpaceObject> >::returnType(L, obj);
+}
+/// getObjectByCallSign(callsign)
+/// Return a space object with supplied callsign
+REGISTER_SCRIPT_FUNCTION(getObjectByCallSign);
 
 static int getObjectsInRadius(lua_State* L)
 {

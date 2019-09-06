@@ -113,6 +113,7 @@ public:
     GameGlobalInfo();
 
     P<PlayerSpaceship> getPlayerShip(int index);
+    P<SpaceObject> getObjectByCallSign(string callsign);
     void setPlayerShip(int index, P<PlayerSpaceship> ship);
 
     int findPlayerShip(P<PlayerSpaceship> ship);

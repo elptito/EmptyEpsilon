@@ -4,8 +4,14 @@
 #include "main.h"
 
 #include "scriptInterface.h"
-REGISTER_SCRIPT_SUBCLASS_NO_CREATE(ScanProbe, SpaceObject)
-{
+REGISTER_SCRIPT_SUBCLASS(ScanProbe, SpaceObject)
+{    
+    /// set owner for this probe, by callsign
+    REGISTER_SCRIPT_CLASS_FUNCTION(ScanProbe, setOwner);
+    /// set target position for this probe.
+    REGISTER_SCRIPT_CLASS_FUNCTION(ScanProbe, setTarget);
+    /// set time remaining for for this probe.
+    REGISTER_SCRIPT_CLASS_FUNCTION(ScanProbe, setLifetime);
 }
 
 REGISTER_MULTIPLAYER_CLASS(ScanProbe, "ScanProbe");
@@ -78,4 +84,18 @@ void ScanProbe::setOwner(P<SpaceObject> owner)
 
     setFactionId(owner->getFactionId());
     owner_id = owner->getMultiplayerId();
+}
+
+string ScanProbe::getExportLine() {
+    string ret = "ScanProbe()";
+    if (owner_id){
+        P<SpaceObject> owner = game_server? game_server->getObjectById(owner_id) : game_client->getObjectById(owner_id);
+        if (owner){
+            ret +=  ":setOwner(getObjectByCallSign(\"" + owner->getCallSign() + "\"))";
+        }
+    }
+    ret += ":setPosition(" + string(getPosition().x, 0) + ", " + string(getPosition().y, 0) + ")";
+    ret += ":setTarget(" + string(target_position.x, 0) + ", " + string(target_position.y, 0) + ")";
+    ret += ":setLifetime(" + string(lifetime, 0) + ")";
+    return ret;
 }

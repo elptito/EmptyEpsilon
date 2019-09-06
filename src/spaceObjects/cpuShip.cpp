@@ -276,12 +276,12 @@ string CpuShip::getExportLine()
     case AI_Roaming: ret += ":orderRoaming()"; break;
     case AI_StandGround: ret += ":orderStandGround()"; break;
     case AI_DefendLocation: ret += ":orderDefendLocation(" + string(order_target_location.x, 0) + ", " + string(order_target_location.y, 0) + ")"; break;
-    case AI_DefendTarget: ret += ":orderDefendTarget(?)"; break;
-    case AI_FlyFormation: ret += ":orderFlyFormation(?, " + string(order_target_location.x, 0) + ", " + string(order_target_location.y, 0) + ")"; break;
+    case AI_DefendTarget: ret += ":orderDefendTarget(getObjectByCallSign(\"" + order_target->getCallSign() + "\"))"; break;
+    case AI_FlyFormation: ret += ":orderFlyFormation(getObjectByCallSign(\"" + order_target->getCallSign() + "\"), " + string(order_target_location.x, 0) + ", " + string(order_target_location.y, 0) + ")"; break;
     case AI_FlyTowards: ret += ":orderFlyTowards(" + string(order_target_location.x, 0) + ", " + string(order_target_location.y, 0) + ")"; break;
     case AI_FlyTowardsBlind: ret += ":orderFlyTowardsBlind(" + string(order_target_location.x, 0) + ", " + string(order_target_location.y, 0) + ")"; break;
-    case AI_Attack: ret += ":orderAttack(?)"; break;
-    case AI_Dock: ret += ":orderDock(?)"; break;
+    case AI_Attack: ret += ":orderAttack(getObjectByCallSign(\"" + order_target->getCallSign() + "\"))"; break;
+    case AI_Dock: ret += ":orderDock(getObjectByCallSign(\"" + order_target->getCallSign() + "\"))"; break;
     }
     return ret + getScriptExportModificationsOnTemplate();
 }

@@ -1698,6 +1698,7 @@ string PlayerSpaceship::getExportLine()
 {
     return std::string("PlayerSpaceship()") + 
         ":setTemplate(\"" + template_name + "\")" + 
+        ":setCallSign(\"" + getCallSign() + "\")" + 
         ":setPosition(" + string(getPosition().x, 0) + ", " + string(getPosition().y, 0) + ")" + 
         getScriptExportModificationsOnTemplate();
 }
