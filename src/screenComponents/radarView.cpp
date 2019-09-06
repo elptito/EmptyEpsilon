@@ -498,6 +498,7 @@ void GuiRadarView::drawMissileTubes(sf::RenderTarget& window)
     }
 }
 
+// rectangular area
 PVector<SpaceObject> GuiRadarView::getVisibleObjects(sf::Vector2f pov_position, unsigned int pov_faction, EFogOfWarStyle fog_style, float width, float height){
     PVector<SpaceObject> visible_objects;
     switch(fog_style)
@@ -549,12 +550,16 @@ PVector<SpaceObject> GuiRadarView::getVisibleObjects(sf::Vector2f pov_position, 
     return visible_objects;
 }
 
+// circular area
 PVector<SpaceObject> GuiRadarView::getVisibleObjects(sf::Vector2f pov_position, unsigned int pov_faction, EFogOfWarStyle fog_style, float radius){
     PVector<SpaceObject> result;
-    PVector<SpaceObject> rectResult =  GuiRadarView::getVisibleObjects(pov_position, pov_faction, fog_style, radius, radius);
-    std::copy_if(rectResult.begin(), rectResult.end(), back_inserter(result), [pov_position, radius](P<SpaceObject> obj){
-        return (obj->getPosition() - pov_position) < radius + obj->getRadius(); // filter by radius
-    });
+    // query bounding rectangle and kep targets in the circle
+    PVector<SpaceObject> rectResult =  GuiRadarView::getVisibleObjects(pov_position, pov_faction, fog_style, radius * 2, radius * 2);
+     for(const auto & obj : rectResult) {
+        if((obj->getPosition() - pov_position) < radius + obj->getRadius()) {
+            result.push_back(obj);
+        }
+    }
     return result;
 }
 
@@ -563,7 +568,7 @@ PVector<SpaceObject> GuiRadarView::getVisibleObjects(){
     if (style == Rectangular){
         return GuiRadarView::getVisibleObjects(getViewPosition(), faction, fog_style, rect.width / getScale(), rect.height / getScale());
     } else {
-        return GuiRadarView::getVisibleObjects(getViewPosition(), faction, fog_style, getDistance(), getDistance());
+        return GuiRadarView::getVisibleObjects(getViewPosition(), faction, fog_style, getDistance());
     }
 }
 
