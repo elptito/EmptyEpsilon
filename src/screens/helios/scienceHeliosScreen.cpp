@@ -26,8 +26,6 @@
 ScienceHeliosScreen::ScienceHeliosScreen(GuiContainer* owner, ECrewPosition crew_position)
 : GuiOverlay(owner, "SCIENCE_SCREEN", colorConfig.background)
 {
-    targets.setAllowWaypointSelection(); // WHY?
-
     GuiOverlay* background_crosses = new GuiOverlay(this, "BACKGROUND_CROSSES", sf::Color::White);
     background_crosses->setTextureTiled("gui/BackgroundCrosses");
     
@@ -348,5 +346,33 @@ void ScienceHeliosScreen::onDraw(sf::RenderTarget& window)
         info_distance->setValue(string(distance / 1000.0f, 1) + DISTANCE_UNIT_1K);
         info_heading->setValue(string(int(heading)));
         info_relspeed->setValue(string(rel_velocity / 1000.0f * 60.0f, 1) + DISTANCE_UNIT_1K + "/min");
+    }
+}
+
+// TODO waypoints
+void ScienceHeliosScreen::iterateTagrets(bool forward){
+    PVector<SpaceObject> potentialTargetsUnfiltered = GuiRadarView::getVisibleObjects(
+        my_spaceship->getPosition(), 
+        my_spaceship->getFactionId(), 
+        GuiRadarView::RadarRangeAndLineOfSight, 
+        my_spaceship->getRadarRange());
+    PVector<SpaceObject> potentialTargets;
+    for(const auto & obj : potentialTargetsUnfiltered) {
+        if(obj != my_spaceship && obj->canBeSelectedBy(my_spaceship)) {
+            potentialTargets.push_back(obj);
+        }
+    }
+    targets.next(potentialTargets, forward);
+    my_spaceship->commandSetTarget(targets.get());
+}
+
+void ScienceHeliosScreen::onHotkey(const HotkeyResult& key)
+{
+    if (key.category == "WEAPONS" && my_spaceship) {
+        if (key.hotkey == "NEXT_TARGET") {
+            iterateTagrets(true);
+        } else if (key.hotkey == "PREV_TARGET") {
+            iterateTagrets(false);
+        }
     }
 }

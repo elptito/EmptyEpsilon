@@ -46,7 +46,11 @@ public:
 public:
     ScienceHeliosScreen(GuiContainer* owner, ECrewPosition crew_position=scienceHeliosScreen);
 
-    virtual void onDraw(sf::RenderTarget& window);
+    virtual void onDraw(sf::RenderTarget& window) override;
+    virtual void onHotkey(const HotkeyResult& key) override;
+    virtual bool onJoystickAxis(const AxisAction& axisAction) override{ return false;};
+private:
+    void iterateTagrets(bool forward);
 };
 
 #endif//SCIENCE_HELIOS_SCREEN_H
