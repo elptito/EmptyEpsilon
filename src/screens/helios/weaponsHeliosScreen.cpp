@@ -192,52 +192,19 @@ void WeaponsHeliosScreen::onDraw(sf::RenderTarget& window)
     GuiOverlay::onDraw(window);
 }
 
-bool compareSpaceObjects(P<SpaceObject> o1, P<SpaceObject> o2) { 
-    return (o1->getPosition() - my_spaceship->getPosition()) < (o2->getPosition() - my_spaceship->getPosition());
-} 
-
 void WeaponsHeliosScreen::iterateTagrets(bool forward, bool enemiesOnly, bool nearOnly){
-    bool current_reached = false;
-    P<SpaceObject> lastSeen = nullptr;
-    P<SpaceObject> firstSeen = nullptr;
-    float range = nearOnly? radar->getDistance() : gameGlobalInfo->long_range_radar_range;
-    PVector<SpaceObject> potentialTargets = GuiRadarView::getVisibleObjects(my_spaceship->getPosition(), my_spaceship->getFactionId(), GuiRadarView::RadarRangeAndLineOfSight, range);
-    std::sort(potentialTargets.begin(), potentialTargets.end(), compareSpaceObjects); 
-    P<SpaceObject> found = nullptr;
-    foreach(SpaceObject, obj, potentialTargets) {
-        if (found){
-            break;
-        } else if (obj == targets.get()) {
-            // reached current target
-            if (forward) {
-                current_reached = true;
-            } else if (lastSeen){
-                found = lastSeen;
-            }
-        } else if (obj != my_spaceship &&
+    float range = nearOnly? radar->getDistance() : my_spaceship->getRadarRange();
+    PVector<SpaceObject> potentialTargetsUnfiltered = GuiRadarView::getVisibleObjects(my_spaceship->getPosition(), my_spaceship->getFactionId(), GuiRadarView::RadarRangeAndLineOfSight, range);
+    PVector<SpaceObject> potentialTargets;
+    for(const auto & obj : potentialTargetsUnfiltered) {
+        if(obj != my_spaceship &&
             obj->canBeTargetedBy(my_spaceship) &&
             (!enemiesOnly || my_spaceship->isKnownEnemy(obj))) {
-            // qualified for targeting
-            if (forward) {
-                if (current_reached) {
-                    found = obj;
-                } else if(!firstSeen){
-                    // track first target seen
-                    firstSeen = obj;
-                }
-            } else {
-                // track last target seen
-                lastSeen = obj;
-            }
+            potentialTargets.push_back(obj);
         }
-    } // end of loop
-    if (found){
-        my_spaceship->commandSetTarget(found);
-    } else if (forward && firstSeen){
-        my_spaceship->commandSetTarget(firstSeen);
-    } else if (!forward && lastSeen){
-        my_spaceship->commandSetTarget(lastSeen);
     }
+    targets.next(potentialTargets, forward);
+    my_spaceship->commandSetTarget(targets.get());
 }
 
 void WeaponsHeliosScreen::onHotkey(const HotkeyResult& key)

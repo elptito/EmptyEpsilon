@@ -91,6 +91,46 @@ void TargetsContainer::setToClosestTo(sf::Vector2f position, float max_range, ES
     set(target);
 }
 
+static bool compareSpaceObjects(P<SpaceObject> o1, P<SpaceObject> o2) { 
+    return (o1->getPosition() - my_spaceship->getPosition()) < (o2->getPosition() - my_spaceship->getPosition());
+} 
+
+void TargetsContainer::next(PVector<SpaceObject> potentials, bool forward){
+    P<SpaceObject> found = nullptr;
+    bool current_reached = false;
+    P<SpaceObject> lastSeen = nullptr;
+    P<SpaceObject> firstSeen = nullptr;
+    std::sort(potentials.begin(), potentials.end(), compareSpaceObjects); 
+    foreach(SpaceObject, obj, potentials) {
+        if (found){
+            break;
+        } else if (obj == get()) {
+            // reached current target
+            if (forward) {
+                current_reached = true;
+            } else if (lastSeen){
+                found = lastSeen;
+            }
+        } else if (forward) {
+            if (current_reached) {
+                found = obj;
+            } else if(!firstSeen){
+                // track first target seen
+                firstSeen = obj;
+            }
+        } else {
+            // track last target seen
+            lastSeen = obj;
+        }
+    } // end of loop
+
+    if (!found){
+        // current target might be the first or last element
+        found = forward? firstSeen : lastSeen;
+    } 
+    set(found);
+}
+
 int TargetsContainer::getWaypointIndex()
 {
     if (!my_spaceship || waypoint_selection_index < 0)
