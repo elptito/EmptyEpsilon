@@ -144,11 +144,6 @@ public:
     int32_t scanning_target_id;
     // Time in seconds to scan an object if scanning_complexity is 0 (none)
     float scanning_delay;
-    // Number of sliders during a scan
-    int scanning_complexity;
-    // Number of times an object must be scanned to achieve a fully scanned
-    // state
-    int scanning_depth;
     // Time in seconds it takes to recalibrate shields
     float shield_calibration_delay;
     // Time in seconds it takes to recalibrate warp engine

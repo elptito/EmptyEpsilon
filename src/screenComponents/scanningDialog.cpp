@@ -47,32 +47,38 @@ void GuiScanningDialog::onDraw(sf::RenderTarget& window)
     
     if (my_spaceship)
     {
-        if (my_spaceship->scanning_delay > 0.0 && my_spaceship->scanning_complexity > 0)
-        {
-            if (!box->isVisible())
-            {
-                box->show();
-                scan_depth = 0;
-                setupParameters();
-            }
-            
-            if (locked && engine->getElapsedTime() - lock_start_time > lock_delay)
-            {
-                scan_depth += 1;
-                if (scan_depth >= my_spaceship->scanning_depth)
+        P<SpaceObject> scanning_target = my_spaceship->getScanTarget();
+        if (scanning_target){
+            float scanning_complexity = scanning_target->scanningComplexity(my_spaceship);
+            float scanning_depth = scanning_target->scanningChannelDepth(my_spaceship);
+            if (scanning_complexity && scanning_depth){
+                if (!box->isVisible())
                 {
-                    my_spaceship->commandScanDone();
-                    lock_start_time = engine->getElapsedTime() - 1.0f;
-                }else{
+                    box->show();
+                    scan_depth = 0;
                     setupParameters();
                 }
-            }
-            
-            if (locked && engine->getElapsedTime() - lock_start_time > lock_delay / 2.0f)
-            {
-                locked_label->show();
+                
+                if (locked && engine->getElapsedTime() - lock_start_time > lock_delay)
+                {
+                    scan_depth += 1;
+                    if (scan_depth >= scanning_depth)
+                    {
+                        my_spaceship->commandScanDone();
+                        lock_start_time = engine->getElapsedTime() - 1.0f;
+                    }else{
+                        setupParameters();
+                    }
+                }
+                
+                if (locked && engine->getElapsedTime() - lock_start_time > lock_delay / 2.0f)
+                {
+                    locked_label->show();
+                }else{
+                    locked_label->hide();
+                }
             }else{
-                locked_label->hide();
+                box->hide();
             }
         }else{
             box->hide();
@@ -98,42 +104,49 @@ void GuiScanningDialog::setupParameters()
 {
     if (!my_spaceship)
         return;
-    
-    for(int n=0; n<max_sliders; n++)
-    {
-        if (n < my_spaceship->scanning_complexity)
-            sliders[n]->show();
-        else
-            sliders[n]->hide();
-    }
-    box->setSize(500, 265 + 70 * my_spaceship->scanning_complexity);
+    P<SpaceObject> scanning_target = my_spaceship->getScanTarget();
+    if (scanning_target){
+        float scanning_complexity = scanning_target->scanningComplexity(my_spaceship);
+        float scanning_depth = scanning_target->scanningChannelDepth(my_spaceship);
 
-    for(int n=0; n<max_sliders; n++)
-    {
-        target[n] = random(0.0, 1.0);
-        sliders[n]->setValue(random(0.0, 1.0));
-        while(fabsf(target[n] - sliders[n]->getValue()) < 0.2)
+        for(int n=0; n<max_sliders; n++)
+        {
+            if (n < scanning_complexity)
+                sliders[n]->show();
+            else
+                sliders[n]->hide();
+        }
+        box->setSize(500, 265 + 70 * scanning_complexity);
+
+        for(int n=0; n<max_sliders; n++)
+        {
+            target[n] = random(0.0, 1.0);
             sliders[n]->setValue(random(0.0, 1.0));
+            while(fabsf(target[n] - sliders[n]->getValue()) < 0.2)
+                sliders[n]->setValue(random(0.0, 1.0));
+        }
+        updateSignal();
+        
+        string label = "[" + string(scan_depth + 1) + "/" + string(scanning_depth) + "] ";
+        switch(irandom(0, 10))
+        {
+        default:
+        case 0: label += "Electric signature"; break;
+        case 1: label += "Biomass frequency"; break;
+        case 2: label += "Gravity well signature"; break;
+        case 3: label += "Radiation halftime"; break;
+        case 4: label += "Radio profile"; break;
+        case 5: label += "Ionic phase shift"; break;
+        case 6: label += "Infra-red color shift"; break;
+        case 7: label += "Doppler stability"; break;
+        case 8: label += "Raspberry jam prevention"; break;
+        case 9: label += "Infinity impropability"; break;
+        case 10: label += "Zerospace audio frequency"; break;
+        }
+        signal_label->setText(label);
+    } else {
+
     }
-    updateSignal();
-    
-    string label = "[" + string(scan_depth + 1) + "/" + string(my_spaceship->scanning_depth) + "] ";
-    switch(irandom(0, 10))
-    {
-    default:
-    case 0: label += "Electric signature"; break;
-    case 1: label += "Biomass frequency"; break;
-    case 2: label += "Gravity well signature"; break;
-    case 3: label += "Radiation halftime"; break;
-    case 4: label += "Radio profile"; break;
-    case 5: label += "Ionic phase shift"; break;
-    case 6: label += "Infra-red color shift"; break;
-    case 7: label += "Doppler stability"; break;
-    case 8: label += "Raspberry jam prevention"; break;
-    case 9: label += "Infinity impropability"; break;
-    case 10: label += "Zerospace audio frequency"; break;
-    }
-    signal_label->setText(label);
 }
 
 void GuiScanningDialog::updateSignal()

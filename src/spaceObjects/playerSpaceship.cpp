@@ -174,8 +174,7 @@ PlayerSpaceship::PlayerSpaceship()
     activate_self_destruct = false;
     self_destruct_countdown = 0.0;
     scanning_delay = 0.0;
-    scanning_complexity = 0;
-    scanning_depth = 0;
+    scanning_target_id = -1;
     max_scan_probes = 8;
     scan_probe_stock = max_scan_probes;
     scan_probe_recharge = 0.0;
@@ -203,8 +202,6 @@ PlayerSpaceship::PlayerSpaceship()
     registerMemberReplication(&main_screen_overlay);
     registerMemberReplication(&scanning_delay, 0.5);
     registerMemberReplication(&scanning_target_id);
-    registerMemberReplication(&scanning_complexity);
-    registerMemberReplication(&scanning_depth);
     registerMemberReplication(&shields_active);
     registerMemberReplication(&shield_calibration_delay, 0.5);
     registerMemberReplication(&warp_calibration_delay, 0.5);
@@ -525,7 +522,7 @@ void PlayerSpaceship::update(float delta)
         {
             // If the scan setting or a target's scan complexity is none/0,
             // complete the scan after a delay.
-            if (scanning_complexity < 1)
+            if (getScanTarget()->scanningComplexity(this) < 1)
             {
                 scanning_delay -= delta;
                 if (scanning_delay < 0)
@@ -586,7 +583,7 @@ void PlayerSpaceship::update(float delta)
 
         // If scan settings or the scan target's complexity is 0/none, tick
         // the scan delay timer.
-        if (scanning_complexity < 1)
+        if (getScanTarget()->scanningComplexity(this) < 1)
         {
             if (scanning_delay > 0.0)
                 scanning_delay -= delta;
@@ -1123,27 +1120,22 @@ void PlayerSpaceship::handleClientCommand(int32_t client_id, int16_t command, sf
             packet >> id;
 
             P<SpaceObject> scanning_target = game_server->getObjectById(id);
-            if (scanning_target)
+            if (scanning_target && scanning_target->canBeScannedBy(this))
             {
                 scanning_target_id = id;
-                scanning_complexity = scanning_target->scanningComplexity(this);
-                scanning_depth = scanning_target->scanningChannelDepth(this);
                 scanning_delay = max_scanning_delay;
             }
         }
         break;
     case CMD_SCAN_DONE:
-        if (getScanTarget() && scanning_complexity > 0)
+        if (getScanTarget())
         {
             getScanTarget()->scannedBy(this);
             scanning_target_id = -1;
         }
         break;
     case CMD_SCAN_CANCEL:
-        if (getScanTarget() && scanning_complexity > 0)
-        {
             scanning_target_id = -1;
-        }
         break;
     case CMD_SET_SYSTEM_POWER_REQUEST:
         {

@@ -47,6 +47,7 @@ HotkeyConfig::HotkeyConfig()
     newCategory("SCIENCE", "Science Officer");
     newKey("POV_SHIP", std::make_tuple("set radar point of view to main ship", "Q"));
     newKey("POV_PROBE", std::make_tuple("set radar point of view to probe", "A"));
+    newKey("SCAN", std::make_tuple("Scan targer", "S"));
 
     newCategory("TARGET", "Target");
     newKey("NEXT_ENEMY_TARGET", std::make_tuple("Select next enemy target", ""));

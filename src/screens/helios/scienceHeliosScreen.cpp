@@ -6,7 +6,6 @@
 
 #include "screenComponents/radarView.h"
 #include "screenComponents/rawScannerDataRadarOverlay.h"
-#include "screenComponents/scanTargetButton.h"
 #include "screenComponents/frequencyCurve.h"
 #include "screenComponents/scanningDialog.h"
 #include "screenComponents/databaseView.h"
@@ -188,20 +187,16 @@ void ScienceHeliosScreen::onDraw(sf::RenderTarget& window)
     radar->setViewPosition(radar_pov->getPosition())->setAutoCentering(false);
     radar->setDistance(Tween<float>::linear(zoom, 0.f, 1.f, 5000, radar_pov->getRadarRange()));
 
+    showNoInfo();
     P<SpaceObject> target = targets.get();
     if (target) {
         showTargetInfo();
     } else if (targets.getWaypointIndex() >= 0) {
-        showTargetInfo();
-    } else {
-        showNoInfo();
+        showWaypointInfo();
     }
 
-    if (my_spaceship->scanning_target_id != -1){
-        P<ScanProbe> scanning_target = getObjectById(my_spaceship->scanning_target_id);
-        if (scanning_target){
-            scan_status->setText("Scanning " + scanning_target->getCallSign())->setColor(sf::Color::Yellow)->setTextColor(sf::Color::Yellow);
-        }
+    if (my_spaceship->getScanTarget()){
+        scan_status->setText("Scanning " + my_spaceship->getScanTarget()->getCallSign())->setColor(sf::Color::Yellow)->setTextColor(sf::Color::Yellow);
     } else if (target){
         if (target->getScannedStateFor(my_spaceship) == SS_FullScan) {
             scan_status->setText("Scanned")->setColor(grey)->setTextColor(grey);
@@ -368,6 +363,10 @@ void ScienceHeliosScreen::onHotkey(const HotkeyResult& key)
             probe_view = false;
         } else if (key.hotkey == "POV_PROBE") {
             probe_view = true;
+        } else if (key.hotkey == "SCAN") {
+            if (targets.get() && targets.get()->canBeScannedBy(my_spaceship)){
+                my_spaceship->commandScan(targets.get());
+            }
         }
     }
 }
