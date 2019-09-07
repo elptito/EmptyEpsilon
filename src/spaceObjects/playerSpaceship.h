@@ -140,8 +140,8 @@ public:
     // Visual indicators of hull damage and in-progress jumps
     float hull_damage_indicator;
     float jump_indicator;
-    // Target of a scan. Server-only value
-    P<SpaceObject> scanning_target;
+    /// MultiplayerObjectID of the targeted object for scan, or -1 when no target is selected.
+    int32_t scanning_target_id;
     // Time in seconds to scan an object if scanning_complexity is 0 (none)
     float scanning_delay;
     // Number of sliders during a scan
@@ -217,6 +217,7 @@ public:
     bool isCommsChatOpenToGM() { return comms_state == CS_ChannelOpenGM; }
     bool isCommsChatOpenToPlayer() { return comms_state == CS_ChannelOpenPlayer; }
     bool isCommsScriptOpen() { return comms_state == CS_ChannelOpen; }
+    P<SpaceObject> getScanTarget();
     ECommsState getCommsState() { return comms_state; }
     float getCommsOpeningDelay() { return comms_open_delay; }
     const std::vector<string>& getCommsReplyOptions() const { return comms_reply_message; }

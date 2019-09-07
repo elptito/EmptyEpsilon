@@ -12,7 +12,6 @@ class GuiFrequencyCurve;
 class GuiText;
 class GuiAutoLayout;
 class GuiButton;
-class GuiScanTargetButton;
 class GuiToggleButton;
 class GuiLabel;
 class GuiProgressbar;
@@ -23,7 +22,6 @@ private:
     TargetsContainer targets;
     GuiRadarView* radar;
     GuiProgressbar* zoom_bar;
-    GuiScanTargetButton* scan_button;
     GuiLabel* info_callsign;
     GuiKeyValueDisplay* info_distance;
     GuiKeyValueDisplay* info_heading;
@@ -42,6 +40,7 @@ private:
 
     GuiLabel* main_view_display;
     GuiLabel* probe_view_display;
+    GuiLabel* scan_status;
 
     P<SpaceObject> radar_pov;
     bool probe_view;
@@ -54,6 +53,9 @@ public:
     virtual bool onJoystickAxis(const AxisAction& axisAction) override{ return false;};
 private:
     void iterateTagrets(bool forward);
+    void showTargetInfo();
+    void showWaypointInfo();
+    void showNoInfo();
 };
 
 #endif//SCIENCE_HELIOS_SCREEN_H

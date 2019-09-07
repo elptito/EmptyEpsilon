@@ -202,6 +202,7 @@ PlayerSpaceship::PlayerSpaceship()
     registerMemberReplication(&main_screen_setting);
     registerMemberReplication(&main_screen_overlay);
     registerMemberReplication(&scanning_delay, 0.5);
+    registerMemberReplication(&scanning_target_id);
     registerMemberReplication(&scanning_complexity);
     registerMemberReplication(&scanning_depth);
     registerMemberReplication(&shields_active);
@@ -520,7 +521,7 @@ void PlayerSpaceship::update(float delta)
             }
         }
 
-        if (scanning_target)
+        if (getScanTarget())
         {
             // If the scan setting or a target's scan complexity is none/0,
             // complete the scan after a delay.
@@ -529,13 +530,14 @@ void PlayerSpaceship::update(float delta)
                 scanning_delay -= delta;
                 if (scanning_delay < 0)
                 {
-                    scanning_target->scannedBy(this);
-                    scanning_target = NULL;
+                    getScanTarget()->scannedBy(this);
+                    scanning_target_id = -1;
                 }
             }
         }else{
             // Otherwise, ignore the scanning_delay setting.
             scanning_delay = 0.0;
+            scanning_target_id = -1;
         }
 
         if (activate_self_destruct)
@@ -644,6 +646,13 @@ void PlayerSpaceship::executeJump(float distance)
     // When jumping, reset the jump effect and move the ship.
     jump_indicator = 2.0;
     SpaceShip::executeJump(distance);
+}
+
+P<SpaceObject> PlayerSpaceship::getScanTarget()
+{
+    if (scanning_target_id == -1)
+        return NULL;
+    return getObjectById(scanning_target_id);
 }
 
 void PlayerSpaceship::takeHullDamage(float damage_amount, DamageInfo& info)
@@ -1113,27 +1122,27 @@ void PlayerSpaceship::handleClientCommand(int32_t client_id, int16_t command, sf
             int32_t id;
             packet >> id;
 
-            P<SpaceObject> obj = game_server->getObjectById(id);
-            if (obj)
+            P<SpaceObject> scanning_target = game_server->getObjectById(id);
+            if (scanning_target)
             {
-                scanning_target = obj;
-                scanning_complexity = obj->scanningComplexity(this);
-                scanning_depth = obj->scanningChannelDepth(this);
+                scanning_target_id = id;
+                scanning_complexity = scanning_target->scanningComplexity(this);
+                scanning_depth = scanning_target->scanningChannelDepth(this);
                 scanning_delay = max_scanning_delay;
             }
         }
         break;
     case CMD_SCAN_DONE:
-        if (scanning_target && scanning_complexity > 0)
+        if (getScanTarget() && scanning_complexity > 0)
         {
-            scanning_target->scannedBy(this);
-            scanning_target = nullptr;
+            getScanTarget()->scannedBy(this);
+            scanning_target_id = -1;
         }
         break;
     case CMD_SCAN_CANCEL:
-        if (scanning_target && scanning_complexity > 0)
+        if (getScanTarget() && scanning_complexity > 0)
         {
-            scanning_target = nullptr;
+            scanning_target_id = -1;
         }
         break;
     case CMD_SET_SYSTEM_POWER_REQUEST:

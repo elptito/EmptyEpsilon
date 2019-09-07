@@ -70,9 +70,6 @@ ScienceHeliosScreen::ScienceHeliosScreen(GuiContainer* owner, ECrewPosition crew
 
     new RawScannerDataRadarOverlay(radar, "");
 
-    // Scan button.
-    scan_button = new GuiScanTargetButton(target_actions, "SCAN_BUTTON", &targets);
-    scan_button->setSize(GuiElement::GuiSizeMax, 50);
     info_type_button = new GuiButton(target_actions, "TYPE_INFO_BUTTON", "DB", [this]() {
         // P<SpaceShip> ship = targets.get();
         // if (ship && database_view->findAndDisplayEntry(ship->getTypeName())) {
@@ -133,6 +130,12 @@ ScienceHeliosScreen::ScienceHeliosScreen(GuiContainer* owner, ECrewPosition crew
     main_view_display = new GuiLabel(radar_source, "PROBE_VIEW", "Main View", 30);
     main_view_display->addBackground()->setSize(GuiElement::GuiSizeMax, 50);
 
+
+    // Scan button.
+    // scan_button = new GuiScanTargetButton(target_actions, "SCAN_BUTTON", &targets);
+    scan_status = new GuiLabel(target_actions, "SCAN_STATUS", "Scan Target", 30);
+    scan_status->addBackground()->setSize(GuiElement::GuiSizeMax, 50);
+    
     // Draw the zoom slider.
     zoom_bar = new GuiProgressbar(radar_controls, "ZOOM_BAR", 1, 0, -1); // force sync in onDraw()
     zoom_bar->setSize(GuiElement::GuiSizeMax, 50);
@@ -145,8 +148,9 @@ ScienceHeliosScreen::ScienceHeliosScreen(GuiContainer* owner, ECrewPosition crew
 
 void ScienceHeliosScreen::onDraw(sf::RenderTarget& window)
 {
+    if (!my_spaceship)
+        return;
     GuiOverlay::onDraw(window);
-    P<ScanProbe> probe;
 
     // Handle mouse wheel
     float mouse_wheel_delta = InputHandler::getMouseWheelDelta();
@@ -158,32 +162,10 @@ void ScienceHeliosScreen::onDraw(sf::RenderTarget& window)
     zoom_bar->setValue(zoom);
     zoom_bar->setText("Zoom: " + string(gameGlobalInfo->long_range_radar_range / radar->getDistance(), 1) + "x");
 
-    if (!my_spaceship)
-        return;
-
-    if (game_server)
-        probe = game_server->getObjectById(my_spaceship->linked_science_probe_id);
-    else
-        probe = game_client->getObjectById(my_spaceship->linked_science_probe_id);
+    P<ScanProbe> probe = getObjectById(my_spaceship->linked_science_probe_id);
 
     if (targets.get() && (radar->getViewPosition() - targets.get()->getPosition()) > radar->getDistance())
         targets.clear();
-    
-    info_callsign->setText("-");
-    info_distance->setValue("-");
-    info_heading->setValue("-");
-    info_relspeed->setValue("-");
-    info_faction->setValue("-");
-    info_type->setValue("-");
-    info_shields->setValue("-");
-    info_hull->setValue("-");
-    info_shield_frequency->setFrequency(-1);
-    info_beam_frequency->setFrequency(-1);
-    info_description->setText("");
-
-    for(int n = 0; n < SYS_COUNT; n++) {
-        info_system[n]->setValue("-");
-    }
 
     main_view_display->setText("View Main (" + my_spaceship->getCallSign() + ")");
     if (probe){
@@ -206,7 +188,72 @@ void ScienceHeliosScreen::onDraw(sf::RenderTarget& window)
     radar->setViewPosition(radar_pov->getPosition())->setAutoCentering(false);
     radar->setDistance(Tween<float>::linear(zoom, 0.f, 1.f, 5000, radar_pov->getRadarRange()));
 
-    if (targets.get()) {
+    P<SpaceObject> target = targets.get();
+    if (target) {
+        showTargetInfo();
+    } else if (targets.getWaypointIndex() >= 0) {
+        showTargetInfo();
+    } else {
+        showNoInfo();
+    }
+
+    if (my_spaceship->scanning_target_id != -1){
+        P<ScanProbe> scanning_target = getObjectById(my_spaceship->scanning_target_id);
+        if (scanning_target){
+            scan_status->setText("Scanning " + scanning_target->getCallSign())->setColor(sf::Color::Yellow)->setTextColor(sf::Color::Yellow);
+        }
+    } else if (target){
+        if (target->getScannedStateFor(my_spaceship) == SS_FullScan) {
+            scan_status->setText("Scanned")->setColor(grey)->setTextColor(grey);
+        } else if (target->canBeScannedBy(my_spaceship)){
+            scan_status->setText("Scan " + target->getCallSign())->setColor(sf::Color::White)->setTextColor(sf::Color::White);
+        } else {
+            scan_status->setText("Can't scan " + target->getCallSign())->setColor(grey)->setTextColor(grey);
+        }
+    } else {
+        scan_status->setText("No scan target")->setColor(grey)->setTextColor(grey);
+    }
+}
+
+void ScienceHeliosScreen::showNoInfo(){
+    info_callsign->setText("-");
+    info_distance->setValue("-");
+    info_heading->setValue("-");
+    info_relspeed->setValue("-");
+    info_faction->setValue("-");
+    info_type->setValue("-");
+    info_shields->setValue("-");
+    info_hull->setValue("-");
+    info_shield_frequency->setFrequency(-1);
+    info_beam_frequency->setFrequency(-1);
+    info_description->setText("");
+
+    for(int n = 0; n < SYS_COUNT; n++) {
+        info_system[n]->setValue("-");
+    }
+}
+
+void ScienceHeliosScreen::showWaypointInfo(){
+    // If the target is a waypoint, show its heading and distance, and our
+    // velocity toward it.
+        // sidebar_pager->hide();
+        sf::Vector2f position_diff = my_spaceship->waypoints[targets.getWaypointIndex()] - my_spaceship->getPosition();
+        float distance = sf::length(position_diff);
+        float heading = sf::vector2ToAngle(position_diff) - 270;
+
+        while(heading < 0) heading += 360;
+
+        float rel_velocity = -dot(my_spaceship->getVelocity(), position_diff / distance);
+
+        if (fabs(rel_velocity) < 0.01)
+            rel_velocity = 0.0;
+
+        info_distance->setValue(string(distance / 1000.0f, 1) + DISTANCE_UNIT_1K);
+        info_heading->setValue(string(int(heading)));
+        info_relspeed->setValue(string(rel_velocity / 1000.0f * 60.0f, 1) + DISTANCE_UNIT_1K + "/min");
+}
+
+void ScienceHeliosScreen::showTargetInfo(){
         P<SpaceObject> obj = targets.get();
         P<SpaceShip> ship = obj;
         P<SpaceStation> station = obj;
@@ -288,27 +335,7 @@ void ScienceHeliosScreen::onDraw(sf::RenderTarget& window)
                 info_hull->setValue(int(station->getHull()));
             }
         }
-    } else if (targets.getWaypointIndex() >= 0) {
-    // If the target is a waypoint, show its heading and distance, and our
-    // velocity toward it.
-        // sidebar_pager->hide();
-        sf::Vector2f position_diff = my_spaceship->waypoints[targets.getWaypointIndex()] - my_spaceship->getPosition();
-        float distance = sf::length(position_diff);
-        float heading = sf::vector2ToAngle(position_diff) - 270;
-
-        while(heading < 0) heading += 360;
-
-        float rel_velocity = -dot(my_spaceship->getVelocity(), position_diff / distance);
-
-        if (fabs(rel_velocity) < 0.01)
-            rel_velocity = 0.0;
-
-        info_distance->setValue(string(distance / 1000.0f, 1) + DISTANCE_UNIT_1K);
-        info_heading->setValue(string(int(heading)));
-        info_relspeed->setValue(string(rel_velocity / 1000.0f * 60.0f, 1) + DISTANCE_UNIT_1K + "/min");
-    }
 }
-
 // TODO waypoints
 void ScienceHeliosScreen::iterateTagrets(bool forward){
     PVector<SpaceObject> potentialTargetsUnfiltered = GuiRadarView::getVisibleObjects(
