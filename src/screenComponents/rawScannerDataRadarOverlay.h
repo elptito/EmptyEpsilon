@@ -8,12 +8,11 @@ class GuiRadarView;
 class RawScannerDataRadarOverlay : public GuiElement
 {
 public:
-    RawScannerDataRadarOverlay(GuiRadarView* owner, string id, float distance);
+    RawScannerDataRadarOverlay(GuiRadarView* owner, string id);
 
     virtual void onDraw(sf::RenderTarget& window) override;
 private:
     GuiRadarView* radar;
-    float distance;
 };
 
 #endif//RAW_SCANNER_DATA_RADAR_OVERLAY_H

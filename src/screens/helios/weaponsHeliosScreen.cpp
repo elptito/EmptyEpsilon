@@ -12,7 +12,7 @@
 #include "gui/gui2_keyvaluedisplay.h"
 #include "gui/gui2_progressbar.h"
 
-sf::Color grey(96, 96, 96);
+static sf::Color grey(96, 96, 96);
 WeaponsHeliosScreen::WeaponsHeliosScreen(GuiContainer* owner)
 : GuiOverlay(owner, "WEAPONS_SCREEN", colorConfig.background), load_type(MW_None), missile_target_angle(0)
     , next_shields_frequency(0), manual_aim(false), target_mode_near(true), target_mode_enemy(true)
@@ -192,6 +192,10 @@ void WeaponsHeliosScreen::onDraw(sf::RenderTarget& window)
     GuiOverlay::onDraw(window);
 }
 
+static bool compareSpaceObjects(P<SpaceObject> o1, P<SpaceObject> o2) { 
+    return (o1->getPosition() - my_spaceship->getPosition()) < (o2->getPosition() - my_spaceship->getPosition());
+} 
+
 void WeaponsHeliosScreen::iterateTagrets(bool forward, bool enemiesOnly, bool nearOnly){
     float range = nearOnly? radar->getDistance() : my_spaceship->getRadarRange();
     PVector<SpaceObject> potentialTargetsUnfiltered = GuiRadarView::getVisibleObjects(my_spaceship->getPosition(), my_spaceship->getFactionId(), GuiRadarView::RadarRangeAndLineOfSight, range);
@@ -203,6 +207,7 @@ void WeaponsHeliosScreen::iterateTagrets(bool forward, bool enemiesOnly, bool ne
             potentialTargets.push_back(obj);
         }
     }
+    std::sort(potentialTargets.begin(), potentialTargets.end(), compareSpaceObjects); 
     targets.next(potentialTargets, forward);
     my_spaceship->commandSetTarget(targets.get());
 }
@@ -210,15 +215,7 @@ void WeaponsHeliosScreen::iterateTagrets(bool forward, bool enemiesOnly, bool ne
 void WeaponsHeliosScreen::onHotkey(const HotkeyResult& key)
 {
     if (key.category == "WEAPONS" && my_spaceship) {
-        if (key.hotkey == "NEXT_TARGET") {
-            iterateTagrets(true, target_mode_enemy, target_mode_near);
-        } else if (key.hotkey == "PREV_TARGET") {
-            iterateTagrets(false, target_mode_enemy, target_mode_near);
-        } else if (key.hotkey == "TARGET_NEAR_TOGGLE") {
-            target_mode_near = !target_mode_near;
-        } else if (key.hotkey == "TARGET_ENEMY_TOGGLE") {
-            target_mode_enemy = !target_mode_enemy;
-        } else if (key.hotkey == "BEAM_FREQUENCY_INCREASE") {
+        if (key.hotkey == "BEAM_FREQUENCY_INCREASE") {
             my_spaceship->commandSetBeamFrequency((my_spaceship->beam_frequency + 1) % SpaceShip::max_frequency);
         } else if (key.hotkey == "BEAM_FREQUENCY_DECREASE") {
             my_spaceship->commandSetBeamFrequency((SpaceShip::max_frequency + my_spaceship->beam_frequency - 1) % SpaceShip::max_frequency);
@@ -288,6 +285,16 @@ void WeaponsHeliosScreen::onHotkey(const HotkeyResult& key)
         } else if (key.hotkey == "SHIELD_CAL_START") {
             my_spaceship->commandSetShieldFrequency(next_shields_frequency);
         } 
+    } else if (key.category == "TARGET" && my_spaceship){
+        if (key.hotkey == "NEXT_TARGET") {
+            iterateTagrets(true, target_mode_enemy, target_mode_near);
+        } else if (key.hotkey == "PREV_TARGET") {
+            iterateTagrets(false, target_mode_enemy, target_mode_near);
+        } else if (key.hotkey == "TARGET_NEAR_TOGGLE") {
+            target_mode_near = !target_mode_near;
+        } else if (key.hotkey == "TARGET_ENEMY_TOGGLE") {
+            target_mode_enemy = !target_mode_enemy;
+        }
     }
 }
 

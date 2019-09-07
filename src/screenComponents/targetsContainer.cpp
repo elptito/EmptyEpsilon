@@ -91,39 +91,34 @@ void TargetsContainer::setToClosestTo(sf::Vector2f position, float max_range, ES
     set(target);
 }
 
-static bool compareSpaceObjects(P<SpaceObject> o1, P<SpaceObject> o2) { 
-    return (o1->getPosition() - my_spaceship->getPosition()) < (o2->getPosition() - my_spaceship->getPosition());
-} 
-
 void TargetsContainer::next(PVector<SpaceObject> potentials, bool forward){
     P<SpaceObject> found = nullptr;
     bool current_reached = false;
-    P<SpaceObject> lastSeen = nullptr;
-    P<SpaceObject> firstSeen = nullptr;
-    std::sort(potentials.begin(), potentials.end(), compareSpaceObjects); 
+    P<SpaceObject> lastSeen = nullptr; // for reverse logic edge case
+    P<SpaceObject> firstSeen = nullptr; // for forward logic edge case
     foreach(SpaceObject, obj, potentials) {
-        if (found){
+        if (found) // no need to iterate more
             break;
-        } else if (obj == get()) {
-            // reached current target
-            if (forward) {
-                current_reached = true;
-            } else if (lastSeen){
+        if (!obj) // should never happen but helps debug confidence
+            continue;
+        if(!firstSeen)
+            firstSeen = obj;
+        if (obj == get()) { // reached current target
+            current_reached = true;
+            if (!forward && lastSeen){
                 found = lastSeen;
             }
-        } else if (forward) {
-            if (current_reached) {
-                found = obj;
-            } else if(!firstSeen){
-                // track first target seen
-                firstSeen = obj;
-            }
-        } else {
-            // track last target seen
-            lastSeen = obj;
-        }
+        } else if (forward && current_reached) { // 1 after current
+            found = obj;
+        } 
+        lastSeen = obj;
     } // end of loop
-
+    /*
+    LOG(INFO) << "size : " << string(potentials.size(),0);
+    LOG(INFO) << "found : " << (found ? found->getCallSign() : "NULL");
+    LOG(INFO) << "firstSeen : " << (firstSeen ? firstSeen->getCallSign() : "NULL");
+    LOG(INFO) << "lastSeen : " << (lastSeen ? lastSeen->getCallSign() : "NULL");
+    */
     if (!found){
         // current target might be the first or last element
         found = forward? firstSeen : lastSeen;

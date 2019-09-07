@@ -52,7 +52,7 @@ ScanHeliosScreen::ScanHeliosScreen(GuiContainer* owner, ECrewPosition crew_posit
             targets.setToClosestTo(position, 1000, TargetsContainer::Selectable);
         }, nullptr, nullptr
     );
-    new RawScannerDataRadarOverlay(science_radar, "", gameGlobalInfo->long_range_radar_range);
+    new RawScannerDataRadarOverlay(science_radar, "");
 
     // Draw and hide the probe radar.
     probe_radar = new GuiRadarView(radar_view, "PROBE_RADAR", 5000, &targets, my_spaceship);
@@ -66,7 +66,7 @@ ScanHeliosScreen::ScanHeliosScreen(GuiContainer* owner, ECrewPosition crew_posit
             targets.setToClosestTo(position, 1000, TargetsContainer::Selectable);
         }, nullptr, nullptr
     );
-    new RawScannerDataRadarOverlay(probe_radar, "", 5000);
+    new RawScannerDataRadarOverlay(probe_radar, "");
 
     sidebar_selector = new GuiSelector(radar_view, "", [this](int index, string value)
     {

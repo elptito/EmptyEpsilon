@@ -19,10 +19,9 @@ class GuiProgressbar;
 
 class ScienceHeliosScreen : public GuiOverlay
 {
-public:
+private:
     TargetsContainer targets;
-    GuiRadarView* science_radar;
-    GuiRadarView* probe_radar;
+    GuiRadarView* radar;
     GuiProgressbar* zoom_bar;
     GuiScanTargetButton* scan_button;
     GuiLabel* info_callsign;
@@ -41,8 +40,12 @@ public:
     GuiFrequencyCurve* info_beam_frequency;
     GuiKeyValueDisplay* info_system[SYS_COUNT];
 
-    GuiToggleButton* probe_view_button;
-    P<ScanProbe> observation_point;
+    GuiLabel* main_view_display;
+    GuiLabel* probe_view_display;
+
+    P<SpaceObject> radar_pov;
+    bool probe_view;
+    float zoom;
 public:
     ScienceHeliosScreen(GuiContainer* owner, ECrewPosition crew_position=scienceHeliosScreen);
 

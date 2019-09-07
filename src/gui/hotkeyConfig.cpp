@@ -44,6 +44,18 @@ HotkeyConfig::HotkeyConfig()
     newKey("COMBAT_BOOST", std::make_tuple("Combat maneuver boost", "[alt];Up"));
     newKey("COMBAT_BACK", std::make_tuple("Combat maneuver reverse", "[alt];Down"));
 
+    newCategory("SCIENCE", "Science Officer");
+    newKey("POV_SHIP", std::make_tuple("set radar point of view to main ship", "Q"));
+    newKey("POV_PROBE", std::make_tuple("set radar point of view to probe", "A"));
+
+    newCategory("TARGET", "Target");
+    newKey("NEXT_ENEMY_TARGET", std::make_tuple("Select next enemy target", ""));
+    newKey("PREV_ENEMY_TARGET", std::make_tuple("Select previous enemy target", ""));
+    newKey("NEXT_TARGET", std::make_tuple("Select next target", "RBracket"));
+    newKey("PREV_TARGET", std::make_tuple("Select previous target", "LBracket"));
+    newKey("TARGET_NEAR_TOGGLE", std::make_tuple("select only near targets", "[alt];RBracket"));
+    newKey("TARGET_ENEMY_TOGGLE", std::make_tuple("select only enemy targets", "[alt];LBracket"));
+    
     newCategory("WEAPONS", "Weapons");
     for(int n=0; n<MW_Count; n++)
         newKey("SELECT_MISSILE_TYPE_" + getMissileWeaponName(EMissileWeapons(n)).upper(), 
@@ -54,12 +66,7 @@ HotkeyConfig::HotkeyConfig()
         newKey(std::string("UNLOAD_TUBE_") + string(n+1), std::make_tuple(std::string("Unload tube ") + string(n+1), digit("[alt];[shift];", n+1)));
     for(int n=0; n<max_weapon_tubes; n++)
         newKey(std::string("FIRE_TUBE_") + string(n+1), std::make_tuple(std::string("Fire tube ") + string(n+1), digit("[alt];", n+1)));
-    newKey("NEXT_ENEMY_TARGET", std::make_tuple("Select next enemy target", ""));
-    newKey("PREV_ENEMY_TARGET", std::make_tuple("Select previous enemy target", ""));
-    newKey("NEXT_TARGET", std::make_tuple("Select next target", "RBracket"));
-    newKey("PREV_TARGET", std::make_tuple("Select previous target", "LBracket"));
-    newKey("TARGET_NEAR_TOGGLE", std::make_tuple("select only near targets", "[alt];RBracket"));
-    newKey("TARGET_ENEMY_TOGGLE", std::make_tuple("select only enemy targets", "[alt];LBracket"));
+
     newKey("TOGGLE_SHIELDS", std::make_tuple("Toggle shields", "S"));
     newKey("ENABLE_SHIELDS", std::make_tuple("Enable shields", ""));
     newKey("DISABLE_SHIELDS", std::make_tuple("Disable shields", ""));

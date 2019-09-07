@@ -3,8 +3,8 @@
 #include "playerInfo.h"
 #include "spaceObjects/playerSpaceship.h"
 
-RawScannerDataRadarOverlay::RawScannerDataRadarOverlay(GuiRadarView* owner, string id, float distance)
-: GuiElement(owner, id), radar(owner), distance(distance)
+RawScannerDataRadarOverlay::RawScannerDataRadarOverlay(GuiRadarView* owner, string id)
+: GuiElement(owner, id), radar(owner)
 {
     setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 }
@@ -37,12 +37,12 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
 
         // If the object is more than twice as far away as the maximum radar
         // range, disregard it.
-        if (dist > distance * 2.0)
+        if (dist > radar->getDistance() * 2.0)
             continue;
 
         // The further away the object is, the less its effect on radar data.
-        if (dist > distance)
-            scale = (dist - distance) / distance;
+        if (dist > radar->getDistance())
+            scale = (dist - radar->getDistance()) / radar->getDistance();
 
         // If we're adjacent to the object ...
         if (dist <= obj->getRadius())

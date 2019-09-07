@@ -13,23 +13,35 @@ function init()
         setFactionVsFactionState("MCF Extreme", "FSN", "Enemy")
         setFactionVsFactionState("Raiders", "FSN", "Enemy")
         setFactionVsFactionState("Corp1", "FSN", "Friendly")
-        PlayerSpaceship():setTemplate("Gravitas"):setFaction("FSN"):setPosition(0, 0):setWarpFrequency(5)
+        PlayerSpaceship():setTemplate("Gravitas"):setCallSign("PL4"):setFaction("FSN"):setPosition(0, 0):setWarpFrequency(5)
+
         -- enemyShips()
         -- tactical()
         -- enemyTargets()
         targets()
+        probes()
 end
 
 function update(delta)
 	--No victory condition
 end
 
+function probes()
+        ScanProbe():setOwner(getObjectByCallSign("PL4")):setPosition(3644, 8431):setTarget(5479, 12677):setLifetime(591)
+        ScanProbe():setOwner(getObjectByCallSign("PL4")):setPosition(9914, -4688):setTarget(10353, -4895):setLifetime(589)
+        ScanProbe():setOwner(getObjectByCallSign("PL4")):setPosition(-6631, -3995):setTarget(-6706, -4040):setLifetime(587)
+        ScanProbe():setOwner(getObjectByCallSign("PL4")):setPosition(-5378, 5067):setTarget(-11323, 10667):setLifetime(593)
+end
+
 function targets()
         SpaceStation():setTemplate("Small Station"):setFaction("FSN"):setCallSign("DS665"):setPosition(-16949, 18366)
         SpaceStation():setTemplate("Small Station"):setFaction("FSN"):setCallSign("DS666"):setPosition(-17659, 17780)
         SpaceStation():setTemplate("Small Station"):setFaction("FSN"):setCallSign("DS667"):setPosition(-12743, 18683)
-        CpuShip():setFaction("Free Miners"):setTemplate("Adder MK5"):setCallSign("CSS9"):setPosition(2014, 42):setWeaponStorage("HVLI", 6):setWarpFrequency(0)
-        CpuShip():setFaction("FSN"):setTemplate("Atlantis X23"):setCallSign("CV10"):setPosition(-1222, -194):orderRoaming():setWeaponStorage("EMP", 2):setWarpFrequency(5)
+        -- CpuShip():setFaction("Free Miners"):setTemplate("Adder MK5"):setCallSign("CSS9"):setPosition(2014, 42):setWeaponStorage("HVLI", 6):setWarpFrequency(0)
+        -- CpuShip():setFaction("FSN"):setTemplate("Atlantis X23"):setCallSign("CV10"):setPosition(-1222, -194):orderRoaming():setWeaponStorage("EMP", 2):setWarpFrequency(5)
+        CpuShip():setFaction("FSN"):setTemplate("Atlantis X23"):setCallSign("CV10"):setPosition(-1225, -195):orderDefendTarget(getObjectByCallSign("PL4")):setWeaponStorage("EMP", 0):setWeaponStorage("Nuke", 0):setWarpFrequency(5)
+        CpuShip():setFaction("Free Miners"):setTemplate("Adder MK5"):setCallSign("CSS9"):setPosition(2011, 44):orderDock(getObjectByCallSign("DS667")):setWeaponStorage("HVLI", 4):setWarpFrequency(0)
+    
 end
 function enemyTargets()
        SpaceStation():setTemplate("Medium Station"):setFaction("MCF Extreme"):setCallSign("target_UN_HIDDEN"):setPosition(-14967, 17975)

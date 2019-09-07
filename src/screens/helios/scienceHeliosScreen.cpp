@@ -23,8 +23,10 @@
 #include "gui/gui2_progressbar.h"
 #include "gui/gui2_image.h"
 
+static sf::Color grey(96, 96, 96);
+
 ScienceHeliosScreen::ScienceHeliosScreen(GuiContainer* owner, ECrewPosition crew_position)
-: GuiOverlay(owner, "SCIENCE_SCREEN", colorConfig.background)
+: GuiOverlay(owner, "SCIENCE_SCREEN", colorConfig.background), radar_pov(my_spaceship), probe_view(false), zoom(0)
 {
     GuiOverlay* background_crosses = new GuiOverlay(this, "BACKGROUND_CROSSES", sf::Color::White);
     background_crosses->setTextureTiled("gui/BackgroundCrosses");
@@ -62,32 +64,11 @@ ScienceHeliosScreen::ScienceHeliosScreen(GuiContainer* owner, ECrewPosition crew
     background_gradient->setPosition(0, 0, ACenter)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
     // Draw the radar.
     // Draw the science radar.
-    science_radar = new GuiRadarView(radar_view, "SCIENCE_RADAR", gameGlobalInfo->long_range_radar_range, &targets, my_spaceship);
-    science_radar->setMargins(25)->setPosition(0, 0, ACenter)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
-    science_radar->setRangeIndicatorStepSize(5000.0)->longRange()->enableWaypoints()->enableCallsigns()->enableHeadingIndicators()->setStyle(GuiRadarView::Circular)->setFogOfWarStyle(GuiRadarView::RadarRangeAndLineOfSight);
-    science_radar->setCallbacks(
-        [this](sf::Vector2f position) {
-            if (!my_spaceship || my_spaceship->scanning_delay > 0.0)
-                return;
+    radar = new GuiRadarView(radar_view, "SCIENCE_RADAR", gameGlobalInfo->long_range_radar_range, &targets, my_spaceship);
+    radar->setMargins(25)->setPosition(0, 0, ACenter)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+    radar->setRangeIndicatorStepSize(5000.0)->longRange()->enableWaypoints()->enableCallsigns()->enableHeadingIndicators()->setStyle(GuiRadarView::Circular)->setFogOfWarStyle(GuiRadarView::RadarRangeAndLineOfSight);
 
-            targets.setToClosestTo(position, 1000, TargetsContainer::Selectable);
-        }, nullptr, nullptr
-    );
-    new RawScannerDataRadarOverlay(science_radar, "", gameGlobalInfo->long_range_radar_range);
-
-    // Draw and hide the probe radar.
-    probe_radar = new GuiRadarView(radar_view, "PROBE_RADAR", 5000, &targets, my_spaceship);
-    probe_radar->setPosition(-270, 0, ACenterRight)->setMargins(40)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax)->hide();
-    probe_radar->setAutoCentering(false)->longRange()->enableWaypoints()->enableCallsigns()->enableHeadingIndicators()->setStyle(GuiRadarView::Circular)->setFogOfWarStyle(GuiRadarView::NoFogOfWar);
-    probe_radar->setCallbacks(
-        [this](sf::Vector2f position) {
-            if (!my_spaceship || my_spaceship->scanning_delay > 0.0)
-                return;
-
-            targets.setToClosestTo(position, 1000, TargetsContainer::Selectable);
-        }, nullptr, nullptr
-    );
-    new RawScannerDataRadarOverlay(probe_radar, "", 5000);
+    new RawScannerDataRadarOverlay(radar, "");
 
     // Scan button.
     scan_button = new GuiScanTargetButton(target_actions, "SCAN_BUTTON", &targets);
@@ -147,30 +128,13 @@ ScienceHeliosScreen::ScienceHeliosScreen(GuiContainer* owner, ECrewPosition crew
     // database_view->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
     // Probe view button
-    probe_view_button = new GuiToggleButton(radar_source, "PROBE_VIEW", "Probe View", [this](bool value){
-        P<ScanProbe> probe;
-
-        if (game_server)
-            probe = game_server->getObjectById(my_spaceship->linked_science_probe_id);
-        else
-            probe = game_client->getObjectById(my_spaceship->linked_science_probe_id);
-        
-        if (value && probe)
-        {
-            sf::Vector2f probe_position = probe->getPosition();
-            science_radar->hide();
-            probe_radar->show();
-            probe_radar->setViewPosition(probe_position)->show();
-        } else {
-            probe_view_button->setValue(false);
-            science_radar->show();
-            probe_radar->hide();
-        }
-    });
-    probe_view_button->setSize(GuiElement::GuiSizeMax, 50)->disable();
+    probe_view_display = new GuiLabel(radar_source, "PROBE_VIEW", "Probe View", 30);
+    probe_view_display->addBackground()->setSize(GuiElement::GuiSizeMax, 50);
+    main_view_display = new GuiLabel(radar_source, "PROBE_VIEW", "Main View", 30);
+    main_view_display->addBackground()->setSize(GuiElement::GuiSizeMax, 50);
 
     // Draw the zoom slider.
-    zoom_bar = new GuiProgressbar(radar_controls, "ZOOM_BAR", gameGlobalInfo->long_range_radar_range, 5000.f, -1); // force sync in onDraw()
+    zoom_bar = new GuiProgressbar(radar_controls, "ZOOM_BAR", 1, 0, -1); // force sync in onDraw()
     zoom_bar->setSize(GuiElement::GuiSizeMax, 50);
 
     // Scanning dialog.
@@ -187,19 +151,12 @@ void ScienceHeliosScreen::onDraw(sf::RenderTarget& window)
     // Handle mouse wheel
     float mouse_wheel_delta = InputHandler::getMouseWheelDelta();
     if (mouse_wheel_delta != 0.0) {
-        float view_distance = science_radar->getDistance() * (1.0 - (mouse_wheel_delta * 0.1f));
-        if (view_distance > gameGlobalInfo->long_range_radar_range)
-            view_distance = gameGlobalInfo->long_range_radar_range;
-        if (view_distance < 5000.0f)
-            view_distance = 5000.0f;
-        science_radar->setDistance(view_distance);
+        zoom = std::min(1.f, std::max(0.f, zoom - (mouse_wheel_delta * 0.05f)));
     }
 
-    // Keep the zoom slider in sync.
-    if (zoom_bar->getValue() != science_radar->getDistance()){
-        zoom_bar->setValue(science_radar->getDistance());
-        zoom_bar->setText("Zoom: " + string(gameGlobalInfo->long_range_radar_range / science_radar->getDistance(), 1) + "x");
-    }
+    // Keep the zoom bar in sync.
+    zoom_bar->setValue(zoom);
+    zoom_bar->setText("Zoom: " + string(gameGlobalInfo->long_range_radar_range / radar->getDistance(), 1) + "x");
 
     if (!my_spaceship)
         return;
@@ -209,17 +166,9 @@ void ScienceHeliosScreen::onDraw(sf::RenderTarget& window)
     else
         probe = game_client->getObjectById(my_spaceship->linked_science_probe_id);
 
-    if (probe_view_button->getValue() && probe)
-    {
-        if (targets.get() && (probe->getPosition() - targets.get()->getPosition()) > 5000.0f)
-            targets.clear();
-    }else{
-        if (targets.get() && Nebula::blockedByNebula(my_spaceship->getPosition(), targets.get()->getPosition()))
-            targets.clear();
-    }
+    if (targets.get() && (radar->getViewPosition() - targets.get()->getPosition()) > radar->getDistance())
+        targets.clear();
     
-    // sidebar_selector->setVisible(sidebar_selector->getSelectionIndex() > 0 || custom_function_sidebar->hasEntries());
-
     info_callsign->setText("-");
     info_distance->setValue("-");
     info_heading->setValue("-");
@@ -236,15 +185,26 @@ void ScienceHeliosScreen::onDraw(sf::RenderTarget& window)
         info_system[n]->setValue("-");
     }
 
-    if (probe) {
-        probe_view_button->enable();
-        probe_radar->setViewPosition(probe->getPosition());
+    main_view_display->setText("View Main (" + my_spaceship->getCallSign() + ")");
+    if (probe){
+        probe_view_display->setText("View Probe (" + probe->getCallSign() + ")");
     } else {
-        probe_view_button->disable();
-        probe_view_button->setValue(false);
-        science_radar->show();
-        probe_radar->hide();
+        probe_view = false;
+        probe_view_display->setText("No Probe Link");
     }
+    if (probe_view){
+        radar_pov = probe;
+        probe_view_display->setColor(sf::Color::Yellow)->setTextColor(sf::Color::Yellow);
+        main_view_display->setColor(sf::Color::White)->setTextColor(sf::Color::White);
+    } else {
+        radar_pov = my_spaceship;
+        sf::Color color = probe? sf::Color::White : grey;
+        probe_view_display->setColor(color)->setTextColor(color);
+        main_view_display->setColor(sf::Color::Yellow)->setTextColor(sf::Color::Yellow);
+    }
+
+    radar->setViewPosition(radar_pov->getPosition())->setAutoCentering(false);
+    radar->setDistance(Tween<float>::linear(zoom, 0.f, 1.f, 5000, radar_pov->getRadarRange()));
 
     if (targets.get()) {
         P<SpaceObject> obj = targets.get();
@@ -352,27 +312,35 @@ void ScienceHeliosScreen::onDraw(sf::RenderTarget& window)
 // TODO waypoints
 void ScienceHeliosScreen::iterateTagrets(bool forward){
     PVector<SpaceObject> potentialTargetsUnfiltered = GuiRadarView::getVisibleObjects(
-        my_spaceship->getPosition(), 
+        radar_pov->getPosition(), 
         my_spaceship->getFactionId(), 
         GuiRadarView::RadarRangeAndLineOfSight, 
-        my_spaceship->getRadarRange());
+        radar->getDistance());
     PVector<SpaceObject> potentialTargets;
     for(const auto & obj : potentialTargetsUnfiltered) {
         if(obj != my_spaceship && obj->canBeSelectedBy(my_spaceship)) {
             potentialTargets.push_back(obj);
         }
     }
+    std::sort(potentialTargets.begin(), potentialTargets.end(), [this](P<SpaceObject> o1, P<SpaceObject> o2) { 
+        return (o1->getPosition() - radar_pov->getPosition()) < (o2->getPosition() - radar_pov->getPosition());
+    }); 
     targets.next(potentialTargets, forward);
-    my_spaceship->commandSetTarget(targets.get());
 }
 
 void ScienceHeliosScreen::onHotkey(const HotkeyResult& key)
 {
-    if (key.category == "WEAPONS" && my_spaceship) {
+     if (key.category == "TARGET" && my_spaceship){
         if (key.hotkey == "NEXT_TARGET") {
             iterateTagrets(true);
         } else if (key.hotkey == "PREV_TARGET") {
             iterateTagrets(false);
+        } 
+    } else if (key.category == "SCIENCE" && my_spaceship){
+        if (key.hotkey == "POV_SHIP") {
+            probe_view = false;
+        } else if (key.hotkey == "POV_PROBE") {
+            probe_view = true;
         }
     }
 }
