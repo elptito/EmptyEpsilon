@@ -42,10 +42,7 @@ void ProbeScreen::update(float delta)
 	
     if (my_spaceship)
     {
-		if (game_server)
-		    probe = game_server->getObjectById(my_spaceship->linked_probe_3D_id);
-		else
-		    probe = game_client->getObjectById(my_spaceship->linked_probe_3D_id);
+		probe = getObjectById(my_spaceship->linked_probe_3D_id);
 	
 		if (probe)
 		{

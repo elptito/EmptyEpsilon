@@ -29,11 +29,7 @@ DroneOperatorScreen::DroneOperatorScreen(GuiContainer *owner)
 
     // Drone list
     drone_list = new GuiListbox(droneSelection, "PLAYER_SHIP_LIST", [this](int index, string value) {
-        P<PlayerSpaceship> ship;
-        if (game_server)
-            ship = game_server->getObjectById(value.toInt());
-        else if (game_client)
-            ship = game_client->getObjectById(value.toInt());
+        P<PlayerSpaceship> ship = getObjectById(value.toInt());
         // If the selected item is a ship ...
         if (ship)
         // TODO :  check if occupied

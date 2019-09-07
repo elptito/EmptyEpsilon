@@ -86,9 +86,7 @@ P<SpaceObject> GameGlobalInfo::getObjectByCallSign(string callsign){
 P<PlayerSpaceship> GameGlobalInfo::getPlayerShip(int index)
 {
     assert(index >= 0 && index < max_player_ships);
-    if (game_server)
-        return game_server->getObjectById(playerShipId[index]);
-    return game_client->getObjectById(playerShipId[index]);
+    return getObjectById(playerShipId[index]);
 }
 
 void GameGlobalInfo::setPlayerShip(int index, P<PlayerSpaceship> ship)
@@ -134,10 +132,7 @@ void GameGlobalInfo::update(float delta)
         //Set the my_spaceship variable based on the my_player_info->ship_id
         if ((my_spaceship && my_spaceship->getMultiplayerId() != my_player_info->ship_id) || (my_spaceship && my_player_info->ship_id == -1) || (!my_spaceship && my_player_info->ship_id != -1))
         {
-            if (game_server)
-                my_spaceship = game_server->getObjectById(my_player_info->ship_id);
-            else
-                my_spaceship = game_client->getObjectById(my_player_info->ship_id);
+            my_spaceship = getObjectById(my_player_info->ship_id);
         }
     }
 }
@@ -585,3 +580,9 @@ static int getTerrainValueAtPosition(lua_State *L){
 /// getTerrainValueAtPosition(id, x, y)
 /// Return the normalized alpha value of a layer in a given position, between 0 and 1;
 REGISTER_SCRIPT_FUNCTION(getTerrainValueAtPosition);
+
+P<MultiplayerObject> getObjectById(int32_t id){
+    if (game_server)
+        return game_server->getObjectById(id);
+    return game_client->getObjectById(id);
+}

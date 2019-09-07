@@ -152,6 +152,7 @@ bool isValidSectorName(string sectorName);
 sf::Vector2f getPositionFromSring(string sectorName);
 string getStringFromPosition(sf::Vector2f position);
 bool isValidPositionString(string sectorName);
+P<MultiplayerObject> getObjectById(int32_t id);
 
 REGISTER_MULTIPLAYER_ENUM(EScanningComplexity);
 

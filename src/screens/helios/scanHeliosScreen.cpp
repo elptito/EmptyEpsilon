@@ -172,13 +172,7 @@ ScanHeliosScreen::ScanHeliosScreen(GuiContainer* owner, ECrewPosition crew_posit
 
     // Probe view button
     probe_view_button = new GuiToggleButton(radar_view, "PROBE_VIEW", "Probe View", [this](bool value){
-        P<ScanProbe> probe;
-
-        if (game_server)
-            probe = game_server->getObjectById(my_spaceship->linked_science_probe_id);
-        else
-            probe = game_client->getObjectById(my_spaceship->linked_science_probe_id);
-        
+        P<ScanProbe> probe = getObjectById(my_spaceship->linked_science_probe_id);
         if (value && probe)
         {
             sf::Vector2f probe_position = probe->getPosition();
@@ -218,7 +212,6 @@ ScanHeliosScreen::ScanHeliosScreen(GuiContainer* owner, ECrewPosition crew_posit
 void ScanHeliosScreen::onDraw(sf::RenderTarget& window)
 {
     GuiOverlay::onDraw(window);
-    P<ScanProbe> probe;
 
     // Handle mouse wheel
     float mouse_wheel_delta = InputHandler::getMouseWheelDelta();
@@ -238,10 +231,7 @@ void ScanHeliosScreen::onDraw(sf::RenderTarget& window)
     if (!my_spaceship)
         return;
 
-    if (game_server)
-        probe = game_server->getObjectById(my_spaceship->linked_science_probe_id);
-    else
-        probe = game_client->getObjectById(my_spaceship->linked_science_probe_id);
+    P<ScanProbe> probe = getObjectById(my_spaceship->linked_science_probe_id);
 
     if (probe_view_button->getValue() && probe)
     {

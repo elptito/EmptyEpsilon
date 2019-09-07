@@ -3,6 +3,7 @@
 #include "spaceObjects/playerSpaceship.h"
 #include <algorithm>
 #include "random.h"
+#include "gameGlobalInfo.h"
 
 bool isDockOpenForDocking (Dock &d){
     return d.isOpenForDocking();
@@ -29,10 +30,7 @@ P<Cargo> Dock::getCargo()
 {
     if (state == Empty)
         return nullptr;
-    if (game_server)
-        return game_server->getObjectById(cargo_id);
-    else
-        return game_client->getObjectById(cargo_id);
+    return getObjectById(cargo_id);
 }
 
 void Dock::startMoveCargo()

@@ -1,4 +1,5 @@
 #include <SFML/OpenGL.hpp>
+#include "gameGlobalInfo.h"
 #include "beamEffect.h"
 #include "spaceship.h"
 #include "mesh.h"
@@ -80,15 +81,9 @@ void BeamEffect::draw3DTransparent()
 
 void BeamEffect::update(float delta)
 {
-    P<SpaceObject> source, target;
-    if (game_server)
-    {
-        source = game_server->getObjectById(sourceId);
-        target = game_server->getObjectById(target_id);
-    }else{
-        source = game_client->getObjectById(sourceId);
-        target = game_client->getObjectById(target_id);
-    }
+    P<SpaceObject> source = getObjectById(sourceId);
+    P<SpaceObject> target = getObjectById(target_id);
+
     if (source)
         setPosition(source->getPosition() + rotateVector(sf::Vector2f(sourceOffset.x, sourceOffset.y), source->getRotation()));
     if (target)

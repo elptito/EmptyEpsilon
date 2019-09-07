@@ -1,5 +1,6 @@
 #include "missileWeapon.h"
 #include "particleEffect.h"
+#include "gameGlobalInfo.h"
 #include "explosionEffect.h"
 
 MissileWeapon::MissileWeapon(string multiplayerName, const MissileWeaponData& data)
@@ -67,11 +68,7 @@ void MissileWeapon::updateMovement()
     {
         if (data.homing_range > 0)
         {
-            P<SpaceObject> target;
-            if (game_server)
-                target = game_server->getObjectById(target_id);
-            else
-                target = game_client->getObjectById(target_id);
+            P<SpaceObject> target = getObjectById(target_id);
 
             if (target && (target->getPosition() - getPosition()) < data.homing_range + target->getRadius())
             {

@@ -1108,9 +1108,7 @@ float SpaceShip::getShieldRechargeRate(int shield_index)
 
 P<SpaceObject> SpaceShip::getTarget()
 {
-    if (game_server)
-        return game_server->getObjectById(target_id);
-    return game_client->getObjectById(target_id);
+    return getObjectById(target_id);
 }
 
 void SpaceShip::executeJump(float distance)

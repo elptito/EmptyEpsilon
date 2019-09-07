@@ -2,7 +2,7 @@
 #include <SFML/OpenGL.hpp>
 #include "main.h"
 #include "pathPlanner.h"
-
+#include "gameGlobalInfo.h"
 #include "scriptInterface.h"
 
 static Mesh* planet_mesh[16];
@@ -202,11 +202,7 @@ void Planet::update(float delta)
 
     if (orbit_distance > 0.0f)
     {
-        P<SpaceObject> orbit_target;
-        if (game_server)
-            orbit_target = game_server->getObjectById(orbit_target_id);
-        else
-            orbit_target = game_client->getObjectById(orbit_target_id);
+        P<SpaceObject> orbit_target = getObjectById(orbit_target_id);
         if (orbit_target)
         {
             float angle = sf::vector2ToAngle(getPosition() - orbit_target->getPosition());

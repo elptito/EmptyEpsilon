@@ -1,4 +1,5 @@
 #include "repairCrew.h"
+#include "gameGlobalInfo.h"
 
 const static int16_t CMD_SET_TARGET_POSITION = 0x0000;
 
@@ -127,17 +128,7 @@ ERepairCrewDirection pathFind(sf::Vector2i start_pos, sf::Vector2i target_pos, P
 
 void RepairCrew::update(float delta)
 {
-    P<PlayerSpaceship> ship;
-    if (game_server)
-        ship = game_server->getObjectById(ship_id);
-    else if (game_client)
-        ship = game_client->getObjectById(ship_id);
-    else
-    {
-        destroy();
-        return;
-    }
-
+    P<PlayerSpaceship> ship = getObjectById(ship_id);
 
     if (game_server && !ship)
     {

@@ -2,6 +2,7 @@
 #include "scanProbe.h"
 #include "explosionEffect.h"
 #include "main.h"
+#include "gameGlobalInfo.h"
 
 #include "scriptInterface.h"
 REGISTER_SCRIPT_SUBCLASS(ScanProbe, SpaceObject)
@@ -89,7 +90,7 @@ void ScanProbe::setOwner(P<SpaceObject> owner)
 string ScanProbe::getExportLine() {
     string ret = "ScanProbe()";
     if (owner_id){
-        P<SpaceObject> owner = game_server? game_server->getObjectById(owner_id) : game_client->getObjectById(owner_id);
+        P<SpaceObject> owner = getObjectById(owner_id);
         if (owner){
             ret +=  ":setOwner(getObjectByCallSign(\"" + owner->getCallSign() + "\"))";
         }
