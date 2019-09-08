@@ -11,8 +11,6 @@ class GuiKeyValueDisplay;
 class GuiFrequencyCurve;
 class GuiText;
 class GuiAutoLayout;
-class GuiButton;
-class GuiToggleButton;
 class GuiLabel;
 class GuiProgressbar;
 
@@ -30,7 +28,6 @@ private:
 
     GuiKeyValueDisplay* info_faction;
     GuiKeyValueDisplay* info_type;
-    GuiButton* info_type_button;
     GuiKeyValueDisplay* info_shields;
     GuiKeyValueDisplay* info_hull;
     GuiText* info_description;
@@ -41,6 +38,7 @@ private:
     GuiLabel* main_view_display;
     GuiLabel* probe_view_display;
     GuiLabel* scan_status;
+    GuiLabel* query_action;
 
     P<SpaceObject> radar_pov;
     bool probe_view;

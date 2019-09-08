@@ -184,6 +184,7 @@ PlayerSpaceship::PlayerSpaceship()
     warp_indicator = 0;
     auto_repairing_system = SYS_None;
     engineering_control_from_bridge = false;
+    science_query_to_bridge_db = "";
     setFactionId(1);
 
     extern_log_size = (uint8)1000;
@@ -226,6 +227,7 @@ PlayerSpaceship::PlayerSpaceship()
     registerMemberReplication(&auto_repairing_system);
     registerMemberReplication(&warp_calibration_delay);
     registerMemberReplication(&engineering_control_from_bridge);
+    registerMemberReplication(&science_query_to_bridge_db);
 
     // Determine which stations must provide self-destruct confirmation codes.
     for(int n = 0; n < max_self_destruct_codes; n++)
@@ -1461,6 +1463,10 @@ void PlayerSpaceship::handleClientCommand(int32_t client_id, int16_t command, sf
             }
         }
         break;
+    case CMD_SCIENCE_QUERY_TO_BRIDGE_DB:
+        {
+            packet >> science_query_to_bridge_db;
+        }
     default:
         SpaceShip::handleClientCommand(client_id, command, packet);
     }
@@ -1693,6 +1699,12 @@ void PlayerSpaceship::onReceiveServerCommand(sf::Packet& packet)
         }
         break;
     }
+}
+
+void PlayerSpaceship::commandSendScienceQueryToBridgeDB(string entryName){
+    sf::Packet packet;
+    packet << CMD_SCIENCE_QUERY_TO_BRIDGE_DB << entryName;
+    sendClientCommand(packet);
 }
 
 string PlayerSpaceship::getExportLine()

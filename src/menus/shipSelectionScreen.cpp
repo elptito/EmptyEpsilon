@@ -453,6 +453,7 @@ void ShipSelectionScreen::updateCrewTypeOptions()
         crew_position_button[scanHeliosScreen]->show();
         crew_position_button[helmsHeliosScreen]->show();
         crew_position_button[databaseHeliosScreen]->show();        
+        crew_position_button[bridgeDatabaseHeliosScreen]->show();        
         crew_position_button[tractorBeamHeliosScreen]->show();
         break;
     case 1: // Helios Bridge
@@ -460,6 +461,9 @@ void ShipSelectionScreen::updateCrewTypeOptions()
         crew_position_button[weaponsHeliosScreen]->show();
         crew_position_button[tractorBeamHeliosScreen]->show();  
         crew_position_button[bridgeEngineeringHeliosScreen]->show();
+        crew_position_button[scienceHeliosScreen]->show();
+        crew_position_button[scanHeliosScreen]->show();
+        crew_position_button[bridgeDatabaseHeliosScreen]->show();
         crew_position_button[relayOfficerNC]->show();
         crew_position_button[commsView]->show();      
         crew_position_button[externLog]->show();

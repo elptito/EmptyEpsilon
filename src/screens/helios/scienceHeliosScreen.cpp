@@ -68,13 +68,6 @@ ScienceHeliosScreen::ScienceHeliosScreen(GuiContainer* owner, ECrewPosition crew
 
     new RawScannerDataRadarOverlay(radar, "");
 
-    info_type_button = new GuiButton(target_actions, "TYPE_INFO_BUTTON", "DB", [this]() {
-        // P<SpaceShip> ship = targets.get();
-        // if (ship && database_view->findAndDisplayEntry(ship->getTypeName())) {
-        //     database_view->show();
-        // }
-    });
-    info_type_button->setSize(GuiElement::GuiSizeMax, 50);
     // Simple scan data.
     info_callsign = new GuiLabel(middle_column, "SCIENCE_CALLSIGN", "", 30);
     info_callsign->addBackground()->setSize(GuiAutoLayout::GuiSizeMax, 40);
@@ -118,21 +111,20 @@ ScienceHeliosScreen::ScienceHeliosScreen(GuiContainer* owner, ECrewPosition crew
         info_system[n]->setSize(GuiElement::GuiSizeMax, 30);
     }
 
-    // Prep the database view.
-    // database_view = new DatabaseViewComponent(this);
-    // database_view->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
-
-    // Probe view button
+    // Probe view action label
     probe_view_display = new GuiLabel(radar_source, "PROBE_VIEW", "Probe View", 30);
     probe_view_display->addBackground()->setSize(GuiElement::GuiSizeMax, 50);
     main_view_display = new GuiLabel(radar_source, "PROBE_VIEW", "Main View", 30);
     main_view_display->addBackground()->setSize(GuiElement::GuiSizeMax, 50);
 
 
-    // Scan button.
-    // scan_button = new GuiScanTargetButton(target_actions, "SCAN_BUTTON", &targets);
+    // Scan action label.
     scan_status = new GuiLabel(target_actions, "SCAN_STATUS", "Scan Target", 30);
     scan_status->addBackground()->setSize(GuiElement::GuiSizeMax, 50);
+    
+    // DB info action label.
+    query_action = new GuiLabel(target_actions, "QUERY_ACTION", "Query ship Type", 30);
+    query_action->addBackground()->setSize(GuiElement::GuiSizeMax, 50);
     
     // Draw the zoom slider.
     zoom_bar = new GuiProgressbar(radar_controls, "ZOOM_BAR", 1, 0, -1); // force sync in onDraw()
@@ -186,6 +178,7 @@ void ScienceHeliosScreen::onDraw(sf::RenderTarget& window)
 
     showNoInfo();
     P<SpaceObject> target = targets.get();
+    P<SpaceShip> ship = target;
     if (target) {
         showTargetInfo();
     } else if (targets.getWaypointIndex() >= 0) {
@@ -204,6 +197,11 @@ void ScienceHeliosScreen::onDraw(sf::RenderTarget& window)
         }
     } else {
         scan_status->setText("No scan target")->setColor(grey)->setTextColor(grey);
+    }
+    if (ship && ship->getScannedStateFor(my_spaceship) >= SS_SimpleScan){
+        query_action->setText("Query '" + ship->getTypeName() + "'")->setColor(sf::Color::White)->setTextColor(sf::Color::White);
+    } else {
+        query_action->setText("No query target")->setColor(grey)->setTextColor(grey);
     }
 }
 
@@ -367,6 +365,11 @@ void ScienceHeliosScreen::onHotkey(const HotkeyResult& key)
         } else if (key.hotkey == "CANCEL_SCAN") {
             if (my_spaceship->getScanTarget()){
                 my_spaceship->commandScanCancel();
+            }
+        } else if (key.hotkey == "OPEN_TYPE_IN_DB") {
+            P<SpaceShip> ship = targets.get();
+            if (ship && ship->getScannedStateFor(my_spaceship) >= SS_SimpleScan){
+                my_spaceship->commandSendScienceQueryToBridgeDB(ship->getTypeName());
             }
         }
     }

@@ -59,6 +59,7 @@ protected:
     static const int16_t CMD_CUSTOM_FUNCTION = 0x002A;
     static const int16_t CMD_SET_AUTO_REPAIR_SYSTEM_TARGET = 0x0030;
     static const int16_t CMD_SET_ENGINEERING_CONTROL = 0x0037;
+    static const int16_t CMD_SCIENCE_QUERY_TO_BRIDGE_DB = 0x0039;
 public:
 
     // Subsystem effectiveness base rates
@@ -197,7 +198,8 @@ public:
 
     int32_t linked_science_probe_id;
     int32_t linked_probe_3D_id;
-    
+    string science_query_to_bridge_db;
+
     PlayerSpaceship();
 
     // Comms functions
@@ -274,6 +276,7 @@ public:
     void commandSetAutoRepairSystemTarget(ESystem system);
     void commandSetEngineeringControlToBridge();
     void commandSetEngineeringControlToECR();
+    void commandSendScienceQueryToBridgeDB(string entryName);
 
     virtual void onReceiveServerCommand(sf::Packet& packet) override;
 

@@ -49,6 +49,7 @@ HotkeyConfig::HotkeyConfig()
     newKey("POV_PROBE", std::make_tuple("set radar point of view to probe", "A"));
     newKey("SCAN", std::make_tuple("Scan target", "S"));
     newKey("CANCEL_SCAN", std::make_tuple("Cancel current scan", "[alt];S"));
+    newKey("OPEN_TYPE_IN_DB", std::make_tuple("Open selected ship type in DB", "D"));
 
     newCategory("TARGET", "Target");
     newKey("NEXT_ENEMY_TARGET", std::make_tuple("Select next enemy target", ""));

@@ -37,6 +37,7 @@ enum ECrewPosition
     helmsHeliosScreen,
     weaponsHeliosScreen,
     databaseHeliosScreen,
+    bridgeDatabaseHeliosScreen,
     tractorBeamHeliosScreen,
     scienceHeliosScreen,
     scanHeliosScreen,

@@ -11,8 +11,8 @@
 #include "screenComponents/passwordEntry.h"
 
 #define MARGIN 20
-DatabaseHeliosScreen::DatabaseHeliosScreen(GuiContainer* owner)
-: GuiOverlay(owner, "DATABASE_SCREEN", colorConfig.background)
+DatabaseHeliosScreen::DatabaseHeliosScreen(GuiContainer* owner, bool linkedToScience)
+: GuiOverlay(owner, "DATABASE_SCREEN", colorConfig.background), linkedToScience(linkedToScience)
 {
     database_entry = nullptr;
 
@@ -45,6 +45,15 @@ DatabaseHeliosScreen::DatabaseHeliosScreen(GuiContainer* owner)
     (new GuiCustomShipFunctions(this, databaseView, "", my_spaceship))->setPosition(-20, 120, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
 }
 
+void DatabaseHeliosScreen::onDraw(sf::RenderTarget& window){
+    if (linkedToScience 
+        && my_spaceship 
+        && my_spaceship->science_query_to_bridge_db != ""
+        && (!displayed_entry || displayed_entry->getName() != my_spaceship->science_query_to_bridge_db)){
+        my_spaceship->commandSendScienceQueryToBridgeDB("");
+        findAndDisplayEntry(my_spaceship->science_query_to_bridge_db);
+    }
+}
 
 bool DatabaseHeliosScreen::findAndDisplayEntry(string name)
 {
@@ -101,6 +110,7 @@ void DatabaseHeliosScreen::fillListBox()
 
 void DatabaseHeliosScreen::display(P<ScienceDatabase> entry)
 {
+    displayed_entry = entry;
     if (database_entry)
         database_entry->destroy();
     

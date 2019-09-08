@@ -144,7 +144,9 @@ void PlayerInfo::spawnUI()
         if (crew_position[weaponsHeliosScreen])
             screen->addStationTab(new WeaponsHeliosScreen(screen), weaponsHeliosScreen, getCrewPositionName(weaponsHeliosScreen), getCrewPositionIcon(weaponsHeliosScreen));
         if (crew_position[databaseHeliosScreen])
-            screen->addStationTab(new DatabaseHeliosScreen(screen), databaseHeliosScreen, getCrewPositionName(databaseHeliosScreen), getCrewPositionIcon(databaseHeliosScreen));
+            screen->addStationTab(new DatabaseHeliosScreen(screen, false), databaseHeliosScreen, getCrewPositionName(databaseHeliosScreen), getCrewPositionIcon(databaseHeliosScreen));
+        if (crew_position[bridgeDatabaseHeliosScreen])
+            screen->addStationTab(new DatabaseHeliosScreen(screen, true), bridgeDatabaseHeliosScreen, getCrewPositionName(bridgeDatabaseHeliosScreen), getCrewPositionIcon(bridgeDatabaseHeliosScreen));
         if (crew_position[tractorBeamHeliosScreen])
             screen->addStationTab(new TractorBeamScreen(screen), tractorBeamHeliosScreen, getCrewPositionName(tractorBeamHeliosScreen), getCrewPositionIcon(tractorBeamHeliosScreen));
         if (crew_position[scienceHeliosScreen])
@@ -248,6 +250,7 @@ string getCrewPositionName(ECrewPosition position)
     case damageControl: return "Damage Control";
     case powerManagement: return "Power Management";
     case databaseView: case databaseHeliosScreen: return "Database";
+    case bridgeDatabaseHeliosScreen: return "Bridge Database";
     case commsView: return "Comms View";
     case tacticalRadar: return "Tactical Radar";
     case scienceRadar: return "Science Radar";
@@ -281,7 +284,7 @@ string getCrewPositionIcon(ECrewPosition position)
     case singlePilot: return "";
     case damageControl: return "";
     case powerManagement: return "";
-    case databaseView: case databaseHeliosScreen: return "";
+    case databaseView: case databaseHeliosScreen: case bridgeDatabaseHeliosScreen: return "";
     case commsView: return "";
     case tacticalRadar: return "";
     case scienceRadar: return "";
@@ -315,6 +318,8 @@ template<> void convert<ECrewPosition>::param(lua_State* L, int& idx, ECrewPosit
         cp = weaponsHeliosScreen;
     else if (str == "databaseHelios")
         cp = databaseHeliosScreen;
+    else if (str == "bridgeDatabaseHelios")
+        cp = bridgeDatabaseHeliosScreen;
     else if (str == "tractorBeamHelios")
         cp = tractorBeamHeliosScreen;
     else if (str == "scienceHelios")
