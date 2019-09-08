@@ -367,6 +367,10 @@ void ScienceHeliosScreen::onHotkey(const HotkeyResult& key)
             if (targets.get() && targets.get()->canBeScannedBy(my_spaceship)){
                 my_spaceship->commandScan(targets.get());
             }
+        } else if (key.hotkey == "CANCEL_SCAN") {
+            if (my_spaceship->getScanTarget()){
+                my_spaceship->commandScanCancel();
+            }
         }
     }
 }
