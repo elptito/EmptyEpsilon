@@ -12,7 +12,8 @@ ScanHeliosScreen::ScanHeliosScreen(GuiContainer* owner, ECrewPosition crew_posit
     locked = false;
     lock_start_time = 0;
     scan_depth = 0;
-    
+    scanning = false;
+
     GuiOverlay* background_crosses = new GuiOverlay(this, "BACKGROUND_CROSSES", sf::Color::White);
     background_crosses->setTextureTiled("gui/BackgroundCrosses");
     
@@ -31,10 +32,9 @@ ScanHeliosScreen::ScanHeliosScreen(GuiContainer* owner, ECrewPosition crew_posit
     no_target_label = new GuiLabel(signal_quality, "NO_TARGET_LABEL", "No Scan Target", 50);
     no_target_label->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
     
-    for(int n=0; n<max_bars; n++)
-    {
-        bars[n] = new GuiProgressbar(box, "SLIDER_" + string(n), 0.0, 1.0, 0.0);
-        bars[n]->setPosition(0, 200 + n * 70, ATopCenter)->setSize(450, 50);
+    for(int n=0; n<max_bars; n++) {
+        bars[n] = new GuiProgressbar(box, "SLIDER_" + string(n), 0.0, 1.0, 0.5);
+        bars[n]->setBiDirectional(true)->setPosition(0, 200 + n * 70, ATopCenter)->setSize(450, 50);
     }
 
     setupParameters();
@@ -47,51 +47,45 @@ void ScanHeliosScreen::onDraw(sf::RenderTarget& window)
     if (my_spaceship)
     {
         P<SpaceObject> scanning_target = my_spaceship->getScanTarget();
-        if (scanning_target){
+        if (scanning_target) {
             float scanning_complexity = scanning_target->scanningComplexity(my_spaceship);
             float scanning_depth = scanning_target->scanningChannelDepth(my_spaceship);
-            if (scanning_complexity && scanning_depth){
-                if (!box->isVisible())
+            if (scanning_complexity && scanning_depth) {
+                no_target_label->hide();
+                if (!scanning)
                 {
-                    box->show();
+                    scanning = true;
                     scan_depth = 0;
                     setupParameters();
                 }
                 
-                if (locked && engine->getElapsedTime() - lock_start_time > lock_delay)
-                {
+                if (locked && engine->getElapsedTime() - lock_start_time > lock_delay) {
                     scan_depth += 1;
-                    if (scan_depth >= scanning_depth)
-                    {
+                    if (scan_depth >= scanning_depth) {
                         my_spaceship->commandScanDone();
                         lock_start_time = engine->getElapsedTime() - 1.0f;
-                    }else{
+                    } else {
                         setupParameters();
                     }
                 }
                 
-                if (locked && engine->getElapsedTime() - lock_start_time > lock_delay / 2.0f)
-                {
+                if (locked && engine->getElapsedTime() - lock_start_time > lock_delay / 2.0f) {
                     locked_label->show();
-                }else{
+                } else {
                     locked_label->hide();
                 }
-                no_target_label->hide();
-            }else{
-                no_target_label->show();
-                locked_label->hide();
-                // box->hide();
+            } else {
+                reset();
             }
-        }else{
-            no_target_label->show();
-            locked_label->hide();
-            // box->hide();
+        } else {
+            reset();
         }
     }
 }
+
 bool ScanHeliosScreen::onJoystickAxis(const AxisAction& axisAction){
     if(my_spaceship){
-        if (axisAction.category == "SCIENCE"){
+        if (axisAction.category == "SCAN"){
             for(int n=0; n<max_bars; n++) {
                 if (axisAction.action == std::string("SCAN_PARAM_") + string(n+1)){
                     bars[n]->setValue((axisAction.value + 1) / 2.0);
@@ -104,17 +98,25 @@ bool ScanHeliosScreen::onJoystickAxis(const AxisAction& axisAction){
     return false;
 }
 
-void ScanHeliosScreen::setupParameters()
-{
+void ScanHeliosScreen::reset() {
+    scanning = false;
+    no_target_label->show();
+    locked_label->hide();
+    box->setSize(500, 500);
+    signal_label->setText("Electric signature");
+    for(int n=0; n<max_bars; n++) {
+        bars[n]->show(); //->setValue(0.5f)
+        target[n] = random(0.0, 1.0);
+    }
+}
+
+void ScanHeliosScreen::setupParameters() {
     if (!my_spaceship)
         return;
     P<SpaceObject> scanning_target = my_spaceship->getScanTarget();
     if (scanning_target){
         float scanning_complexity = scanning_target->scanningComplexity(my_spaceship);
-        float scanning_depth = scanning_target->scanningChannelDepth(my_spaceship);
-
-        for(int n=0; n<max_bars; n++)
-        {
+        for(int n=0; n<max_bars; n++) {
             if (n < scanning_complexity)
                 bars[n]->show();
             else
@@ -122,16 +124,14 @@ void ScanHeliosScreen::setupParameters()
         }
         box->setSize(500, 215 + 70 * scanning_complexity);
 
-        for(int n=0; n<max_bars; n++)
-        {
+        for(int n=0; n<max_bars; n++) {
             target[n] = random(0.0, 1.0);
-            bars[n]->setValue(random(0.0, 1.0));
-            while(fabsf(target[n] - bars[n]->getValue()) < 0.2)
-                bars[n]->setValue(random(0.0, 1.0));
+            while(fabsf(target[n]) < 0.2f)
+                target[n] = random(0.0, 1.0);
         }
         updateSignal();
         
-        string label = "[" + string(scan_depth + 1) + "/" + string(scanning_depth) + "] ";
+        string label = "[" + string(scan_depth + 1) + "/" + string(my_spaceship->getScanTarget()->scanningChannelDepth(my_spaceship), 0) + "] ";
         switch(irandom(0, 10))
         {
         default:
@@ -148,8 +148,6 @@ void ScanHeliosScreen::setupParameters()
         case 10: label += "Zerospace audio frequency"; break;
         }
         signal_label->setText(label);
-    } else {
-
     }
 }
 
@@ -168,7 +166,7 @@ void ScanHeliosScreen::updateSignal()
             phase += fabsf(target[n] - bars[n]->getValue());
         }
     }
-    if (noise < 0.05f && period < 0.05f && phase < 0.05f)
+    if (noise < 0.04f && period < 0.04f && phase < 0.04f)
     {
         if (!locked)
         {

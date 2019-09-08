@@ -23,6 +23,7 @@ private:
     GuiSignalQualityIndicator* signal_quality;
     GuiProgressbar* bars[max_bars];
     
+    bool scanning;
     float target[max_bars];
     bool locked;
     float lock_start_time;
@@ -33,6 +34,7 @@ public:
     virtual void onDraw(sf::RenderTarget& window);
     virtual bool onJoystickAxis(const AxisAction& axisAction) override;
     
+    void reset();
     void setupParameters();
     void updateSignal();
 };

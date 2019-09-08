@@ -7,7 +7,6 @@
 #include "screenComponents/radarView.h"
 #include "screenComponents/rawScannerDataRadarOverlay.h"
 #include "screenComponents/frequencyCurve.h"
-#include "screenComponents/scanningDialog.h"
 #include "screenComponents/databaseView.h"
 #include "screenComponents/alertOverlay.h"
 #include "screenComponents/customShipFunctions.h"
@@ -139,8 +138,6 @@ ScienceHeliosScreen::ScienceHeliosScreen(GuiContainer* owner, ECrewPosition crew
     zoom_bar = new GuiProgressbar(radar_controls, "ZOOM_BAR", 1, 0, -1); // force sync in onDraw()
     zoom_bar->setSize(GuiElement::GuiSizeMax, 50);
 
-    // Scanning dialog.
-    new GuiScanningDialog(this, "SCANNING_DIALOG");
     // Render the alert level color overlay.
     (new AlertLevelOverlay(this));
 }
