@@ -8,10 +8,10 @@
 # sudo apt update && sudo apt upgrade
 # sudo apt install mingw-w64 cmake
 # ------
-# assuming ~/workspace contains `EmptyEpsilon` and `SeriousProton` src projects
+# assuming ~/workspace contains `drmingw-0.8.2-win32`, and `EmptyEpsilon` and `SeriousProton` src projects
 cd ~/workspace/EmptyEpsilon
 rm -rf "_build_win32"
 mkdir "_build_win32"
 cd "_build_win32"
-sudo cmake .. -DCMAKE_TOOLCHAIN_FILE=../cmake/mingw.toolchain -DSERIOUS_PROTON_DIR=../../SeriousProton
+sudo cmake .. -DCMAKE_TOOLCHAIN_FILE=../cmake/mingw.toolchain -DSERIOUS_PROTON_DIR=../../SeriousProton -DDRMINGW_ROOT="$(pwd)/../../drmingw-0.8.2-win32" -DENABLE_CRASH_LOGGER=1
 sudo make -j $(grep -c ^processor /proc/cpuinfo) package

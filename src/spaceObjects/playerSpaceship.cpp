@@ -583,7 +583,7 @@ void PlayerSpaceship::update(float delta)
 
         // If scan settings or the scan target's complexity is 0/none, tick
         // the scan delay timer.
-        if (getScanTarget()->scanningComplexity(this) < 1)
+        if (getScanTarget() && getScanTarget()->scanningComplexity(this) < 1)
         {
             if (scanning_delay > 0.0)
                 scanning_delay -= delta;
