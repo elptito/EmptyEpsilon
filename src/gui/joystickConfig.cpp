@@ -43,6 +43,9 @@ JoystickConfig::JoystickConfig()
     newAxis("ARC", std::make_tuple("Change arc of tractor beam", "Z"));
     newAxis("DIRECTION", std::make_tuple("Change direction of tractor beam", ""));
     newAxis("RANGE", std::make_tuple("Change range of tractor beam", ""));
+
+    newCategory("SCIENCE", "Science");
+    newAxis("ZOOM", std::make_tuple("change radar zoom", "X"));
 }
 
 static std::vector<std::pair<string, sf::Joystick::Axis> > sfml_axis_names = {

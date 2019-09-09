@@ -24,7 +24,7 @@
 static sf::Color grey(96, 96, 96);
 
 ScienceHeliosScreen::ScienceHeliosScreen(GuiContainer* owner, ECrewPosition crew_position)
-: GuiOverlay(owner, "SCIENCE_SCREEN", colorConfig.background), radar_pov(my_spaceship), probe_view(false), zoom(0), target_waypoints(false)
+: GuiOverlay(owner, "SCIENCE_SCREEN", colorConfig.background), radar_pov(my_spaceship), probe_view(false), target_waypoints(false), zoom(0.5)
 {
     targets.setAllowWaypointSelection();
 
@@ -145,16 +145,10 @@ void ScienceHeliosScreen::onDraw(sf::RenderTarget& window)
         return;
     GuiOverlay::onDraw(window);
 
-    // Handle mouse wheel
-    float mouse_wheel_delta = InputHandler::getMouseWheelDelta();
-    if (mouse_wheel_delta != 0.0) {
-        zoom = std::min(1.f, std::max(0.f, zoom - (mouse_wheel_delta * 0.05f)));
-    }
-
     // Keep the zoom bar in sync.
     zoom_bar->setValue(zoom);
     zoom_bar->setText("Zoom: " + string(gameGlobalInfo->long_range_radar_range / radar->getDistance(), 1) + "x");
-
+            
     P<ScanProbe> probe = getObjectById(my_spaceship->linked_science_probe_id);
 
     // de-select items that are deleted / outside radar
@@ -390,4 +384,14 @@ void ScienceHeliosScreen::onHotkey(const HotkeyResult& key)
             }
         }
     }
+}
+
+bool ScienceHeliosScreen::onJoystickAxis(const AxisAction& axisAction){
+    if (axisAction.category == "SCIENCE" && my_spaceship){
+        if (axisAction.action == "ZOOM"){
+            zoom = (axisAction.value + 1) / 2.0;
+            return true;
+        } 
+    }
+    return false;
 }
