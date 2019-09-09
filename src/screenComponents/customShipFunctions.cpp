@@ -31,6 +31,7 @@ void GuiCustomShipFunctions::checkEntries()
     }
     for(unsigned int n=0; n<entries.size(); n++)
     {
+        string caption = my_spaceship->custom_functions[n].caption;
         if (entries[n].name != target_spaceship->custom_functions[n].name)
         {
             createEntries();
@@ -38,18 +39,18 @@ void GuiCustomShipFunctions::checkEntries()
         }
         else if (my_spaceship->custom_functions[n].type == PlayerSpaceship::CustomShipFunction::Type::Button)
         {
-            GuiButton* button = (GuiButton*) entries[n].element;
-            if (button->getText() != my_spaceship->custom_functions[n].caption)
+            GuiButton* button = (GuiButton*) (entries[n].element);
+            if (button->getText() != caption)
             {
-              button->setText(my_spaceship->custom_functions[n].caption);
+                button->setText(caption);
             }
         }
         else if (my_spaceship->custom_functions[n].type == PlayerSpaceship::CustomShipFunction::Type::Info)
         {
-            GuiLabel* label = (GuiLabel*) entries[n].element;
-            if (label->getText() != my_spaceship->custom_functions[n].caption)
+            GuiLabel* label = (GuiLabel*) (entries[n].element);
+            if (label->getText() != caption)
             {
-              label->setText(my_spaceship->custom_functions[n].caption);
+                label->setText(caption);
             }
         }
     }
