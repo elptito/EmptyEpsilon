@@ -24,8 +24,10 @@
 static sf::Color grey(96, 96, 96);
 
 ScienceHeliosScreen::ScienceHeliosScreen(GuiContainer* owner, ECrewPosition crew_position)
-: GuiOverlay(owner, "SCIENCE_SCREEN", colorConfig.background), radar_pov(my_spaceship), probe_view(false), zoom(0)
+: GuiOverlay(owner, "SCIENCE_SCREEN", colorConfig.background), radar_pov(my_spaceship), probe_view(false), zoom(0), target_waypoints(false)
 {
+    targets.setAllowWaypointSelection();
+
     GuiOverlay* background_crosses = new GuiOverlay(this, "BACKGROUND_CROSSES", sf::Color::White);
     background_crosses->setTextureTiled("gui/BackgroundCrosses");
     
@@ -113,22 +115,25 @@ ScienceHeliosScreen::ScienceHeliosScreen(GuiContainer* owner, ECrewPosition crew
 
     // Probe view action label
     probe_view_display = new GuiLabel(radar_source, "PROBE_VIEW", "Probe View", 30);
-    probe_view_display->addBackground()->setSize(GuiElement::GuiSizeMax, 50);
+    probe_view_display->addBackground()->setMargins(10, 0)->setSize(GuiElement::GuiSizeMax, 50);
     main_view_display = new GuiLabel(radar_source, "PROBE_VIEW", "Main View", 30);
-    main_view_display->addBackground()->setSize(GuiElement::GuiSizeMax, 50);
+    main_view_display->addBackground()->setMargins(10, 0)->setSize(GuiElement::GuiSizeMax, 50);
 
 
     // Scan action label.
     scan_status = new GuiLabel(target_actions, "SCAN_STATUS", "Scan Target", 30);
-    scan_status->addBackground()->setSize(GuiElement::GuiSizeMax, 50);
+    scan_status->addBackground()->setMargins(10, 0)->setSize(GuiElement::GuiSizeMax, 50);
     
     // DB info action label.
     query_action = new GuiLabel(target_actions, "QUERY_ACTION", "Query ship Type", 30);
-    query_action->addBackground()->setSize(GuiElement::GuiSizeMax, 50);
+    query_action->addBackground()->setMargins(10, 0)->setSize(GuiElement::GuiSizeMax, 50);
     
     // Draw the zoom slider.
     zoom_bar = new GuiProgressbar(radar_controls, "ZOOM_BAR", 1, 0, -1); // force sync in onDraw()
     zoom_bar->setSize(GuiElement::GuiSizeMax, 50);
+
+    target_mode_waypoints_display = new GuiLabel(radar_controls, "TARGET_WAYPOINTS", "Waypoints", 30);
+    target_mode_waypoints_display->addBackground()->setMargins(10, 0)->setSize(GuiAutoLayout::GuiSizeMax, 50);
 
     // Render the alert level color overlay.
     (new AlertLevelOverlay(this));
@@ -152,8 +157,12 @@ void ScienceHeliosScreen::onDraw(sf::RenderTarget& window)
 
     P<ScanProbe> probe = getObjectById(my_spaceship->linked_science_probe_id);
 
+    // de-select items that are deleted / outside radar
     if (targets.get() && (radar->getViewPosition() - targets.get()->getPosition()) > radar->getDistance())
         targets.clear();
+
+    sf::Color color = target_waypoints? sf::Color::Yellow : sf::Color::White;
+    target_mode_waypoints_display->setColor(color)->setTextColor(color);
 
     main_view_display->setText("View Main (" + my_spaceship->getCallSign() + ")");
     if (probe){
@@ -228,6 +237,7 @@ void ScienceHeliosScreen::showWaypointInfo(){
     // velocity toward it.
         // sidebar_pager->hide();
         sf::Vector2f position_diff = my_spaceship->waypoints[targets.getWaypointIndex()] - my_spaceship->getPosition();
+        info_callsign->setText("Waypoint " + string(targets.getWaypointIndex() + 1, 0));
         float distance = sf::length(position_diff);
         float heading = sf::vector2ToAngle(position_diff) - 270;
 
@@ -328,21 +338,25 @@ void ScienceHeliosScreen::showTargetInfo(){
 }
 // TODO waypoints
 void ScienceHeliosScreen::iterateTagrets(bool forward){
-    PVector<SpaceObject> potentialTargetsUnfiltered = GuiRadarView::getVisibleObjects(
-        radar_pov->getPosition(), 
-        my_spaceship->getFactionId(), 
-        GuiRadarView::RadarRangeAndLineOfSight, 
-        radar->getDistance());
-    PVector<SpaceObject> potentialTargets;
-    for(const auto & obj : potentialTargetsUnfiltered) {
-        if(obj != my_spaceship && obj->canBeSelectedBy(my_spaceship)) {
-            potentialTargets.push_back(obj);
+    if (target_waypoints){
+        targets.nextWaypoint(forward);
+    } else {
+        PVector<SpaceObject> potentialTargetsUnfiltered = GuiRadarView::getVisibleObjects(
+            radar_pov->getPosition(), 
+            my_spaceship->getFactionId(), 
+            GuiRadarView::RadarRangeAndLineOfSight, 
+            radar->getDistance());
+        PVector<SpaceObject> potentialTargets;
+        for(const auto & obj : potentialTargetsUnfiltered) {
+            if(obj != my_spaceship && obj->canBeSelectedBy(my_spaceship)) {
+                potentialTargets.push_back(obj);
+            }
         }
+        std::sort(potentialTargets.begin(), potentialTargets.end(), [this](P<SpaceObject> o1, P<SpaceObject> o2) { 
+            return (o1->getPosition() - radar_pov->getPosition()) < (o2->getPosition() - radar_pov->getPosition());
+        }); 
+        targets.next(potentialTargets, forward);
     }
-    std::sort(potentialTargets.begin(), potentialTargets.end(), [this](P<SpaceObject> o1, P<SpaceObject> o2) { 
-        return (o1->getPosition() - radar_pov->getPosition()) < (o2->getPosition() - radar_pov->getPosition());
-    }); 
-    targets.next(potentialTargets, forward);
 }
 
 void ScienceHeliosScreen::onHotkey(const HotkeyResult& key)
@@ -352,6 +366,9 @@ void ScienceHeliosScreen::onHotkey(const HotkeyResult& key)
             iterateTagrets(true);
         } else if (key.hotkey == "PREV_TARGET") {
             iterateTagrets(false);
+        } else if (key.hotkey == "TARGET_WAYPOINTS_TOGGLE") {
+            targets.clear();
+            target_waypoints = !target_waypoints;
         } 
     } else if (key.category == "SCIENCE" && my_spaceship){
         if (key.hotkey == "POV_SHIP") {

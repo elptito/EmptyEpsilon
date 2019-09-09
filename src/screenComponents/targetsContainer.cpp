@@ -91,6 +91,20 @@ void TargetsContainer::setToClosestTo(sf::Vector2f position, float max_range, ES
     set(target);
 }
 
+void TargetsContainer::nextWaypoint(bool forward){
+    if (my_spaceship && allow_waypoint_selection) {
+        entries.clear();
+        int current = getWaypointIndex();
+        int next;
+        if (current == -1){
+            next = forward? 0: my_spaceship->waypoints.size() - 1;
+        } else {
+            next = (current + my_spaceship->waypoints.size() + (forward ? 1 : -1)) % my_spaceship->waypoints.size();
+        }
+        setWaypointIndex(next);
+    }
+}
+
 void TargetsContainer::next(PVector<SpaceObject> potentials, bool forward){
     P<SpaceObject> found = nullptr;
     bool current_reached = false;

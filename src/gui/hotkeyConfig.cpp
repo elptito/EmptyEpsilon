@@ -58,6 +58,7 @@ HotkeyConfig::HotkeyConfig()
     newKey("PREV_TARGET", std::make_tuple("Select previous target", "LBracket"));
     newKey("TARGET_NEAR_TOGGLE", std::make_tuple("select only near targets", "[alt];RBracket"));
     newKey("TARGET_ENEMY_TOGGLE", std::make_tuple("select only enemy targets", "[alt];LBracket"));
+    newKey("TARGET_WAYPOINTS_TOGGLE", std::make_tuple("select only waypoints", "W"));
     
     newCategory("WEAPONS", "Weapons");
     for(int n=0; n<MW_Count; n++)

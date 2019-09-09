@@ -33,6 +33,7 @@ public:
     
     void setToClosestTo(sf::Vector2f position, float max_range, ESelectionType selection_type);
     void next(PVector<SpaceObject> potentials, bool forward);
+    void nextWaypoint(bool forward);
 };
 
 #endif//TARGETS_CONTAINER_H

@@ -35,6 +35,8 @@ private:
     GuiFrequencyCurve* info_beam_frequency;
     GuiKeyValueDisplay* info_system[SYS_COUNT];
 
+    GuiLabel* target_mode_waypoints_display;
+
     GuiLabel* main_view_display;
     GuiLabel* probe_view_display;
     GuiLabel* scan_status;
@@ -42,6 +44,7 @@ private:
 
     P<SpaceObject> radar_pov;
     bool probe_view;
+    bool target_waypoints;
     float zoom;
 public:
     ScienceHeliosScreen(GuiContainer* owner, ECrewPosition crew_position=scienceHeliosScreen);
