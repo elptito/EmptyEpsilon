@@ -258,7 +258,11 @@ PlayerSpaceship::PlayerSpaceship()
         registerMemberReplication(&systems[n].coolant_request);
         registerMemberReplication(&systems[n].heat_level, 1.0);
     }
-
+    for(int n = 0; n < max_hack_jobs; n++)
+    {
+        hackingJobs[n].setParent(this);
+    }
+    
     if (game_server)
     {
         if (gameGlobalInfo->insertPlayerShip(this) < 0)
