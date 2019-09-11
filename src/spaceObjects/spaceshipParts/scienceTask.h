@@ -6,10 +6,10 @@
 
 class SpaceShip;
 
-class HackingJob : public sf::NonCopyable
+class ScienceTask : public sf::NonCopyable
 {
   public:
-  static int countJobs(HackingJob jobs[], int size);
+  static int countTasks(ScienceTask tasks[], int size);
 
   protected:
     SpaceShip *parent;
@@ -20,7 +20,7 @@ class HackingJob : public sf::NonCopyable
     ESystem target_system;
     float timeout;
 
-    HackingJob();
+    ScienceTask();
 
     void update(float delta);
     void setParent(SpaceShip *parent);

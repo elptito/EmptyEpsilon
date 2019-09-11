@@ -1,21 +1,21 @@
-#include "hackingJob.h"
+#include "scienceTask.h"
 #include "gameGlobalInfo.h"
 
-HackingJob::HackingJob() : parent(nullptr), target_id(-1), target_system(SYS_None), timeout(0){
+ScienceTask::ScienceTask() : parent(nullptr), target_id(-1), target_system(SYS_None), timeout(0){
     clear();
 }
 
-int HackingJob::countJobs(HackingJob jobs[], int size){
+int ScienceTask::countTasks(ScienceTask tasks[], int size){
     int result = 0;
     for(int n = 0; n < size; n++){
-        if (!jobs[n].empty)
+        if (!tasks[n].empty)
             result++;
     }
     return result;
 }
 
 
-void HackingJob::update(float delta){
+void ScienceTask::update(float delta){
     if (!empty){
         timeout -=delta;
     }
@@ -25,7 +25,7 @@ void HackingJob::update(float delta){
     }
 }
 
-void HackingJob::setParent(SpaceShip *parent){
+void ScienceTask::setParent(SpaceShip *parent){
     assert(!this->parent);
     this->parent = parent;
 
@@ -35,7 +35,7 @@ void HackingJob::setParent(SpaceShip *parent){
     parent->registerMemberReplication(&timeout);
 } 
 
-void HackingJob::complete(){
+void ScienceTask::complete(){
     P<SpaceShip> target = getObjectById(target_id);
     if (target && target->canBeHackedBy(parent)){
         parent->commandHackingFinished(target, target_system);
@@ -43,14 +43,14 @@ void HackingJob::complete(){
     clear();
 }
 
-void HackingJob::clear(){
+void ScienceTask::clear(){
     timeout = 0.f;
     target_id = -1;
     target_system = SYS_None;
     empty = true;
 }
 
-bool HackingJob::init(P<SpaceShip> target, ESystem target_system){
+bool ScienceTask::init(P<SpaceShip> target, ESystem target_system){
     if (empty){
         empty = false;
         timeout = 10 * 60 * 1000;

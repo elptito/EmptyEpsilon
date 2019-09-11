@@ -258,9 +258,9 @@ PlayerSpaceship::PlayerSpaceship()
         registerMemberReplication(&systems[n].coolant_request);
         registerMemberReplication(&systems[n].heat_level, 1.0);
     }
-    for(int n = 0; n < max_hack_jobs; n++)
+    for(int n = 0; n < max_science_tasks; n++)
     {
-        hackingJobs[n].setParent(this);
+        scienceTasks[n].setParent(this);
     }
     
     if (game_server)
@@ -1478,8 +1478,8 @@ void PlayerSpaceship::handleClientCommand(int32_t client_id, int16_t command, sf
             packet >> target_id >> target_system;
             P<SpaceShip> target = game_server->getObjectById(target_id);
             if (target && target_system < SYS_COUNT && target->hasSystem(target_system) && target->canBeHackedBy(this))
-                for(int n = 0; n < max_hack_jobs; n++)
-                    if (hackingJobs[n].init(target, target_system))
+                for(int n = 0; n < max_science_tasks; n++)
+                    if (scienceTasks[n].init(target, target_system))
                         break;
         }
     default:

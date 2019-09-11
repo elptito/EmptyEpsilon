@@ -261,7 +261,7 @@ set(SOURCES
 	src/spaceObjects/spaceshipParts/tractorBeam.cpp
 	src/spaceObjects/spaceshipParts/weaponTube.cpp
 	src/spaceObjects/spaceshipParts/dock.cpp
-	src/spaceObjects/spaceshipParts/hackingJob.cpp
+	src/spaceObjects/spaceshipParts/scienceTask.cpp
 	src/ai/fighterAI.cpp
 	src/ai/ai.cpp
 	src/ai/aiFactory.cpp

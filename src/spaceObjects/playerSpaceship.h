@@ -6,7 +6,7 @@
 #include "playerInfo.h"
 #include <iostream>
 #include "preferenceManager.h"
-#include "spaceshipParts/hackingJob.h"
+#include "spaceshipParts/scienceTask.h"
 
 enum ECommsState
 {
@@ -116,7 +116,7 @@ public:
     static float over_fix_heat_factor;
     // Maximum number of self-destruction confirmation codes
     constexpr static int max_self_destruct_codes = 3;
-    constexpr static int max_hack_jobs = 20;
+    constexpr static int max_science_tasks = 20;
 
     static float warp_terrain_cap; 
 
@@ -140,7 +140,7 @@ public:
         bool operator!=(const CustomShipFunction& csf) { return type != csf.type || name != csf.name || caption != csf.caption || crew_position != csf.crew_position; }
     };
 
-    HackingJob hackingJobs[max_hack_jobs];
+    ScienceTask scienceTasks[max_science_tasks];
     // Visual indicators of hull damage and in-progress jumps
     float hull_damage_indicator;
     float jump_indicator;

@@ -126,8 +126,8 @@ ScienceHeliosScreen::ScienceHeliosScreen(GuiContainer* owner, ECrewPosition crew
     main_view_display = new GuiLabel(radar_source, "PROBE_VIEW", "Main View", 30);
     main_view_display->addBackground()->setMargins(10, 0)->setSize(GuiElement::GuiSizeMax, 50);
 
-    jobs_queue = new GuiLabel(middle_column_down, "JOBS_QUEUE", "0/0 Jobs", 30);
-    jobs_queue->addBackground()->setMargins(10, 0)->setSize(250, 50);
+    tasks_queue = new GuiLabel(middle_column_down, "tasks_queue", "0/0 Tasks", 30);
+    tasks_queue->addBackground()->setMargins(10, 0)->setSize(250, 50);
 
     // Scan action label.
     scan_status = new GuiLabel(target_actions, "SCAN_STATUS", "Scan Target", 30);
@@ -199,7 +199,7 @@ void ScienceHeliosScreen::onDraw(sf::RenderTarget& window)
     } else if (targets.getWaypointIndex() >= 0) {
         showWaypointInfo();
     }
-    int jobsCount = HackingJob::countJobs(my_spaceship->hackingJobs, my_spaceship->max_hack_jobs);
+    int tasksCount = ScienceTask::countTasks(my_spaceship->scienceTasks, my_spaceship->max_science_tasks);
 
     if (my_spaceship->getScanTarget()){
         scan_status->setText("Scanning " + my_spaceship->getScanTarget()->getCallSign())->setColor(sf::Color::Yellow)->setTextColor(sf::Color::Yellow);
@@ -214,21 +214,21 @@ void ScienceHeliosScreen::onDraw(sf::RenderTarget& window)
     } else {
         scan_status->setText("No scan target")->setColor(grey)->setTextColor(grey);
     }
-    if (jobsCount < my_spaceship->max_hack_jobs){
+    if (tasksCount < my_spaceship->max_science_tasks){
         if (target && target->canBeHackedBy(my_spaceship)){
             hack_action->setText("Hack '" + ship->getTypeName() + "'")->setColor(sf::Color::White)->setTextColor(sf::Color::White);
         } else {
             hack_action->setText("No hack target")->setColor(grey)->setTextColor(grey);
         }
     } else {
-            hack_action->setText("Job queue full")->setColor(grey)->setTextColor(grey);
+            hack_action->setText("Tasks queue full")->setColor(grey)->setTextColor(grey);
     }
     if (ship && ship->getScannedStateFor(my_spaceship) >= SS_SimpleScan){
         query_action->setText("Query '" + ship->getTypeName() + "'")->setColor(sf::Color::White)->setTextColor(sf::Color::White);
     } else {
         query_action->setText("No query target")->setColor(grey)->setTextColor(grey);
     }
-    jobs_queue->setText(string(jobsCount, 0) + "/" + string(my_spaceship->max_hack_jobs, 0) + " Jobs");
+    tasks_queue->setText(string(tasksCount, 0) + "/" + string(my_spaceship->max_science_tasks, 0) + " Tasks");
 }
 
 void ScienceHeliosScreen::showNoInfo(){
@@ -394,7 +394,7 @@ void ScienceHeliosScreen::onHotkey(const HotkeyResult& key)
             target_waypoints = !target_waypoints;
         } 
     } else if (key.category == "SCIENCE" && my_spaceship){
-        int jobsCount = HackingJob::countJobs(my_spaceship->hackingJobs, my_spaceship->max_hack_jobs);
+        int tasksCount = ScienceTask::countTasks(my_spaceship->scienceTasks, my_spaceship->max_science_tasks);
         if (key.hotkey == "POV_SHIP") {
             probe_view = false;
         } else if (key.hotkey == "POV_PROBE") {
@@ -412,7 +412,7 @@ void ScienceHeliosScreen::onHotkey(const HotkeyResult& key)
             if (ship && ship->getScannedStateFor(my_spaceship) >= SS_SimpleScan){
                 my_spaceship->commandSendScienceQueryToBridgeDB(ship->getTypeName());
             }
-        } else if (jobsCount < my_spaceship->max_hack_jobs){
+        } else if (tasksCount < my_spaceship->max_science_tasks){
             for(int n=0; n<SYS_COUNT; n++) {
                 ESystem system = ESystem(n);
                 string systemName = getSystemName(system);
