@@ -40,6 +40,8 @@ private:
     GuiLabel* main_view_display;
     GuiLabel* probe_view_display;
     GuiLabel* scan_status;
+    GuiLabel* jobs_queue;
+    GuiLabel* hack_action;
     GuiLabel* query_action;
 
     P<SpaceObject> radar_pov;

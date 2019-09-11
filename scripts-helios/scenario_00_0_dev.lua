@@ -15,10 +15,10 @@ function init()
         setFactionVsFactionState("Corp1", "FSN", "Friendly")
         PlayerSpaceship():setTemplate("Gravitas"):setCallSign("PL4"):setFaction("FSN"):setPosition(0, 0):setWarpFrequency(5)
 
-        -- enemyShips()
+        enemyShips()
         -- tactical()
         -- enemyTargets()
-        targets()
+        -- targets()
         probes()
 end
 

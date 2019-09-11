@@ -1471,6 +1471,17 @@ void PlayerSpaceship::handleClientCommand(int32_t client_id, int16_t command, sf
         {
             packet >> science_query_to_bridge_db;
         }
+    case CMD_HACK_TARGET:
+        {
+            ESystem target_system;
+            uint32_t target_id;
+            packet >> target_id >> target_system;
+            P<SpaceShip> target = game_server->getObjectById(target_id);
+            if (target && target_system < SYS_COUNT && target->hasSystem(target_system) && target->canBeHackedBy(this))
+                for(int n = 0; n < max_hack_jobs; n++)
+                    if (hackingJobs[n].init(target, target_system))
+                        break;
+        }
     default:
         SpaceShip::handleClientCommand(client_id, command, packet);
     }
@@ -1708,6 +1719,12 @@ void PlayerSpaceship::onReceiveServerCommand(sf::Packet& packet)
 void PlayerSpaceship::commandSendScienceQueryToBridgeDB(string entryName){
     sf::Packet packet;
     packet << CMD_SCIENCE_QUERY_TO_BRIDGE_DB << entryName;
+    sendClientCommand(packet);
+}
+
+void PlayerSpaceship::commandHackTarget(P<SpaceShip> target, ESystem target_system){
+    sf::Packet packet;
+    packet << CMD_HACK_TARGET << target->getMultiplayerId() << target_system;
     sendClientCommand(packet);
 }
 

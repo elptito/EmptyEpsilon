@@ -3,9 +3,9 @@
 
 #include "gui/gui2_element.h"
 #include "shipTemplate.h"
-#include "spaceObjects/playerSpaceship.h"
+#include "spaceObjects/spaceship.h"
 
-class PlayerSpaceship;
+class SpaceShip;
 class GuiSystemStatus : public GuiElement
 {
 public:
@@ -17,15 +17,15 @@ public:
             return sf::Color(255 * (f - 1) / 2, 255, 255 * (f - 1) / 2);
         }
     }
-    GuiSystemStatus(GuiContainer* owner, string name, ESystem system, P<PlayerSpaceship> targetSpaceship);
+    GuiSystemStatus(GuiContainer* owner, string name, ESystem system, P<SpaceShip> targetSpaceship);
     
     virtual void onDraw(sf::RenderTarget& window);
-    void setTargetSpaceship(P<PlayerSpaceship> targetSpaceship){target_spaceship = targetSpaceship;}
+    void setTargetSpaceship(P<SpaceShip> targetSpaceship){target_spaceship = targetSpaceship;}
 private:
     ESystem system;
     float text_size;
     EGuiAlign icon_align;
-    P<PlayerSpaceship> target_spaceship;
+    P<SpaceShip> target_spaceship;
 
     sf::Vector2f icon_position;
     sf::Vector2f icon_offset;

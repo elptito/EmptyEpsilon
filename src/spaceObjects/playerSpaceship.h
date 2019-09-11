@@ -60,6 +60,7 @@ protected:
     static const int16_t CMD_SET_AUTO_REPAIR_SYSTEM_TARGET = 0x0030;
     static const int16_t CMD_SET_ENGINEERING_CONTROL = 0x0037;
     static const int16_t CMD_SCIENCE_QUERY_TO_BRIDGE_DB = 0x0039;
+    static const int16_t CMD_HACK_TARGET = 0x003A;
 public:
 
     // Subsystem effectiveness base rates
@@ -279,6 +280,7 @@ public:
     void commandSetEngineeringControlToBridge();
     void commandSetEngineeringControlToECR();
     void commandSendScienceQueryToBridgeDB(string entryName);
+    void commandHackTarget(P<SpaceShip> target, ESystem target_system);
 
     virtual void onReceiveServerCommand(sf::Packet& packet) override;
 

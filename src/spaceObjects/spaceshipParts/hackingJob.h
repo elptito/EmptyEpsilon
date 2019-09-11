@@ -2,25 +2,22 @@
 #define HACKING_JOB_H
 
 #include "P.h"
-#include "SFML/System/NonCopyable.hpp"
+#include "spaceObjects/spaceship.h"
 
 class SpaceShip;
 
-enum EHackJobStatus
-{
-    HJS_Pending,
-    HJS_InProgress,
-    HJS_Empty
-};
 class HackingJob : public sf::NonCopyable
 {
+  public:
+  static int countJobs(HackingJob jobs[], int size);
+
   protected:
     SpaceShip *parent;
 
   public:
-    EHackJobStatus status;
+    bool empty;
     int32_t target_id;
-    string target_system;
+    ESystem target_system;
     float timeout;
 
     HackingJob();
@@ -30,6 +27,7 @@ class HackingJob : public sf::NonCopyable
     
     void clear();
     void complete();
+    bool init(P<SpaceShip> target, ESystem target_system);
 };
 
 #endif //HACKING_JOB_H

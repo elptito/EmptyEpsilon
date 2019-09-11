@@ -1304,7 +1304,7 @@ bool SpaceShip::isFullyScannedByFaction(int faction_id)
 
 bool SpaceShip::canBeHackedBy(P<SpaceObject> other)
 {
-    return (!(this->isFriendly(other)) && this->isFriendOrFoeIdentifiedBy(other)) ;
+    return !this->isFriendly(other) && this->isFriendOrFoeIdentifiedBy(other) && this->getPosition() - other->getPosition() <= other->getRadarRange();
 }
 
 std::vector<std::pair<string, float>> SpaceShip::getHackingTargets()

@@ -10,6 +10,7 @@
 #include "screenComponents/databaseView.h"
 #include "screenComponents/alertOverlay.h"
 #include "screenComponents/customShipFunctions.h"
+#include "screenComponents/systemStatus.h"
 
 #include "gui/gui2_autolayout.h"
 #include "gui/gui2_keyvaluedisplay.h"
@@ -39,8 +40,14 @@ ScienceHeliosScreen::ScienceHeliosScreen(GuiContainer* owner, ECrewPosition crew
     right_column->setMargins(10, 0, 0, 0)->setSize(250, GuiElement::GuiSizeMax);
 
     // Target scan data sidebar.
-    GuiAutoLayout *middle_column = new GuiAutoLayout(root_layout, "MIDDLE_COLUMN", GuiAutoLayout::LayoutVerticalTopToBottom);
+    GuiAutoLayout *middle_column = new GuiAutoLayout(root_layout, "MIDDLE_COLUMN", GuiAutoLayout::LayoutVerticalBottomToTop);
     middle_column->setMargins(0, 0, 10, 0)->setSize(250, GuiElement::GuiSizeMax);
+
+    GuiAutoLayout *middle_column_down = new GuiAutoLayout(middle_column, "MIDDLE_COLUMN_DOWN", GuiAutoLayout::LayoutVerticalBottomToTop);
+    middle_column_down->setMargins(0, 0, 10, 0)->setSize(GuiElement::GuiSizeMax, 50);
+
+    GuiAutoLayout *middle_column_up = new GuiAutoLayout(middle_column, "MIDDLE_COLUMN_UP", GuiAutoLayout::LayoutVerticalTopToBottom);
+    middle_column_up->setMargins(0, 0, 10, 0)->setSize(250, GuiElement::GuiSizeMax);
 
     GuiAutoLayout *left_column = new GuiAutoLayout(root_layout, "LEFT_COLUMN", GuiAutoLayout::LayoutVerticalBottomToTop);
     left_column->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
@@ -71,27 +78,27 @@ ScienceHeliosScreen::ScienceHeliosScreen(GuiContainer* owner, ECrewPosition crew
     new RawScannerDataRadarOverlay(radar, "");
 
     // Simple scan data.
-    info_callsign = new GuiLabel(middle_column, "SCIENCE_CALLSIGN", "", 30);
+    info_callsign = new GuiLabel(middle_column_up, "SCIENCE_CALLSIGN", "", 30);
     info_callsign->addBackground()->setSize(GuiAutoLayout::GuiSizeMax, 40);
-    info_distance = new GuiKeyValueDisplay(middle_column, "SCIENCE_DISTANCE", 0.4, "Distance", "");
+    info_distance = new GuiKeyValueDisplay(middle_column_up, "SCIENCE_DISTANCE", 0.4, "Distance", "");
     info_distance->setSize(GuiElement::GuiSizeMax, 30);
-    info_heading = new GuiKeyValueDisplay(middle_column, "SCIENCE_HEADING", 0.4, "Heading", "");
+    info_heading = new GuiKeyValueDisplay(middle_column_up, "SCIENCE_HEADING", 0.4, "Heading", "");
     info_heading->setSize(GuiElement::GuiSizeMax, 30);
-    info_relspeed = new GuiKeyValueDisplay(middle_column, "SCIENCE_REL_SPEED", 0.4, "Rel. Speed", "");
+    info_relspeed = new GuiKeyValueDisplay(middle_column_up, "SCIENCE_REL_SPEED", 0.4, "Rel. Speed", "");
     info_relspeed->setSize(GuiElement::GuiSizeMax, 30);
-    info_faction = new GuiKeyValueDisplay(middle_column, "SCIENCE_FACTION", 0.4, "Faction", "");
+    info_faction = new GuiKeyValueDisplay(middle_column_up, "SCIENCE_FACTION", 0.4, "Faction", "");
     info_faction->setSize(GuiElement::GuiSizeMax, 30);
-    info_type = new GuiKeyValueDisplay(middle_column, "SCIENCE_TYPE", 0.4, "Type", "");
+    info_type = new GuiKeyValueDisplay(middle_column_up, "SCIENCE_TYPE", 0.4, "Type", "");
     info_type->setSize(GuiElement::GuiSizeMax, 30);
 
-    info_shields = new GuiKeyValueDisplay(middle_column, "SCIENCE_SHIELDS", 0.4, "Shields", "");
+    info_shields = new GuiKeyValueDisplay(middle_column_up, "SCIENCE_SHIELDS", 0.4, "Shields", "");
     info_shields->setSize(GuiElement::GuiSizeMax, 30);
-    info_hull = new GuiKeyValueDisplay(middle_column, "SCIENCE_HULL", 0.4, "Hull", "");
+    info_hull = new GuiKeyValueDisplay(middle_column_up, "SCIENCE_HULL", 0.4, "Hull", "");
     info_hull->setSize(GuiElement::GuiSizeMax, 30);
 
 
     // Prep the description text area.
-    info_description = new GuiText(middle_column, "SCIENCE_DESC", "");
+    info_description = new GuiText(middle_column_up, "SCIENCE_DESC", "");
     info_description->setTextSize(28)->setMargins(0, 20, 0, 0)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
     // Prep the frequency graphs.
@@ -119,10 +126,15 @@ ScienceHeliosScreen::ScienceHeliosScreen(GuiContainer* owner, ECrewPosition crew
     main_view_display = new GuiLabel(radar_source, "PROBE_VIEW", "Main View", 30);
     main_view_display->addBackground()->setMargins(10, 0)->setSize(GuiElement::GuiSizeMax, 50);
 
+    jobs_queue = new GuiLabel(middle_column_down, "JOBS_QUEUE", "0/0 Jobs", 30);
+    jobs_queue->addBackground()->setMargins(10, 0)->setSize(250, 50);
 
     // Scan action label.
     scan_status = new GuiLabel(target_actions, "SCAN_STATUS", "Scan Target", 30);
     scan_status->addBackground()->setMargins(10, 0)->setSize(GuiElement::GuiSizeMax, 50);
+    
+    hack_action = new GuiLabel(target_actions, "HACK_ACTION", "Hack Target", 30);
+    hack_action->addBackground()->setMargins(10, 0)->setSize(GuiElement::GuiSizeMax, 50);
     
     // DB info action label.
     query_action = new GuiLabel(target_actions, "QUERY_ACTION", "Query ship Type", 30);
@@ -187,6 +199,7 @@ void ScienceHeliosScreen::onDraw(sf::RenderTarget& window)
     } else if (targets.getWaypointIndex() >= 0) {
         showWaypointInfo();
     }
+    int jobsCount = HackingJob::countJobs(my_spaceship->hackingJobs, my_spaceship->max_hack_jobs);
 
     if (my_spaceship->getScanTarget()){
         scan_status->setText("Scanning " + my_spaceship->getScanTarget()->getCallSign())->setColor(sf::Color::Yellow)->setTextColor(sf::Color::Yellow);
@@ -201,11 +214,21 @@ void ScienceHeliosScreen::onDraw(sf::RenderTarget& window)
     } else {
         scan_status->setText("No scan target")->setColor(grey)->setTextColor(grey);
     }
+    if (jobsCount < my_spaceship->max_hack_jobs){
+        if (target && target->canBeHackedBy(my_spaceship)){
+            hack_action->setText("Hack '" + ship->getTypeName() + "'")->setColor(sf::Color::White)->setTextColor(sf::Color::White);
+        } else {
+            hack_action->setText("No hack target")->setColor(grey)->setTextColor(grey);
+        }
+    } else {
+            hack_action->setText("Job queue full")->setColor(grey)->setTextColor(grey);
+    }
     if (ship && ship->getScannedStateFor(my_spaceship) >= SS_SimpleScan){
         query_action->setText("Query '" + ship->getTypeName() + "'")->setColor(sf::Color::White)->setTextColor(sf::Color::White);
     } else {
         query_action->setText("No query target")->setColor(grey)->setTextColor(grey);
     }
+    jobs_queue->setText(string(jobsCount, 0) + "/" + string(my_spaceship->max_hack_jobs, 0) + " Jobs");
 }
 
 void ScienceHeliosScreen::showNoInfo(){
@@ -222,7 +245,7 @@ void ScienceHeliosScreen::showNoInfo(){
     info_description->setText("");
 
     for(int n = 0; n < SYS_COUNT; n++) {
-        info_system[n]->setValue("-");
+        info_system[n]->setValue("-")->setColor(sf::Color::White)->setContentColor(sf::Color::White);
     }
 }
 
@@ -312,8 +335,14 @@ void ScienceHeliosScreen::showTargetInfo(){
                 
                 // Show the status of each subsystem.
                 for(int n = 0; n < SYS_COUNT; n++) {
-                    float system_health = ship->systems[n].health;
-                    info_system[n]->setValue(string(int(system_health * 100.0f)) + "%")->setColor(sf::Color(255, 127.5 * (system_health + 1), 127.5 * (system_health + 1), 255));
+                    if (ship->hasSystem(ESystem(n))){
+                        float effectiveness = ship->getSystemEffectiveness(ESystem(n));
+                        sf::Color statusColor = GuiSystemStatus::getSystemEffectivenessColor(effectiveness);
+                        sf::Color actionColor = ship->canBeHackedBy(my_spaceship) ? sf::Color::Yellow : sf::Color::White;
+                        info_system[n]->setValue(string(int(effectiveness * 100.0f)) + "%")->setColor(actionColor)->setKeyColor(actionColor)->setValueColor(statusColor);
+                    } else {
+                        info_system[n]->setValue("N/A")->setContentColor(sf::Color::White);
+                    }
                 }
             }
             // }
@@ -365,6 +394,7 @@ void ScienceHeliosScreen::onHotkey(const HotkeyResult& key)
             target_waypoints = !target_waypoints;
         } 
     } else if (key.category == "SCIENCE" && my_spaceship){
+        int jobsCount = HackingJob::countJobs(my_spaceship->hackingJobs, my_spaceship->max_hack_jobs);
         if (key.hotkey == "POV_SHIP") {
             probe_view = false;
         } else if (key.hotkey == "POV_PROBE") {
@@ -381,6 +411,17 @@ void ScienceHeliosScreen::onHotkey(const HotkeyResult& key)
             P<SpaceShip> ship = targets.get();
             if (ship && ship->getScannedStateFor(my_spaceship) >= SS_SimpleScan){
                 my_spaceship->commandSendScienceQueryToBridgeDB(ship->getTypeName());
+            }
+        } else if (jobsCount < my_spaceship->max_hack_jobs){
+            for(int n=0; n<SYS_COUNT; n++) {
+                ESystem system = ESystem(n);
+                string systemName = getSystemName(system);
+                if (key.hotkey == "HACK_" + systemName) {
+                    P<SpaceShip> ship = targets.get();
+                    if (ship && ship->canBeHackedBy(my_spaceship) && ship->hasSystem(system)){
+                        my_spaceship->commandHackTarget(ship, system);
+                    }
+                }
             }
         }
     }

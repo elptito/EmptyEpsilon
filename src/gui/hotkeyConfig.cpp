@@ -50,6 +50,10 @@ HotkeyConfig::HotkeyConfig()
     newKey("SCAN", std::make_tuple("Scan target", "S"));
     newKey("CANCEL_SCAN", std::make_tuple("Cancel current scan", "[alt];S"));
     newKey("OPEN_TYPE_IN_DB", std::make_tuple("Open selected ship type in DB", "D"));
+    for(int n=0; n<SYS_COUNT; n++) {
+        string systemName = getSystemName(ESystem(n));
+        newKey(std::string("HACK_") + systemName, std::make_tuple(std::string("Hack ") + systemName, string(n, 0)));
+    }
 
     newCategory("TARGET", "Target");
     newKey("NEXT_ENEMY_TARGET", std::make_tuple("Select next enemy target", ""));

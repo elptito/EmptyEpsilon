@@ -5,7 +5,7 @@
 
 #define NUM_ICONS 6
 
-GuiSystemStatus::GuiSystemStatus(GuiContainer* owner, string name, ESystem system, P<PlayerSpaceship> targetSpaceship)
+GuiSystemStatus::GuiSystemStatus(GuiContainer* owner, string name, ESystem system, P<SpaceShip> targetSpaceship)
 : GuiElement(owner, name), system(system), text_size(20), target_spaceship(targetSpaceship)
 {
 }
@@ -82,7 +82,8 @@ void GuiSystemStatus::onDraw(sf::RenderTarget& window)
         }
     } else if (system == SYS_FrontShield || system == SYS_RearShield){
         iconRect.left -= icon_size;
-        if (target_spaceship->shield_calibration_delay > 0.0) {
+        P<PlayerSpaceship> playerShip = target_spaceship;
+        if (playerShip && playerShip->shield_calibration_delay > 0.0) {
             drawIcon(window, iconRect, "gui/icons/status_jammed", colorConfig.overlay_jammed);
         } else {
             drawText(window, iconRect, "OK" , ACenter, text_size, font, colorConfig.overlay_ok);
