@@ -77,7 +77,6 @@ private:
 
 // hacker
     void initHacker();
-    void resetHacker();
     void setupParametersHacker();
     void addCodeLine();
     void onDrawHacker(sf::RenderTarget& window);

@@ -129,6 +129,7 @@ void ScienceTaskHeliosScreen::onDrawHacker(sf::RenderTarget& window){
                 hacked_label->show();
                 hacker_target->hide();
                 hacker_current->hide();
+                this->setFocus();
                 hacker_input->hide();
                 hack_time = engine->getElapsedTime();
             }
@@ -140,7 +141,8 @@ void ScienceTaskHeliosScreen::onDrawHacker(sf::RenderTarget& window){
                 hacker_target->setEntryColor(i, i == hacker_next_line? sf::Color::White : grey);
             }
         } else {
-            resetHacker();
+            hacker->hide();
+            this->setFocus();
         }
     }
 }
@@ -150,8 +152,8 @@ void ScienceTaskHeliosScreen::onDrawScanner(sf::RenderTarget& window){
     updateSignalScanner();
     
     if (getTarget() && getTaskType() == STT_Scan) {
-        float scanning_complexity = getTarget()->scanningComplexity(my_spaceship);
-        float scanning_depth = getTarget()->scanningChannelDepth(my_spaceship);
+        int scanning_complexity = getTarget()->scanningComplexity(my_spaceship);
+        int scanning_depth = getTarget()->scanningChannelDepth(my_spaceship);
         if (scanning_complexity && scanning_depth) {
             scanner->show();
             no_target_label->hide();
@@ -211,10 +213,6 @@ void ScienceTaskHeliosScreen::onDraw(sf::RenderTarget& window)
     onDrawHacker(window);
 }
 
-void ScienceTaskHeliosScreen::resetHacker() {
-    hacker->hide();
-}
-
 void ScienceTaskHeliosScreen::resetScanner() {
     scanning = false;
     scanner->hide();
@@ -254,12 +252,12 @@ void ScienceTaskHeliosScreen::addCodeLine() {
             line += ", " + LETTER + LETTER + LETTER + LETTER;
         }
     }
-    hacker_target->addEntry("", "A", sf::Color::White);
+    hacker_target->addEntry("", line, sf::Color::White);
 }
 
 void ScienceTaskHeliosScreen::setupParametersHacker() {
     hacked_label->hide();
-    hacker_input->show();
+    hacker_target->show();
     hacker_current->show();
     hacker_input->show();
     last_line_start = engine->getElapsedTime();
