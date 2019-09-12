@@ -448,13 +448,8 @@ void ShipSelectionScreen::updateCrewTypeOptions()
     case 0: // Helios GM  / tests
         game_master_button->show();
         crew_position_button[scienceHeliosScreen]->show();
-        crew_position_button[relayOfficerNC]->show();
+        crew_position_button[relayHelios]->show();
         crew_position_button[weaponsHeliosScreen]->show();
-        crew_position_button[scienceTaskHeliosScreen]->show();
-        crew_position_button[helmsHeliosScreen]->show();
-        crew_position_button[databaseHeliosScreen]->show();        
-        crew_position_button[bridgeDatabaseHeliosScreen]->show();        
-        crew_position_button[tractorBeamHeliosScreen]->show();
         break;
     case 1: // Helios Bridge
         crew_position_button[helmsHeliosScreen]->show();
@@ -462,22 +457,22 @@ void ShipSelectionScreen::updateCrewTypeOptions()
         crew_position_button[tractorBeamHeliosScreen]->show();  
         crew_position_button[bridgeEngineeringHeliosScreen]->show();
         crew_position_button[scienceHeliosScreen]->show();
-        crew_position_button[scienceTaskHeliosScreen]->show();
         crew_position_button[bridgeDatabaseHeliosScreen]->show();
-        crew_position_button[relayOfficerNC]->show();
+        crew_position_button[relayHelios]->show();
         crew_position_button[commsView]->show();      
         crew_position_button[externLog]->show();
-        crew_position_button[tacticalRadar]->show();
-        crew_position_button[scienceRadar]->show();
-        crew_position_button[relayRadar]->show();
+        // crew_position_button[tacticalRadar]->show();
+        // crew_position_button[scienceRadar]->show();
+        // crew_position_button[relayRadar]->show();
         break;
     case 2: // Helios Ship
         crew_position_button[engineControlHeliosScreen]->show();
-        crew_position_button[navigation]->show();  
+        crew_position_button[internLog]->show();
         crew_position_button[dockMaster]->show();
         crew_position_button[dronePilot]->show();
-        crew_position_button[databaseHeliosScreen]->show();    
-        crew_position_button[internLog]->show();
+        crew_position_button[navigation]->show();  
+        crew_position_button[databaseHeliosScreen]->show();  
+        crew_position_button[scienceTaskHeliosScreen]->show();  
         break;
     case 3: // 6/5 player crew
         for(int n = helmsOfficer; n <= relayOfficer; n++)

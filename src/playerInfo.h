@@ -41,6 +41,7 @@ enum ECrewPosition
     tractorBeamHeliosScreen,
     scienceHeliosScreen,
     scienceTaskHeliosScreen,
+    relayHelios,
     max_crew_positions
 };
 

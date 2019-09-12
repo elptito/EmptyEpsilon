@@ -64,7 +64,7 @@ private:
     void stopPlacingWaypoint();
     void placeWaypoint(sf::Vector2f position);
 public:
-    RelayScreen(GuiContainer* owner, bool has_comms = true);
+    RelayScreen(GuiContainer* owner, bool has_comms = true, bool has_hack = true);
 
     virtual void onDraw(sf::RenderTarget& window);
 };

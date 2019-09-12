@@ -185,6 +185,8 @@ void PlayerInfo::spawnUI()
             screen->addStationTab(new DatabaseScreen(screen), databaseView, getCrewPositionName(databaseView), getCrewPositionIcon(databaseView));
       	if (crew_position[relayOfficerNC])
             screen->addStationTab(new RelayScreen(screen,false), relayOfficer, getCrewPositionName(relayOfficer), getCrewPositionIcon(relayOfficer));
+      	if (crew_position[relayHelios])
+            screen->addStationTab(new RelayScreen(screen,false, false), relayHelios, getCrewPositionName(relayHelios), getCrewPositionIcon(relayHelios));
         if (crew_position[commsView])
             screen->addStationTab(new CommsScreen(screen), commsView, getCrewPositionName(commsView), getCrewPositionIcon(commsView));
         if (crew_position[tacticalRadar])
@@ -241,7 +243,7 @@ string getCrewPositionName(ECrewPosition position)
     case weaponsOfficer: case weaponsHeliosScreen: return "Weapons";
     case engineering: return "Engineering";
     case scienceOfficer: case scienceHeliosScreen: return "Science";
-    case relayOfficer: return "Relay";
+    case relayOfficer: case relayHelios: return "Relay";
     case relayOfficerNC: return "Relay (No comms)";
     case tacticalOfficer: return "Tactical";
     case engineeringAdvanced: return "Engineering+";
@@ -276,7 +278,7 @@ string getCrewPositionIcon(ECrewPosition position)
     case weaponsOfficer: case weaponsHeliosScreen: return "gui/icons/station-weapons";
     case engineering: return "gui/icons/station-engineering";
     case scienceOfficer: case scienceHeliosScreen: return "gui/icons/station-science";
-    case relayOfficer: return "gui/icons/station-relay";
+    case relayOfficer: case relayHelios: return "gui/icons/station-relay";
     case relayOfficerNC: return "gui/icons/station-relay";
     case tacticalOfficer: return "";
     case engineeringAdvanced: return "";
@@ -326,6 +328,8 @@ template<> void convert<ECrewPosition>::param(lua_State* L, int& idx, ECrewPosit
         cp = scienceHeliosScreen;
     else if (str == "Science Task")
         cp = scienceTaskHeliosScreen;
+    else if (str == "Relay Helios")
+        cp = relayHelios;
     //6/5 player crew
     else if (str == "helms" || str == "helmsofficer")
         cp = helmsOfficer;
