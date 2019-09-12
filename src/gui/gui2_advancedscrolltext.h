@@ -30,9 +30,12 @@ public:
 
     unsigned int getEntryCount() const;
     string getEntryText(int index) const;
+    void setEntryColor(int index, sf::Color color);
     GuiAdvancedScrollText* removeEntry(int index);
     GuiAdvancedScrollText* clearEntries();
 
+    int getScrollPosition(){return scrollbar->getValue();}
+    void setScrollPosition(int pos){scrollbar->setValue(pos);}
     virtual void onDraw(sf::RenderTarget& window);
 };
 

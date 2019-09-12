@@ -29,6 +29,13 @@ string GuiAdvancedScrollText::getEntryText(int index) const
     return entries[index].text;
 }
 
+void GuiAdvancedScrollText::setEntryColor(int index, sf::Color color)
+{
+    if (index >= 0 && index < int(getEntryCount())){
+        entries[index].color = color;
+    }
+}
+
 GuiAdvancedScrollText* GuiAdvancedScrollText::removeEntry(int index)
 {
     if (index < 0 || index > int(getEntryCount()))
