@@ -22,6 +22,8 @@ class ScienceTask : public sf::NonCopyable
   public:
 
   static int countTasks(ScienceTask tasks[], int size);
+  static void addHackTask(ScienceTask tasks[], int size, uint32_t target_id, ESystem target_system);
+  static void addScanTask(ScienceTask tasks[], int size, uint32_t target_id);
 
   protected:
     PlayerSpaceship *parent;
@@ -29,7 +31,7 @@ class ScienceTask : public sf::NonCopyable
 
   public:
     EScienceTaskType type;
-    int32_t target_id;
+    uint32_t target_id;
     ESystem target_system;
     float timeout;
 
@@ -41,9 +43,10 @@ class ScienceTask : public sf::NonCopyable
     
     // void complete();
     string getDescription();
-    bool orderHack(P<SpaceShip> target, ESystem targetSystem);
-    bool orderScan(P<SpaceObject> target);
     void clear();
+private: 
+    bool orderHack(uint32_t target_id, ESystem targetSystem);
+    bool orderScan(uint32_t target_id);
 };
 
 #endif //SCIENCE_TASK_H

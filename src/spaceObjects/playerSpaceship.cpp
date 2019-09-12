@@ -1484,9 +1484,7 @@ void PlayerSpaceship::handleClientCommand(int32_t client_id, int16_t command, sf
             packet >> target_id >> target_system;
             P<SpaceShip> target = game_server->getObjectById(target_id);
             if (target && target_system < SYS_COUNT && target->hasSystem(target_system) && target->canBeHackedBy(this))
-                for(int n = 0; n < max_science_tasks; n++)
-                    if (scienceTasks[n].orderHack(target, target_system))
-                        break;
+                ScienceTask::addHackTask(scienceTasks, my_spaceship->max_science_tasks, target_id, target_system);
         }
         break;
     case CMD_SCAN_TASK:
@@ -1495,22 +1493,23 @@ void PlayerSpaceship::handleClientCommand(int32_t client_id, int16_t command, sf
             packet >> target_id;
             P<SpaceShip> target = game_server->getObjectById(target_id);
             if (target && target->canBeScannedBy(this))
-                for(int n = 0; n < max_science_tasks; n++)
-                    if (scienceTasks[n].orderScan(target))
-                        break;
+                ScienceTask::addScanTask(scienceTasks, my_spaceship->max_science_tasks, target_id);
         }
         break;
         case CMD_TASK_COMPLETED:
         {
             int taskIndex;
-            packet >> taskIndex;
-            if (taskIndex < max_science_tasks){
+            bool success;
+            packet >> taskIndex >> success;
+            if (taskIndex > 0 && taskIndex < max_science_tasks){
                 ScienceTask &task = scienceTasks[taskIndex];
-                P<SpaceShip> target = getObjectById(task.target_id);
-                if (task.type == STT_Hack && target && target->canBeHackedBy(this)){
-                    target->hackFinished(this, getSystemName(task.target_system));
-                } else if (task.type == STT_Scan && target && target->canBeScannedBy(this)){
-                    target->scannedBy(this);
+                if (success){
+                    P<SpaceShip> target = getObjectById(task.target_id);
+                    if (task.type == STT_Hack && target && target->canBeHackedBy(this)){
+                        target->hackFinished(this, getSystemName(task.target_system));
+                    } else if (task.type == STT_Scan && target && target->canBeScannedBy(this)){
+                        target->scannedBy(this);
+                    }
                 }
                 task.clear();
             }
@@ -1768,9 +1767,9 @@ void PlayerSpaceship::commandAddScanTask(P<SpaceObject> object){
     sendClientCommand(packet);
 }
 
-void PlayerSpaceship::commandCompleteScienceTask(int taskIndex){
+void PlayerSpaceship::commandCompleteScienceTask(int taskIndex, bool success){
     sf::Packet packet;
-    packet << CMD_TASK_COMPLETED << taskIndex;
+    packet << CMD_TASK_COMPLETED << taskIndex << success;
     sendClientCommand(packet);
 }
 

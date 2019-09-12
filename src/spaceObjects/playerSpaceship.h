@@ -284,7 +284,7 @@ public:
     void commandSendScienceQueryToBridgeDB(string entryName);
     void commandAddHackTask(P<SpaceShip> target, ESystem target_system);
     void commandAddScanTask(P<SpaceObject> object);
-    void commandCompleteScienceTask(int taskIndex);
+    void commandCompleteScienceTask(int taskIndex, bool success);
 
     virtual void onReceiveServerCommand(sf::Packet& packet) override;
 

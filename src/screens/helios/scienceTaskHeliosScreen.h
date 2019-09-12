@@ -6,10 +6,14 @@
 #include "gameGlobalInfo.h"
 #include "gui/gui2_overlay.h"
 
+#define HACKER_LiNES 20
+
 class GuiPanel;
 class GuiLabel;
 class GuiProgressbar;
 class GuiKeyValueDisplay;
+class GuiTextEntry;
+class GuiAdvancedScrollText;
 
 class ScienceTaskHeliosScreen : public GuiOverlay
 {
@@ -23,21 +27,36 @@ private:
     GuiKeyValueDisplay* tasks_queue[PlayerSpaceship::max_science_tasks];
 
 // scanner
-    GuiPanel* box;
+    GuiPanel* scanner;
     GuiLabel* signal_label;
     GuiLabel* locked_label;
     GuiLabel* no_target_label;
     GuiSignalQualityIndicator* signal_quality;
-    GuiProgressbar* bars[max_bars];
-    
+    GuiProgressbar* scanner_bars[max_bars];
+// hacker
+    GuiPanel* hacker;
+    GuiLabel* hacked_label;
+    GuiAdvancedScrollText* hacker_target;
+    GuiAdvancedScrollText* hacker_current;
+    GuiTextEntry* hacker_input;
+
 // tasks
+    EScienceTaskType simulation;
     int task_id;
 // scanner
     bool scanning;
-    float bars_target[max_bars];
+    float scanner_targets[max_bars];
     bool locked;
     float lock_start_time;
     int scan_depth;
+// hacker
+    unsigned int hacker_next_line;
+    float hack_time;
+
+    float last_line_start;
+    float add_next_line_time;
+    float avg_line_type_time;
+
 public:
     ScienceTaskHeliosScreen(GuiContainer* owner, ECrewPosition crew_position=scienceHeliosScreen);
 
@@ -48,13 +67,20 @@ public:
 private:
     P<SpaceShip> getTarget();
     EScienceTaskType getTaskType();
-
+    void completeTask();
 // scanner    
     void initScanner();
     void resetScanner();
     void setupParametersScanner();
     void updateSignalScanner();
     void onDrawScanner(sf::RenderTarget& window);
+
+// hacker
+    void initHacker();
+    void resetHacker();
+    void setupParametersHacker();
+    void addCodeLine();
+    void onDrawHacker(sf::RenderTarget& window);
 };
 
 #endif//SCIENCE_TASK_HELIOS_SCREEN_H
