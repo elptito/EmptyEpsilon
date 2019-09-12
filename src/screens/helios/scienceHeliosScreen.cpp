@@ -44,7 +44,7 @@ ScienceHeliosScreen::ScienceHeliosScreen(GuiContainer* owner, ECrewPosition crew
     middle_column->setMargins(0, 0, 10, 0)->setSize(250, GuiElement::GuiSizeMax);
 
     GuiAutoLayout *middle_column_down = new GuiAutoLayout(middle_column, "MIDDLE_COLUMN_DOWN", GuiAutoLayout::LayoutVerticalBottomToTop);
-    middle_column_down->setMargins(0, 0, 10, 0)->setSize(GuiElement::GuiSizeMax, 50);
+    middle_column_down->setMargins(0, 0, 10, 0)->setSize(GuiElement::GuiSizeMax, 50 + 30 * my_spaceship->max_science_tasks);
 
     GuiAutoLayout *middle_column_up = new GuiAutoLayout(middle_column, "MIDDLE_COLUMN_UP", GuiAutoLayout::LayoutVerticalTopToBottom);
     middle_column_up->setMargins(0, 0, 10, 0)->setSize(250, GuiElement::GuiSizeMax);
@@ -126,8 +126,13 @@ ScienceHeliosScreen::ScienceHeliosScreen(GuiContainer* owner, ECrewPosition crew
     main_view_display = new GuiLabel(radar_source, "PROBE_VIEW", "Main View", 30);
     main_view_display->addBackground()->setMargins(10, 0)->setSize(GuiElement::GuiSizeMax, 50);
 
-    tasks_queue = new GuiLabel(middle_column_down, "tasks_queue", "0/0 Tasks", 30);
-    tasks_queue->addBackground()->setMargins(10, 0)->setSize(250, 50);
+    for(int n = my_spaceship->max_science_tasks - 1; n >= 0; n--){
+        tasks_queue[n] = new GuiLabel(middle_column_down, "TASK_"+ string(n, 0), "-", 25);
+        tasks_queue[n]->addBackground()->setMargins(10, 2)->setSize(250, 30)->hide();
+    }
+
+    tasks_queue_title = new GuiLabel(middle_column_down, "TASKS_TITLE", "0/0 Tasks", 30);
+    tasks_queue_title->addBackground()->setMargins(10, 0)->setSize(250, 50);
 
     // Scan action label.
     scan_status = new GuiLabel(target_actions, "SCAN_STATUS", "Scan Target", 30);
@@ -200,35 +205,42 @@ void ScienceHeliosScreen::onDraw(sf::RenderTarget& window)
         showWaypointInfo();
     }
     int tasksCount = ScienceTask::countTasks(my_spaceship->scienceTasks, my_spaceship->max_science_tasks);
-
-    if (my_spaceship->getScanTarget()){
-        scan_status->setText("Scanning " + my_spaceship->getScanTarget()->getCallSign())->setColor(sf::Color::Yellow)->setTextColor(sf::Color::Yellow);
-    } else if (target){
-        if (target->getScannedStateFor(my_spaceship) == SS_FullScan) {
-            scan_status->setText("Scanned")->setColor(grey)->setTextColor(grey);
-        } else if (target->canBeScannedBy(my_spaceship)){
-            scan_status->setText("Scan " + target->getCallSign())->setColor(sf::Color::White)->setTextColor(sf::Color::White);
-        } else {
-            scan_status->setText("Can't scan " + target->getCallSign())->setColor(grey)->setTextColor(grey);
-        }
-    } else {
-        scan_status->setText("No scan target")->setColor(grey)->setTextColor(grey);
-    }
     if (tasksCount < my_spaceship->max_science_tasks){
-        if (target && target->canBeHackedBy(my_spaceship)){
-            hack_action->setText("Hack '" + ship->getTypeName() + "'")->setColor(sf::Color::White)->setTextColor(sf::Color::White);
+        if (target){
+            if (target->getScannedStateFor(my_spaceship) == SS_FullScan){
+                scan_status->setText("Scanned")->setColor(grey)->setTextColor(grey);
+            } else if(target->canBeScannedBy(my_spaceship)){
+                scan_status->setText("Scan '" + ship->getTypeName() + "'")->setColor(sf::Color::White)->setTextColor(sf::Color::White);
+            } else {
+                scan_status->setText("Can not scan '" + ship->getTypeName() + "'")->setColor(grey)->setTextColor(grey);
+            }
+            if (target->canBeHackedBy(my_spaceship)){
+                hack_action->setText("Hack '" + ship->getTypeName() + "'")->setColor(sf::Color::White)->setTextColor(sf::Color::White);
+            } else {
+                hack_action->setText("Can't hack " + target->getCallSign())->setColor(grey)->setTextColor(grey);
+            }
         } else {
-            hack_action->setText("No hack target")->setColor(grey)->setTextColor(grey);
+            scan_status->setText("nothing to scan")->setColor(grey)->setTextColor(grey);
+            hack_action->setText("nothing to hack")->setColor(grey)->setTextColor(grey);
         }
     } else {
-            hack_action->setText("Tasks queue full")->setColor(grey)->setTextColor(grey);
+        scan_status->setText("Tasks queue full")->setColor(grey)->setTextColor(grey);
+        hack_action->setText("Tasks queue full")->setColor(grey)->setTextColor(grey);
     }
     if (ship && ship->getScannedStateFor(my_spaceship) >= SS_SimpleScan){
         query_action->setText("Query '" + ship->getTypeName() + "'")->setColor(sf::Color::White)->setTextColor(sf::Color::White);
     } else {
         query_action->setText("No query target")->setColor(grey)->setTextColor(grey);
     }
-    tasks_queue->setText(string(tasksCount, 0) + "/" + string(my_spaceship->max_science_tasks, 0) + " Tasks");
+
+    tasks_queue_title->setText(string(tasksCount, 0) + "/" + string(my_spaceship->max_science_tasks, 0) + " Tasks");
+    for(int n = 0; n < my_spaceship->max_science_tasks; n++){
+        if (my_spaceship->scienceTasks[n].type != STT_Empty){
+            tasks_queue[n]->setText(my_spaceship->scienceTasks[n].getDescription())->show();
+        } else {
+            tasks_queue[n]->setText("-")->hide();
+        }
+    }
 }
 
 void ScienceHeliosScreen::showNoInfo(){
@@ -401,11 +413,7 @@ void ScienceHeliosScreen::onHotkey(const HotkeyResult& key)
             probe_view = true;
         } else if (key.hotkey == "SCAN") {
             if (targets.get() && targets.get()->canBeScannedBy(my_spaceship)){
-                my_spaceship->commandScan(targets.get());
-            }
-        } else if (key.hotkey == "CANCEL_SCAN") {
-            if (my_spaceship->getScanTarget()){
-                my_spaceship->commandScanCancel();
+                my_spaceship->commandAddScanTask(targets.get());
             }
         } else if (key.hotkey == "OPEN_TYPE_IN_DB") {
             P<SpaceShip> ship = targets.get();
@@ -419,7 +427,7 @@ void ScienceHeliosScreen::onHotkey(const HotkeyResult& key)
                 if (key.hotkey == "HACK_" + systemName) {
                     P<SpaceShip> ship = targets.get();
                     if (ship && ship->canBeHackedBy(my_spaceship) && ship->hasSystem(system)){
-                        my_spaceship->commandHackTarget(ship, system);
+                        my_spaceship->commandAddHackTask(ship, system);
                     }
                 }
             }

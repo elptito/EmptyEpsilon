@@ -40,7 +40,7 @@ enum ECrewPosition
     bridgeDatabaseHeliosScreen,
     tractorBeamHeliosScreen,
     scienceHeliosScreen,
-    scanHeliosScreen,
+    scienceTaskHeliosScreen,
     max_crew_positions
 };
 

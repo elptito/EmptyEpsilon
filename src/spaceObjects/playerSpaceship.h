@@ -60,7 +60,9 @@ protected:
     static const int16_t CMD_SET_AUTO_REPAIR_SYSTEM_TARGET = 0x0030;
     static const int16_t CMD_SET_ENGINEERING_CONTROL = 0x0037;
     static const int16_t CMD_SCIENCE_QUERY_TO_BRIDGE_DB = 0x0039;
-    static const int16_t CMD_HACK_TARGET = 0x003A;
+    static const int16_t CMD_HACK_TASK = 0x003A;
+    static const int16_t CMD_SCAN_TASK = 0x003B;
+    static const int16_t CMD_TASK_COMPLETED = 0x003C;
 public:
 
     // Subsystem effectiveness base rates
@@ -116,7 +118,7 @@ public:
     static float over_fix_heat_factor;
     // Maximum number of self-destruction confirmation codes
     constexpr static int max_self_destruct_codes = 3;
-    constexpr static int max_science_tasks = 20;
+    constexpr static int max_science_tasks = 10;
 
     static float warp_terrain_cap; 
 
@@ -280,7 +282,9 @@ public:
     void commandSetEngineeringControlToBridge();
     void commandSetEngineeringControlToECR();
     void commandSendScienceQueryToBridgeDB(string entryName);
-    void commandHackTarget(P<SpaceShip> target, ESystem target_system);
+    void commandAddHackTask(P<SpaceShip> target, ESystem target_system);
+    void commandAddScanTask(P<SpaceObject> object);
+    void commandCompleteScienceTask(int taskIndex);
 
     virtual void onReceiveServerCommand(sf::Packet& packet) override;
 

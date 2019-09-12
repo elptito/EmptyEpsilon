@@ -55,6 +55,11 @@ HotkeyConfig::HotkeyConfig()
         newKey(std::string("HACK_") + systemName, std::make_tuple(std::string("Hack ") + systemName, string(n, 0)));
     }
 
+    newCategory("SCIENCE_TASK", "Science Task");
+    for(int n = 0; n < PlayerSpaceship::max_science_tasks; n++){
+        newKey("DO_TASK_" + string(n, 0), std::make_tuple("Execute task "+ string(n+1, 0), string((n+1) % 10, 0)));
+    }
+
     newCategory("TARGET", "Target");
     newKey("NEXT_ENEMY_TARGET", std::make_tuple("Select next enemy target", ""));
     newKey("PREV_ENEMY_TARGET", std::make_tuple("Select previous enemy target", ""));

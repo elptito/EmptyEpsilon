@@ -261,6 +261,7 @@ PlayerSpaceship::PlayerSpaceship()
     for(int n = 0; n < max_science_tasks; n++)
     {
         scienceTasks[n].setParent(this);
+        scienceTasks[n].setIndex(n);
     }
     
     if (game_server)
@@ -606,6 +607,10 @@ void PlayerSpaceship::update(float delta)
     // Cap energy at the max_energy_level.
     if (energy_level > max_energy_level)
         energy_level = max_energy_level;
+
+    for(int n = 0; n < max_science_tasks; n++) {
+        scienceTasks[n].update(delta);
+    }
 }
 
 void PlayerSpaceship::applyTemplateValues()
@@ -1471,7 +1476,8 @@ void PlayerSpaceship::handleClientCommand(int32_t client_id, int16_t command, sf
         {
             packet >> science_query_to_bridge_db;
         }
-    case CMD_HACK_TARGET:
+        break;
+    case CMD_HACK_TASK:
         {
             ESystem target_system;
             uint32_t target_id;
@@ -1479,9 +1485,37 @@ void PlayerSpaceship::handleClientCommand(int32_t client_id, int16_t command, sf
             P<SpaceShip> target = game_server->getObjectById(target_id);
             if (target && target_system < SYS_COUNT && target->hasSystem(target_system) && target->canBeHackedBy(this))
                 for(int n = 0; n < max_science_tasks; n++)
-                    if (scienceTasks[n].init(target, target_system))
+                    if (scienceTasks[n].orderHack(target, target_system))
                         break;
         }
+        break;
+    case CMD_SCAN_TASK:
+        {
+            uint32_t target_id;
+            packet >> target_id;
+            P<SpaceShip> target = game_server->getObjectById(target_id);
+            if (target && target->canBeScannedBy(this))
+                for(int n = 0; n < max_science_tasks; n++)
+                    if (scienceTasks[n].orderScan(target))
+                        break;
+        }
+        break;
+        case CMD_TASK_COMPLETED:
+        {
+            int taskIndex;
+            packet >> taskIndex;
+            if (taskIndex < max_science_tasks){
+                ScienceTask &task = scienceTasks[taskIndex];
+                P<SpaceShip> target = getObjectById(task.target_id);
+                if (task.type == STT_Hack && target && target->canBeHackedBy(this)){
+                    target->hackFinished(this, getSystemName(task.target_system));
+                } else if (task.type == STT_Scan && target && target->canBeScannedBy(this)){
+                    target->scannedBy(this);
+                }
+                task.clear();
+            }
+        }
+        break;
     default:
         SpaceShip::handleClientCommand(client_id, command, packet);
     }
@@ -1722,9 +1756,21 @@ void PlayerSpaceship::commandSendScienceQueryToBridgeDB(string entryName){
     sendClientCommand(packet);
 }
 
-void PlayerSpaceship::commandHackTarget(P<SpaceShip> target, ESystem target_system){
+void PlayerSpaceship::commandAddHackTask(P<SpaceShip> target, ESystem target_system){
     sf::Packet packet;
-    packet << CMD_HACK_TARGET << target->getMultiplayerId() << target_system;
+    packet << CMD_HACK_TASK << target->getMultiplayerId() << target_system;
+    sendClientCommand(packet);
+}
+
+void PlayerSpaceship::commandAddScanTask(P<SpaceObject> object){
+    sf::Packet packet;
+    packet << CMD_SCAN_TASK << object->getMultiplayerId();
+    sendClientCommand(packet);
+}
+
+void PlayerSpaceship::commandCompleteScienceTask(int taskIndex){
+    sf::Packet packet;
+    packet << CMD_TASK_COMPLETED << taskIndex;
     sendClientCommand(packet);
 }
 

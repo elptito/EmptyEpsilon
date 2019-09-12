@@ -40,7 +40,8 @@ private:
     GuiLabel* main_view_display;
     GuiLabel* probe_view_display;
     GuiLabel* scan_status;
-    GuiLabel* tasks_queue;
+    GuiLabel* tasks_queue_title;
+    GuiLabel* tasks_queue[PlayerSpaceship::max_science_tasks];
     GuiLabel* hack_action;
     GuiLabel* query_action;
 

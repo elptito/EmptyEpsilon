@@ -33,7 +33,7 @@
 #include "screens/helios/databaseHeliosScreen.h"
 #include "screens/helios/tractorBeamScreen.h"
 #include "screens/helios/scienceHeliosScreen.h"
-#include "screens/helios/scanHeliosScreen.h"
+#include "screens/helios/scienceTaskHeliosScreen.h"
 
 #include "screenComponents/mainScreenControls.h"
 #include "screenComponents/selfDestructEntry.h"
@@ -151,8 +151,8 @@ void PlayerInfo::spawnUI()
             screen->addStationTab(new TractorBeamScreen(screen), tractorBeamHeliosScreen, getCrewPositionName(tractorBeamHeliosScreen), getCrewPositionIcon(tractorBeamHeliosScreen));
         if (crew_position[scienceHeliosScreen])
             screen->addStationTab(new ScienceHeliosScreen(screen), scienceHeliosScreen, getCrewPositionName(scienceHeliosScreen), getCrewPositionIcon(scienceHeliosScreen));
-        if (crew_position[scanHeliosScreen])
-            screen->addStationTab(new ScanHeliosScreen(screen), scanHeliosScreen, getCrewPositionName(scanHeliosScreen), getCrewPositionIcon(scanHeliosScreen));
+        if (crew_position[scienceTaskHeliosScreen])
+            screen->addStationTab(new ScienceTaskHeliosScreen(screen), scienceTaskHeliosScreen, getCrewPositionName(scienceTaskHeliosScreen), getCrewPositionIcon(scienceTaskHeliosScreen));
       	//Crew 6/5
         if (crew_position[helmsOfficer])
             screen->addStationTab(new HelmsScreen(screen), helmsOfficer, getCrewPositionName(helmsOfficer), getCrewPositionIcon(helmsOfficer));
@@ -263,7 +263,7 @@ string getCrewPositionName(ECrewPosition position)
     case engineControlHeliosScreen: return "ECR";
     case bridgeEngineeringHeliosScreen: return "Bridge Engineering";
     case tractorBeamHeliosScreen: return "Tractor Beam";
-    case scanHeliosScreen: return "Scan";
+    case scienceTaskHeliosScreen: return "Science Task";
     default: return "ErrUnk: " + string(position);
     }
 }
@@ -297,7 +297,7 @@ string getCrewPositionIcon(ECrewPosition position)
     case engineControlHeliosScreen: return "";
     case bridgeEngineeringHeliosScreen: return "";
     case tractorBeamHeliosScreen: return "";
-    case scanHeliosScreen: return "";
+    case scienceTaskHeliosScreen: return "";
     default: return "ErrUnk: " + string(position);
     }
 }
@@ -324,8 +324,8 @@ template<> void convert<ECrewPosition>::param(lua_State* L, int& idx, ECrewPosit
         cp = tractorBeamHeliosScreen;
     else if (str == "scienceHelios")
         cp = scienceHeliosScreen;
-    else if (str == "scan")
-        cp = scanHeliosScreen;
+    else if (str == "Science Task")
+        cp = scienceTaskHeliosScreen;
     //6/5 player crew
     else if (str == "helms" || str == "helmsofficer")
         cp = helmsOfficer;

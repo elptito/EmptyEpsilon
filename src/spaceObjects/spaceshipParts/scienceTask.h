@@ -1,21 +1,34 @@
-#ifndef HACKING_JOB_H
-#define HACKING_JOB_H
+#ifndef SCIENCE_TASK_H
+#define SCIENCE_TASK_H
 
 #include "P.h"
-#include "spaceObjects/spaceship.h"
+#include "engine.h"
+#include "shipTemplate.h"
 
 class SpaceShip;
+class PlayerSpaceship;
+
+enum EScienceTaskType {
+  STT_Empty,
+  STT_Hack,
+  STT_Scan,
+};
+string getScienceTaskTypeName(EScienceTaskType taskType);
+
+REGISTER_MULTIPLAYER_ENUM(EScienceTaskType);
 
 class ScienceTask : public sf::NonCopyable
 {
   public:
+
   static int countTasks(ScienceTask tasks[], int size);
 
   protected:
-    SpaceShip *parent;
+    PlayerSpaceship *parent;
+    int index_at_parent;
 
   public:
-    bool empty;
+    EScienceTaskType type;
     int32_t target_id;
     ESystem target_system;
     float timeout;
@@ -23,11 +36,14 @@ class ScienceTask : public sf::NonCopyable
     ScienceTask();
 
     void update(float delta);
-    void setParent(SpaceShip *parent);
+    void setParent(PlayerSpaceship *parent);
+    void setIndex(int index) { this->index_at_parent = index; }
     
+    // void complete();
+    string getDescription();
+    bool orderHack(P<SpaceShip> target, ESystem targetSystem);
+    bool orderScan(P<SpaceObject> target);
     void clear();
-    void complete();
-    bool init(P<SpaceShip> target, ESystem target_system);
 };
 
-#endif //HACKING_JOB_H
+#endif //SCIENCE_TASK_H
