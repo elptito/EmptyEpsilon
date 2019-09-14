@@ -17,6 +17,14 @@ local systems = {"warp", "rearshield", "docks", "impulse", "beamweapons", "drone
 
 -- update state helios mechanics
 function updateHelios(delta)
+	local playerShip = getPlayerShip(-1)
+	if (not playerShip._daedalus_hooks) then
+		playerShip._daedalus_hooks = {}
+	end
+	for i, hook in ipairs(playerShip._daedalus_hooks) do
+		hook(delta)
+	end
+
 	local ships = getAllShips()
 	for _, ship in ipairs(ships) do
 		local x, y = ship:getPosition()
