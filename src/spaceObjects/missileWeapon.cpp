@@ -72,6 +72,15 @@ void MissileWeapon::collide(Collisionable* target, float force)
     P<SpaceObject> object = P<Collisionable>(target);
     if (!object || object == owner || !object->canBeTargetedBy(owner))
         return;
+
+    P<MissileWeapon> missile = object;
+    if (missile)
+    {
+//        destroy();
+//        missile->destroy();
+        return;
+    }
+
     P<SpaceShip> ship = object;
     if (ship->isDockedWith(owner))
         return;
