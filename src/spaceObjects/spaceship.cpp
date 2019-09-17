@@ -43,6 +43,7 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getPassagersCount);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setMaxPassagersCount);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getMaxPassagersCount);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getBeamFrequency);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getMaxEnergy);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setMaxEnergy);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getEnergy);
