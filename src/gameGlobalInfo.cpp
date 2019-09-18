@@ -38,6 +38,8 @@ GameGlobalInfo::GameGlobalInfo()
     global_message_timeout = 0.0;
     player_warp_jump_drive_setting = PWJ_ShipDefault;
     scanning_complexity = SC_Normal;
+    hacking_difficulty = 2;
+    hacking_games = HG_All;
     long_range_radar_range = 30000;
     use_beam_shield_frequencies = true;
     use_system_damage = true;

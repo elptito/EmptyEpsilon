@@ -41,6 +41,12 @@ enum ECommsGmInterception
     CGI_Temp,
     CGI_Always
 };
+enum EHackingGames
+{
+    HG_Mine,
+    HG_Lights,
+    HG_All
+};
 
 class GameGlobalInfo : public MultiplayerObject, public Updatable
 {
@@ -76,6 +82,9 @@ public:
     NebulaInfo nebula_info[max_nebulas];
     EPlayerWarpJumpDrive player_warp_jump_drive_setting;
     EScanningComplexity scanning_complexity;
+    //Hacking difficulty ranges from 0 to 3
+    int hacking_difficulty;
+    EHackingGames hacking_games;
     /*!
      * \brief Range of the science radar.
      */
