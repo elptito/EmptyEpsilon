@@ -8,7 +8,7 @@ EMPMissile::EMPMissile()
 {
 }
 
-void EMPMissile::hitObject(P<SpaceObject> object)
+void EMPMissile::explode()
 {
     DamageInfo info(owner, damage_type, getPosition());
     //Tdelc/Tsht : damage_multiplier (qui fait doublon avec la categorie)
@@ -19,3 +19,16 @@ void EMPMissile::hitObject(P<SpaceObject> object)
     e->setPosition(getPosition());
     e->setOnRadar(true);
 }
+
+
+void EMPMissile::hitObject(P<SpaceObject> object)
+{
+    explode();
+}
+
+void EMPMissile::lifeEnded()
+{
+    explode();
+}
+
+

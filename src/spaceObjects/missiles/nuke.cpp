@@ -8,7 +8,7 @@ Nuke::Nuke()
 {
 }
 
-void Nuke::hitObject(P<SpaceObject> object)
+void Nuke::explode()
 {
     DamageInfo info(owner, damage_type, getPosition());
     SpaceObject::damageArea(getPosition(), category_modifier * blast_range, category_modifier * damage_at_edge * damage_multiplier, category_modifier * damage_at_center * damage_multiplier, info, getRadius());
@@ -18,4 +18,14 @@ void Nuke::hitObject(P<SpaceObject> object)
     e->setPosition(getPosition());
     e->setOnRadar(true);
     e->setExplosionSound("sfx/nuke_explosion.wav");
+}
+
+void Nuke::hitObject(P<SpaceObject> object)
+{
+    explode();
+}
+
+void Nuke::lifeEnded()
+{
+    explode();
 }
