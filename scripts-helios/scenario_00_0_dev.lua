@@ -2,6 +2,8 @@
 -- Description: a place to throw simulations for development tests
 -- Type: Basic
 
+require("helios.lua")
+
 function init()
         setFactionVsFactionState("Free Miners", "FSN", "Friendly")
         setFactionVsFactionState("FSN", "Free Miners", "Friendly")
@@ -15,15 +17,16 @@ function init()
         setFactionVsFactionState("Corp1", "FSN", "Friendly")
         PlayerSpaceship():setTemplate("Gravitas"):setCallSign("PL4"):setFaction("FSN"):setPosition(0, 0):setWarpFrequency(5)
 
-        enemyShips()
+        -- enemyShips()
         -- tactical()
         -- enemyTargets()
         -- targets()
-        probes()
+        -- probes()
 end
 
 function update(delta)
 	--No victory condition
+	updateHelios(delta)
 end
 
 function probes()
