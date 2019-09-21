@@ -353,7 +353,7 @@ void GuiRadarView::drawTargetProjections(sf::RenderTarget& window)
                 continue;
 //            sf::Vector2f fire_position = target_spaceship->getPosition() + sf::rotateVector(target_spaceship->ship_template->model_data->getTubePosition2D(n), target_spaceship->getRotation());
             sf::Vector2f fire_position = target_spaceship->getPosition() + sf::rotateVector(sf::Vector2f(target_spaceship->getRadius()/2,target_spaceship->getRadius()/2),target_spaceship->getRotation()+target_spaceship->weapon_tube[n].getDirection()+135);
-            sf::Vector2f fire_draw_position = radar_screen_center + (getViewPosition() - fire_position) * getScale();
+            sf::Vector2f fire_draw_position = radar_screen_center - (getViewPosition() - fire_position) * getScale();
 
             const MissileWeaponData& data = MissileWeaponData::getDataFor(target_spaceship->weapon_tube[n].getLoadType());
             float fire_angle = target_spaceship->getRotation() + target_spaceship->weapon_tube[n].getDirection();
@@ -451,12 +451,12 @@ void GuiRadarView::drawMissileTubes(sf::RenderTarget& window)
 
     if (target_spaceship)
     {
-        sf::VertexArray a(sf::LinesStrip, target_spaceship->weapon_tube_count * 2);
+        sf::VertexArray a(sf::Lines, target_spaceship->weapon_tube_count * 2);
         for(int n=0; n<target_spaceship->weapon_tube_count; n++)
         {
 //            sf::Vector2f fire_position = target_spaceship->getPosition() + sf::rotateVector(target_spaceship->ship_template->model_data->getTubePosition2D(n), target_spaceship->getRotation());
             sf::Vector2f fire_position = target_spaceship->getPosition() + sf::rotateVector(sf::Vector2f(target_spaceship->getRadius()/2,target_spaceship->getRadius()/2),target_spaceship->getRotation()+target_spaceship->weapon_tube[n].getDirection()+135);
-            sf::Vector2f fire_draw_position = radar_screen_center + (getViewPosition() - fire_position) * getScale();
+            sf::Vector2f fire_draw_position = radar_screen_center - (getViewPosition() - fire_position) * getScale();
 
             float fire_angle = target_spaceship->getRotation() + target_spaceship->weapon_tube[n].getDirection();
 
