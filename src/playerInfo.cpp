@@ -184,9 +184,9 @@ void PlayerInfo::spawnUI()
         if (crew_position[databaseView])
             screen->addStationTab(new DatabaseScreen(screen), databaseView, getCrewPositionName(databaseView), getCrewPositionIcon(databaseView));
       	if (crew_position[relayOfficerNC])
-            screen->addStationTab(new RelayScreen(screen,false), relayOfficer, getCrewPositionName(relayOfficer), getCrewPositionIcon(relayOfficer));
+            screen->addStationTab(new RelayScreen(screen, false), relayOfficer, getCrewPositionName(relayOfficer), getCrewPositionIcon(relayOfficer));
       	if (crew_position[relayHelios])
-            screen->addStationTab(new RelayScreen(screen,false, false), relayHelios, getCrewPositionName(relayHelios), getCrewPositionIcon(relayHelios));
+            screen->addStationTab(new RelayScreen(screen, false, false, false), relayHelios, getCrewPositionName(relayHelios), getCrewPositionIcon(relayHelios));
         if (crew_position[commsView])
             screen->addStationTab(new CommsScreen(screen), commsView, getCrewPositionName(commsView), getCrewPositionIcon(commsView));
         if (crew_position[tacticalRadar])

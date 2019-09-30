@@ -20,7 +20,7 @@
 #include "gui/gui2_togglebutton.h"
 #include "gui/gui2_textentry.h"
 
-RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms, bool has_hack)
+RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms, bool has_hack, bool has_log)
 : GuiOverlay(owner, "RELAY_SCREEN", colorConfig.background),has_comms(has_comms),mode(TargetSelection)
 {
     targets.setAllowWaypointSelection();
@@ -224,7 +224,9 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms, bool has_hack)
 
     hacking_dialog = new GuiHackingDialog(this, "");
 
-    new ShipsLog(this,"extern");
+    if (has_log){
+        new ShipsLog(this,"extern");
+    }
 	if (has_comms)
 		(new GuiCommsOverlay(this))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 }
