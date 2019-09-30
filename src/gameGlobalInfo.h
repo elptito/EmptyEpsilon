@@ -16,6 +16,22 @@ public:
     string textureName;
 };
 
+class ActionItem: public MultiplayerObject
+{
+public:
+    typedef std::function<void(string)> func_t;
+    static PVector<ActionItem> actionItems;
+    string title;
+    string query;
+    string response;
+    func_t accept; // server only
+    func_t decline; // server only
+public:
+    ActionItem();
+    ActionItem(string title, string query, func_t resolve);
+    ActionItem(string title, string query, func_t accept, func_t decline);
+};
+
 class MapLayer
 {
 public:

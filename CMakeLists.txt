@@ -198,6 +198,7 @@ set(SOURCES
 	src/screenComponents/scrollingBanner.cpp
 	src/screenComponents/navigationView.cpp
 	src/screenComponents/passwordEntry.cpp
+	src/screenComponents/actionItemOverlay.cpp
 	src/gui/colorConfig.cpp
 	src/gui/hotkeyConfig.cpp
 	src/gui/joystickConfig.cpp

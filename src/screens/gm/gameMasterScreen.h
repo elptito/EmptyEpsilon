@@ -7,6 +7,7 @@
 #include "gui/gui2_canvas.h"
 #include "gui/gui2_overlay.h"
 #include "screenComponents/targetsContainer.h"
+#include "gameGlobalInfo.h"
 
 class GuiGlobalMessageEntry;
 class GuiObjectCreationScreen;
@@ -25,6 +26,9 @@ class GuiObjectCreationView;
 class GuiGlobalMessageEntryView;
 class GuiFactions;
 class CpuShip;
+class GuiEntryList;
+class ActionItemOverlay;
+
 class GameMasterScreen : public GuiCanvas, public Updatable
 {
 private:
@@ -49,6 +53,8 @@ private:
     bool managing_layers;
     GuiButton* manageLayersButton;
     GuiButton* layerButtons[GameGlobalInfo::max_map_layers];
+    GuiListbox* actionItems;
+    ActionItemOverlay* action_item_dialog;
     GuiTextEntry* position_text;
     GuiAutoLayout* info_layout;
     std::vector<GuiKeyValueDisplay*> info_items;
@@ -59,6 +65,7 @@ private:
     GuiButton* global_message_button;
     GuiToggleButton* pause_button;
     GuiToggleButton* intercept_comms_button;
+    GuiToggleButton* alerts_button;
     GuiButton* tweak_button;
     GuiButton* factions_button;
     GuiToggleButton* possess_button;

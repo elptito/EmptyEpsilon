@@ -12,15 +12,16 @@
 #include "factions.h"
 
 #include "screenComponents/radarView.h"
+#include "screenComponents/actionItemOverlay.h"
 
 #include "gui/gui2_togglebutton.h"
 #include "gui/gui2_selector.h"
 #include "gui/gui2_autolayout.h"
+#include "gui/gui2_entrylist.h" 
 #include "gui/gui2_listbox.h"
 #include "gui/gui2_label.h"
 #include "gui/gui2_keyvaluedisplay.h"
 #include "gui/gui2_textentry.h"
-#include "screenComponents/missileTubeControls.h"
 
 GameMasterScreen::GameMasterScreen()
 : click_and_drag_state(CD_None)
@@ -50,7 +51,17 @@ GameMasterScreen::GameMasterScreen()
     });
     intercept_comms_button->setValue((int)gameGlobalInfo->intercept_all_comms_to_gm)->setTextSize(20)->setPosition(300, 20, ATopLeft)->setSize(200, 25);
     intercept_comms_button->setVisible(gameGlobalInfo->intercept_all_comms_to_gm < CGI_Always);
+
+    alerts_button = new GuiToggleButton(this, "ALERTS_BUTTON", "0 Alerts", [](bool value) {});
+    alerts_button->setValue(false)->setTextSize(20)->setPosition(300, 50, ATopLeft)->setSize(200, 25);
     
+    actionItems = new GuiListbox(this, "ACTION_ITEMS", [this](int index, string value)
+    {
+        alerts_button->setValue(false);
+        action_item_dialog->setIndex(index);
+    });
+    actionItems->setPosition(300, 100, ATopLeft)->setSize(250, 500);
+
     faction_selector = new GuiSelector(this, "FACTION_SELECTOR", [this](int index, string value) {
         gameMasterActions->commandSetFactionId(index, targets.getTargets());
     });
@@ -226,6 +237,8 @@ GameMasterScreen::GameMasterScreen()
         chat_dialog_per_ship[n]->hide();
     }
 
+    action_item_dialog = new ActionItemOverlay(this);
+    action_item_dialog->setIndex(-1);
     player_tweak_dialog = new GuiObjectTweak(this, TW_Player);
     player_tweak_dialog->hide();
     ship_tweak_dialog = new GuiObjectTweak(this, TW_Ship);
@@ -263,6 +276,17 @@ GameMasterScreen::GameMasterScreen()
 
 void GameMasterScreen::update(float delta)
 {
+    if (ActionItem::actionItems.size() != (size_t) this->actionItems->entryCount()){
+        std::vector<string> options;
+        foreach(ActionItem, ai, ActionItem::actionItems){
+            options.emplace_back(ai->title);
+        }
+        this->actionItems->setOptions(options);
+    }
+    this->actionItems->setSelectionIndex(-1)->setVisible(alerts_button->getValue());
+
+    alerts_button->setText(string(this->actionItems->entryCount(), 0) + " Alerts");
+
     float mouse_wheel_delta = InputHandler::getMouseWheelDelta();
     if (mouse_wheel_delta != 0.0)
     {

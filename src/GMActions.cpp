@@ -18,6 +18,7 @@ const static int16_t CMD_DESTROY = 0x0009;
 const static int16_t CMD_SEND_COMM_TO_PLAYER_SHIP = 0x000A;
 const static int16_t CMD_SET_FACTIONS_STATE = 0x000B;
 const static int16_t CMD_SET_POSESSED = 0x000C;
+const static int16_t CMD_RESOLVE_ACTION_ITEM = 0x000D;
 
 P<GameMasterActions> gameMasterActions;
 
@@ -213,6 +214,21 @@ void GameMasterActions::onReceiveClientCommand(int32_t client_id, sf::Packet& pa
             target->possessed = posessed;
         }
         break;
+        case CMD_RESOLVE_ACTION_ITEM:
+        {
+            int index;
+            bool accepted; 
+            string response;
+            packet >> index >> accepted >> response;
+            P<ActionItem> ai = ActionItem::actionItems.at(index);
+            ai->response = response;
+            if (accepted){
+                ai->accept(response);
+            } else {
+                ai->decline(response);
+            }
+        }
+        break;
     }
 }
 
@@ -288,6 +304,13 @@ void GameMasterActions::commandSetPosessed(P<CpuShip> target, bool posessed)
     packet << CMD_SET_POSESSED << target << posessed;
     sendClientCommand(packet);
 }
+
+void GameMasterActions::commandResolveActionItem(int index, bool accepted, string response){
+    sf::Packet packet;
+    packet << CMD_RESOLVE_ACTION_ITEM << index << accepted << response;
+    sendClientCommand(packet);
+}
+
 void GameMasterActions::executeContextualGoTo(sf::Vector2f position, bool force, PVector<SpaceObject> selection)
 {
     P<SpaceObject> target;

@@ -3,6 +3,26 @@
 #include "resources.h"
 #include <regex>
 
+PVector<ActionItem> ActionItem::actionItems = PVector<ActionItem>();
+// 
+// PVector<ActionItem> ActionItem::actionItems;
+//
+REGISTER_MULTIPLAYER_CLASS(ActionItem, "ActionItem");
+ActionItem::ActionItem(): MultiplayerObject("ActionItem"){
+    registerMemberReplication(&title);
+    registerMemberReplication(&query);
+    registerMemberReplication(&response);
+    ActionItem::actionItems.push_back(this); // TODO memory leak?
+}
+ActionItem::ActionItem(string title, string query, func_t resolve): ActionItem(title, query, resolve, resolve){
+}
+ActionItem::ActionItem(string title, string query, func_t accept, func_t decline): ActionItem(){
+    this->title = title;
+    this->query = query;
+    this->accept = accept;
+    this->decline = decline;
+}
+
 static inline sf::Packet& operator << (sf::Packet& packet, const ECommsGmInterception& cgi) { return packet << int(cgi); }
 static inline sf::Packet& operator >> (sf::Packet& packet, ECommsGmInterception& cgi) { 
     int value;

@@ -38,6 +38,7 @@ public:
     void commandSendCommToPlayerShip(P<PlayerSpaceship> target, string line);
     void commandSetFactionsState(int faction_a, int faction_b, int stateIdx);
     void commandSetPosessed(P<CpuShip> target, bool posessed);
+    void commandResolveActionItem(int index, bool accepted, string response);
     virtual void onReceiveClientCommand(int32_t client_id, sf::Packet& packet);
     
 private:

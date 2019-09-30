@@ -44,7 +44,7 @@ private:
     GuiToggleButton* link_to_3D_port_button;
     GuiButton* delete_waypoint_button;
     GuiButton* launch_probe_button;
-    GuiButton* launch_drone_button;
+    GuiButton* open_mid_range_comms_button;
     GuiAutoLayout* view_controls;
     bool position_text_custom;
     GuiTextEntry* position_text;

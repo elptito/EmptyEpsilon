@@ -20,7 +20,7 @@ function init()
         -- enemyShips()
         -- tactical()
         -- enemyTargets()
-        -- targets()
+        targets()
         -- probes()
 end
 

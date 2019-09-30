@@ -165,6 +165,7 @@ PlayerSpaceship::PlayerSpaceship()
     hull_damage_indicator = 0.0;
     jump_indicator = 0.0;
     comms_state = CS_Inactive;
+    mid_range_comms_state = CS_Inactive;
     comms_open_delay = 0.0;
     shield_calibration_delay = 0.0;
     warp_calibration_delay = 0.0;
@@ -210,9 +211,11 @@ PlayerSpaceship::PlayerSpaceship()
     registerMemberReplication(&max_coolant);
     registerMemberReplication(&auto_coolant_enabled);
     registerMemberReplication(&beam_system_target);
+    registerMemberReplication(&mid_range_comms_state);
     registerMemberReplication(&comms_state);
     registerMemberReplication(&comms_open_delay, 1.0);
     registerMemberReplication(&comms_reply_message);
+    registerMemberReplication(&mid_range_comms_target_name);
     registerMemberReplication(&comms_target_name);
     registerMemberReplication(&comms_incomming_message);
     registerMemberReplication(&waypoints);
@@ -1089,6 +1092,20 @@ void PlayerSpaceship::closeComms()
     }
 }
 
+void PlayerSpaceship::acceptedMidRangeCall(string response){
+    if (mid_range_comms_state == CS_OpeningChannel){
+        mid_range_comms_state = CS_Inactive;
+        addToShipLog("Opened voice channel to " + mid_range_comms_target_name, colorConfig.log_generic);
+    }
+}
+
+void PlayerSpaceship::closeMidRangeComms(string response){
+    if (mid_range_comms_state == CS_OpeningChannel){
+        mid_range_comms_state = CS_Inactive;
+        addToShipLog("Voice communication to "+ mid_range_comms_target_name+ " failed: " + response, colorConfig.log_generic); 
+    }
+}
+
 void PlayerSpaceship::handleClientCommand(int32_t client_id, int16_t command, sf::Packet& packet)
 {
     switch(command)
@@ -1166,6 +1183,29 @@ void PlayerSpaceship::handleClientCommand(int32_t client_id, int16_t command, sf
                 setSystemCoolantRequest(system, request);
         }
         break;
+    case CMD_OPEN_MID_RANGE_COMM:
+        {
+            int32_t id;
+            packet >> id;
+            if (mid_range_comms_state == CS_Inactive || mid_range_comms_state == CS_BeingHailed || mid_range_comms_state == CS_BeingHailedByGM || mid_range_comms_state == CS_ChannelClosed)
+            {
+                mid_range_comms_target = game_server->getObjectById(id);
+                if (mid_range_comms_target && length(getPosition() - mid_range_comms_target->getPosition()) < gameGlobalInfo->long_range_radar_range)
+                {
+                    mid_range_comms_state = CS_OpeningChannel;
+                    comms_open_delay = comms_channel_open_time;
+                    mid_range_comms_target_name = mid_range_comms_target->getCallSign();
+                    comms_incomming_message = "Opened mid-range comms with " + mid_range_comms_target_name;
+                    addToShipLog("Hailing (mid range): " + mid_range_comms_target_name, colorConfig.log_generic);
+                    new ActionItem(string("Calling: " + mid_range_comms_target_name), string("(type reason if declining)"), 
+                        [this](string response){acceptedMidRangeCall(response);}, 
+                        [this](string response){closeMidRangeComms(response);});
+                } else {
+                    mid_range_comms_state = CS_Inactive;
+                }
+            }
+        }
+        break;
     case CMD_OPEN_TEXT_COMM:
         if (comms_state == CS_Inactive || comms_state == CS_BeingHailed || comms_state == CS_BeingHailedByGM || comms_state == CS_ChannelClosed)
         {
@@ -1179,7 +1219,7 @@ void PlayerSpaceship::handleClientCommand(int32_t client_id, int16_t command, sf
                 comms_open_delay = comms_channel_open_time;
                 comms_target_name = comms_target->getCallSign();
                 comms_incomming_message = "Opened comms with " + comms_target_name;
-                addToShipLog("Hailing: " + comms_target_name, colorConfig.log_generic);
+                addToShipLog("Hailing (long range): " + comms_target_name, colorConfig.log_generic);
             }else{
                 comms_state = CS_Inactive;
             }
@@ -1563,6 +1603,16 @@ void PlayerSpaceship::commandSetSystemCoolantRequest(ESystem system, float coola
     sf::Packet packet;
     systems[system].coolant_request = coolant_request;
     packet << CMD_SET_SYSTEM_COOLANT_REQUEST << system << coolant_request;
+    sendClientCommand(packet);
+}
+
+void PlayerSpaceship::commandOpenVoiceComm(P<SpaceObject> obj)
+{
+    if (!obj || 
+        length(getPosition() - obj->getPosition()) > gameGlobalInfo->long_range_radar_range)
+        return;
+    sf::Packet packet;
+    packet << CMD_OPEN_MID_RANGE_COMM << obj->getMultiplayerId();
     sendClientCommand(packet);
 }
 

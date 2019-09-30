@@ -124,7 +124,11 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms, bool has_hack)
     
     // Open comms button.
     (new GuiOpenCommsButton(option_buttons, "OPEN_COMMS_BUTTON", &targets))->setSize(GuiElement::GuiSizeMax, 50);
-
+    open_mid_range_comms_button = new GuiButton(option_buttons, "OPEN_MID_RANGE_COMMS_BUTTON", "Open mid-range comms", [this]() {
+        if (my_spaceship && targets.get())
+            my_spaceship->commandOpenVoiceComm(targets.get());
+    });
+    open_mid_range_comms_button->setSize(GuiElement::GuiSizeMax, 50);
     // Hack target
     hack_target_button = new GuiButton(option_buttons, "HACK_TARGET", "Start hacking", [this, has_hack](){
         P<SpaceObject> target = targets.get();
@@ -259,6 +263,7 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
     GuiOverlay::onDraw(window);
 
     info_faction->setValue("-");
+    open_mid_range_comms_button->disable();            
 
     if (targets.get() && my_spaceship)
     {
@@ -284,7 +289,7 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
             targets.clear();
     }
 
-    if (targets.get())
+    if (targets.get() && my_spaceship)
     {
         P<SpaceObject> obj = targets.get();
         P<SpaceShip> ship = obj;
@@ -319,13 +324,16 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
             link_to_3D_port_button->setValue(false);
             link_to_3D_port_button->disable();
         }
-        if (my_spaceship && obj->canBeHackedBy(my_spaceship))
+        if (obj->canBeHackedBy(my_spaceship))
         {
             hack_target_button->enable();
         }else{
             hack_target_button->disable();
         }
-    }else{
+        if (my_spaceship->isMidRangeCommsInactive() && (ship || station) && length(my_spaceship->getPosition() - obj->getPosition()) < gameGlobalInfo->long_range_radar_range){
+            open_mid_range_comms_button->enable();            
+        }
+    } else {
         hack_target_button->disable();
         link_to_science_button->disable();
         link_to_science_button->setValue(false);

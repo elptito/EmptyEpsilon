@@ -14,9 +14,11 @@ class GuiTextEntry;
 class GuiCommsOverlay : public GuiElement
 {
 private:
+    GuiPanel* mid_range_opening_box;
+    GuiProgressbar* mid_range_opening_progress;
+    
     GuiPanel* opening_box;
     GuiProgressbar* opening_progress;
-    GuiButton* opening_cancel;
     
     GuiPanel* hailed_box;
     GuiLabel* hailed_label;

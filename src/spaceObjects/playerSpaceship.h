@@ -63,6 +63,8 @@ protected:
     static const int16_t CMD_HACK_TASK = 0x003A;
     static const int16_t CMD_SCAN_TASK = 0x003B;
     static const int16_t CMD_TASK_COMPLETED = 0x003C;
+    static const int16_t CMD_OPEN_MID_RANGE_COMM = 0x003D; //VOICE communication
+
 public:
 
     // Subsystem effectiveness base rates
@@ -168,9 +170,12 @@ private:
     int shield_sound;
     // Comms variables
     ECommsState comms_state;
+    ECommsState mid_range_comms_state;
     float comms_open_delay;
+    string mid_range_comms_target_name;
     string comms_target_name;
     string comms_incomming_message;
+    P<SpaceObject> mid_range_comms_target; // Server only
     P<SpaceObject> comms_target; // Server only
     std::vector<int> comms_reply_id;
     std::vector<string> comms_reply_message;
@@ -208,6 +213,8 @@ public:
     PlayerSpaceship();
 
     // Comms functions
+    bool isMidRangeCommsInactive() { return mid_range_comms_state == CS_Inactive; }
+    bool isMidRangeCommsOpening() { return mid_range_comms_state == CS_OpeningChannel; }
     bool isCommsInactive() { return comms_state == CS_Inactive; }
     bool isCommsOpening() { return comms_state == CS_OpeningChannel; }
     bool isCommsBeingHailed() { return comms_state == CS_BeingHailed || comms_state == CS_BeingHailedByGM; }
@@ -234,6 +241,8 @@ public:
     void addCommsReply(int32_t id, string message);
     void closeComms();
 
+    void acceptedMidRangeCall(string response);
+    void closeMidRangeComms(string response);
     void setEnergyLevel(float amount) { energy_level = std::max(0.0f, std::min(max_energy_level, amount)); }
     void setEnergyLevelMax(float amount) { max_energy_level = std::max(0.0f, amount); energy_level = std::min(energy_level, max_energy_level); }
     float getEnergyLevel() { return energy_level; }
@@ -260,7 +269,9 @@ public:
     void commandScan(P<SpaceObject> object);
     void commandSetSystemPowerRequest(ESystem system, float power_level);
     void commandSetSystemCoolantRequest(ESystem system, float coolant_level);
+    void commandOpenVoiceComm(P<SpaceObject> obj);
     void commandOpenTextComm(P<SpaceObject> obj);
+    void commandCloseVoiceComm();
     void commandCloseTextComm();
     void commandAnswerCommHail(bool awnser);
     void commandSendComm(uint8_t index);
