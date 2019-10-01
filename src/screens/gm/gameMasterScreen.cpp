@@ -287,6 +287,23 @@ void GameMasterScreen::update(float delta)
 
     alerts_button->setText(string(this->actionItems->entryCount(), 0) + " Alerts");
 
+
+    // If we have an impulse power, loop the engine sound.
+    string notification_sound_file = "notification.wav";
+    if (this->actionItems->entryCount() > 0){
+        if (notification_sound > -1) {
+            soundManager->setSoundVolume(notification_sound, 10.0f);
+            soundManager->setSoundPitch(notification_sound, 0.7f);
+        } else {
+            notification_sound = soundManager->playSound(notification_sound_file, 0.7f, 30.0f, true);
+        }
+    } else if (notification_sound > -1) {
+        // If we don't have action items, stop the sound.
+        soundManager->stopSound(notification_sound);
+        notification_sound = -1;
+    }
+
+
     float mouse_wheel_delta = InputHandler::getMouseWheelDelta();
     if (mouse_wheel_delta != 0.0)
     {

@@ -66,6 +66,7 @@ private:
     GuiToggleButton* pause_button;
     GuiToggleButton* intercept_comms_button;
     GuiToggleButton* alerts_button;
+    int notification_sound = -1;
     GuiButton* tweak_button;
     GuiButton* factions_button;
     GuiToggleButton* possess_button;
