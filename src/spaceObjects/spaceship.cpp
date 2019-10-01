@@ -179,6 +179,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     max_energy_level = 1000;
     extern_log_size = 0;
     intern_log_size = 1;
+    excalibur_log_size = 1;
     turnSpeed = 0.0f;
 
     registerMemberReplication(&target_rotation, 1.5);
@@ -215,6 +216,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     registerMemberReplication(&radar_trace);
     registerMemberReplication(&ships_log_extern);
     registerMemberReplication(&ships_log_intern);
+    registerMemberReplication(&ships_log_excalibur);
     registerMemberReplication(&warp_frequency);
 
     for(int n=0; n<SYS_COUNT; n++)
@@ -284,6 +286,12 @@ void SpaceShip::addToShipLog(string message, sf::Color color, string station)
             ships_log_intern.erase(ships_log_intern.begin());
         ships_log_intern.emplace_back(string(engine->getElapsedTime(), 1) + string(": "), message, color, station);
     }
+    else if (station == "excalibur" && excalibur_log_size)
+    {
+        if (ships_log_excalibur.size() > excalibur_log_size)
+            ships_log_excalibur.erase(ships_log_excalibur.begin());
+        ships_log_excalibur.emplace_back(string(engine->getElapsedTime(), 1) + string(": "), message, color, station);
+    }
 }
 
 void SpaceShip::addToShipLogBy(string message, P<SpaceObject> target)
@@ -304,6 +312,8 @@ const std::vector<SpaceShip::ShipLogEntry>& SpaceShip::getShipsLog(string statio
 {
     if (station == "intern")
         return ships_log_intern;
+    else if (station == "excalibur")
+        return ships_log_excalibur;
     return ships_log_extern;
 }
 

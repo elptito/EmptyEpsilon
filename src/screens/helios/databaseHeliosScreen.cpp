@@ -7,8 +7,10 @@
 #include "gui/gui2_keyvaluedisplay.h"
 #include "gui/gui2_scrolltext.h"
 #include "gui/gui2_image.h"
+#include "gui/gui2_label.h"
 #include "screenComponents/rotatingModelView.h"
 #include "screenComponents/passwordEntry.h"
+#include "screens/extra/shipLogScreen.h"
 
 #define MARGIN 20
 DatabaseHeliosScreen::DatabaseHeliosScreen(GuiContainer* owner, bool linkedToScience)
@@ -42,7 +44,15 @@ DatabaseHeliosScreen::DatabaseHeliosScreen(GuiContainer* owner, bool linkedToSci
     fillListBox();
 
     password = new PasswordEntry(this);
+    defaultRightSide = new GuiElement(this, "EXCALIBUR");
+    defaultRightSide->setPosition(400, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax)->setMargins(20);
+    if (linkedToScience){
+        (new GuiLabel(defaultRightSide, "", "Linked to science station", 40))->setPosition(0, 0, ACenter);
+    } else {
+        (new ShipLogScreen(defaultRightSide, "excalibur", true, false));
+    }
     (new GuiCustomShipFunctions(this, databaseView, "", my_spaceship))->setPosition(-20, 120, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
+    display(nullptr);
 }
 
 void DatabaseHeliosScreen::onDraw(sf::RenderTarget& window){
@@ -117,31 +127,33 @@ void DatabaseHeliosScreen::display(P<ScienceDatabase> entry)
     database_entry = new GuiAutoLayout(this, "DATABASE_ENTRY", GuiAutoLayout::LayoutVerticalColumns);
     database_entry->setPosition(400, 20, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
     
-    if (!entry)
-        return;
+    if (entry){
+        defaultRightSide->hide();
+        if (entry->keyValuePairs.size() > 0) {
+            GuiAutoLayout* vLayout = new GuiAutoLayout(database_entry, "DATABASE_ENTRY_V_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+            vLayout->setMargins(MARGIN);
 
-    if (entry->keyValuePairs.size() > 0) {
-        GuiAutoLayout* vLayout = new GuiAutoLayout(database_entry, "DATABASE_ENTRY_V_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
-        vLayout->setMargins(MARGIN);
-
-        for(unsigned int n=0; n<entry->keyValuePairs.size(); n++) {
-            (new GuiKeyValueDisplay(vLayout, "", 0.37, entry->keyValuePairs[n].key, entry->keyValuePairs[n].value))->setSize(GuiElement::GuiSizeMax, 40);
+            for(unsigned int n=0; n<entry->keyValuePairs.size(); n++) {
+                (new GuiKeyValueDisplay(vLayout, "", 0.37, entry->keyValuePairs[n].key, entry->keyValuePairs[n].value))->setSize(GuiElement::GuiSizeMax, 40);
+            }
         }
-    }
-    if (entry->model_data || entry->image_name.length() > 0 || entry->longDescription.length() > 0){
-        GuiAutoLayout* hLayout = new GuiAutoLayout(database_entry, "DATABASE_ENTRY_H_LAYOUT", GuiAutoLayout::LayoutHorizontalRows);
-        if (entry->image_name.length() > 0) {
-            (new GuiImage(hLayout, "DATABASE_IMAGE", entry->image_name));
+        if (entry->model_data || entry->image_name.length() > 0 || entry->longDescription.length() > 0){
+            GuiAutoLayout* hLayout = new GuiAutoLayout(database_entry, "DATABASE_ENTRY_H_LAYOUT", GuiAutoLayout::LayoutHorizontalRows);
+            if (entry->image_name.length() > 0) {
+                (new GuiImage(hLayout, "DATABASE_IMAGE", entry->image_name));
+            }
+            if (entry->model_data) {
+                (new GuiRotatingModelView(hLayout, "DATABASE_MODEL_VIEW", entry->model_data))->setMargins(MARGIN);
+            }
+            if (entry->longDescription.length() > 0) {
+                (new GuiScrollText(hLayout, "DATABASE_LONG_DESCRIPTION", entry->longDescription))->setTextSize(24)->setMargins(MARGIN);
+            }
         }
-        if (entry->model_data) {
-            (new GuiRotatingModelView(hLayout, "DATABASE_MODEL_VIEW", entry->model_data))->setMargins(MARGIN);
+        if (entry->items.size() > 0) {
+            selected_entry = entry;
+            fillListBox();
         }
-        if (entry->longDescription.length() > 0) {
-            (new GuiScrollText(hLayout, "DATABASE_LONG_DESCRIPTION", entry->longDescription))->setTextSize(24)->setMargins(MARGIN);
-        }
-    }
-    if (entry->items.size() > 0) {
-        selected_entry = entry;
-        fillListBox();
+    } else {
+        defaultRightSide->show();
     }
 }

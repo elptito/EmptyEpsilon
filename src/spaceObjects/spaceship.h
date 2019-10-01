@@ -261,8 +261,10 @@ public:
 
     uint8 extern_log_size;
     uint8 intern_log_size;
+    uint8 excalibur_log_size;
     std::vector<ShipLogEntry> ships_log_extern;
     std::vector<ShipLogEntry> ships_log_intern;
+    std::vector<ShipLogEntry> ships_log_excalibur;
     
 
     SpaceShip(string multiplayerClassName, float multiplayer_significant_range=-1);

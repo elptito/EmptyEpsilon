@@ -190,7 +190,9 @@ PlayerSpaceship::PlayerSpaceship()
 
     extern_log_size = (uint8)1000;
     intern_log_size = (uint8)1000;
+    excalibur_log_size = (uint8)1000;
     intern_in_query = false;
+    excalibur_in_query = false;
     // For now, set player ships to always be fully scanned to all other ships
     for(unsigned int faction_id = 0; faction_id < factionInfo.size(); faction_id++)
         setScannedStateForFaction(faction_id, SS_FullScan);
@@ -278,8 +280,9 @@ PlayerSpaceship::PlayerSpaceship()
     // Initialize player ship callsigns with a "PL" designation.
     setCallSign("PL" + string(getMultiplayerId()));
 
-    addToShipLog("Start of extern log", colorConfig.log_generic,"extern");
-    addToShipLog("Start of intern log", colorConfig.log_generic,"intern");
+    addToShipLog("Start of extern log", colorConfig.log_generic, "extern");
+    addToShipLog("Start of intern log", colorConfig.log_generic, "intern");
+    addToShipLog("Excalibur 3.0 initialized", colorConfig.log_generic, "excalibur");
 }
 
 void PlayerSpaceship::update(float delta)
@@ -1559,21 +1562,31 @@ void PlayerSpaceship::handleClientCommand(int32_t client_id, int16_t command, sf
         {
             string message, station;
             packet >> message >> station;
-            if (station == "intern" && intern_in_query){
+            if ((station == "intern" && intern_in_query) || (station == "excalibur" && excalibur_in_query)){
                 addToShipLog("failed request: " + message, colorConfig.log_receive_enemy, station);
                 addToShipLog("previous request in process. try again later.", colorConfig.log_receive_enemy, station);
             } else {
                 if (station == "intern"){
                     intern_in_query = true;
-                }
+                } else if (station == "excalibur"){
+                    excalibur_in_query = true;
+                } 
                 addToShipLog("Request: " + message, colorConfig.log_send, station);
                 new ActionItem(string("Request: " + station + "@"+ getCallSign() ), message, 
                     [this, station](string response){
-                        intern_in_query = false;
+                        if (station == "intern"){
+                            intern_in_query = false;
+                        } else if (station == "excalibur"){
+                            excalibur_in_query = false;
+                        }
                         addToShipLog("Request resolved: " + response, colorConfig.log_receive_friendly, station);
                     }, 
                     [this, station](string response){
-                        intern_in_query = false;
+                        if (station == "intern"){
+                            intern_in_query = false;
+                        } else if (station == "excalibur"){
+                            excalibur_in_query = false;
+                        }
                         addToShipLog("Request error: " + response, colorConfig.log_receive_enemy, station);
                     });
             }

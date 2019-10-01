@@ -182,6 +182,7 @@ private:
     std::vector<string> comms_reply_message;
     CommsScriptInterface comms_script_interface;  //Server only
     bool intern_in_query;
+    bool excalibur_in_query;
 
 public:
     ESystem auto_repairing_system;

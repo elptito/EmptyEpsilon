@@ -17,6 +17,7 @@ class DatabaseHeliosScreen : public GuiOverlay
     PasswordEntry* password;
     const bool linkedToScience;
     P<ScienceDatabase> displayed_entry;
+    GuiElement* defaultRightSide;
 public:
     DatabaseHeliosScreen(GuiContainer* owner, bool linkedToScience);
     virtual void onDraw(sf::RenderTarget& window) override;
