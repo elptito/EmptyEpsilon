@@ -5,6 +5,7 @@
 
 class GuiAdvancedScrollText;
 class GuiTextEntry;
+class GuiToggleButton;
 
 class ShipLogScreen : public GuiOverlay
 {
@@ -12,8 +13,9 @@ private:
     string station;
     GuiAdvancedScrollText* log_text;
     GuiTextEntry* new_line;
+    GuiToggleButton* mode;
 public:
-    ShipLogScreen(GuiContainer* owner, string station, bool queries = false);
+    ShipLogScreen(GuiContainer* owner, string station, bool queries = false, bool log = true);
     
     void onDraw(sf::RenderTarget& window) override;
 };

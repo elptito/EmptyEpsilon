@@ -2,25 +2,28 @@
 #include "playerInfo.h"
 #include "spaceObjects/playerSpaceship.h"
 #include "gui/gui2_textentry.h"
-
+#include "gui/gui2_togglebutton.h"
 #include "gui/gui2_advancedscrolltext.h"
 
-ShipLogScreen::ShipLogScreen(GuiContainer* owner, string station, bool queries)
+ShipLogScreen::ShipLogScreen(GuiContainer* owner, string station, bool queries, bool log)
 : GuiOverlay(owner, "SHIP_LOG_SCREEN", colorConfig.background), station(station)
 {
     (new GuiOverlay(this, "", sf::Color::White))->setTextureTiled("gui/BackgroundCrosses");
-
     log_text = new GuiAdvancedScrollText(this, "SHIP_LOG");
     log_text->enableAutoScrollDown();
     log_text->setPosition(50, -50, EGuiAlign::ABottomLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
-    new_line = new GuiTextEntry(this, "", "");
-    new_line->setPosition(0, 0, EGuiAlign::ABottomLeft)->setSize(GuiElement::GuiSizeMax, 50);
-    if (queries){
-        new_line->validator([this](string text){return !text.startswith(">");});
+    mode = new GuiToggleButton(this, "MODE_BUTTON", "log", [this](bool value){
+        mode->setText(value? "request" : "log");
+    });
+    if (queries != log){
+        mode->setValue(queries)->hide();
     }
+    mode->setPosition(0, 0, EGuiAlign::ABottomLeft)->setSize(150, 50);
+    new_line = new GuiTextEntry(this, "NEW_LINE", "");
+    new_line->setPosition(mode->isVisible()? 150 : 0, 0, EGuiAlign::ABottomLeft)->setSize(GuiElement::GuiSizeMax, 50);
     new_line->enterCallback([this, queries](string text){
-        if (queries && !new_line->isValid()) {
-            my_spaceship->commandSendQuery(text.substr(1), this->station);
+        if (mode->getValue()) {
+            my_spaceship->commandSendQuery(text, this->station);
         } else {
             my_spaceship->commandAddLogLine(text, this->station);
         }
