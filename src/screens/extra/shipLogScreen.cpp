@@ -5,7 +5,7 @@
 
 #include "gui/gui2_advancedscrolltext.h"
 
-ShipLogScreen::ShipLogScreen(GuiContainer* owner, string station)
+ShipLogScreen::ShipLogScreen(GuiContainer* owner, string station, bool queries)
 : GuiOverlay(owner, "SHIP_LOG_SCREEN", colorConfig.background), station(station)
 {
     (new GuiOverlay(this, "", sf::Color::White))->setTextureTiled("gui/BackgroundCrosses");
@@ -15,8 +15,15 @@ ShipLogScreen::ShipLogScreen(GuiContainer* owner, string station)
     log_text->setPosition(50, -50, EGuiAlign::ABottomLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
     new_line = new GuiTextEntry(this, "", "");
     new_line->setPosition(0, 0, EGuiAlign::ABottomLeft)->setSize(GuiElement::GuiSizeMax, 50);
-    new_line->enterCallback([this](string text){
-        my_spaceship->commandAddLogLine(text, this->station);
+    if (queries){
+        new_line->validator([this](string text){return !text.startswith(">");});
+    }
+    new_line->enterCallback([this, queries](string text){
+        if (queries && !new_line->isValid()) {
+            my_spaceship->commandSendQuery(text.substr(1), this->station);
+        } else {
+            my_spaceship->commandAddLogLine(text, this->station);
+        }
         new_line->setText("");
     });
 }

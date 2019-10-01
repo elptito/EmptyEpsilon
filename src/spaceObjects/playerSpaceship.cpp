@@ -190,7 +190,7 @@ PlayerSpaceship::PlayerSpaceship()
 
     extern_log_size = (uint8)1000;
     intern_log_size = (uint8)1000;
-
+    intern_in_query = false;
     // For now, set player ships to always be fully scanned to all other ships
     for(unsigned int faction_id = 0; faction_id < factionInfo.size(); faction_id++)
         setScannedStateForFaction(faction_id, SS_FullScan);
@@ -1536,7 +1536,7 @@ void PlayerSpaceship::handleClientCommand(int32_t client_id, int16_t command, sf
                 ScienceTask::addScanTask(scienceTasks, my_spaceship->max_science_tasks, target_id);
         }
         break;
-        case CMD_TASK_COMPLETED:
+    case CMD_TASK_COMPLETED:
         {
             int taskIndex;
             bool success;
@@ -1553,6 +1553,31 @@ void PlayerSpaceship::handleClientCommand(int32_t client_id, int16_t command, sf
                 }
                 task.clear();
             }
+        }
+        break;
+    case CMD_SEND_QUERY:
+        {
+            string message, station;
+            packet >> message >> station;
+            if (station == "intern" && intern_in_query){
+                addToShipLog("failed request: " + message, colorConfig.log_receive_enemy, station);
+                addToShipLog("previous request in process. try again later.", colorConfig.log_receive_enemy, station);
+            } else {
+                if (station == "intern"){
+                    intern_in_query = true;
+                }
+                addToShipLog("Request: " + message, colorConfig.log_send, station);
+                new ActionItem(string("Request: " + station + "@"+ getCallSign() ), message, 
+                    [this, station](string response){
+                        intern_in_query = false;
+                        addToShipLog("Request resolved: " + response, colorConfig.log_receive_friendly, station);
+                    }, 
+                    [this, station](string response){
+                        intern_in_query = false;
+                        addToShipLog("Request error: " + response, colorConfig.log_receive_enemy, station);
+                    });
+            }
+            // TODO
         }
         break;
     default:
@@ -1820,6 +1845,12 @@ void PlayerSpaceship::commandAddScanTask(P<SpaceObject> object){
 void PlayerSpaceship::commandCompleteScienceTask(int taskIndex, bool success){
     sf::Packet packet;
     packet << CMD_TASK_COMPLETED << taskIndex << success;
+    sendClientCommand(packet);
+}
+
+void PlayerSpaceship::commandSendQuery(string message, string station){
+    sf::Packet packet;
+    packet << CMD_SEND_QUERY << message << station;
     sendClientCommand(packet);
 }
 

@@ -204,7 +204,7 @@ void PlayerInfo::spawnUI()
         if (crew_position[externLog])
             screen->addStationTab(new ShipLogScreen(screen, "extern"), externLog, getCrewPositionName(externLog), getCrewPositionIcon(externLog));
         if (crew_position[internLog])
-            screen->addStationTab(new ShipLogScreen(screen, "intern"), internLog, getCrewPositionName(internLog), getCrewPositionIcon(internLog));
+            screen->addStationTab(new ShipLogScreen(screen, "intern", true), internLog, getCrewPositionName(internLog), getCrewPositionIcon(internLog));
         //Ship log screen, if you have comms, you have ships log. (note this is mostly replaced by the [at the bottom of the screen openable log]
         if (crew_position[singlePilot])
             screen->addStationTab(new ShipLogScreen(screen, "intern"), max_crew_positions, "Ships log", "");

@@ -13,7 +13,7 @@ private:
     GuiAdvancedScrollText* log_text;
     GuiTextEntry* new_line;
 public:
-    ShipLogScreen(GuiContainer* owner, string station);
+    ShipLogScreen(GuiContainer* owner, string station, bool queries = false);
     
     void onDraw(sf::RenderTarget& window) override;
 };

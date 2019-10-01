@@ -30,6 +30,8 @@ public:
     ActionItem();
     ActionItem(string title, string query, func_t resolve);
     ActionItem(string title, string query, func_t accept, func_t decline);
+
+    void destroy();
 };
 
 class MapLayer

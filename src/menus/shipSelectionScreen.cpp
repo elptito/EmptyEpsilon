@@ -449,6 +449,8 @@ void ShipSelectionScreen::updateCrewTypeOptions()
         game_master_button->show();
         crew_position_button[commsView]->show();      
         crew_position_button[relayHelios]->show();
+        crew_position_button[databaseHeliosScreen]->show();
+        crew_position_button[internLog]->show();
         crew_position_button[externLog]->show();
     break;
     case 1: // Helios Bridge

@@ -227,6 +227,7 @@ void GameMasterActions::onReceiveClientCommand(int32_t client_id, sf::Packet& pa
             } else {
                 ai->decline(response);
             }
+            ai->destroy();
         }
         break;
     }

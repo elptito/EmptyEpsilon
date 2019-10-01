@@ -64,6 +64,7 @@ protected:
     static const int16_t CMD_SCAN_TASK = 0x003B;
     static const int16_t CMD_TASK_COMPLETED = 0x003C;
     static const int16_t CMD_OPEN_MID_RANGE_COMM = 0x003D; //VOICE communication
+    static const int16_t CMD_SEND_QUERY = 0x003E; //VOICE communication
 
 public:
 
@@ -180,6 +181,7 @@ private:
     std::vector<int> comms_reply_id;
     std::vector<string> comms_reply_message;
     CommsScriptInterface comms_script_interface;  //Server only
+    bool intern_in_query;
 
 public:
     ESystem auto_repairing_system;
@@ -296,7 +298,7 @@ public:
     void commandAddHackTask(P<SpaceShip> target, ESystem target_system);
     void commandAddScanTask(P<SpaceObject> object);
     void commandCompleteScienceTask(int taskIndex, bool success);
-
+    void commandSendQuery(string message, string station);
     virtual void onReceiveServerCommand(sf::Packet& packet) override;
 
     // Template function

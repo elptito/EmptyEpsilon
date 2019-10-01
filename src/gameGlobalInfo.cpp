@@ -22,6 +22,10 @@ ActionItem::ActionItem(string title, string query, func_t accept, func_t decline
     this->accept = accept;
     this->decline = decline;
 }
+void ActionItem::destroy(){
+    MultiplayerObject::destroy();
+    ActionItem::actionItems.update();
+}
 
 static inline sf::Packet& operator << (sf::Packet& packet, const ECommsGmInterception& cgi) { return packet << int(cgi); }
 static inline sf::Packet& operator >> (sf::Packet& packet, ECommsGmInterception& cgi) { 
