@@ -19,6 +19,7 @@
 #include "gui/gui2_slider.h"
 #include "gui/gui2_textentry.h"
 #include "gui/gui2_togglebutton.h"
+#include "preferenceManager.h"
 
 ShipSelectionScreen::ShipSelectionScreen()
 {
@@ -503,25 +504,32 @@ void ShipSelectionScreen::onReadyClick()
         my_player_info->commandSetShipId(-1);
         destroy();
         new GameMasterScreen();
-    }else if (window_button->getValue())
+    }
+    else if (window_button->getValue())
     {
         destroy();
-        new WindowScreen(int(window_angle->getValue()));
-    }else if (probe_button->getValue())
+        uint8_t window_flags = PreferencesManager::get("ship_window_flags","1").toInt();
+        new WindowScreen(int(window_angle->getValue()), window_flags);
+    }
+    else if (probe_button->getValue())
     {
         destroy();
         new ProbeScreen();
-    }else if(topdown_button->getValue())
+    }
+    else if(topdown_button->getValue())
     {
         my_player_info->commandSetShipId(-1);
         destroy();
         new TopDownScreen();
-    }else if(cinematic_view_button->getValue())
+    }
+    else if(cinematic_view_button->getValue())
     {
         my_player_info->commandSetShipId(-1);
         destroy();
         new CinematicViewScreen();
-    }else{
+    }
+    else
+    {
         destroy();
         my_player_info->spawnUI();
     }
