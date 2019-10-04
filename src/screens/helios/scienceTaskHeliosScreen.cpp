@@ -265,8 +265,9 @@ void ScienceTaskHeliosScreen::setupParametersHacker() {
     hacker_current->clearEntries();
     hacker_target->clearEntries();
     int minLines = PreferencesManager::get("hack_minigame_min_initial_code_lines", "6").toInt();
-    int maxLines = PreferencesManager::get("hack_minigame_min_initial_code_lines", "6").toInt();
-    for (int i = 0; i < irandom(minLines, maxLines); i++){
+    int maxLines = PreferencesManager::get("hack_minigame_max_initial_code_lines", "10").toInt();
+    int numOfLines = irandom(minLines, maxLines);
+    for (int i = 0; i < numOfLines; i++){
         addCodeLine();
     }
     hacker_input->setText("");
