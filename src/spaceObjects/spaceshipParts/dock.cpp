@@ -5,14 +5,22 @@
 #include "random.h"
 #include "gameGlobalInfo.h"
 
-bool isDockOpenForDocking (Dock &d){
+static bool isThermicDockOpenForDocking (Dock &d){
+    return d.dock_type == Dock_Thermic && d.isOpenForDocking();
+}
+
+static bool isDockOpenForDocking (Dock &d){
     return d.isOpenForDocking();
 }
 
 Dock *Dock::findOpenForDocking(Dock docks[], int size)
 {
     int randIdx = irandom(0, size - 1);
-    Dock *dock = std::find_if(docks + randIdx, docks + size, isDockOpenForDocking);
+    Dock *dock = std::find_if(docks + randIdx, docks + size, isThermicDockOpenForDocking);
+    if (dock == docks + size)
+        dock = std::find_if(docks, docks + size, isThermicDockOpenForDocking);
+    if (dock == docks + size)
+        dock = std::find_if(docks + randIdx, docks + size, isDockOpenForDocking);
     if (dock == docks + size)
         dock = std::find_if(docks, docks + size, isDockOpenForDocking);
     if (dock == docks + size)
