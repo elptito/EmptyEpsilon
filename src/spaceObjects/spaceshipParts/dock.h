@@ -36,9 +36,9 @@ class Dock : public sf::NonCopyable
     static Dock* findOpenForDocking(Dock docks[], int size);
   protected:
     SpaceShip *parent;
-    int index_at_parent;
 
   public:
+    int index_at_parent;
     EDockType dock_type;
     EDockState state;
     float move_speed;

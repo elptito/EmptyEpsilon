@@ -20,20 +20,6 @@ class GuiRotatingModelView;
 class GuiOverlay;
 class Dock;
 
-class GuiTractorBeamControl : public GuiAutoLayout
-{
-private:
-    GuiSelector* mode_slector;
-    GuiSlider* arc_slider;
-    GuiSlider* direction_slider;
-    GuiSlider* range_slider;
-public:
-    GuiTractorBeamControl(GuiContainer* owner, string id);
-    virtual void onDraw(sf::RenderTarget& window) override;
-    virtual void onHotkey(const HotkeyResult& key);
-    virtual bool onJoystickAxis(const AxisAction& axisAction) override;
-
-};
 
 class DockMasterScreen : public GuiOverlay
 {
@@ -63,9 +49,9 @@ class DockMasterScreen : public GuiOverlay
     DockMasterScreen(GuiContainer *owner);
 
     void onDraw(sf::RenderTarget &window) override;
-    private:
-    void selectDock(int index);
   private:
+    void selectDock(int index);
     void displayDroneDetails(Dock &dockData);
+    string getDockDisplayName(Dock &dockData);
 };
 #endif //DOCK_MASTER_SCREEN_H
