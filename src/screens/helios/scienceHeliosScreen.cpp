@@ -382,7 +382,7 @@ void ScienceHeliosScreen::iterateTagrets(bool forward){
             GuiRadarView::RadarRangeAndLineOfSight, 
             radar->getDistance());
         PVector<SpaceObject> potentialTargets;
-        for(const auto & obj : potentialTargetsUnfiltered) {
+        foreach(SpaceObject, obj, potentialTargetsUnfiltered) {
             if(obj != my_spaceship && obj->canBeSelectedBy(my_spaceship)) {
                 potentialTargets.push_back(obj);
             }

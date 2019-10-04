@@ -118,7 +118,7 @@ void GameMasterActions::onReceiveClientCommand(int32_t client_id, sf::Packet& pa
             sf::Vector2f delta;
             PVector<SpaceObject> selection;
             packet >> delta >> selection;
-            for(P<SpaceObject> obj : selection)
+            foreach(SpaceObject, obj, selection)
             {
                 obj->setPosition(obj->getPosition() + delta);
             }
@@ -136,7 +136,7 @@ void GameMasterActions::onReceiveClientCommand(int32_t client_id, sf::Packet& pa
             uint32_t faction_id;
             PVector<SpaceObject> selection;
             packet >> faction_id >> selection;
-            for(P<SpaceObject> obj : selection)
+            foreach(SpaceObject, obj, selection)
             {
                 obj->setFactionId(faction_id);
             }
@@ -156,7 +156,7 @@ void GameMasterActions::onReceiveClientCommand(int32_t client_id, sf::Packet& pa
             int i_order;
             PVector<SpaceObject> selection;
             packet >> i_order >> selection;
-            for(P<SpaceObject> obj : selection)
+            foreach(SpaceObject, obj, selection)
                 if (P<CpuShip>(obj))
                     switch(EShipOrder(i_order))
                     {
@@ -179,7 +179,7 @@ void GameMasterActions::onReceiveClientCommand(int32_t client_id, sf::Packet& pa
         {
             PVector<SpaceObject> selection;
             packet >> selection;
-            for(P<SpaceObject> obj : selection)
+            foreach(SpaceObject, obj, selection)
             {
                 if (obj)
                     obj->destroy();

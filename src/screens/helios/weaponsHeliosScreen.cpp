@@ -200,7 +200,7 @@ void WeaponsHeliosScreen::iterateTagrets(bool forward, bool enemiesOnly, bool ne
     float range = nearOnly? radar->getDistance() : my_spaceship->getRadarRange();
     PVector<SpaceObject> potentialTargetsUnfiltered = GuiRadarView::getVisibleObjects(my_spaceship->getPosition(), my_spaceship->getFactionId(), GuiRadarView::RadarRangeAndLineOfSight, range);
     PVector<SpaceObject> potentialTargets;
-    for(const auto & obj : potentialTargetsUnfiltered) {
+    foreach(SpaceObject, obj, potentialTargetsUnfiltered) {
         if(obj != my_spaceship &&
             obj->canBeTargetedBy(my_spaceship) &&
             (!enemiesOnly || my_spaceship->isKnownEnemy(obj))) {

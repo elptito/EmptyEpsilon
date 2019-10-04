@@ -525,12 +525,13 @@ PVector<SpaceObject> GuiRadarView::getVisibleObjects(sf::Vector2f pov_position, 
                     PVector<Collisionable> obj_list = CollisionManager::queryArea(lowerBound, upperBound);
                     foreach(Collisionable, c_obj, obj_list) {
                         P<SpaceObject> obj2 = c_obj;
-                        sf::Vector2f relativePosition2 = obj2->getPosition() - pov_position;
-                        if (obj2 
-                            && std::abs(relativePosition2.x) < width / 2 + obj2->getRadius() && std::abs(relativePosition2.y) < height / 2 + obj2->getRadius()
-                            && (obj->getPosition() - obj2->getPosition()) < obj_range + obj2->getRadius()
-                            && !(obj->canHideInNebula() && Nebula::blockedByNebula(obj->getPosition(), obj2->getPosition()))) {
-                            result_set.insert(obj2);
+                        if (obj2){
+                            sf::Vector2f relativePosition2 = obj2->getPosition() - pov_position;
+                            if (std::abs(relativePosition2.x) < width / 2 + obj2->getRadius() && std::abs(relativePosition2.y) < height / 2 + obj2->getRadius()
+                                && (obj->getPosition() - obj2->getPosition()) < obj_range + obj2->getRadius()
+                                && !(obj->canHideInNebula() && Nebula::blockedByNebula(obj->getPosition(), obj2->getPosition()))) {
+                                result_set.insert(obj2);
+                            }
                         }
                     }
                 }
@@ -547,6 +548,7 @@ PVector<SpaceObject> GuiRadarView::getVisibleObjects(sf::Vector2f pov_position, 
         }
         break;
     }
+    visible_objects.update();
     return visible_objects;
 }
 
@@ -555,7 +557,7 @@ PVector<SpaceObject> GuiRadarView::getVisibleObjects(sf::Vector2f pov_position, 
     PVector<SpaceObject> result;
     // query bounding rectangle and kep targets in the circle
     PVector<SpaceObject> rectResult =  GuiRadarView::getVisibleObjects(pov_position, pov_faction, fog_style, radius * 2, radius * 2);
-     for(const auto & obj : rectResult) {
+    foreach(SpaceObject, obj, rectResult) {
         if((obj->getPosition() - pov_position) < radius + obj->getRadius()) {
             result.push_back(obj);
         }
