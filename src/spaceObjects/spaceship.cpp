@@ -21,6 +21,7 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     //[DEPRICATED]
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, isFriendOrFoeIdentified);
     //[DEPRICATED]
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, logToFiles);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, isFullyScanned);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, isFriendOrFoeIdentifiedBy);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, isFullyScannedBy);
@@ -134,8 +135,8 @@ float SpaceShip::heat_per_combat_maneuver_strafe = 0;
 float SpaceShip::unhack_time = 0;
 
 // Configure ship's log packets.
-static inline sf::Packet& operator << (sf::Packet& packet, const SpaceShip::ShipLogEntry& e) { return packet << e.prefix << e.text << e.color.r << e.color.g << e.color.b << e.color.a << e.station; }
-static inline sf::Packet& operator >> (sf::Packet& packet, SpaceShip::ShipLogEntry& e) { packet >> e.prefix >> e.text >> e.color.r >> e.color.g >> e.color.b >> e.color.a >> e.station; return packet; }
+static inline sf::Packet& operator << (sf::Packet& packet, const SpaceShip::ShipLogEntry& e) { return packet << e.time << e.text << e.color.r << e.color.g << e.color.b << e.color.a << e.station; }
+static inline sf::Packet& operator >> (sf::Packet& packet, SpaceShip::ShipLogEntry& e) { packet >> e.time >> e.text >> e.color.r >> e.color.g >> e.color.b >> e.color.a >> e.station; return packet; }
 
 SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_range)
 : ShipTemplateBasedObject(50, multiplayerClassName, multiplayer_significant_range)
@@ -278,19 +279,19 @@ void SpaceShip::addToShipLog(string message, sf::Color color, string station)
         if (ships_log_extern.size() > extern_log_size)
             ships_log_extern.erase(ships_log_extern.begin());
         // Timestamp a log entry, color it, and add it to the end of the log.
-        ships_log_extern.emplace_back(string(engine->getElapsedTime(), 1) + string(": "), message, color, station);
+        ships_log_extern.emplace_back(engine->getElapsedTime(), message, color, station);
     }
     else if (station == "intern" && intern_log_size)
     {
         if (ships_log_intern.size() > intern_log_size)
             ships_log_intern.erase(ships_log_intern.begin());
-        ships_log_intern.emplace_back(string(engine->getElapsedTime(), 1) + string(": "), message, color, station);
+        ships_log_intern.emplace_back(engine->getElapsedTime(), message, color, station);
     }
     else if (station == "excalibur" && excalibur_log_size)
     {
         if (ships_log_excalibur.size() > excalibur_log_size)
             ships_log_excalibur.erase(ships_log_excalibur.begin());
-        ships_log_excalibur.emplace_back(string(engine->getElapsedTime(), 1) + string(": "), message, color, station);
+        ships_log_excalibur.emplace_back(engine->getElapsedTime(), message, color, station);
     }
 }
 
@@ -315,6 +316,14 @@ const std::vector<SpaceShip::ShipLogEntry>& SpaceShip::getShipsLog(string statio
     else if (station == "excalibur")
         return ships_log_excalibur;
     return ships_log_extern;
+}
+
+void SpaceShip::logToFiles(){
+    if (game_server){
+        file_logger_intern.start(this, "intern");
+        file_logger_excalibur.start(this, "excalibur");
+        file_logger_extern.start(this, "extern");
+    }
 }
 
 void SpaceShip::onReceiveClientCommand(int32_t client_id, sf::Packet& packet)
@@ -866,6 +875,10 @@ void SpaceShip::update(float delta)
     float warp_terrain_cap = PreferencesManager::get("warp_terrain_cap", "2.0").toFloat();
     if (game_server)
     {
+        file_logger_intern.update(delta);
+        file_logger_excalibur.update(delta);
+        file_logger_extern.update(delta);
+        
         if (docking_state == DS_Docking)
         {
             if (!docking_target)

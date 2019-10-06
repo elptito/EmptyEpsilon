@@ -41,4 +41,21 @@ private:
     void writeStationEntry(JSONGenerator& json, P<SpaceStation> obj);
 };
 
+class ShipFileLogger
+{
+private:
+    float last_time;
+    SpaceShip* ship;
+    string station;
+    
+public:
+    ShipFileLogger();
+    
+    void start(SpaceShip* ship, string station);
+    void stop();
+    
+    void update(float delta);
+private:
+    string fileName();
+};
 #endif//GAME_STATE_LOGGER_H

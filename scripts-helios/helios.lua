@@ -20,6 +20,7 @@ function updateHelios(delta)
 	local playerShip = getPlayerShip(-1)
 	if (not playerShip._daedalus_hooks) then
 		playerShip._daedalus_hooks = {}
+		playerShip:logToFiles()
 	end
 	for i, hook in ipairs(playerShip._daedalus_hooks) do
 		hook(delta)

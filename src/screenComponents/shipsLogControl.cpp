@@ -59,7 +59,7 @@ void ShipsLog::onDraw(sf::RenderTarget& window)
         while(log_text->getEntryCount() < logs.size())
         {
             int n = log_text->getEntryCount();
-            log_text->addEntry(logs[n].prefix, logs[n].text, logs[n].color);
+            log_text->addEntry(logs[n].time, logs[n].text, logs[n].color);
         }
     }else{
         if (log_text->getEntryCount() > 0 && logs.size() == 0)
@@ -70,7 +70,7 @@ void ShipsLog::onDraw(sf::RenderTarget& window)
                 log_text->clearEntries();
         }
         if (log_text->getEntryCount() == 0 && logs.size() > 0)
-            log_text->addEntry(logs.back().prefix, logs.back().text, logs.back().color);
+            log_text->addEntry(logs.back().time, logs.back().text, logs.back().color);
     }
 }
 

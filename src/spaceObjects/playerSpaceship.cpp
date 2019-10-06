@@ -188,9 +188,9 @@ PlayerSpaceship::PlayerSpaceship()
     science_query_to_bridge_db = "";
     setFactionId(1);
 
-    extern_log_size = (uint8)1000;
-    intern_log_size = (uint8)1000;
-    excalibur_log_size = (uint8)1000;
+    extern_log_size = PreferencesManager::get("extern_log_size", "100").toInt();
+    intern_log_size = PreferencesManager::get("intern_log_size", "100").toInt();
+    excalibur_log_size = PreferencesManager::get("excalibur_log_size", "100").toInt();
     intern_in_query = false;
     excalibur_in_query = false;
     // For now, set player ships to always be fully scanned to all other ships

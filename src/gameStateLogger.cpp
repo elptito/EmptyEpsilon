@@ -509,3 +509,82 @@ void GameStateLogger::writeStationEntry(JSONGenerator& json, P<SpaceStation> sta
         }
     }
 }
+
+
+ShipFileLogger::ShipFileLogger()
+    : last_time(-1.f), ship(nullptr), station("")
+{
+}
+
+string ShipFileLogger::fileName(){
+    if (ship){
+        return string("logs/ship_log_")+ ship->getCallSign() + "_" + station + ".txt";
+    } else return "";
+}
+
+void ShipFileLogger::start(SpaceShip* shipArg, string stationArg)
+{
+    if (shipArg){
+        this->ship = shipArg;
+        this->station = stationArg;
+        string file_name = fileName();
+        string openArg = "at";
+        if (PreferencesManager::get("overrite_logs", "1").toInt()){
+            openArg = "wt";
+        }
+        FILE* log_file = fopen(file_name.c_str(), openArg.c_str());
+        if (log_file)
+            LOG(INFO) << "Opened ship log: " << file_name;
+        else
+            LOG(WARNING) << "Failed to open ship log file: " << file_name;
+        fclose(log_file);
+    }
+}
+
+void ShipFileLogger::stop()
+{
+    ship = nullptr;
+}
+
+void ShipFileLogger::update(float delta)
+{
+    static char log_line_buffer[1024 * 10];
+    if (!ship || !P<SpaceShip>(ship) || delta == 0.0)
+        return;
+    if (ship->isDestroyed()){
+        stop();
+    } else {
+        const std::vector<SpaceShip::ShipLogEntry>& log = ship->getShipsLog(station);
+        if (log.size() > 0 && log.back().time > last_time){
+            // at least one line to add to file
+            string file_name = fileName();
+            FILE* log_file = fopen(file_name.c_str(), "at");
+            if (log_file){
+                auto lastKnownGood = std::find_if(log.rbegin(), log.rend(), [this](SpaceShip::ShipLogEntry e) { return e.time <= last_time; });
+                int idxToUpdate = std::distance(lastKnownGood, log.rend()); 
+                for (auto line = log.begin() + idxToUpdate; line != log.end(); ++line){
+                    char* ptr = log_line_buffer;
+                    {
+                        JSONGenerator json(ptr);
+                        json.write("time", line->time);
+                        json.write("station", line->station);
+                        json.write("text", line->text);
+                        std::stringstream sstream;
+                        sstream << "#" 
+                            << std::setfill ('0') << std::setw(8) 
+                            << std::hex << line->color.toInteger();
+                        json.write("color", sstream.str());
+                        // end of scope for json, invokes the destructor
+                    }
+                    *ptr++ = '\n';
+                    *ptr = '\0';
+                    fwrite(log_line_buffer, 1, ptr - log_line_buffer, log_file);
+                    last_time = line->time;
+                }
+                fclose(log_file);
+            } else {
+                LOG(WARNING) << "Failed to open ship log file: " << file_name;
+            }
+        }
+    }
+}

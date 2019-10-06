@@ -8,6 +8,7 @@
 #include "spaceshipParts/weaponTube.h"
 #include "spaceshipParts/dock.h"
 #include "preferenceManager.h"
+#include "gameStateLogger.h"
 
 enum EMainScreenSetting
 {
@@ -128,16 +129,16 @@ public:
     class ShipLogEntry
     {
     public:
-        string prefix;
+        float time;
         string text;
         sf::Color color;
         string station;
 
         ShipLogEntry() {}
-        ShipLogEntry(string prefix, string text, sf::Color color, string station)
-        : prefix(prefix), text(text), color(color), station(station) {}
+        ShipLogEntry(float time, string text, sf::Color color, string station)
+        : time(time), text(text), color(color), station(station) {}
 
-        bool operator!=(const ShipLogEntry& e) { return prefix != e.prefix || text != e.text || color != e.color || station != e.station; }
+        bool operator!=(const ShipLogEntry& e) { return time != e.time || text != e.text || color != e.color || station != e.station; }
     };
 
     float energy_level;
@@ -265,7 +266,9 @@ public:
     std::vector<ShipLogEntry> ships_log_extern;
     std::vector<ShipLogEntry> ships_log_intern;
     std::vector<ShipLogEntry> ships_log_excalibur;
-    
+    ShipFileLogger file_logger_extern;
+    ShipFileLogger file_logger_intern;
+    ShipFileLogger file_logger_excalibur;
 
     SpaceShip(string multiplayerClassName, float multiplayer_significant_range=-1);
 
@@ -361,6 +364,7 @@ public:
     void addToShipLog(string message, sf::Color color, string station = "extern");
     void addToShipLogBy(string message, P<SpaceObject> target);
     const std::vector<ShipLogEntry>& getShipsLog(string station) const;
+    void logToFiles();
 
     bool isFriendOrFoeIdentified();//[DEPRICATED]
     bool isFullyScanned();//[DEPRICATED]
