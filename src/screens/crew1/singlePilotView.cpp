@@ -38,7 +38,7 @@ SinglePilotView::SinglePilotView(GuiContainer* owner, P<PlayerSpaceship> targetS
     // 5U tactical radar with piloting features.
     radar = new GuiRadarView(this, "TACTICAL_RADAR", 5000.0, &targets, (P<SpaceShip>)target_spaceship);
     radar->setPosition(0, 0, ACenter)->setSize(GuiElement::GuiSizeMatchHeight, 650);
-    radar->setRangeIndicatorStepSize(1000.0)->shortRange()->enableGhostDots()->enableWaypoints()->enableCallsigns()->enableHeadingIndicators()->setStyle(GuiRadarView::Circular);
+    radar->setRangeIndicatorStepSize(1000.0)->shortRange()->enableGhostDots()->enableWaypoints()->enableCallsigns()->enableHeadingIndicators()->setStyle(GuiRadarView::Circular)->setAutoOrient(true)->setShowSectors(false);
     radar->setCallbacks(
         [this](sf::Vector2f position) {
             targets.setToClosestTo(position, 250, TargetsContainer::Targetable);
@@ -194,6 +194,8 @@ void SinglePilotView::onHotkey(const HotkeyResult& key)
                 target_spaceship->commandTargetRotation(target_spaceship->getRotation() - 5.0f);
             else if (key.hotkey == "TURN_RIGHT")
                 target_spaceship->commandTargetRotation(target_spaceship->getRotation() + 5.0f);
+            else if (key.hotkey == "COMBAT_BACK")
+                my_spaceship->commandCombatManeuverBoost(my_spaceship->combat_maneuver_boost_request - 0.1f);
         }
         if (key.category == "WEAPONS" && target_spaceship)
         {

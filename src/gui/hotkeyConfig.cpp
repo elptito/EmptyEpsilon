@@ -155,6 +155,13 @@ HotkeyConfig::HotkeyConfig()
         newKey("LAYER_TOGGLE_" + string(n, 0), std::make_tuple("toggle layer "+ string(n, 0), "Num" + string(n, 0)));
     }
     newKey("WAYPOINT_DELETE", std::make_tuple("Delete selected waypoint", "Delete"));
+
+    newCategory("DRONE_OPERATOR", "Drone Operator");
+    newKey("DISCONNECT", std::make_tuple("disconnect from drone", "[B5]"));
+    newKey("CONNECT", std::make_tuple("connect to drone", "[B5]"));
+    newKey("PREV_DRONE", std::make_tuple("Select previous drone to connect", "[B4]"));
+    newKey("NEXT_DRONE", std::make_tuple("Select next drone to connect", "[B6]"));
+    
 }
 
 static std::vector<std::pair<string, sf::Keyboard::Key> > sfml_key_names = {

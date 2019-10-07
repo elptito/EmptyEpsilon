@@ -85,11 +85,28 @@ GuiMissileTubeControls::GuiMissileTubeControls(GuiContainer* owner, string id, P
     load_type_rows[MW_EMP].button->setIcon("gui/icons/weapon-emp.png");
     load_type_rows[MW_Nuke].button->setIcon("gui/icons/weapon-nuke.png");
     load_type_rows[MW_HVLI].button->setIcon("gui/icons/weapon-hvli.png");
+    setTargetSpaceship(targetSpaceship);
 }
 
 void GuiMissileTubeControls::setTargetSpaceship(P<PlayerSpaceship> targetSpaceship){
     target_spaceship = targetSpaceship;
     pdi->setTargetSpaceship(target_spaceship);
+    if(targetSpaceship){
+        EMissileWeapons singleType = MW_None;
+        for (int n = 0; n < MW_Count; n++) {
+            if (target_spaceship->weapon_storage_max[n] > 0){
+                if (singleType == MW_None){
+                    singleType = EMissileWeapons(n);
+                } else {
+                    singleType = MW_Count;
+                }
+            }
+        }
+        if (singleType != MW_Count && singleType != MW_None){
+            // exactly one missile type
+            selectMissileWeapon(singleType);
+        }
+    }
 }
 
 void GuiMissileTubeControls::onDraw(sf::RenderTarget& window){
@@ -160,16 +177,12 @@ void GuiMissileTubeControls::onHotkey(const HotkeyResult& key)
 {
     if (key.category == "WEAPONS" && target_spaceship)
     {
-        if (key.hotkey == "SELECT_MISSILE_TYPE_HOMING")
-            selectMissileWeapon(MW_Heavy);
-        if (key.hotkey == "SELECT_MISSILE_TYPE_NUKE")
-            selectMissileWeapon(MW_Nuke);
-        if (key.hotkey == "SELECT_MISSILE_TYPE_MINE")
-            selectMissileWeapon(MW_Mine);
-        if (key.hotkey == "SELECT_MISSILE_TYPE_EMP")
-            selectMissileWeapon(MW_EMP);
-        if (key.hotkey == "SELECT_MISSILE_TYPE_HVLI")
-            selectMissileWeapon(MW_HVLI);
+        for(int n=0; n<MW_Count; n++){
+            if (key.hotkey == "SELECT_MISSILE_TYPE_" + getMissileWeaponName(EMissileWeapons(n)).upper()){
+                selectMissileWeapon(EMissileWeapons(n));
+                return;
+            }
+        }
 
         for(int n=0; n<target_spaceship->weapon_tube_count; n++)
         {

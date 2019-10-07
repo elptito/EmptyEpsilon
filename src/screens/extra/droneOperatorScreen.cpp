@@ -24,22 +24,12 @@ DroneOperatorScreen::DroneOperatorScreen(GuiContainer *owner)
     (new AlertLevelOverlay(this));
 
     // Draw a container for drone selection UI
-    droneSelection = new GuiAutoLayout(this, "", GuiAutoLayout::ELayoutMode::LayoutHorizontalRows);
-    droneSelection->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+    droneSelection = new GuiPanel(this, "");
+    droneSelection->setPosition(0, 0, ACenter)->setSize(500, 500);
 
     // Drone list
-    drone_list = new GuiListbox(droneSelection, "PLAYER_SHIP_LIST", [this](int index, string value) {
-        P<PlayerSpaceship> ship = getObjectById(value.toInt());
-        // If the selected item is a ship ...
-        if (ship)
-        // TODO :  check if occupied
-        {
-            mode = Piloting;
-            selected_drone = ship;
-            single_pilot_view->setTargetSpaceship(selected_drone);
-        }
-    });
-    drone_list->setPosition(0, -100, ABottomCenter)->setSize(500, 1000);
+    drone_list = new GuiListbox(droneSelection, "PLAYER_SHIP_LIST", [this](int _, string value) {connect(value);});
+    drone_list->setPosition(0, 0, ACenter)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
     // single pilot UI
     single_pilot_view = new SinglePilotView(this, selected_drone);
@@ -50,7 +40,7 @@ DroneOperatorScreen::DroneOperatorScreen(GuiContainer *owner)
     connection_label = new GuiLabel(this, "CONNECTION_LABEL", "0%", 30);
     connection_label->setPosition(0, -50, ABottomCenter)->setSize(460, 50);
 
-    disconnect_button = new GuiButton(this, "DISCONNECT_BUTTON", "Disconnect", [this]() {disconnected();});
+    disconnect_button = new GuiButton(this, "DISCONNECT_BUTTON", "Disconnect", [this]() {disconnect();});
     disconnect_button->setPosition(0, 0, ABottomCenter)->setSize(400, 50);
     disconnect_button->moveToFront();
     // label for when there are no drones
@@ -60,7 +50,21 @@ DroneOperatorScreen::DroneOperatorScreen(GuiContainer *owner)
     (new GuiPowerDamageIndicator(this, "DRONES_PDI", SYS_Drones, ATopCenter, my_spaceship))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 }
 
-void DroneOperatorScreen::disconnected()
+void DroneOperatorScreen::connect(string value){
+    if (value != ""){
+        P<PlayerSpaceship> ship = getObjectById(value.toInt());
+        // If the selected item is a ship ...
+        if (ship)
+        // TODO :  check if occupied
+        {
+            mode = Piloting;
+            selected_drone = ship;
+            single_pilot_view->setTargetSpaceship(selected_drone);
+        }
+    }
+}
+
+void DroneOperatorScreen::disconnect()
 {
     mode = drone_list->entryCount() == 0 ? NoDrones : DroneSelection;
     selected_drone = NULL;
@@ -100,7 +104,7 @@ void DroneOperatorScreen::onDraw(sf::RenderTarget &window)
         // automatically change mode if needed
         if (!selected_drone || !isConnectable(selected_drone) || selected_drone->isDestroyed())
         {
-           disconnected();
+           disconnect();
         }
         // update display according to mode
         switch (mode)
@@ -135,6 +139,33 @@ void DroneOperatorScreen::onDraw(sf::RenderTarget &window)
             disconnect_button->hide();
             connection_label->hide();
             break;
+        }
+    }
+}
+
+void DroneOperatorScreen::onHotkey(const HotkeyResult& key)
+{
+    if (my_spaceship){
+        if (key.category == "DRONE_OPERATOR")
+        {
+            if (key.hotkey == "DISCONNECT" && mode == Piloting) {
+                disconnect();
+                drone_list->setSelectionIndex(-1);
+            } else if (key.hotkey == "CONNECT" && mode == DroneSelection) {
+                connect(drone_list->getSelectionValue());
+            } else if (key.hotkey == "PREV_DRONE") {
+                int idx = drone_list->getSelectionIndex() - 1;
+                if (idx < -1) {
+                    idx = drone_list->entryCount() - 1;
+                }
+                drone_list->setSelectionIndex(idx);
+            } else if (key.hotkey == "NEXT_DRONE") {
+                int idx = drone_list->getSelectionIndex() + 1;
+                if (idx >= drone_list->entryCount()) {
+                    idx = -1;
+                }
+                drone_list->setSelectionIndex(idx);
+            }
         }
     }
 }

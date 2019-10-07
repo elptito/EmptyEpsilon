@@ -35,7 +35,7 @@ private:
 
     SinglePilotView* single_pilot_view;
     GuiOverlay* background_crosses;
-    GuiAutoLayout* droneSelection;    
+    GuiElement* droneSelection;    
     GuiLabel* connection_label;
     GuiNoiseOverlay* noise_overlay;
     GuiButton* disconnect_button;
@@ -45,8 +45,10 @@ public:
     DroneOperatorScreen(GuiContainer* owner);
 
     virtual void onDraw(sf::RenderTarget& window);
+    virtual void onHotkey(const HotkeyResult& key);
 private:
-    void disconnected();
+    void disconnect();
+    void connect(string value);
     bool isConnectable(P<PlayerSpaceship> ship);
     float getConnectionQuality(P<PlayerSpaceship> ship);
 };
