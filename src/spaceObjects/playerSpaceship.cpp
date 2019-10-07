@@ -1870,6 +1870,7 @@ void PlayerSpaceship::commandSendQuery(string message, string station){
 string PlayerSpaceship::getExportLine()
 {
     return std::string("PlayerSpaceship()") + 
+        ":setFaction(\"" + getFaction() + "\")" +
         ":setTemplate(\"" + template_name + "\")" + 
         ":setCallSign(\"" + getCallSign() + "\")" + 
         ":setPosition(" + string(getPosition().x, 0) + ", " + string(getPosition().y, 0) + ")" + 
