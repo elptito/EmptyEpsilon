@@ -11,12 +11,14 @@ class GuiScrollText;
 class GuiListbox;
 class GuiTextEntry;
 
-class GuiCommsOverlay : public GuiElement
+class GuiCommsOverlayHelios : public GuiElement
 {
 private:
+    GuiPanel* mid_range_opening_box;
+    GuiProgressbar* mid_range_opening_progress;
+    
     GuiPanel* opening_box;
     GuiProgressbar* opening_progress;
-    GuiButton* opening_cancel;
     
     GuiPanel* hailed_box;
     GuiLabel* hailed_label;
@@ -38,7 +40,7 @@ private:
     GuiListbox* script_comms_options;
     GuiButton* script_comms_close;
 public:
-    GuiCommsOverlay(GuiContainer* owner);
+    GuiCommsOverlayHelios(GuiContainer* owner);
     
     virtual void onDraw(sf::RenderTarget& window);
     void clearElements();

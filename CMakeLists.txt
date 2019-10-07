@@ -186,6 +186,7 @@ set(SOURCES
 	src/screenComponents/targetsContainer.cpp
 	src/screenComponents/globalMessage.cpp
 	src/screenComponents/commsOverlay.cpp
+	src/screenComponents/commsOverlayHelios.cpp
 	src/screenComponents/jumpIndicator.cpp
 	src/screenComponents/scanningDialog.cpp
 	src/screenComponents/signalQualityIndicator.cpp
