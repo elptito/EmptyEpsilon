@@ -260,6 +260,7 @@ public:
     P<SpaceObject> docking_target; //Server only
     sf::Vector2f docking_offset; //Server only
 
+    float mission_time_diff;
     uint8 extern_log_size;
     uint8 intern_log_size;
     uint8 excalibur_log_size;
@@ -361,6 +362,7 @@ public:
     virtual void scannedBy(P<SpaceObject> other) override;
 
     // Ship's log functions
+    void setMissionTime(float mission_time);
     void addToShipLog(string message, sf::Color color, string station = "extern");
     void addToShipLogBy(string message, P<SpaceObject> target);
     const std::vector<ShipLogEntry>& getShipsLog(string station) const;

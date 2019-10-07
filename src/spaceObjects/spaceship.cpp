@@ -21,6 +21,7 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     //[DEPRICATED]
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, isFriendOrFoeIdentified);
     //[DEPRICATED]
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setMissionTime);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, logToFiles);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, isFullyScanned);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, isFriendOrFoeIdentifiedBy);
@@ -143,6 +144,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
 {
     setCollisionPhysics(true, false);
 
+    mission_time_diff = 0.f;
     target_rotation = getRotation();
     impulse_request = 0;
     current_impulse = 0;
@@ -183,6 +185,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     excalibur_log_size = 1;
     turnSpeed = 0.0f;
 
+    registerMemberReplication(&mission_time_diff);
     registerMemberReplication(&target_rotation, 1.5);
     registerMemberReplication(&turnSpeed, 1.5);
     registerMemberReplication(&impulse_request, 0.1);
@@ -279,19 +282,19 @@ void SpaceShip::addToShipLog(string message, sf::Color color, string station)
         if (ships_log_extern.size() > extern_log_size)
             ships_log_extern.erase(ships_log_extern.begin());
         // Timestamp a log entry, color it, and add it to the end of the log.
-        ships_log_extern.emplace_back(engine->getElapsedTime(), message, color, station);
+        ships_log_extern.emplace_back(engine->getElapsedTime() + mission_time_diff, message, color, station);
     }
     else if (station == "intern" && intern_log_size)
     {
         if (ships_log_intern.size() > intern_log_size)
             ships_log_intern.erase(ships_log_intern.begin());
-        ships_log_intern.emplace_back(engine->getElapsedTime(), message, color, station);
+        ships_log_intern.emplace_back(engine->getElapsedTime() + mission_time_diff, message, color, station);
     }
     else if (station == "excalibur" && excalibur_log_size)
     {
         if (ships_log_excalibur.size() > excalibur_log_size)
             ships_log_excalibur.erase(ships_log_excalibur.begin());
-        ships_log_excalibur.emplace_back(engine->getElapsedTime(), message, color, station);
+        ships_log_excalibur.emplace_back(engine->getElapsedTime() + mission_time_diff, message, color, station);
     }
 }
 
@@ -316,6 +319,10 @@ const std::vector<SpaceShip::ShipLogEntry>& SpaceShip::getShipsLog(string statio
     else if (station == "excalibur")
         return ships_log_excalibur;
     return ships_log_extern;
+}
+
+void SpaceShip::setMissionTime(float mission_time){
+    mission_time_diff = mission_time;
 }
 
 void SpaceShip::logToFiles(){
@@ -1730,6 +1737,7 @@ string SpaceShip::getScriptExportModificationsOnTemplate()
         ret += ":setTractorBeam(" + getTractorBeamModeName(tractor_beam.getMode()) + ", " + string(tractor_beam.getArc(), 0) + ", " + string(tractor_beam.getDirection(), 0) + ", " + string(tractor_beam.getRange(), 0) + ", " + string(tractor_beam.getMaxArea(), 0) + ", " + string(tractor_beam.getDragPerSecond(), 0) + ")";
     }
     ret += ":setWarpFrequency(" + string(getWarpFrequency()) + ")";
+    ret += ":setMissionTime("+ string(engine->getElapsedTime() + mission_time_diff, 4) + ")";
     return ret;
 }
 
