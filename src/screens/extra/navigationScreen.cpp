@@ -6,10 +6,6 @@
 #include "gameGlobalInfo.h"
 
 #include "screenComponents/navigationView.h"
-#include "screenComponents/openCommsButton.h"
-#include "screenComponents/commsOverlay.h"
-#include "screenComponents/shipsLogControl.h"
-#include "screenComponents/hackingDialog.h"
 #include "screenComponents/customShipFunctions.h"
 
 #include "gui/gui2_autolayout.h"
