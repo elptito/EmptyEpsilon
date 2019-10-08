@@ -184,6 +184,10 @@ void RepairCrew::update(float delta)
                     ship->systems[system].health = 1.0;
                 if (ship->systems[system].health > ship->systems[system].health_max)
                     ship->systems[system].health = ship->systems[system].health_max;
+                
+                ship->systems[system].hacked_level -= repair_per_second * delta;
+                if (ship->systems[system].hacked_level < 0.0)
+                    ship->systems[system].hacked_level = 0.0;
             }
             else if (ship->docking_state == DS_Docked)
             {
