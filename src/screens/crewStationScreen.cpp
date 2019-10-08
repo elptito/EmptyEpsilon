@@ -171,29 +171,31 @@ void CrewStationScreen::onHotkey(const HotkeyResult& key)
 
 void CrewStationScreen::onKey(sf::Event::KeyEvent key, int unicode)
 {
-    switch(key.code)
-    {
-    //TODO: This is more generic code and is duplicated.
-    case sf::Keyboard::Escape:
-    case sf::Keyboard::Home:
-        destroy();
-        soundManager->stopMusic();
-        returnToShipSelection();
-        break;
-    case sf::Keyboard::Slash:
-        // Toggle keyboard help.
-        keyboard_help->frame->setVisible(!keyboard_help->frame->isVisible());
-        break;
-    case sf::Keyboard::F1:
-        // Toggle keyboard help.
-        keyboard_help->frame->setVisible(!keyboard_help->frame->isVisible());
-        break;
-    case sf::Keyboard::P:
-        if (game_server)
-            engine->setGameSpeed(0.0);
-        break;
-    default:
-        break;
+    if(PreferencesManager::get("station_hotkeys", "1").toInt()){
+        switch(key.code)
+        {
+        //TODO: This is more generic code and is duplicated.
+        case sf::Keyboard::Escape:
+        case sf::Keyboard::Home:
+            destroy();
+            soundManager->stopMusic();
+            returnToShipSelection();
+            break;
+        case sf::Keyboard::Slash:
+            // Toggle keyboard help.
+            keyboard_help->frame->setVisible(!keyboard_help->frame->isVisible());
+            break;
+        case sf::Keyboard::F1:
+            // Toggle keyboard help.
+            keyboard_help->frame->setVisible(!keyboard_help->frame->isVisible());
+            break;
+        case sf::Keyboard::P:
+            if (game_server)
+                engine->setGameSpeed(0.0);
+            break;
+        default:
+            break;
+        }
     }
 }
 
