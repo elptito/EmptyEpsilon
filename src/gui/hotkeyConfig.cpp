@@ -56,8 +56,8 @@ HotkeyConfig::HotkeyConfig()
     }
 
     newCategory("SCIENCE_TASK", "Science Task");
-    newKey("SIMULATE_HACK", std::make_tuple("simulate hack task", "[alt];H"));
-    newKey("SIMULATE_SCAN", std::make_tuple("simulate scan task", "[alt];S"));
+    newKey("SIMULATE_HACK", std::make_tuple("simulate hack task", "[alt];F11"));
+    newKey("SIMULATE_SCAN", std::make_tuple("simulate scan task", "[alt];F12"));
     newKey("ABORT_TASK", std::make_tuple("abort task", "[alt];Q"));
     for(int n = 0; n < PlayerSpaceship::max_science_tasks; n++){
         newKey("DO_TASK_" + string(n, 0), std::make_tuple("Execute task "+ string(n+1, 0), string((n+1) % 10, 0)));
