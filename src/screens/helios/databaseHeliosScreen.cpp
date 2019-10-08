@@ -40,7 +40,7 @@ DatabaseHeliosScreen::DatabaseHeliosScreen(GuiContainer* owner, bool linkedToSci
             display(entry);
         }
     });
-    item_list->setPosition(0, 0, ATopLeft)->setMargins(20, 20, 20, 130)->setSize(400, GuiElement::GuiSizeMax);
+    item_list->setVisible(!linkedToScience)->setPosition(0, 0, ATopLeft)->setMargins(20, 20, 20, 130)->setSize(400, GuiElement::GuiSizeMax);
     fillListBox();
 
     password = new PasswordEntry(this);
@@ -60,8 +60,8 @@ void DatabaseHeliosScreen::onDraw(sf::RenderTarget& window){
         && my_spaceship 
         && my_spaceship->science_query_to_bridge_db != ""
         && (!displayed_entry || displayed_entry->getName() != my_spaceship->science_query_to_bridge_db)){
-        my_spaceship->commandSendScienceQueryToBridgeDB("");
-        findAndDisplayEntry(my_spaceship->science_query_to_bridge_db);
+            findAndDisplayEntry(my_spaceship->science_query_to_bridge_db);
+            my_spaceship->commandSendScienceQueryToBridgeDB("");
     }
 }
 
