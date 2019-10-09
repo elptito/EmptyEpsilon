@@ -62,7 +62,7 @@ private:
     float last_measurement_time;
     RollingDeriviateAvg energy_deriv;
     ECrewPosition crew_position;
-    
+    float last_commands_time;
     void addSystemEffect(string key, string value);
 public:
     EngineControlScreen(GuiContainer* owner, ECrewPosition crew_position);
@@ -71,6 +71,8 @@ public:
     virtual void onHotkey(const HotkeyResult& key) override;
     virtual bool onJoystickAxis(const AxisAction& axisAction) override;
     bool hasControl();
+    void setAllSystemsCoolantRequests();
+    void setAllSystemsPowerRequests();
 };
 
 #endif//ENGINE_CONTROL_SCREEN_H

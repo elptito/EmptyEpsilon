@@ -108,6 +108,7 @@ EngineControlScreen::EngineControlScreen(GuiContainer* owner, ECrewPosition crew
     energy_deriv.last_measurement = 0.0;
     energy_deriv.average = 0.0;
     last_measurement_time = 0.0;
+    last_commands_time = 0.0;
 }
 
 void EngineControlScreen::RollingDeriviateAvg::apply(float deltaTime, float currentMeasurement){
@@ -133,6 +134,11 @@ void EngineControlScreen::onDraw(sf::RenderTarget& window)
         }
         last_measurement_time = engine->getElapsedTime();
 
+        if (hasControl() && last_commands_time < engine->getElapsedTime() - 1){
+            setAllSystemsCoolantRequests();
+            setAllSystemsPowerRequests();
+            last_commands_time = engine->getElapsedTime();
+        }
         energy_display->setValue(string(int(my_spaceship->energy_level)) + " (" + string(int(energy_deriv.average * 60.0f)) + "/m)");
         if (my_spaceship->energy_level < 100)
             energy_display->setColor(sf::Color::Red);
@@ -274,20 +280,34 @@ void EngineControlScreen::onDraw(sf::RenderTarget& window)
     GuiOverlay::onDraw(window);
 }
 
+void EngineControlScreen::setAllSystemsCoolantRequests(){
+    float values[SYS_COUNT];
+    for(int n=0; n<SYS_COUNT; n++){
+        ESystem system = ESystem(n);
+        if (my_spaceship->hasSystem(system)){
+            float position = joystick.getLastAxisValue("ENGINEERING", "COOLANT_" + getSystemName(system));
+            values[n] = (position + 1) / 2.0;
+        } else {
+            values[n] = 0.f;
+        }
+    }
+    my_spaceship->commandSetAllSystemsCoolantRequests(values);
+}
+
+void EngineControlScreen::setAllSystemsPowerRequests(){
+    for(int n=0; n<SYS_COUNT; n++){
+        ESystem system = ESystem(n);
+        if (my_spaceship->hasSystem(ESystem(n))){
+            float position = joystick.getLastAxisValue("ENGINEERING", "POWER_" + getSystemName(system));
+            my_spaceship->commandSetSystemPowerRequest(system, (position + 1) * 3.0 / 2.0);
+        }
+    }
+}
+
 bool EngineControlScreen::onJoystickAxis(const AxisAction& axisAction){
     if (hasControl() && axisAction.category == "ENGINEERING"){
         if (axisAction.action.startswith("COOLANT_")){
-            float values[SYS_COUNT];
-            for(int n=0; n<SYS_COUNT; n++){
-                if (my_spaceship->hasSystem(ESystem(n))){
-                    float position = joystick.getLastAxisValue("ENGINEERING", "COOLANT_" + getSystemName(ESystem(n)));
-                    values[n] = (position + 1) / 2.0;
-                } else {
-                    values[n] = 0.f;
-                }
-            }
-            my_spaceship->commandSetAllSystemsCoolantRequests(values);
-            LOG(INFO) << "max_coolant:" << my_spaceship->max_coolant  << " max_coolant_per_system:" << my_spaceship->max_coolant_per_system;
+            setAllSystemsCoolantRequests();
             return true;
         } 
         for(int n=0; n<SYS_COUNT; n++)
