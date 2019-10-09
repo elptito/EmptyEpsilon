@@ -72,7 +72,8 @@ public:
     void load();
     std::vector<string> getCategories();
     std::vector<std::pair<string, string>> listJoystickByCategory(string hotkey_category);
-    
+
+    float getLastAxisValue(string category, string action);
     std::vector<AxisAction> getAxisAction(unsigned int joystickId, sf::Joystick::Axis axis, float position);
     std::vector<HotkeyResult> getButtonAction(unsigned int joystickId, unsigned int button);
 

@@ -83,7 +83,7 @@ EngineControlScreen::EngineControlScreen(GuiContainer* owner, ECrewPosition crew
         info.heat_icon->setColor(colorConfig.overlay_overheating)->setPosition(0, 0, ACenter)->setSize(GuiElement::GuiSizeMatchHeight, GuiElement::GuiSizeMax);
         info.power_bar = new GuiProgressbar(info.layout, id + "_POWER", 0.0, 3.0, 0.0);
         info.power_bar->setColor(sf::Color(192, 192, 32, 128))->setSize(100, GuiElement::GuiSizeMax);
-        info.coolant_bar = new GuiProgressbar(info.layout, id + "_COOLANT", 0.0, 10.0, 0.0);
+        info.coolant_bar = new GuiProgressbar(info.layout, id + "_COOLANT", 0.0, my_spaceship->max_coolant, 0.0);
         info.coolant_bar->setColor(sf::Color(32, 128, 128, 128))->setSize(100, GuiElement::GuiSizeMax);
         info.effectiveness_bar = new GuiProgressbar(info.layout, id + "_EFFECTIVENESS", 0.0, 3.0, 0.0);
         info.effectiveness_bar->setSize(100, GuiElement::GuiSizeMax);
@@ -276,15 +276,25 @@ void EngineControlScreen::onDraw(sf::RenderTarget& window)
 
 bool EngineControlScreen::onJoystickAxis(const AxisAction& axisAction){
     if (hasControl() && axisAction.category == "ENGINEERING"){
+        if (axisAction.action.startswith("COOLANT_")){
+            float values[SYS_COUNT];
+            for(int n=0; n<SYS_COUNT; n++){
+                if (my_spaceship->hasSystem(ESystem(n))){
+                    float position = joystick.getLastAxisValue("ENGINEERING", "COOLANT_" + getSystemName(ESystem(n)));
+                    values[n] = (position + 1) / 2.0;
+                } else {
+                    values[n] = 0.f;
+                }
+            }
+            my_spaceship->commandSetAllSystemsCoolantRequests(values);
+            LOG(INFO) << "max_coolant:" << my_spaceship->max_coolant  << " max_coolant_per_system:" << my_spaceship->max_coolant_per_system;
+            return true;
+        } 
         for(int n=0; n<SYS_COUNT; n++)
         {
             ESystem system = ESystem(n);
             if (axisAction.action == "POWER_" + getSystemName(system)){
                 my_spaceship->commandSetSystemPowerRequest(system, (axisAction.value + 1) * 3.0 / 2.0);
-                return true;
-            } 
-            if (axisAction.action == "COOLANT_" + getSystemName(system)){
-                my_spaceship->commandSetSystemCoolantRequest(system, (axisAction.value + 1) * 10.0 / 2.0);
                 return true;
             }
         }

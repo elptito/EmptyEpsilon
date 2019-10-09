@@ -102,6 +102,34 @@ void JoystickConfig::load()
     }
 }
 
+float JoystickConfig::getLastAxisValue(string category, string action){
+    for(JoystickConfigCategory& cat : categories) {
+        if (cat.key == category){
+            for(AxisConfigItem& item : cat.axes)
+            {
+                if (item.defined && item.key == action)
+                {
+                    unsigned int joystickId = item.joystickId;
+                    if (joystickId == ANY_JOYSTICK){
+                        for (joystickId = 0; joystickId < sf::Joystick::Count; joystickId++){
+                            float position = InputHandler::getJoysticAxisPos(joystickId, item.axis);
+                            if (position != 0.f){
+                                return item.reversed? position / -100 : position / 100;
+                            }
+                        }
+                        return 0;
+                    } else {
+                        float position = InputHandler::getJoysticAxisPos(joystickId, item.axis);
+                        return item.reversed? position / -100 : position / 100;
+                    }
+                }
+            }
+            return 0;
+        }
+    }
+    return 0;
+}
+
 std::vector<AxisAction> JoystickConfig::getAxisAction(unsigned int joystickId, sf::Joystick::Axis axis, float position)
 {
     std::vector<AxisAction> actions;
@@ -118,6 +146,7 @@ std::vector<AxisAction> JoystickConfig::getAxisAction(unsigned int joystickId, s
     }
     return actions;
 }
+
 std::vector<HotkeyResult> JoystickConfig::getButtonAction(unsigned int joystickId, unsigned int button)
 {
     std::vector<HotkeyResult> actions;
@@ -216,7 +245,10 @@ void AxisConfigItem::load(string key_config)
     for(string& config : key_config.split(";"))
     {
         if (std::regex_match(config, matches, joystickIdExpression)) {
-            joystickId = std::stoi(matches[1]);
+            unsigned int inputJoystickId = std::stoi(matches[1]);
+            if(inputJoystickId >= 0 && inputJoystickId < sf::Joystick::Count){
+                joystickId = inputJoystickId;
+            }
         } else {
             if (config.startswith("-")){
                 reversed = true;

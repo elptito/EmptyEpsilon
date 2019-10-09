@@ -1186,6 +1186,20 @@ void PlayerSpaceship::handleClientCommand(int32_t client_id, int16_t command, sf
                 setSystemCoolantRequest(system, request);
         }
         break;
+    case CMD_SET_ALL_SYSTEMS_COOLANT_REQUESTS:
+        {
+            float values[SYS_COUNT];
+            float totalValue = 0;
+
+            for(int n=0; n<SYS_COUNT; n++){
+                packet >> values[n];
+                totalValue += values[n];
+            }
+            for(int n=0; n<SYS_COUNT; n++){
+                systems[n].coolant_request = values[n] * max_coolant / totalValue;
+            }
+        }
+        break;
     case CMD_OPEN_MID_RANGE_COMM:
         {
             int32_t id;
@@ -1641,6 +1655,17 @@ void PlayerSpaceship::commandSetSystemCoolantRequest(ESystem system, float coola
     sf::Packet packet;
     systems[system].coolant_request = coolant_request;
     packet << CMD_SET_SYSTEM_COOLANT_REQUEST << system << coolant_request;
+    sendClientCommand(packet);
+}
+
+void PlayerSpaceship::commandSetAllSystemsCoolantRequests(float coolant_requests[SYS_COUNT])
+{
+    sf::Packet packet;
+    packet << CMD_SET_ALL_SYSTEMS_COOLANT_REQUESTS;
+    for(int n=0; n<SYS_COUNT; n++){
+        ESystem system = ESystem(n);
+        packet << coolant_requests[n];
+    }
     sendClientCommand(packet);
 }
 

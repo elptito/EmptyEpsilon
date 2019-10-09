@@ -65,6 +65,7 @@ protected:
     static const int16_t CMD_TASK_COMPLETED = 0x003C;
     static const int16_t CMD_OPEN_MID_RANGE_COMM = 0x003D; //VOICE communication
     static const int16_t CMD_SEND_QUERY = 0x003E; //VOICE communication
+    static const int16_t CMD_SET_ALL_SYSTEMS_COOLANT_REQUESTS = 0x003F;
 
 public:
 
@@ -272,6 +273,7 @@ public:
     void commandScan(P<SpaceObject> object);
     void commandSetSystemPowerRequest(ESystem system, float power_level);
     void commandSetSystemCoolantRequest(ESystem system, float coolant_level);
+    void commandSetAllSystemsCoolantRequests(float coolant_level[SYS_COUNT]);
     void commandOpenVoiceComm(P<SpaceObject> obj);
     void commandOpenTextComm(P<SpaceObject> obj);
     void commandCloseVoiceComm();
