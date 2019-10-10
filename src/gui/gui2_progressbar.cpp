@@ -1,7 +1,7 @@
 #include "gui2_progressbar.h"
 
 GuiProgressbar::GuiProgressbar(GuiContainer* owner, string id, float min_value, float max_value, float start_value)
-: GuiElement(owner, id), min_value(min_value), max_value(max_value), value(start_value), color(sf::Color(255, 255, 255, 64)), text_color(sf::Color::White), drawBackground(true), bi_directional(false)
+: GuiElement(owner, id), min_value(min_value), max_value(max_value), value(start_value), color(sf::Color(255, 255, 255, 64)), text_color(sf::Color::White), drawBackground(true), bi_directional(false), text_size(30.f)
 {
 }
 
@@ -42,7 +42,7 @@ void GuiProgressbar::onDraw(sf::RenderTarget& window)
         }
         drawStretchedV(window, fill_rect, "gui/ProgressbarFill", color);
     }
-    drawText(window, rect, text, ACenter, 30.f, main_font, text_color);
+    drawText(window, rect, text, ACenter, text_size, main_font, text_color);
 }
 
 GuiProgressbar* GuiProgressbar::setValue(float value)
@@ -89,5 +89,10 @@ GuiProgressbar* GuiProgressbar::setDrawBackground(bool drawBackground)
 GuiProgressbar* GuiProgressbar::setBiDirectional(bool biDirectional)
 {
     this->bi_directional = biDirectional;
+    return this;
+}
+GuiProgressbar* GuiProgressbar::setTextSize(float size)
+{
+    this->text_size = size;
     return this;
 }

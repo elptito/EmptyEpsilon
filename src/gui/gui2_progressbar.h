@@ -13,6 +13,7 @@ private:
     sf::Color text_color;
     bool drawBackground;
     bool bi_directional;
+    float text_size;
     string text;
 public:
     GuiProgressbar(GuiContainer* owner, string id, float min_value, float max_value, float start_value);
@@ -25,6 +26,7 @@ public:
     GuiProgressbar* setText(string text);
     GuiProgressbar* setColor(sf::Color color);
     GuiProgressbar* setTextColor(sf::Color color);
+    GuiProgressbar* setTextSize(float size);
     GuiProgressbar* setDrawBackground(bool drawBackground);
     GuiProgressbar* setBiDirectional(bool biDirectional);
 };

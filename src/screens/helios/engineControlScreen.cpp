@@ -72,9 +72,9 @@ EngineControlScreen::EngineControlScreen(GuiContainer* owner, ECrewPosition crew
         info.repair_icon->setPosition(0, 0, ACenter)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
         info.damage_bar = new GuiProgressbar(info.layout, id + "_DAMAGE", 0.0, 1.0, 0.0);
-        info.damage_bar->setSize(100, GuiElement::GuiSizeMax);
-        info.damage_label = new GuiLabel(info.damage_bar, id + "_DAMAGE_LABEL", "...", 20);
-        info.damage_label->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+        info.damage_bar->setTextSize(20)->setSize(100, GuiElement::GuiSizeMax);
+        // info.damage_label = new GuiLabel(info.damage_bar, id + "_DAMAGE_LABEL", "...", 20);
+        // info.damage_label->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
         info.heat_bar = new GuiProgressbar(info.layout, id + "_HEAT", 0.0, 1.0, 0.0);
         info.heat_bar->setSize(100, GuiElement::GuiSizeMax);
         info.heat_arrow = new GuiArrow(info.heat_bar, id + "_HEAT_ARROW", 0);
@@ -82,7 +82,7 @@ EngineControlScreen::EngineControlScreen(GuiContainer* owner, ECrewPosition crew
         info.heat_icon = new GuiImage(info.heat_bar, "", "gui/icons/status_overheat");
         info.heat_icon->setColor(colorConfig.overlay_overheating)->setPosition(0, 0, ACenter)->setSize(GuiElement::GuiSizeMatchHeight, GuiElement::GuiSizeMax);
         info.power_bar = new GuiProgressbar(info.layout, id + "_POWER", 0.0, 3.0, 0.0);
-        info.power_bar->setColor(sf::Color(192, 192, 32, 128))->setSize(100, GuiElement::GuiSizeMax);
+        info.power_bar->setTextSize(20)->setColor(sf::Color(192, 192, 32, 128))->setSize(100, GuiElement::GuiSizeMax);
         info.coolant_bar = new GuiProgressbar(info.layout, id + "_COOLANT", 0.0, my_spaceship->max_coolant, 0.0);
         info.coolant_bar->setColor(sf::Color(32, 128, 128, 128))->setSize(100, GuiElement::GuiSizeMax);
         info.effectiveness_bar = new GuiProgressbar(info.layout, id + "_EFFECTIVENESS", 0.0, 3.0, 0.0);
@@ -175,7 +175,7 @@ void EngineControlScreen::onDraw(sf::RenderTarget& window)
                 info.damage_bar->setValue(-health)->setColor(sf::Color(128, 32, 32, 192));
             else
                 info.damage_bar->setValue(health)->setColor(sf::Color(64, 128 * health, 64 * health, 192));
-            info.damage_label->setText(string(int(health * 100)) + "%");
+            info.damage_bar->setText(string(int(health * 100)) + "%");
 
             float heat = system.heat_level;
             info.heat_bar->setValue(heat)->setColor(sf::Color(128, 32 + 96 * (1.0 - heat), 32, 192));
@@ -192,6 +192,7 @@ void EngineControlScreen::onDraw(sf::RenderTarget& window)
                 info.heat_icon->hide();
 
             info.power_bar->setValue(system.power_level);
+            info.power_bar->setText(string(int(system.power_level * 100)) + "%")->setTextColor(system.power_level > 1 ? sf::Color::Red : sf::Color::White);
             info.coolant_bar->setValue(system.coolant_level);
             
             float effectiveness = my_spaceship->getSystemEffectiveness(selected_system);
@@ -299,7 +300,13 @@ void EngineControlScreen::setAllSystemsPowerRequests(){
         ESystem system = ESystem(n);
         if (my_spaceship->hasSystem(ESystem(n))){
             float position = joystick.getLastAxisValue("ENGINEERING", "POWER_" + getSystemName(system));
-            my_spaceship->commandSetSystemPowerRequest(system, (position + 1) * 3.0 / 2.0);
+            if (position <= 0){
+                // under 100%
+                my_spaceship->commandSetSystemPowerRequest(system, position + 1);
+            } else {
+                // 100%-300%
+                my_spaceship->commandSetSystemPowerRequest(system, 2 * position + 1);
+            }
         }
     }
 }
@@ -314,7 +321,14 @@ bool EngineControlScreen::onJoystickAxis(const AxisAction& axisAction){
         {
             ESystem system = ESystem(n);
             if (axisAction.action == "POWER_" + getSystemName(system)){
-                my_spaceship->commandSetSystemPowerRequest(system, (axisAction.value + 1) * 3.0 / 2.0);
+                if (axisAction.value <= 0){
+                    // under 100%
+                    my_spaceship->commandSetSystemPowerRequest(system, axisAction.value + 1);
+                } else {
+                    // 100%-300%
+                     my_spaceship->commandSetSystemPowerRequest(system, 2 * axisAction.value + 1);
+                }
+               
                 return true;
             }
         }

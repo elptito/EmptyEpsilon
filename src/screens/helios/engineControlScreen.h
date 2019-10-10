@@ -44,7 +44,7 @@ private:
         GuiAutoLayout* layout;
         GuiLabel* name_label;
         GuiProgressbar* damage_bar;
-        GuiLabel* damage_label;
+        // GuiLabel* damage_label;
         GuiProgressbar* heat_bar;
         GuiArrow* heat_arrow;
         GuiImage* heat_icon;
