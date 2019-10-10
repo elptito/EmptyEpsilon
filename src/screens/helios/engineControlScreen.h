@@ -54,6 +54,7 @@ private:
         GuiLabel* repair_label;
         GuiImage* repair_icon;
         RollingDeriviateAvg heat_deriv;
+        GuiLabel* energy_label;
     };
     std::vector<SystemRow> system_rows;
     GuiAutoLayout* system_effects_container;

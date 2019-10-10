@@ -72,9 +72,7 @@ EngineControlScreen::EngineControlScreen(GuiContainer* owner, ECrewPosition crew
         info.repair_icon->setPosition(0, 0, ACenter)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
         info.damage_bar = new GuiProgressbar(info.layout, id + "_DAMAGE", 0.0, 1.0, 0.0);
-        info.damage_bar->setTextSize(20)->setSize(100, GuiElement::GuiSizeMax);
-        // info.damage_label = new GuiLabel(info.damage_bar, id + "_DAMAGE_LABEL", "...", 20);
-        // info.damage_label->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+        info.damage_bar->setTextSize(20)->setSize(80, GuiElement::GuiSizeMax);
         info.heat_bar = new GuiProgressbar(info.layout, id + "_HEAT", 0.0, 1.0, 0.0);
         info.heat_bar->setSize(100, GuiElement::GuiSizeMax);
         info.heat_arrow = new GuiArrow(info.heat_bar, id + "_HEAT_ARROW", 0);
@@ -82,12 +80,15 @@ EngineControlScreen::EngineControlScreen(GuiContainer* owner, ECrewPosition crew
         info.heat_icon = new GuiImage(info.heat_bar, "", "gui/icons/status_overheat");
         info.heat_icon->setColor(colorConfig.overlay_overheating)->setPosition(0, 0, ACenter)->setSize(GuiElement::GuiSizeMatchHeight, GuiElement::GuiSizeMax);
         info.power_bar = new GuiProgressbar(info.layout, id + "_POWER", 0.0, 3.0, 0.0);
-        info.power_bar->setTextSize(20)->setColor(sf::Color(192, 192, 32, 128))->setSize(100, GuiElement::GuiSizeMax);
+        info.power_bar->setTextSize(20)->setColor(sf::Color(192, 192, 32, 128))->setSize(80, GuiElement::GuiSizeMax);
         info.coolant_bar = new GuiProgressbar(info.layout, id + "_COOLANT", 0.0, my_spaceship->max_coolant, 0.0);
         info.coolant_bar->setColor(sf::Color(32, 128, 128, 128))->setSize(100, GuiElement::GuiSizeMax);
         info.effectiveness_bar = new GuiProgressbar(info.layout, id + "_EFFECTIVENESS", 0.0, 3.0, 0.0);
         info.effectiveness_bar->setSize(100, GuiElement::GuiSizeMax);
         
+        info.energy_label = new GuiLabel(info.layout, id + "_ENERGY", getSystemName(ESystem(n)), 20);
+        info.energy_label->addBackground()->setSize(70, GuiElement::GuiSizeMax);
+
         info.layout->moveToBack();
         system_rows.push_back(info);
     }
@@ -96,11 +97,12 @@ EngineControlScreen::EngineControlScreen(GuiContainer* owner, ECrewPosition crew
     headers_layout->setSize(GuiElement::GuiSizeMax, 50);
     (new GuiLabel(headers_layout, "NAME_TITLE", "Name", 20))->setSize(200, GuiElement::GuiSizeMax);
     (new GuiLabel(headers_layout, "REPAIR_TITLE", "Repairing", 20))->setSize(70, GuiElement::GuiSizeMax);
-    (new GuiLabel(headers_layout, "HEALTH_TITLE", "Health", 20))->setSize(100, GuiElement::GuiSizeMax);
+    (new GuiLabel(headers_layout, "HEALTH_TITLE", "Health", 20))->setSize(80, GuiElement::GuiSizeMax);
     (new GuiLabel(headers_layout, "HEAT_TITLE", "Heat", 20))->setSize(100, GuiElement::GuiSizeMax);
-    (new GuiLabel(headers_layout, "POWER_TITLE", "Power", 20))->setSize(100, GuiElement::GuiSizeMax);
+    (new GuiLabel(headers_layout, "POWER_TITLE", "Power", 20))->setSize(80, GuiElement::GuiSizeMax);
     (new GuiLabel(headers_layout, "COOLANT_TITLE", "Coolant", 20))->setSize(100, GuiElement::GuiSizeMax);
     (new GuiLabel(headers_layout, "EFFECTIVENESS_TITLE", "Effectiveness", 20))->setSize(100, GuiElement::GuiSizeMax);
+    (new GuiLabel(headers_layout, "ENERGY_TITLE", "Energy", 20))->setSize(70, GuiElement::GuiSizeMax);
 
     system_effects_container = new GuiAutoLayout(this, "SYSTEM_EFFECTS", GuiAutoLayout::LayoutVerticalTopToBottom);
     system_effects_container->setPosition(-50, 50, ATopRight)->setSize(270, GuiElement::GuiSizeMax);
@@ -196,15 +198,21 @@ void EngineControlScreen::onDraw(sf::RenderTarget& window)
             info.coolant_bar->setValue(system.coolant_level);
             
             float effectiveness = my_spaceship->getSystemEffectiveness(selected_system);
+            float energy = 0.f;
+            const float powerFactor = PlayerSpaceship::system_power_user_factor[n];
+            if (powerFactor < 0) {
+                if (effectiveness > 1.0f)
+                    effectiveness = (1.0f + effectiveness) / 2.0f;
+                energy = powerFactor * effectiveness;
+            } else {
+                energy = powerFactor * system.power_level;
+            }
+            info.energy_label->setText(string(-energy * 60.0, 1) + "/m");
+
             info.effectiveness_bar->setValue(effectiveness)->setColor(GuiSystemStatus::getSystemEffectivenessColor(effectiveness));
 
             switch(selected_system)
             {
-            case SYS_Reactor:
-                if (effectiveness > 1.0f)
-                    effectiveness = (1.0f + effectiveness) / 2.0f;
-                addSystemEffect("Energy production", string(effectiveness * -PlayerSpaceship::system_power_user_factor[SYS_Reactor] * 60.0, 1) + "/m");
-                break;
             case SYS_BeamWeapons:
                 addSystemEffect("Beams Firing rate", string(int(effectiveness * 100)) + "%");
                 // If the ship has a turret, also note that the rotation rate
