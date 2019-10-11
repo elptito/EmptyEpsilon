@@ -353,3 +353,15 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
     else
         delete_waypoint_button->disable();
 }
+
+void RelayScreen::onHotkey(const HotkeyResult& key){
+    if (key.category == "RELAY" && my_spaceship)
+    {
+        for(int level=AL_Normal; level < AL_MAX; level++){
+            EAlertLevel aleretLevel = EAlertLevel(level);
+            if (key.hotkey == std::string("SET_ALERT_") + alertLevelToString(aleretLevel)){
+                my_spaceship->commandSetAlertLevel(aleretLevel);
+            }
+        }
+    }
+}

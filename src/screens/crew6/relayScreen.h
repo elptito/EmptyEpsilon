@@ -67,6 +67,7 @@ public:
     RelayScreen(GuiContainer* owner, bool has_comms = true, bool has_hack = true, bool has_log = true);
 
     virtual void onDraw(sf::RenderTarget& window);
+    virtual void onHotkey(const HotkeyResult& key) override;
 };
 
 #endif //RELAY_SCREEN_H

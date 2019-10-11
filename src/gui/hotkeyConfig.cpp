@@ -162,6 +162,12 @@ HotkeyConfig::HotkeyConfig()
     newKey("PREV_DRONE", std::make_tuple("Select previous drone to connect", "[B4]"));
     newKey("NEXT_DRONE", std::make_tuple("Select next drone to connect", "[B6]"));
     
+    
+    newCategory("RELAY", "Relay Officer");
+    for(int level=AL_Normal; level < AL_MAX; level++){
+        string alertname = alertLevelToString(EAlertLevel(level));
+        newKey(std::string("SET_ALERT_") + alertname, std::make_tuple(std::string("set alert level ") + alertname, string(level, 0)));
+    }
 }
 
 static std::vector<std::pair<string, sf::Keyboard::Key> > sfml_key_names = {
