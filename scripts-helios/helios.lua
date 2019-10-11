@@ -2,10 +2,12 @@
 local densityLayer = 0
 local firstHighway = densityLayer + 1
 -- initialize map layers
+-- bug: when ship freq. X , layer named X+1 is in effect
+
 function initLayers()
 	setMapLayer(densityLayer, "space dilation_00004_00000.png", 0, 0, 7000, "Density")
 	for i=firstHighway, (10 - firstHighway) do 
-		setMapLayer(i, "space dilation_00004_000" .. string.format("%02d", i) .. ".png", 0, 0, 7000, "Highways " .. getFrequencyDisplayName(i))
+		setMapLayer(i, "space dilation_00004_000" .. string.format("%02d", i) .. ".png", 0, 0, 7000, "Highways " .. getFrequencyDisplayName(i-firstHighway))
 	end
 end
 
