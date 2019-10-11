@@ -518,7 +518,7 @@ ShipFileLogger::ShipFileLogger()
 
 string ShipFileLogger::fileName(){
     if (ship){
-        return string("logs/ship_log_")+ ship->getCallSign() + "_" + station + ".txt";
+        return string("www/ship_log_")+ ship->getCallSign() + "_" + station + ".html";
     } else return "";
 }
 
@@ -533,10 +533,20 @@ void ShipFileLogger::start(SpaceShip* shipArg, string stationArg)
             openArg = "wt";
         }
         FILE* log_file = fopen(file_name.c_str(), openArg.c_str());
-        if (log_file)
+        if (log_file){
             LOG(INFO) << "Opened ship log: " << file_name;
-        else
-            LOG(WARNING) << "Failed to open ship log file: " << file_name;
+            P<ResourceStream> stream = getResourceStream("log_template.html");
+            if (stream){
+                LOG(INFO) << "opened log template: log_template.html";
+                while(stream->tell() < stream->getSize()) {
+                    string line = stream->readLine().replace("${TITLE}", stationArg) + "\n";
+                    fwrite(line.c_str(), 1, line.size(), log_file);
+                }
+            } else 
+                LOG(ERROR) << "Failed to open log template: log_template.html";
+        } else
+            LOG(ERROR) << "Failed to open ship log file: " << file_name;
+
         fclose(log_file);
     }
 }
@@ -562,24 +572,14 @@ void ShipFileLogger::update(float delta)
             if (log_file){
                 auto lastKnownGood = std::find_if(log.rbegin(), log.rend(), [this](SpaceShip::ShipLogEntry e) { return e.time <= last_time; });
                 int idxToUpdate = std::distance(lastKnownGood, log.rend()); 
-                for (auto line = log.begin() + idxToUpdate; line != log.end(); ++line){
-                    char* ptr = log_line_buffer;
-                    {
-                        JSONGenerator json(ptr);
-                        json.write("time", line->time);
-                        json.write("station", line->station);
-                        json.write("text", line->text);
-                        std::stringstream sstream;
-                        sstream << "#" 
-                            << std::setfill ('0') << std::setw(8) 
-                            << std::hex << line->color.toInteger();
-                        json.write("color", sstream.str());
-                        // end of scope for json, invokes the destructor
-                    }
-                    *ptr++ = '\n';
-                    *ptr = '\0';
-                    fwrite(log_line_buffer, 1, ptr - log_line_buffer, log_file);
+                for (auto line = log.begin() + idxToUpdate; line != log.end(); ++line){                
+                    std::stringstream sstream;
+                    sstream << "#" 
+                        << std::setfill ('0') << std::setw(8) 
+                        << std::hex << line->color.toInteger();
                     last_time = line->time;
+                    string divLine = "	  <div class=\"row\"><span class=\"timestamp\">"+ string(line->time, 1) +"</span><span style=\"color: "+ sstream.str() +"\">"+ line->text +"</span></div>\n";
+                    fwrite(divLine.c_str(), 1, divLine.size(), log_file);
                 }
                 fclose(log_file);
             } else {
