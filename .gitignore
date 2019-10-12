@@ -39,7 +39,7 @@ thumbs.db
 
 .idea
 *.html
-!www/*.html
+!www/logs.html
 !resources/*.html
 .vscode
 logs/*.txt
