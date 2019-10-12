@@ -558,7 +558,6 @@ void ShipFileLogger::stop()
 
 void ShipFileLogger::update(float delta)
 {
-    static char log_line_buffer[1024 * 10];
     if (!ship || !P<SpaceShip>(ship) || delta == 0.0)
         return;
     if (ship->isDestroyed()){

@@ -1663,7 +1663,6 @@ void PlayerSpaceship::commandSetAllSystemsCoolantRequests(float coolant_requests
     sf::Packet packet;
     packet << CMD_SET_ALL_SYSTEMS_COOLANT_REQUESTS;
     for(int n=0; n<SYS_COUNT; n++){
-        ESystem system = ESystem(n);
         packet << coolant_requests[n];
     }
     sendClientCommand(packet);
