@@ -66,6 +66,9 @@ protected:
     static const int16_t CMD_OPEN_MID_RANGE_COMM = 0x003D; //VOICE communication
     static const int16_t CMD_SEND_QUERY = 0x003E; //VOICE communication
     static const int16_t CMD_SET_ALL_SYSTEMS_COOLANT_REQUESTS = 0x003F;
+    static const int16_t CMD_ADD_ROUTE_WAYPOINT = 0x0040;
+    static const int16_t CMD_REMOVE_ROUTE_WAYPOINT = 0x0041;
+    static const int16_t CMD_MOVE_ROUTE_WAYPOINT = 0x0042;
 
 public:
 
@@ -123,6 +126,8 @@ public:
     // Maximum number of self-destruction confirmation codes
     constexpr static int max_self_destruct_codes = 3;
     constexpr static int max_science_tasks = 10;
+    constexpr static unsigned int max_routes = 7;
+    constexpr static unsigned int max_waypoints_in_route = 20;
 
     static float warp_terrain_cap; 
 
@@ -190,6 +195,7 @@ public:
     std::vector<CustomShipFunction> custom_functions;
 
     std::vector<sf::Vector2f> waypoints;
+    sf::Vector2f routes[max_routes][max_waypoints_in_route];
     
     // Scan probe capacity
     int max_scan_probes;
@@ -286,6 +292,9 @@ public:
     void commandAddWaypoint(sf::Vector2f position);
     void commandRemoveWaypoint(int32_t index);
     void commandMoveWaypoint(int32_t index, sf::Vector2f position);
+    void commandAddRouteWaypoint(unsigned int route, sf::Vector2f position);
+    void commandRemoveRouteWaypoint(unsigned int route, unsigned int index);
+    void commandMoveRouteWaypoint(unsigned int route, unsigned int index, sf::Vector2f position);
     void commandActivateSelfDestruct();
     void commandCancelSelfDestruct();
     void commandConfirmDestructCode(int8_t index, uint32_t code);
@@ -356,6 +365,12 @@ static inline sf::Packet& operator << (sf::Packet& packet, const PlayerSpaceship
 static inline sf::Packet& operator >> (sf::Packet& packet, PlayerSpaceship::CustomShipFunction& csf) { int8_t tmp; packet >> tmp; csf.type = PlayerSpaceship::CustomShipFunction::Type(tmp); packet >> tmp; csf.crew_position = ECrewPosition(tmp); packet >> csf.name >> csf.caption; return packet; }
 
 string alertLevelToString(EAlertLevel level);
+
+static const sf::Vector2f empty_waypoint = sf::Vector2f(FLT_MAX, FLT_MAX);
+static const sf::Color routeColors[PlayerSpaceship::max_routes] = {
+    sf::Color::Red, sf::Color::White, sf::Color::Green, 
+    sf::Color::Blue, sf::Color::Yellow, sf::Color::Magenta, 
+    sf::Color::Cyan};
 
 #ifdef _MSC_VER
 #include "playerSpaceship.hpp"

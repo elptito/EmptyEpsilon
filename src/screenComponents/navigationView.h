@@ -26,7 +26,7 @@ class NavigationView : public SectorsView
     }
 private:
     void drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget& window_alpha);
-    void drawWaypoints(sf::RenderTarget &window);
+    void drawRoutes(sf::RenderTarget &window);
 };
 
 #endif //NAVIGATION_VIEW_H

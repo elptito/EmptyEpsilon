@@ -29,7 +29,7 @@ void NavigationView::onDraw(sf::RenderTarget& window)
     forground_texture.clear(sf::Color::Transparent);
     
     drawObjects(forground_texture, background_texture);
-    drawWaypoints(forground_texture);
+    drawRoutes(forground_texture);
     drawTargets(forground_texture);
 
     if (my_spaceship)
@@ -53,7 +53,7 @@ void NavigationView::onDraw(sf::RenderTarget& window)
     drawRenderTexture(forground_texture, window);
 }
 
-void NavigationView::drawWaypoints(sf::RenderTarget& window)
+void NavigationView::drawRoutes(sf::RenderTarget& window)
 {
     if (!my_spaceship)
         return;
@@ -61,19 +61,23 @@ void NavigationView::drawWaypoints(sf::RenderTarget& window)
     sf::Vector2f radar_screen_center(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f);
     float scale = std::min(rect.width, rect.height) / 2.0f / getDistance();
 
-    for(unsigned int n=0; n<my_spaceship->waypoints.size(); n++)
-    {
-        sf::Vector2f screen_position = radar_screen_center + (my_spaceship->waypoints[n] - getViewPosition()) * scale;
+    for(unsigned int r = 0; r < PlayerSpaceship::max_routes; r++){
+        for(unsigned int wp = 0; wp < PlayerSpaceship::max_waypoints_in_route; wp++){
+            if (my_spaceship->routes[r][wp] < empty_waypoint){
+                sf::Vector2f screen_position = radar_screen_center + (my_spaceship->routes[r][wp] - getViewPosition()) * scale;
 
-        sf::Sprite object_sprite;
-        textureManager.setTexture(object_sprite, "waypoint");
-        object_sprite.setColor(colorConfig.ship_waypoint_background);
-        object_sprite.setPosition(screen_position - sf::Vector2f(0, 10));
-        object_sprite.setScale(0.8, 0.8);
-        window.draw(object_sprite);
-        drawText(window, sf::FloatRect(screen_position.x, screen_position.y - 10, 0, 0), string(n + 1), ACenter, 18, bold_font, colorConfig.ship_waypoint_text);
+                sf::Sprite object_sprite;
+                textureManager.setTexture(object_sprite, "waypoint");
+                object_sprite.setColor(routeColors[r]);
+                object_sprite.setPosition(screen_position - sf::Vector2f(0, 10));
+                object_sprite.setScale(0.8, 0.8);
+                window.draw(object_sprite);
+                drawText(window, sf::FloatRect(screen_position.x, screen_position.y - 10, 0, 0), string(wp + 1), ACenter, 18, bold_font, colorConfig.ship_waypoint_text);
+            }
+        }
     }
 }
+
 void NavigationView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget& window_alpha)
 {
     sf::Vector2f radar_screen_center(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f);

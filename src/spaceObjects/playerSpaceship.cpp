@@ -221,6 +221,14 @@ PlayerSpaceship::PlayerSpaceship()
     registerMemberReplication(&comms_target_name);
     registerMemberReplication(&comms_incomming_message);
     registerMemberReplication(&waypoints);
+    for(unsigned int r = 0; r < max_routes; r++)
+    {
+        for(unsigned int wp = 0; wp < max_waypoints_in_route; wp++)
+        {
+            routes[r][wp] = empty_waypoint;
+            registerMemberReplication(&routes[r][wp]);
+        }
+    }
     registerMemberReplication(&scan_probe_stock);
     registerMemberReplication(&activate_self_destruct);
     registerMemberReplication(&self_destruct_countdown, 0.2);
@@ -1396,6 +1404,38 @@ void PlayerSpaceship::handleClientCommand(int32_t client_id, int16_t command, sf
                 waypoints[index] = position;
         }
         break;
+    case CMD_ADD_ROUTE_WAYPOINT:
+        {
+            unsigned int route;
+            sf::Vector2f position;
+            packet >> route >> position;
+            for (unsigned int i = 0; i < max_waypoints_in_route; i++){
+                if (routes[route][i] >= empty_waypoint){
+                    routes[route][i] = position;
+                    break;
+                }
+            }
+        }
+        break;
+    case CMD_REMOVE_ROUTE_WAYPOINT:
+        {
+            unsigned int route;
+            unsigned int index;
+            packet >> route >> index;
+            if (index >= 0 && index < max_waypoints_in_route)
+                routes[route][index] = empty_waypoint;
+        }
+        break;
+    case CMD_MOVE_ROUTE_WAYPOINT:
+        {
+            unsigned int route;
+            unsigned int index;
+            sf::Vector2f position;
+            packet >> route >> index >> position;
+            if (index >= 0 && index < max_waypoints_in_route)
+                routes[route][index] = position;
+        }
+        break;
     case CMD_ACTIVATE_SELF_DESTRUCT:
         activate_self_destruct = true;
         addToShipLog("Auto destruction activated",sf::Color::Red,"intern");
@@ -1746,6 +1786,27 @@ void PlayerSpaceship::commandMoveWaypoint(int32_t index, sf::Vector2f position)
 {
     sf::Packet packet;
     packet << CMD_MOVE_WAYPOINT << index << position;
+    sendClientCommand(packet);
+}
+
+void PlayerSpaceship::commandAddRouteWaypoint(unsigned int route, sf::Vector2f position)
+{
+    sf::Packet packet;
+    packet << CMD_ADD_ROUTE_WAYPOINT << route << position;
+    sendClientCommand(packet);
+}
+
+void PlayerSpaceship::commandRemoveRouteWaypoint(unsigned int route, unsigned int index)
+{
+    sf::Packet packet;
+    packet << CMD_REMOVE_ROUTE_WAYPOINT << route << index;
+    sendClientCommand(packet);
+}
+
+void PlayerSpaceship::commandMoveRouteWaypoint(unsigned int route, unsigned int index, sf::Vector2f position)
+{
+    sf::Packet packet;
+    packet << CMD_MOVE_ROUTE_WAYPOINT << route << index << position;
     sendClientCommand(packet);
 }
 
