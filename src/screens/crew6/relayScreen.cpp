@@ -30,7 +30,7 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms, bool has_hack, boo
     radar->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
     radar->setCallbacks(
         [this](sf::Vector2f position) { //down
-            if (mode == TargetSelection && targets.getWaypointIndex() > -1 && my_spaceship)
+            if (mode == TargetSelection && targets.getWaypointIndex() > -1 && my_spaceship && my_spaceship->waypoints[targets.getWaypointIndex()] < empty_waypoint)
             {
                 if (sf::length(my_spaceship->waypoints[targets.getWaypointIndex()] - position) < 1000.0)
                 {
@@ -81,10 +81,13 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms, bool has_hack, boo
     GuiAutoLayout* sidebar = new GuiAutoLayout(this, "SIDE_BAR", GuiAutoLayout::LayoutVerticalTopToBottom);
     sidebar->setPosition(-20, 150, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
 
-    info_callsign = new GuiKeyValueDisplay(sidebar, "SCIENCE_CALLSIGN", 0.4, "Callsign", "");
+    info_location = new GuiKeyValueDisplay(sidebar, "INFO_LOCATION", 0.4, "Location", "");
+    info_location->setSize(GuiElement::GuiSizeMax, 30);
+
+    info_callsign = new GuiKeyValueDisplay(sidebar, "INFO_CALLSIGN", 0.4, "Callsign", "");
     info_callsign->setSize(GuiElement::GuiSizeMax, 30);
 
-    info_faction = new GuiKeyValueDisplay(sidebar, "SCIENCE_FACTION", 0.4, "Faction", "");
+    info_faction = new GuiKeyValueDisplay(sidebar, "INFO_FACTION", 0.4, "Faction", "");
     info_faction->setSize(GuiElement::GuiSizeMax, 30);
 
     // Controls for the radar view
@@ -298,6 +301,7 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
         P<SpaceStation> station = obj;
         P<ScanProbe> probe = obj;
 
+        info_location->setValue(getStringFromPosition(obj->getPosition()));
         info_callsign->setValue(obj->getCallSign());
 
         if (ship)
@@ -342,15 +346,17 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
 		link_to_3D_port_button->disable();
 		link_to_3D_port_button->setValue(false);
         info_callsign->setValue("-");
+        info_location->setValue("-");
     }
     if (my_spaceship)
     {
         launch_probe_button->setText("Launch probe (" + string(my_spaceship->scan_probe_stock) + ")");
     }
 
-    if (targets.getWaypointIndex() >= 0)
+    if (targets.getWaypointIndex() >= 0 && my_spaceship->waypoints[targets.getWaypointIndex()] < empty_waypoint){
         delete_waypoint_button->enable();
-    else
+        info_location->setValue(getStringFromPosition(my_spaceship->waypoints[targets.getWaypointIndex()]));
+    } else
         delete_waypoint_button->disable();
 }
 

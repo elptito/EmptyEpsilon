@@ -33,6 +33,7 @@ private:
     int drag_waypoint_index;
     GuiRadarView* radar;
 
+    GuiKeyValueDisplay* info_location;
     GuiKeyValueDisplay* info_callsign;
     GuiKeyValueDisplay* info_faction;
 
