@@ -65,6 +65,7 @@ public:
     TargetsContainer * getTargets(){return targets;};
     void drawTargets(sf::RenderTarget &window);
     void drawTerrain(sf::RenderTarget &window);
+    void drawRoutes(sf::RenderTarget &window);
     virtual sf::Vector2f getCenterPosition();
 private:
   int calcGridScaleMagnitude(int scale_magnitude, int position);

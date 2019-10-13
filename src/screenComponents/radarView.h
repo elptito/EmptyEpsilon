@@ -51,6 +51,7 @@ private:
     bool long_range;
     bool show_ghost_dots;
     bool show_waypoints;
+    bool show_routes;
     bool show_target_projection;
     bool show_missile_tubes;
     bool show_callsigns;
@@ -78,6 +79,8 @@ public:
     GuiRadarView* disableGhostDots() { show_ghost_dots = false; return this; }
     GuiRadarView* enableWaypoints() { show_waypoints = true; return this; }
     GuiRadarView* disableWaypoints() { show_waypoints = false; return this; }
+    GuiRadarView* enableRoutes() { show_routes = true; return this; }
+    GuiRadarView* disableRoutes() { show_routes = false; return this; }
     GuiRadarView* enableTargetProjections(MissileAim* missile_tube_controls) { show_target_projection = true; this->missile_tube_controls = missile_tube_controls; return this; }
     GuiRadarView* disableTargetProjections() { show_target_projection = false; return this; }
     GuiRadarView* enableMissileTubeIndicators() { show_missile_tubes = true; return this; }

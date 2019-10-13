@@ -130,6 +130,8 @@ void GuiRadarView::onDraw(sf::RenderTarget& window)
         ));
     }
     //Post masking
+    if (show_routes)
+        drawRoutes(forground_texture);
     if (show_waypoints)
         drawWaypoints(forground_texture);
     if (show_heading_indicators)
