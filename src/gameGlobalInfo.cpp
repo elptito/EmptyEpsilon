@@ -60,6 +60,7 @@ GameGlobalInfo::GameGlobalInfo()
     }
     for(int n=0; n<max_map_layers; n++)
     {
+        registerMemberReplication(&layer[n].title);
         registerMemberReplication(&layer[n].textureName);
         registerMemberReplication(&layer[n].scale);
         registerMemberReplication(&layer[n].coordinates);
