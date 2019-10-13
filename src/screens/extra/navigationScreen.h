@@ -27,7 +27,9 @@ private:
     bool placeWayPoints;
     TargetsContainer targets;
     int drag_waypoint_index;
+    int route_index;
     NavigationView* radar;
+    GuiButton* routeButtons[PlayerSpaceship::max_routes];
     GuiButton* layerButtons[GameGlobalInfo::max_map_layers];
     GuiButton* waypoint_place_button;
     GuiButton* delete_waypoint_button;
@@ -43,6 +45,7 @@ private:
     const float min_distance = 909090.0f; // not to zoom in too much
     
     void placeWaypoint(sf::Vector2f position);
+    void setRouteIndex(int index);
 public:
     NavigationScreen(GuiContainer* owner);
     virtual void onHotkey(const HotkeyResult& key) override;

@@ -4,15 +4,20 @@
 #include "preferenceManager.h"
 
 GuiButton::GuiButton(GuiContainer* owner, string id, string text, func_t func)
-: GuiElement(owner, id), text(text), func(func)
+: GuiElement(owner, id), text(text), func(func), color(sf::Color::Transparent), text_color(sf::Color::Transparent)
 {
     text_size = 30;
 }
 
+GuiButton* GuiButton::setColor(sf::Color color, sf::Color text_color){
+    this->color = color;
+    this->text_color = text_color;
+}
+
 void GuiButton::onDraw(sf::RenderTarget& window)
 {
-    sf::Color color = selectColor(colorConfig.button.background);
-    sf::Color text_color = selectColor(colorConfig.button.forground);
+    sf::Color color = this->color == sf::Color::Transparent ? selectColor(colorConfig.button.background) : this->color;
+    sf::Color text_color = this->text_color == sf::Color::Transparent ? selectColor(colorConfig.button.forground) : this->text_color;
     
     if (!enabled)
         drawStretched(window, rect, "gui/ButtonBackground.disabled", color);

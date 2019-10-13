@@ -61,8 +61,8 @@ void NavigationView::drawRoutes(sf::RenderTarget& window)
     sf::Vector2f radar_screen_center(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f);
     float scale = std::min(rect.width, rect.height) / 2.0f / getDistance();
 
-    for(unsigned int r = 0; r < PlayerSpaceship::max_routes; r++){
-        for(unsigned int wp = 0; wp < PlayerSpaceship::max_waypoints_in_route; wp++){
+    for(int r = 0; r < PlayerSpaceship::max_routes; r++){
+        for(int wp = 0; wp < PlayerSpaceship::max_waypoints_in_route; wp++){
             if (my_spaceship->routes[r][wp] < empty_waypoint){
                 sf::Vector2f screen_position = radar_screen_center + (my_spaceship->routes[r][wp] - getViewPosition()) * scale;
 

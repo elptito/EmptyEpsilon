@@ -126,8 +126,8 @@ public:
     // Maximum number of self-destruction confirmation codes
     constexpr static int max_self_destruct_codes = 3;
     constexpr static int max_science_tasks = 10;
-    constexpr static unsigned int max_routes = 7;
-    constexpr static unsigned int max_waypoints_in_route = 20;
+    constexpr static int max_routes = 7;
+    constexpr static int max_waypoints_in_route = 20;
 
     static float warp_terrain_cap; 
 
@@ -292,9 +292,9 @@ public:
     void commandAddWaypoint(sf::Vector2f position);
     void commandRemoveWaypoint(int32_t index);
     void commandMoveWaypoint(int32_t index, sf::Vector2f position);
-    void commandAddRouteWaypoint(unsigned int route, sf::Vector2f position);
-    void commandRemoveRouteWaypoint(unsigned int route, unsigned int index);
-    void commandMoveRouteWaypoint(unsigned int route, unsigned int index, sf::Vector2f position);
+    void commandAddRouteWaypoint(int route, sf::Vector2f position);
+    void commandRemoveRouteWaypoint(int route, int index);
+    void commandMoveRouteWaypoint(int route, int index, sf::Vector2f position);
     void commandActivateSelfDestruct();
     void commandCancelSelfDestruct();
     void commandConfirmDestructCode(int8_t index, uint32_t code);
