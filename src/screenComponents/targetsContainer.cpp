@@ -76,15 +76,16 @@ void TargetsContainer::setToClosestTo(sf::Vector2f position, float max_range, ES
     if (my_spaceship && allow_waypoint_selection)
     {
         if (route_index == -1){
-            for(int n=0; n<my_spaceship->getWaypointCount(); n++)
+            for(int n=0; n<PlayerSpaceship::max_waypoints; n++)
             {
-                if ((my_spaceship->waypoints[n] - position) < max_range)
+                sf::Vector2f wp = my_spaceship->waypoints[n];
+                if (wp < empty_waypoint && (wp - position) < max_range)
                 {
-                    if (!target || sf::length(position - my_spaceship->waypoints[n]) < sf::length(position - target->getPosition()))
+                    if (!target || sf::length(position - wp) < sf::length(position - target->getPosition()))
                     {
                         clear();
                         waypoint_selection_index = n;
-                        waypoint_selection_position = my_spaceship->waypoints[n];
+                        waypoint_selection_position = wp;
                         return;
                     }
                 }
@@ -114,11 +115,31 @@ void TargetsContainer::nextWaypoint(bool forward){
         if (route_index == -1){ // only sciense selects waypoints, no need to handle routes
             entries.clear();
             int current = getWaypointIndex();
-            int next;
+            int next = -1;
             if (current == -1){
-                next = forward? 0: my_spaceship->waypoints.size() - 1;
+                if (forward){
+                    next = 0;
+                } else {
+                    for(int n=PlayerSpaceship::max_waypoints-1; n >= 0 && next == -1; n--){
+                        if (my_spaceship->waypoints[n] < empty_waypoint){
+                            next = n;
+                        }
+                    }
+                }
             } else {
-                next = (current + my_spaceship->waypoints.size() + (forward ? 1 : -1)) % my_spaceship->waypoints.size();
+                if (forward){
+                    for(int n=current; n != current-1 && next == -1; n = (n + PlayerSpaceship::max_waypoints + 1) % PlayerSpaceship::max_waypoints){
+                        if (my_spaceship->waypoints[n] < empty_waypoint){
+                            next = n;
+                        }
+                    }
+                } else {
+                    for(int n=current; n != current+1 && next == -1; n = (n + PlayerSpaceship::max_waypoints - 1) % PlayerSpaceship::max_waypoints){
+                        if (my_spaceship->waypoints[n] < empty_waypoint){
+                            next = n;
+                        }
+                    }
+                }
             }
             setWaypointIndex(next);
         }
@@ -165,7 +186,9 @@ int TargetsContainer::getWaypointIndex()
     if (!my_spaceship || waypoint_selection_index < 0)
         waypoint_selection_index = -1;
     else if (route_index == -1){
-        if (waypoint_selection_index >= my_spaceship->getWaypointCount())
+        if (waypoint_selection_index >= PlayerSpaceship::max_waypoints)
+            waypoint_selection_index = -1;
+        else if (my_spaceship->waypoints[waypoint_selection_index] >= empty_waypoint)
             waypoint_selection_index = -1;
         else if (my_spaceship->waypoints[waypoint_selection_index] != waypoint_selection_position)
             waypoint_selection_index = -1;
@@ -195,7 +218,7 @@ void TargetsContainer::setWaypointIndex(int index)
 {
     waypoint_selection_index = index;
     if (route_index == -1){
-        if (my_spaceship && index >= 0 && index < (int)my_spaceship->waypoints.size())
+        if (my_spaceship && index >= 0 && index < PlayerSpaceship::max_waypoints && my_spaceship->waypoints[index] < empty_waypoint)
             waypoint_selection_position = my_spaceship->waypoints[index];
     } else {
         if (my_spaceship && index >= 0 && index < PlayerSpaceship::max_waypoints_in_route && my_spaceship->routes[route_index][index] < empty_waypoint)

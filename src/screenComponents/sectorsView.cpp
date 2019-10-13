@@ -142,21 +142,20 @@ void SectorsView::drawTargets(sf::RenderTarget& window)
         }
     }
     if (my_spaceship){
+        sf::Vector2f wp = empty_waypoint;
         if (targets->getRouteIndex() == -1){
-            if (targets->getWaypointIndex() > -1 && targets->getWaypointIndex() < my_spaceship->getWaypointCount()) {
-                sf::Vector2f object_position_on_screen = getCenterPosition() + (my_spaceship->waypoints[targets->getWaypointIndex()] - getViewPosition()) * getScale();
-                target_sprite.setPosition(object_position_on_screen - sf::Vector2f(0, 10));
-                window.draw(target_sprite);
+            if (targets->getWaypointIndex() > -1 && targets->getWaypointIndex() < PlayerSpaceship::max_waypoints) {
+                wp = my_spaceship->waypoints[targets->getWaypointIndex()];
             }
         } else {
             if (targets->getWaypointIndex() > -1 && targets->getWaypointIndex() < PlayerSpaceship::max_waypoints_in_route) {
-                sf::Vector2f wp = my_spaceship->routes[targets->getRouteIndex()][targets->getWaypointIndex()];
-                if (wp < empty_waypoint){
-                    sf::Vector2f object_position_on_screen = getCenterPosition() + (wp - getViewPosition()) * getScale();
-                    target_sprite.setPosition(object_position_on_screen - sf::Vector2f(0, 10));
-                    window.draw(target_sprite);
-                }
+                wp = my_spaceship->routes[targets->getRouteIndex()][targets->getWaypointIndex()];
             }
+        }
+        if (wp < empty_waypoint){
+            sf::Vector2f object_position_on_screen = getCenterPosition() + (wp - getViewPosition()) * getScale();
+            target_sprite.setPosition(object_position_on_screen - sf::Vector2f(0, 10));
+            window.draw(target_sprite);
         }
     }
 }

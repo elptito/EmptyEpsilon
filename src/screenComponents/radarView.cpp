@@ -329,28 +329,32 @@ void GuiRadarView::drawWaypoints(sf::RenderTarget& window)
 
     deOrient();
     sf::Vector2f radar_screen_center = getCenterPosition();
-    for(unsigned int n=0; n<my_spaceship->waypoints.size(); n++)
+    for(unsigned int n=0; n<PlayerSpaceship::max_waypoints; n++)
     {
-        sf::Vector2f screen_position = orientVector(worldToScreen(my_spaceship->waypoints[n]));
-        sf::Sprite object_sprite;
-        textureManager.setTexture(object_sprite, "waypoint");
-        object_sprite.setColor(colorConfig.ship_waypoint_background);
-        object_sprite.setPosition(screen_position - sf::Vector2f(0, 10));
-        object_sprite.setScale(0.8, 0.8);
-        window.draw(object_sprite);
-
-        drawText(window, sf::FloatRect(screen_position.x, screen_position.y - 10, 0, 0), string(n + 1), ACenter, 18, bold_font, colorConfig.ship_waypoint_text);
-
-        if (style != Rectangular && sf::length(screen_position - radar_screen_center) > getRadius())
+        sf::Vector2f wp = my_spaceship->waypoints[n];
+        if (wp < empty_waypoint)
         {
-            sf::Vector2f offset = my_spaceship->waypoints[n] - getViewPosition();
-            screen_position = orientVector(radar_screen_center + (offset / sf::length(offset) * getRadius() * 0.8f));
-
-            object_sprite.setPosition(screen_position);
-            object_sprite.setRotation(sf::vector2ToAngle(screen_position - radar_screen_center) - 90);
+            sf::Vector2f screen_position = orientVector(worldToScreen(wp));
+            sf::Sprite object_sprite;
+            textureManager.setTexture(object_sprite, "waypoint");
+            object_sprite.setColor(colorConfig.ship_waypoint_background);
+            object_sprite.setPosition(screen_position - sf::Vector2f(0, 10));
+            object_sprite.setScale(0.8, 0.8);
             window.draw(object_sprite);
 
-            drawText(window, sf::FloatRect(screen_position.x, screen_position.y, 0, 0), string(n + 1), ACenter, 18, bold_font, colorConfig.ship_waypoint_text);
+            drawText(window, sf::FloatRect(screen_position.x, screen_position.y - 10, 0, 0), string(n + 1), ACenter, 18, bold_font, colorConfig.ship_waypoint_text);
+
+            if (style != Rectangular && sf::length(screen_position - radar_screen_center) > getRadius())
+            {
+                sf::Vector2f offset = wp - getViewPosition();
+                screen_position = orientVector(radar_screen_center + (offset / sf::length(offset) * getRadius() * 0.8f));
+
+                object_sprite.setPosition(screen_position);
+                object_sprite.setRotation(sf::vector2ToAngle(screen_position - radar_screen_center) - 90);
+                window.draw(object_sprite);
+
+                drawText(window, sf::FloatRect(screen_position.x, screen_position.y, 0, 0), string(n + 1), ACenter, 18, bold_font, colorConfig.ship_waypoint_text);
+            }
         }
     }
     orient();

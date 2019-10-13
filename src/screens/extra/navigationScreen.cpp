@@ -19,7 +19,6 @@
 NavigationScreen::NavigationScreen(GuiContainer *owner)
     : GuiOverlay(owner, "NAVIGATION_SCREEN", colorConfig.background), mode(TargetSelection)
 {
-    route_index = -1;
     targets.setAllowWaypointSelection();
     radar = new NavigationView(this, "NAVIGATION_RADAR", min_distance, &targets);
     radar->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
@@ -27,19 +26,11 @@ NavigationScreen::NavigationScreen(GuiContainer *owner)
         [this](sf::Vector2f position) { //down
             if (!placeWayPoints && mode == TargetSelection && targets.getWaypointIndex() > -1 && my_spaceship)
             {
-                if (route_index == -1){
-                    if (sf::length(my_spaceship->waypoints[targets.getWaypointIndex()] - position) < 25.0 / radar->getScale())
-                    {
-                        mode = MoveWaypoint;
-                        drag_waypoint_index = targets.getWaypointIndex();
-                    }
-                } else {
-                    if (my_spaceship->routes[route_index][targets.getWaypointIndex()] < empty_waypoint 
-                        && sf::length(my_spaceship->routes[route_index][targets.getWaypointIndex()] - position) < 25.0 / radar->getScale())
-                    {
-                        mode = MoveWaypoint;
-                        drag_waypoint_index = targets.getWaypointIndex();
-                    }
+                if (my_spaceship->routes[route_index][targets.getWaypointIndex()] < empty_waypoint 
+                    && sf::length(my_spaceship->routes[route_index][targets.getWaypointIndex()] - position) < 25.0 / radar->getScale())
+                {
+                    mode = MoveWaypoint;
+                    drag_waypoint_index = targets.getWaypointIndex();
                 }
             }
             mouse_down_position = position;
@@ -53,9 +44,7 @@ NavigationScreen::NavigationScreen(GuiContainer *owner)
                 if (!position_text_custom)
                     position_text->setText(getStringFromPosition(newPosition));
             } else if (!placeWayPoints && mode == MoveWaypoint && my_spaceship){
-                if (route_index == -1){
-                    my_spaceship->commandMoveWaypoint(drag_waypoint_index, position);
-                } else if (my_spaceship->routes[route_index][drag_waypoint_index] < empty_waypoint){
+                if (my_spaceship->routes[route_index][drag_waypoint_index] < empty_waypoint){
                     my_spaceship->commandMoveRouteWaypoint(route_index, drag_waypoint_index, position);
                 } 
             }
@@ -152,14 +141,11 @@ NavigationScreen::NavigationScreen(GuiContainer *owner)
 
     delete_waypoint_button = new GuiButton(waypoint_controls, "WAYPOINT_DELETE_BUTTON", "Delete Waypoint", [this]() {
         if (my_spaceship && targets.getWaypointIndex() >= 0) {
-            if (route_index == -1){
-                my_spaceship->commandRemoveWaypoint(targets.getWaypointIndex());
-            } else {
-                my_spaceship->commandRemoveRouteWaypoint(route_index, targets.getWaypointIndex());
-            }
+            my_spaceship->commandRemoveRouteWaypoint(route_index, targets.getWaypointIndex());
         }
     });
     delete_waypoint_button->setTextSize(20);
+    setRouteIndex(0);
 
     (new GuiCustomShipFunctions(this, navigation, "", my_spaceship))->setPosition(-20, 240, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
 }
@@ -167,11 +153,7 @@ NavigationScreen::NavigationScreen(GuiContainer *owner)
 void NavigationScreen::placeWaypoint(sf::Vector2f position)
 {
     if (my_spaceship){
-        if (route_index == -1){
-            my_spaceship->commandAddWaypoint(position);
-        } else {
-            my_spaceship->commandAddRouteWaypoint(route_index, position);
-        }
+        my_spaceship->commandAddRouteWaypoint(route_index, position);
     }
 }
 

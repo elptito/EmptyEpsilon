@@ -11,11 +11,6 @@
 // PlayerSpaceship are ships controlled by a player crew.
 REGISTER_SCRIPT_SUBCLASS(PlayerSpaceship, SpaceShip)
 {
-    // Returns the sf::Vector2f of a specific waypoint set by this ship.
-    // Takes the index of the waypoint as its parameter.
-    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getWaypoint);
-    // Returns the total number of this ship's active waypoints.
-    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getWaypointCount);
     // Returns the ship's EAlertLevel.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getAlertLevel);
     // Sets whether this ship's shields are raised or lowered.
@@ -220,11 +215,12 @@ PlayerSpaceship::PlayerSpaceship()
     registerMemberReplication(&mid_range_comms_target_name);
     registerMemberReplication(&comms_target_name);
     registerMemberReplication(&comms_incomming_message);
-    registerMemberReplication(&waypoints);
-    for(int r = 0; r < max_routes; r++)
-    {
-        for(int wp = 0; wp < max_waypoints_in_route; wp++)
-        {
+    for(int wp = 0; wp < max_waypoints; wp++) {
+        waypoints[wp] = empty_waypoint;
+        registerMemberReplication(&waypoints[wp]);
+    }
+    for(int r = 0; r < max_routes; r++) {
+        for(int wp = 0; wp < max_waypoints_in_route; wp++) {
             routes[r][wp] = empty_waypoint;
             registerMemberReplication(&routes[r][wp]);
         }
@@ -1384,15 +1380,20 @@ void PlayerSpaceship::handleClientCommand(int32_t client_id, int16_t command, sf
         {
             sf::Vector2f position;
             packet >> position;
-            waypoints.push_back(position);
+            for (int i = 0; i < max_waypoints; i++){
+                if (waypoints[i] >= empty_waypoint){
+                    waypoints[i] = position;
+                    break;
+                }
+            }
         }
         break;
     case CMD_REMOVE_WAYPOINT:
         {
             int32_t index;
             packet >> index;
-            if (index >= 0 && index < int(waypoints.size()))
-                waypoints.erase(waypoints.begin() + index);
+            if (index >= 0 && index < max_waypoints)
+                waypoints[index] = empty_waypoint;
         }
         break;
     case CMD_MOVE_WAYPOINT:
@@ -1400,7 +1401,7 @@ void PlayerSpaceship::handleClientCommand(int32_t client_id, int16_t command, sf
             int32_t index;
             sf::Vector2f position;
             packet >> index >> position;
-            if (index >= 0 && index < int(waypoints.size()))
+            if (index >= 0 && index < max_waypoints)
                 waypoints[index] = position;
         }
         break;

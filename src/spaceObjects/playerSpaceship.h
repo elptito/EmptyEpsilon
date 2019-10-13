@@ -128,6 +128,7 @@ public:
     constexpr static int max_science_tasks = 10;
     constexpr static int max_routes = 7;
     constexpr static int max_waypoints_in_route = 20;
+    constexpr static int max_waypoints = 99;
 
     static float warp_terrain_cap; 
 
@@ -194,7 +195,7 @@ public:
     ESystem auto_repairing_system;
     std::vector<CustomShipFunction> custom_functions;
 
-    std::vector<sf::Vector2f> waypoints;
+    sf::Vector2f waypoints[max_waypoints];
     sf::Vector2f routes[max_routes][max_waypoints_in_route];
     
     // Scan probe capacity
@@ -345,10 +346,6 @@ public:
     // Ship shields functions
     virtual bool getShieldsActive() override { return shields_active; }
     void setShieldsActive(bool active) { shields_active = active; }
-
-    // Waypoint functions
-    int getWaypointCount() { return waypoints.size(); }
-    sf::Vector2f getWaypoint(int index) { if (index > 0 && index <= int(waypoints.size())) return waypoints[index - 1]; return sf::Vector2f(0, 0); }
 
     // Ship control code/password setter
     void setControlCode(string code) { control_code = code; }
