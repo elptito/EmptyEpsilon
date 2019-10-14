@@ -399,6 +399,10 @@ bool HardwareController::getVariableValue(const ShipFilter& ship_filter, string 
     SHIP_VARIABLE("Alert", ship->getAlertLevel() != AL_Normal ? 1.0f : 0.0f);
     SHIP_VARIABLE("YellowAlert", ship->getAlertLevel() == AL_YellowAlert ? 1.0f : 0.0f);
     SHIP_VARIABLE("RedAlert", ship->getAlertLevel() == AL_RedAlert ? 1.0f : 0.0f);
+    SHIP_VARIABLE("TractorBeamActive", ship->tractor_beam.getMode() == TBM_Off ? 0.0f : 1.0f);
+    for(int n=0; n<max_beam_weapons; n++){
+        SHIP_VARIABLE("BeamCharging", ship->beam_weapons[n].getCooldown() > 0.0f);
+    }
     for(int n=0; n<max_weapon_tubes; n++)
     {
         SHIP_VARIABLE("TubeLoaded" + string(n), ship->weapon_tube[n].isLoaded() ? 1.0f : 0.0f);
