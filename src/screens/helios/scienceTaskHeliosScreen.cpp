@@ -230,7 +230,7 @@ static string letters[] = { "a", "b", "c", "d", "e", "f", "g", /*"h","i",*/
     "j", "k", "l", "m", "n", "o", /*"p",*/ "q", "r",
     "s", "t", "u", "v", "w", "x", "y", "z" };
 
-#define LETTER letters[irandom(0,26)]
+#define LETTER letters[irandom(0,sizeof(letters) / sizeof(letters[0]))]
 #define REGISTER letters[irandom(0,4)] + (irandom(0,1)? "x" : irandom(0,1)? "l" : "k")
 
 void ScienceTaskHeliosScreen::addCodeLine() {
