@@ -35,7 +35,7 @@ ServerCreationScreen::ServerCreationScreen()
     gameGlobalInfo->allow_main_screen_tactical_radar = PreferencesManager::get("server_config_allow_main_screen_tactical_radar", "1").toInt();
     gameGlobalInfo->allow_main_screen_long_range_radar = PreferencesManager::get("server_config_allow_main_screen_long_range_radar", "1").toInt();
     gameGlobalInfo->allow_main_screen_global_range_radar = PreferencesManager::get("server_config_allow_main_screen_global_range_radar", "1").toInt();
-    gameGlobalInfo->allow_main_screen_ship_state = PreferencesManager::get("server_config_allow_main_screen_ship_state", "1").toInt();
+    gameGlobalInfo->allow_main_screen_ship_state = PreferencesManager::get("server_config_allow_main_screen_ship_state", "0").toInt();
 
     // Create a two-column layout.
     GuiElement* container = new GuiAutoLayout(this, "", GuiAutoLayout::ELayoutMode::LayoutVerticalColumns);
