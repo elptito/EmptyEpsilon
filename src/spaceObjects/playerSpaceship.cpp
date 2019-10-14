@@ -122,6 +122,7 @@ float PlayerSpaceship::warp_terrain_cap = 0;
 float PlayerSpaceship::warp_calibration_time = 0;
 float PlayerSpaceship::warp_calibration_penalty_heat_factor = 0;
 float PlayerSpaceship::over_fix_heat_factor = 0;
+float PlayerSpaceship::drones_energy_factor = 0;
 float PlayerSpaceship::system_power_user_factor[] = {
     /*SYS_Reactor*/     -25.0 * 0.08,
     /*SYS_BeamWeapons*/   3.0 * 0.08,
@@ -839,6 +840,10 @@ float PlayerSpaceship::getNetSystemEnergyUsage()
         }
         else
         {
+            float powerFactor = 1.f;
+            if(ship_template && ship_template->getType() == ShipTemplate::TemplateType::Drone){
+                powerFactor = drones_energy_factor;
+            }
             net_power -= system_power_user_factor[n] * systems[n].power_level;
         }
     }

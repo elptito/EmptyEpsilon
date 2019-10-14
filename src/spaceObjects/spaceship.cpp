@@ -1468,14 +1468,20 @@ bool SpaceShip::hasSystem(ESystem system)
     case SYS_Reactor:
         return ship_template->has_reactor;
     case SYS_BeamWeapons:
-        return true;
+        for(int i = 0; i < max_beam_weapons; i++){
+            if(beam_weapons[i].getRange() > 0){
+                return true;
+            }
+        }
+        return false;
     case SYS_Maneuver:
         return turn_speed > 0.0;
     case SYS_Impulse:
         return impulse_max_speed > 0.0;
     case SYS_Docks:
-    case SYS_Drones:
         return docks[0].dock_type != Dock_Disabled;
+    case SYS_Drones:
+        return true;
     }
     return true;
 }
