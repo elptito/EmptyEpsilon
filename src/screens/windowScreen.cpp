@@ -7,6 +7,7 @@
 #include "screenComponents/viewport3d.h"
 #include "screenComponents/indicatorOverlays.h"
 #include "screenComponents/shipDestroyedPopup.h"
+#include "screenComponents/globalMessage.h"
 
 WindowScreen::WindowScreen(float angle)
 : angle(angle)
@@ -17,7 +18,8 @@ WindowScreen::WindowScreen(float angle)
 
     new GuiShipDestroyedPopup(this);
     
-    new GuiIndicatorOverlays(this);
+    new GuiIndicatorOverlays(this);    
+    new GuiGlobalMessage(this);
 }
 
 void WindowScreen::update(float delta)

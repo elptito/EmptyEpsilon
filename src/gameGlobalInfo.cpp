@@ -408,7 +408,7 @@ REGISTER_SCRIPT_FUNCTION(victory);
 static int globalMessage(lua_State* L)
 {
     gameGlobalInfo->global_message = luaL_checkstring(L, 1);
-    gameGlobalInfo->global_message_timeout = 5.0;
+    gameGlobalInfo->global_message_timeout = 10.0;
     return 0;
 }
 /// globalMessage(string)

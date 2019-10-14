@@ -81,7 +81,7 @@ void GameMasterActions::onReceiveClientCommand(int32_t client_id, sf::Packet& pa
             if (message.length() > 0)
             {
                 gameGlobalInfo->global_message = message;
-                gameGlobalInfo->global_message_timeout = 5.0;
+                gameGlobalInfo->global_message_timeout = 10.0;
             }
         }
         break;

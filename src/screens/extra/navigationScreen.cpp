@@ -4,6 +4,7 @@
 #include "spaceObjects/scanProbe.h"
 #include "scriptInterface.h"
 #include "gameGlobalInfo.h"
+#include "screenComponents/globalMessage.h"
 
 #include "screenComponents/navigationView.h"
 #include "screenComponents/customShipFunctions.h"
@@ -148,6 +149,8 @@ NavigationScreen::NavigationScreen(GuiContainer *owner)
     setRouteIndex(0);
 
     (new GuiCustomShipFunctions(this, navigation, "", my_spaceship))->setPosition(-20, 240, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
+    
+    new GuiGlobalMessage(this);
 }
 
 void NavigationScreen::placeWaypoint(sf::Vector2f position)

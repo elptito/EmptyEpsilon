@@ -8,6 +8,7 @@
 #include "screenComponents/customShipFunctions.h"
 #include "screenComponents/shipsLogControl.h"
 #include "screenComponents/systemStatus.h"
+#include "screenComponents/globalMessage.h"
 
 #include "gui/gui2_keyvaluedisplay.h"
 #include "gui/gui2_autolayout.h"
@@ -111,6 +112,8 @@ EngineControlScreen::EngineControlScreen(GuiContainer* owner, ECrewPosition crew
     energy_deriv.average = 0.0;
     last_measurement_time = 0.0;
     last_commands_time = 0.0;
+    
+    new GuiGlobalMessage(this);
 }
 
 void EngineControlScreen::RollingDeriviateAvg::apply(float deltaTime, float currentMeasurement){
