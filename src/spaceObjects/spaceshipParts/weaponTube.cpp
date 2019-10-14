@@ -12,6 +12,7 @@ WeaponTube::WeaponTube()
 {
     parent = nullptr;
     
+    missiles_fired = 0;
     load_time = 8.0;
     direction = 0;
     type_allowed_mask = (1 << MW_Count) - 1;
@@ -29,6 +30,7 @@ void WeaponTube::setParent(SpaceShip* parent)
     parent->registerMemberReplication(&load_time);
     parent->registerMemberReplication(&type_allowed_mask);
     parent->registerMemberReplication(&direction);
+    parent->registerMemberReplication(&missiles_fired);
     
     parent->registerMemberReplication(&type_loaded);
     parent->registerMemberReplication(&state);
@@ -69,6 +71,7 @@ void WeaponTube::startLoad(EMissileWeapons type)
     if (parent->weapon_storage[type] <= 0)
         return;
         
+    missiles_fired = 0;
     state = WTS_Loading;
     delay = load_time;
     type_loaded = type;
@@ -99,6 +102,7 @@ void WeaponTube::fire(float target_angle)
         delay = 0.0;
     }else{
         spawnProjectile(target_angle);
+        missiles_fired += 1;
         state = WTS_Empty;
         type_loaded = MW_None;
     }
@@ -213,6 +217,7 @@ void WeaponTube::update(float delta)
                 spawnProjectile(0);
                 
                 fire_count -= 1;
+                missiles_fired += 1;
                 if (fire_count > 0)
                 {
                     delay = 1.5;
@@ -253,6 +258,11 @@ bool WeaponTube::isUnloading()
 bool WeaponTube::isFiring()
 {
     return state == WTS_Firing;
+}
+
+int WeaponTube::getMissilesFired()
+{
+    return missiles_fired;
 }
 
 float WeaponTube::getLoadProgress()

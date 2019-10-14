@@ -58,7 +58,8 @@ public:
     
     float getLoadProgress();
     float getUnloadProgress();
-
+    int getMissilesFired();
+    
     EMissileWeapons getLoadType();
     
     string getTubeName(); //Get the tube name based on the direction of the tube.
@@ -83,6 +84,7 @@ private:
     EWeaponTubeState state;
     float delay;
     int fire_count;
+    int missiles_fired;
 };
 
 #endif//WEAPON_TUBE_H
