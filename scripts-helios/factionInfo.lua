@@ -1,35 +1,51 @@
-Miners = FactionInfo():setName("Free Miners")
-Miners:setGMColor(0, 50, 128)
+Gravitas = FactionInfo():setName("Gravitas")
+Gravitas:setGMColor(255, 255, 255)
+Gravitas:setDescription([[They to belong anywhere]])
+
+Miners = FactionInfo():setName("Free Miners Y")
+Miners:setGMColor(128, 128, 200)
+Miners:setDescription([[The free ppl]])
+
+Miners = FactionInfo():setName("Free Miners B")
+Miners:setGMColor(128, 128, 200)
+Miners:setDescription([[The free ppl]])
+
+Miners = FactionInfo():setName("Free Miners R")
+Miners:setGMColor(128, 128, 200)
 Miners:setDescription([[The free ppl]])
 
 SOL = FactionInfo():setName("FSN")
-SOL:setGMColor(255, 255, 255)
+SOL:setGMColor(56, 115, 91)
 SOL:setDescription([[Sol Federation]])
 
+Privateers = FactionInfo():setName("Privateers")
+Privateers:setGMColor(161, 61, 142)
+Privateers:setDescription([[]])
+
 MCF = FactionInfo():setName("MCF")
-MCF:setGMColor(255, 0, 0)
+MCF:setGMColor(161, 61, 142)
 MCF:setDescription([[Terrorists]])
 
 MCFT = FactionInfo():setName("MCF Extreme")
-MCFT:setGMColor(128, 0, 0)
+MCFT:setGMColor(250, 47, 211)
 MCFT:setDescription([[Evil Terrorists]])
 
-Pirates = FactionInfo():setName("Pirates")
-Pirates:setGMColor(255, 128, 0)
-Pirates:setDescription([[They kill for money]])
-
 Raiders = FactionInfo():setName("Raiders")
-Raiders:setGMColor(255, 0, 128)
+Raiders:setGMColor(93, 9, 219)
 Raiders:setDescription([[They also kill for money]])
 
-Corp1 = FactionInfo():setName("Corp1")
-Corp1:setGMColor(0, 255, 0)
-Corp1:setDescription([[Mining corp]])
+Pirates = FactionInfo():setName("Pirates")
+Pirates:setGMColor(128, 128, 128)
+Pirates:setDescription([[They kill for money]])
 
-Corp2 = FactionInfo():setName("Corp2")  
-Corp2:setGMColor(128, 128, 0)
-Corp2:setDescription([[Tech Corp]])
+Selucia = FactionInfo():setName("Corp Selucia")
+Selucia:setGMColor(237, 237, 92)
+Selucia:setDescription([[]])
+
+Technoledge = FactionInfo():setName("Corp Technoledge")
+Technoledge:setGMColor(87, 65, 122)
+Technoledge:setDescription([[]])
 
 neutral = FactionInfo():setName("Independent")
-neutral:setGMColor(0, 0, 255)
+neutral:setGMColor(160, 160, 160)
 neutral:setDescription([[They to belong anywhere]])

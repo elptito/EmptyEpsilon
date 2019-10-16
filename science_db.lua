@@ -75,35 +75,6 @@ While the protection afforded by the habitats has been mostly effective, trace a
 
 in the 100 year old colony has been since it's founding and still is a prime source of oxygen and water to the other colonies around jupiter, being in effect a supporting colony for the entire juvian stellar neighborhood.  
 ]])
-item = space_objects:addEntry('Jupiter Colony')
-item:setLongDescription([[
-# Jupiter Colony
-
-Established as part of the Jovian Project, 2195. The planetary conditions do not allow for deployment of a colony on the surface and so the Jupiter Colony consists of 3 Orbital Stations designated Jupiter - Alpha, Jupiter - Bravo and Jupiter - Charlie. Each of these stations serves a purpose the other two depend on. As a result, free movement between these essential parts is critical to their continued existence.
-
-The Jupiter colony is administered by the Federation and is home to significant Federation Navy presence. Jupiter Colony is considered a Federal holding and is thus not a free port. While trade and business is ample and unrestricted, this colony is known for its particularly vigilant customs authorities.
-
-## Jupiter Alpha
-
-Jupiter Alpha Station was the first station of the triumvirate to be deployed and anchored in orbit of Jupiter. It was the cornerstone of the entire Jupiter project -  a celebration of human achievement. Jupiter Alpha holds the Colonial Administration office as well as the local Navy and MArine garrisons.
-
-
-## Jupiter Bravo
-
-Jupiter Bravo Station is a commercial hub in it's core. However, with time and demand the purpose of this station has changed and has become more varied. The station is now home to many businesses as well as entertainment facilities renown in the outer colonies.
-
-
-## Jupiter Charlie
-
-Jupiter Charlie Station is home to many research installations and educational facilities. Universities from across the federation rent workspaces here to conduct various research in conditions and environment the diverse laboratories of Jupter Charlie can provide.
-
-
-## War torn past
-
-Many tourists choose to visit Jupiter Colony to see the carnage left in the form of space debris, that has now joined with the infamous Jupiter Rings. These wrecks dating back to the second revolt remain as a stark reminder that any conflict in space leaves eternal scars.
-
-During the Second Revolt, many officers of the Federation Navy that were born on Jupiter had defected. They later surrendered and were executed for treason. There has not been any rebelious tendencies in the sector since.  
-]])
 item = space_objects:addEntry('luna')
 item:setLongDescription([[
 #Luna (Colony)
@@ -276,67 +247,6 @@ Several generations of this cycle have created a military caste of sorts inside 
 
 The inhabiting of pluto may have not banished piracy from the solar system, but raiding and piracy has been in decline ever since the colony has been established, the citizen of the outer colonies given a much needed respite.
 The plutonians are proud of this heritage and justly so.  
-]])
-item = space_objects:addEntry('Saturn Colony')
-item:setLongDescription([[
-# Saturn
-
-Saturn is the sixth planet from the Sun and the second-largest in the Solar System, after Jupiter. It is a gas giant with an average radius about nine times that of Earth.
-The planet's most famous feature is its prominent ring system that is composed mostly of ice particles, with a smaller amount of rocky debris and dust. 84 moons are known to orbit Saturn. Most of the larger ones are associated with colony stations acompanning them on their orbit.
-These stations include larger station colonies set up in the first stage of the saturn project, of whice most are federal holdings. 
-
-The gas giant itself is orbited by "Saturn station". The saturn colony station is the center of the federal military authority in the saturn sector.
-Besides holding a large federal servicemen population and their families, in orbit of saturn next to the station is the largest concentration of military ships in the saturn sector.
-
-The gas giant itself is mined for resouces by large drone ships that scoop the atmoshpere. The resources collected are a large part of the sector's export depper into the outer rim.
-Illegal mining operations are periodically detected and dismanteled.
-Titan also holds a major Federal Navy training academy with new crews participating in patrols and assignments, policing the sector and getting hands on experiance.
-
-## The "Saturn sector"
-
-The colonies around Saturn and it's moons were built as part of the “Saturn Project”. In the wake of the success of the Jovian project, it was only a matter of time until Saturn and it's moons were treated similarly.
-The Titan colony itself has become a major trade hub of the outer rim colonies and one could say it is the economic heart of the Rim.
-
-While federal presence is clearly felt in the saturn sector and life for the average citizen are perfectly safe, the volume of trafic in the sector has led to attempts by smugglers and pirates to operate in the sector.
-Such initiaives are however short lived, as most of the holdings in the sector are federal. Federal authorities assigned to the sector co-operate with corporate colony beaurocrats effectively in order to police the industry and transportation around saturn, making the sector much safer than any other outer-rim territory. 
-
-## Present day Saturn sector
-
-The present day Saturn sector is a new territory in many ways, but it is unequivocaly a beacon of civilization in the outer rim.
-The Titan arcologies are a center of trade and recreation, art and social sciences. The Titan colony and the ships stationed there are used as a military deterrent of much of the lawlessness pernicious in other places.
-
-Politically, the titan sector send 12 representatives to the senate, though thanks to the population concentration on titan, 10 of the 12 senators elected are from titan.  
-]])
-item = space_objects:addEntry('Titan Colony')
-item:setLongDescription([[
-# Titan
-
-Titan, as the largest moon of Saturn and the second-largest natural satellite in the Solar System, was colonized on 2201 as the lynchpin of the saturn project.
-Techknowledge corporation, in a daring and dramatic business initiative, have struck an accord with the federal government, Launching a massive colonization project to populate real-estate around saturn.
-Techknowledge's federal mandate was awarded in order to create a second ship-building shipyard system, in order to reduce the federal fleet's dependance on the Luna colony installations.
-However, by most prominent economists' public estimations, Titan is decades away from matching luna's shipbuilding capacity.
-Saturni Luna (Saturn's luna - titans' original name, chosen by it's dutch discoverer) is well establishd colony, but is still several orders of magnitude smaller than Luna, it's older sister.
-
-
-## Capital of the "Saturn sector"
-
-The Saturn's project stated purpuse was to colonize the celestial bodies around saturn (I.E. the saturn sector.). Despite the potential hazards of establishing a surface colony of a planet like moon with a nitrogen atmosphere, it's size and location in the saturn sector made it the most viable location as a population and societal hub.
-Techknowledge's execution of the project is studied as a textbook example of a massive scale colonization project executed with forethought and efficiant, flexible planning.
-
-Titan's current role in the saturn sector is as the local population hub, administrative center and cultural leader. The colony and it's surrounding subsidiary colonies contain business ventures and leased arcologies of all major corporations, though techknowledge still holds the greatest share of business and assets in the sector, estimated at 31%.
-   
-Most of the planetoid's population consists of corporate employees, giving rise to complaints from their out-colony neighbors, pianting them as a colony of profiteers and corporate drones.
-The reality, however, is rarely as simple as that and the prosperity and relative security of the saturn sector stand as a testament to the commitment and effectiveness of the corporations operating in this remote solar sector.
-
-## Present Day Titan
-
-The domed cities of titan are massive, pre-planned city arcologies. Hidden beneath dozens of kilometers of a thick nitrogen atmosphere, the domes create the feeling of home by displaying a virtual sky and sun, while also filling extra functions such as a power collection and resource extraction system by harnessing and havresting the nitrogen winds.
-The plantoids' icey core is used in the distillation of oxygen and water that supports titan's limited food fabrication capacity and the surrounding stations and resource scarce colonies.
-
-The society on titan, while highly regimnted physically, holds a spirit of exploration and experimetation as one of it's defining values.
-New societal constructs are thought up and attempted - from the new Kibbutz generational experiment of wealth sharing and up to multi partner line families.
-These social experimentations have served the acedemics and thinkers of titan well, placing them at the front of the valuable sceintific fields of anthropology and sociology.
-This same spirit has also served to grant the titan citizens a reputation (mostly unjustified) of sexual promescuity and social sophistication.  
 ]])
 item = space_objects:addEntry('Uranus')
 item:setLongDescription([[
@@ -579,24 +489,6 @@ The rebellion itself was full of terror acts on a scale which was only being tes
 
 Over time, and understanding grew on Mars and it's moons that these colonies, yerning of independence as they may be, are simply not ready for self-sustainability. Dependency on Earth proved to be a problem yet to be solved. This understanding, coupled with the numeric superiority of the federal forces eventually ground the rebelion to a slow halt.  
 ]])
-item = space_objects:addEntry('Fringe War')
-item:setLongDescription([[
-# Fringe War
-
-The Fringe War was a conflict in The Fringe which refers to three years of war fought between the Federation and the MCF, supported by groups of terrorists as well as armed pirate groups, within what was defined as the "Security Zone" in The Fringe.
-
-The creation of a Security Zone in The Fringe benefited civilian of the Federation, although at great cost to Fringers. It was necessary in order to combat piracy and securing key science expeditions against raids of opportunity.
-
-Despite federal success in eradicating MCF bases and its partial withdrawal after some months, the federal invasion increased the severity of conflict with local Junker militias and resulted in the consolidation of several local movements in The Fringe from a previously unorganized guerrilla movements.
-
-Over the months, military casualties of both sides grew higher, as both parties used more modern weaponry, and the MCF progressed in its tactics.
-
-After a surge in hostilities threatened the Security Zone established by the Federation Navy an order was issued by the Chiefs of Staff to begin a full fledged assault on Reunion Station, a key installation that would cripple the MCF activity in the sector. With Reunion Station destroyed, the MCF forces have dispersed from the field and no major resistance fleets have been formed since.
-
-The Security Zone proved to be a costly endeavor and with popular support ever on the decline for warfare in the Fringe, a directive to withdraw was issued following the 2286 Federal elections, by the newly sworn in government.
-
-By the end of the conflict, the MCF, with support from other Fringers, junkers, pirates and terrorists, emerged as the leading group and military power, monopolizing guerrilla activity in The Fringe.  
-]])
 item = space_objects:addEntry('Fringe')
 item:setLongDescription([[
 # The Fringe
@@ -624,44 +516,6 @@ item:setLongDescription([[
 These anti-social hoarders tend to take the ticket out and never be seen again, with their own unique culture near the end of the solar system.
 Stories of space-cults, lawlessness, marauding and piracy are mostly heard from these individuals when they do come about and surface in Federation Space.
 Some of these mena nd women are considered undesirables or outlaws, while others have chosen a self imposed exile for whatever reason.  
-]])
-item = space_objects:addEntry('Illegal Substances(1)')
-item:setLongDescription([[
-# Illegal Substances (Drugs)
-
-Illegal substances are substances which have had limitations legislated regarding their ownership or use by the federation, and are illegal to own, hold, prescribe or use.
-A drug is any chemical that affects the human body or mind when it is ingested, respirated, or introduced in any other way.
-A psychoactive drug is any drug that affects the brain's chimestry. Most laws against drugs are about psychoactive drugs.
-
-Some controlled substances are allowed if you have a prescription from a doctor.
-Other drugs or products are illegal. The most used drugs are not illegal, for example tobacco and alcohol.
-
-List examples of Common or dangrous controlled substances:
-
--- Tri-Sedarix-Ochtapolin: AKA Red Bear or TSO.
-An old but effective combat enhancment drug, homebrewed versions of reduced consistency are still manufactured today.
-While the Original drug Raised agression along with reflexes and pain tolerances, The modern, reduced versions manufactured do not improve the user's control and focus.
-
--- Gianzhapam-Methaline: AKA Miner's Milk.
-This liquid drug, when added to water and ingested, induces concentration and wakefullness and hyper-intelligence in users. While extremely effective, the drug does cause long term damage to many brain functions.
-This drug is only mildly addictive physically, but pshycological addiction is usually severe, with withrawl leading to depression or suicide.
-
--- Fethratentanil: AKA Long-life
-A controversial drug, a steady theraphy of this substance can increase an aging individual's life expectancy by years, optimally decades. 
-While not expensive to manufacture, drug laws have restricted manufature due to the dangers inherent in even slight quality loss.
-
--- Sytricanotetanil: AKA Strix
-A recreational drug distilled from elements found in astroids, this psychoactive drug is in common recreational use.
-Despite ease of manufacture and ease of distribution, this drug has not been leagalized by the federation due to it's deletrious health effects when overused.
-
--- TetraMorphine: AKA T-Morph
-This powerful sedative is a part of every medpack and medical institute. Used to relax any type of pain and grant lucidity for as long as possible, this drug is regretably highly addictive.
-While injuries justifing the use of TetraMorphine require full doses, a partial dose can be used for reduced effect with a euphoric element, leading to porblems with illegal use.
-
--- Asphomedanine: AKA Goodbie party
-This dangerous psychoactive drug is sometime considered an urban myth. This drug's effects are extreme, both physically and mentally.
-This combat works like an extreamly effective combat enhancer. However, the effect doesn't reverse, only increasing, resaulting in the death of the user.
-Due to it's only possible intended use, this drug's use in highly illegal and incurs harsh penalties.  
 ]])
 item = space_objects:addEntry('Illegal Substances')
 item:setLongDescription([[
@@ -863,15 +717,6 @@ item:setLongDescription([[
 The last century saw a rise in detection of psy-talented individuals and multiple federal programs exist to develop and cultivate their abilities. These men and women, if enlisted to teh federation may find it easy to become comissioned officers, most common in the intelligence divisions of branches of the AFSF.
 
 Known Psy-talented abilities do not extend as far as fiction often depicts. There are some increased sensitivities, some increased awareness and in some cases a distinct ability to serve as a human lie detector in situation where the results of such interogation are not pertinent or legaly relevant.  
-]])
-item = space_objects:addEntry('Reunion Station')
-item:setLongDescription([[
-# Reunion Station
-
-Reunion station was a dead-space installation commissioned in the year 2259 as an unsanctioned and illegal facility, outside of Federal jurisdiction. Reunion Station served as a free port for all travelers, however, de facto was home to many pirates and outlaws seeking to find refuge from Federal reach. Among the inhabitants of the station were men and women of all ages that have come to find themselves at the edge of human civilization.
-
-Reunion station was ultimately used as the MCF headquarters during The Fringe War. The Station was destroyed as a result of a large battle. The rebel forces in the station threatened use of a disproportionate weaponry. The Federation Navy has responded, dispatching a fleet. After all attempts by the Federation to negotiated were rejected by the terrorists, deadly force was applied and a battle ensued. The loss of life was in the tens of thousands.
-Several Federation officers were awarded medals for the ultimate destruction of the station, contributing to bringing the war to an end.  
 ]])
 item = space_objects:addEntry('Rusters')
 item:setLongDescription([[
@@ -1236,193 +1081,6 @@ The commissioned officer ranks of the U.S. Navy are divided into three categorie
 * O-9 | Admiral | ADM
 * O-10 | Fleet Admiral | FADM  
 ]])
-space_objects = ScienceDatabase():setName('Gravitas')
-space_objects1 = space_objects:addEntry('Communications')
-item = space_objects1:addEntry('Proxima Centauri b colony ship - ahead of schedule')
-item:setLongDescription([[
-# Proxima Centauri b colony ship - ahead of schedule
-
-Spirits are high and the music is soaring, as these happy travelers and colonists have started boarding the FSS O’Neil, which was originally scheduled to depart in late February.
-The FSS O’Neil, the largest Colony Ship to depart on its voyage, is now scheduled to depart on December 27th, instead. It’s destination - Proxima Centauri b.
-The O’Neil is destined to be the first Colony ship to leave the bounds of our solar system and continue the epic journey of humanity into the stars and beyond. It is thus no surprise that Federal Authorities have decided to expedite the proceedings and aim to enable the ship to be launched in time for the new year.
-
-However, not everything is as cheerful as it seems on the surface. Sources within the crew (whose identity we cannot publish at this time) report that the Ship is in fact not prepared for departure and that much work remains to be done.
-Other sources report ignored complaints of manpower shortages and other logistical delays.
-
-Despite the festive environment, here, on the docking platforms, it seems celebration may be too early, as some of the settlers and colonists will inadvertently fail to finish making their preparations due to the rescheduling of departure.  
-]])
-space_objects1 = space_objects:addEntry('Personal')
-item = space_objects1:addEntry('Captains log entry 581')
-item:setPassword('poseidonkey')
-item:setLongDescription([[
-Captain's log. Entry 581
-
-Yesterday, Intelligence have decoded a message we picked up on broad beam, from a former Techknowledge scientist, Dr. Heart, who is now aligned with the MCF. 
-It would seem that he had brought a highly dangerous and lethal technology with him, with the hope it would never be used. Since it was used, he found himself an accomplice to terrorist acts. He now contacted the Federation, looking for a way out. 
-
-After watching the message several times, I believe he is sincere, and that he wishes to repent. There are no excuses for him, but there might be salvation, and therefore he deserves to be helped, and to face a court of justice for his crimes.
-
-
-There is strong reason to believe the MCF would use Dr. Heart's technology again, in more terrorist attacks, and so, in retrieving him we are not only offering the man a chance to escape life as a mass murderer, but also saving the potential victims of said attacks. 
-
-
-Dr. Heart asked to be contacted through the Technigma system, which my comms officer tells me is outdated, rarely used and allows for untraceable messaging. However, in order to contact Dr. Heart specifically, to arrange his retrieval, we would need his Technigma transmission code.We should try reaching out to our contacts in Techknowledge to see if they can help us get it. Once obtained - we retrieve Dr. Heart.  
-]])
-item = space_objects1:addEntry('Dear Mickey')
-item:setPassword('j4rrl2fnt')
-item:setLongDescription([[
-Dear Mickey,
-
-I hope this message finds you in good health and high spirits. I apologize for not having written sooner. The times have been hard and not getting better. Finding jobs has been nearly impossible, and what employment can be found - usually does not last. We have both been trying very hard to provide for your brother… However, the situation, I must say, is not good. These Moonies really don’t take kindly to our type around here. It’s like they can smell the fringe on our clothes or something. Five years on this rock, you’d think we would adapt…
-Your brother has been accepted to the community school just in the neighborhood. He is really looking forward to his first day of school, but we are worried that he may run into some bullying. Perhaps we are just too worried. I’m sure he will do great.
-
-Please write back if you get the chance. We all love you very much, our little Mickey.
-
-xoxo
-Mom and Dad (and Robby!)  
-]])
-item = space_objects1:addEntry('July Package Delivery')
-item:setPassword('j4rrl2fnt')
-item:setLongDescription([[
-Hey Mickey, what’s going on?
-Listen, we need to make a change in plans. Don’t worry! It’s a small one!
-I’m going to need more of that stuff, you know, the stuff. The stuff we talked about the other day, yea, the good stuff.
-Anyways, I will need you to deliver to Babbage this time, though. The pay is going to be the same, man. I will transfer the credits to the regular account, ya?
-Get at me when you read this, aight?  
-]])
-item = space_objects1:addEntry('Letter to M')
-item:setPassword('reunionforever')
-item:setLongDescription([[
-Dear M.
-
-I can't begin to tell you how sorry I am for what went down and how it went down. We have all lost many we cared about that day. It is important for me to tell you that as strange as it may seem to you - I didn't know.
-It wasn't how they told it. It wasn't how the news told it, or the navy.
-There were 5 of us that went onboard. I was leading the team and our objective was simple. Disarm the nukes. We didn't know if they were holding on to them for a fight or for leverage, non of that mattered. We had our orderes.
-We snuck in on one of the garbage disposal barges, wearing our vac-suits. Once inside we changed to plainclothes and made our way to the medbay 3, to meet our contact on the station. When we got there, we realized he got cold feet, and he ain't meeting us. With no way to communicate with HQ or any Federation vessels nearby, and with it being a war and all that, we decided to take some initiative and set off to find the nukes ourselves. It was no easy task, but I wasn't going to signal the fleet with the one transmitter I had, just to tell them the whole thing is off and the bad guys get to win.
-
-We made our way to the storage area. On the way, we managed to make contact with some civies that were sympathetic to our cause. I knew there were civs on boards, but I had no idea there were this many. We had this listed as a military HQ, not a god damn rafugee camp. And damn those scum for using all of those people as a human shield, as well. The locals clued us in on whats going on: The rebel leader was a reasonable guy, they said, and can be talked to. He is looking for a way to de-escalate the situation, they said. We convinced them that the nukes were much more important, for everyones' safety. They were convinced, and pointed us in the right direction - Grey 56. A storage unit in grey sector, luckily - not far from where we already were.
-
-The unit was guarded and we had to get our hands dirty to get in. Williams caught a stray in the fight for the door and went down. We could do nothing to help him and had to hide his body in the air vent for the time being.
-After disposing of the dead guards, we entered. Khalid, our demo-tech, made quick work of the detonators and we were ready to take off. Then a monkey wrench was thrown in our plan.
-The civs we spoke with earlier seemed to have a change of heart, and ratted us out. They called in the cavalry and the whole of Grey Sector of Reunion Station was flooded with rebels, junkers and fringers, all waving guns at us demanding us to surrender. I was reading the situation as pretty game-over, but Khalid, Johnson and Pedro felt it otherwise and opened fire. In the ensuing fight, they all died, those crazy bastards. What were they thinking?
-The situation seemed hopeless, and I disarmed myself, asking to be taken to their leader, hoping they would value my life as long as I had useful information.
-
-Their so called general was a tough guy. Or at least he tried his best to play the part. I urged him to stand down, telling him the nukes have already been disarmed and the cavlary is already on the way.
-I bluffed, of course. They have taken the transmitter when they captured us, and before I had a chance to signal our boys.
-There was nobody coming, yet.
-To my surprise, he ate it. His expression changed very radically and he seemed relieved. After hearing the navy is coming while he is without any leverage, he was pretty receptive to simply letting us go and surrendering right there and then. With that, I grabbed the transmitter, and quietly pressed the button, as we made our way to the stations escape pods launchbay.
-
-From the Escape Pod, I managed to establish direct comms with the Fleet, and let them know that the station is disarmed and ready to surrender. I told them to send in the Marines to take custody of the situation.
-As I was accelerating away from Reunion, I saw the fleet warp in. The launch ports opened for what I assumed to be Marine Boarding Pods. As I approached the fleet, it became obvious that the launched objects were missiles, not transports. The station took multiple hits in critical sectors and became unanchored, pivoting and beginning to rotate. As explosions kept erupting, the station was being accelerated towards the nearby asteroid, with which it eventually impacted. Very few people survived, and I swear, I had no idea you had people there, nor that this could happen at all.
-
-I'm sorry.
-
-Yours,
-A.S  
-]])
-item = space_objects1:addEntry('Personnel File - Juan Smirnov')
-item:setPassword('poseidonkey')
-item:setLongDescription([[
-Name : Juan Smirnov
-Date of Birth: 14.06.2249
-Place of Birth: Luna Colony
-Date of Enlistment: 1.1.229
-Rank : First Lieutenant
-Capacity: Weapons Officer
-Civil Status: Married
-
-Personal Highlights:
-Stable personality
-Has 3 sons: Rapahel, Gabriel, Michael
-Wife resides in Bharat Heights
-Attempts to be a family man while remaining a career officer
-<Redacted>
-
-
-Career Highlights: 
-Unbderstanding and experience in Zero-G mining operations
-Familiar with the outter rim
-<Redacted>
-
-
-
-Disciplinary History:
-<Redacted>
-
-
-Decorations and Awards:
-<Redacted>  
-]])
-item = space_objects1:addEntry('Request to delay training day')
-item:setPassword('reunionforever')
-item:setLongDescription([[
-Recipient - Federation Navy Academy, Administration
-
-Greetings and salutations dear comrades and compatriots. It has come to my attention that a group of cadets is to visit onboard the FNS Gravitas in 3 weeks.
-As X.O of the Gravitas, and on behalf of the rest of the crew I must advise against this and insist the visit is canceled.
-
-The FNS Gravitas is not adequate training grounds due to its delicate missions and sensitive operations. It is not an environment in which we, as profesionals, can both observe and teach these cadets while also adequately maintaining our ship and working to meet our objectives.
-
-I must stress that sending cadets onto the Gravitas in it's current state and with it's orders as they stand - is no less than negligent.
-
-A month and a half from now the ship will rotate. I believe that would be a better time for such field expedition for the cadets in a safe and educational environment.
-
-Regards,
-
-Aharon Smith
-XO, Acting
-FNS Gravitas  
-]])
-item = space_objects1:addEntry('Tests result')
-item:setPassword('kkoirt905lfmj6')
-item:setLongDescription([[
-Dear LT. Ryback,
-I would greatly prefer not to deliver such news in a message, but due to the circumstances of your current assignment, and the urgency of the matter, I will make an exception.
-
-I have received the pathology results from your latest biopsy, and combined with the CT scan it is safe to say that the last treatment have not been successful. The number of tumors in the lungs have increased dramatically, which means your cancer now meets the classifications of Stage 4. 
-
-Since we have exhausted all other forms of treatment, the next phase will be lung replacement, and it needs to happen soon. 
-You are in otherwise perfect health, so if we conduct this properly, I expect you could make a full recovery. However, this would require some adjustments on your part, the main one would be a major life-style change. Vat-grown implanted lungs are highly susceptible to pressure changes, and therefore after the transplant, spaceflight is highly dangerous and should only be attempted when absolutely necessary.
-
-I understand this would be difficult, but I have the utmost confidence that the Federation would greatly benefit from your skills and expertise, even if you are working a desk-job.
-
-We have no time to waste.
-Please contact me as soon as possible to schedule the operation.
-
-Lt. Commander E. Maddox. MD.  
-]])
-item = space_objects1:addEntry('Transcripted message 2933')
-item:setPassword('poseidonkey')
-item:setLongDescription([[
-To anyone in the Federation who may get this.
-
-My name is Dr. Eric Heart, and I am in need of your immediate help.
-
-Several years ago, I have worked in Techknowledge, where I have developed a highly dangerous technology, involving the remote activation and deactivation of reactors. Since then I have done everything in my power to prevent it’s misuse.I have put my trust in the MCF and now realise it was a grave mistake. I did not believe they will, but they have used it, and it cost lives. Many of them.
-
-I’m reaching out to the Federation now, hoping that you will be able to decrypt this message and more over that you could help me.
-Billions of lives are at risk.
-
-The MCF could no longer be trusted with my technology. I must get out.
-
-If you can - please contact me via the Technigma system. If you can’t, please forward this to someone who can.
-This is of the utmost importance, I cannot stress this enough.
-
-Thank you for your effort,
-Dr. Heart.  
-]])
-item = space_objects1:addEntry('Vacation Request Christmas 2295')
-item:setPassword('threeangels')
-item:setLongDescription([[
-Captain,
-
-I would like to formally request personal time for the holiday.
-I request 1 week of leave while still on call. I intend to spend this time at the fringe and so will be acessible.
-I have not seen my wife in 3 months and would like to celebrate the holiday with her.
-
-Regards,
-Lt. Juan Smirnov  
-]])
 space_objects = ScienceDatabase():setName('Natural Phenomena')
 item = space_objects:addEntry('Asteroid Belt')
 item:setLongDescription([[
@@ -1493,25 +1151,6 @@ Born in Madrid, Spain, Diaz was was educated in federal schools untill eventuall
 Diaz is most famous for heading the Experimental Jump Drive Project through the Capital Ship phase and was found responsible for the loss of the FSN Langley.
 Diaz was dishonorably discharged from the federation navy and his current whereabout are unknwon.  
 ]])
-item = space_objects:addEntry('Feldman, Erik')
-item:setLongDescription([[
-Name : Erik Feldman
-Date of Birth: Unknown
-Place of Birth: The Fringe
-Status: MCF Officer, Fugitive
-Rank : Unknown
-Capacity: Field Commander
-Civil Status: Unknown
-Threat level: Extreme (Do not apprehend)
-
-
-Personal Highlights
-
-In command of a large group of opperatives for the MCF.
-Considered Deadly in actions and intent.
-Over 45 open murder cases.
-Over 820 counts of attempted murder.  
-]])
 item = space_objects:addEntry('Fernando_dos_Santos')
 item:setLongDescription([[
 # Fernando dos Santos
@@ -1544,40 +1183,6 @@ Santiago was most famous for his charisma and leadership capabilities, harnessin
 Santiago was known to be a strong speaker an even greater strategist and the Federation was prosperous under his guidance and leadersip.
 
 President Santiago was assassinated on March 4th, 2065 by a terrorist organization known as the JoM-LLA (Joint Martian-Lunar Liberation Army).  
-]])
-item = space_objects:addEntry('Sato, Alexander')
-item:setLongDescription([[
-# Alexander Sato
-
-Sato, also known "Genesis", is a <Redacted>.
-<Redacted> but also in the Fringe. <Redacted>.
-Original mission included <Redacted>.
-Point of contact: Captain Chris Zhang, FNS Gravitas.
-
-
-Name : Alexander Sato
-Date of Birth: <Redacted>
-Place of Birth: <Redacted>
-Date of Enlistment: <Redacted>
-Rank : <Redacted>
-Capacity: <Redacted>
-Civil Status: <Redacted>
-
-Personal Highlights:
-Stable personality. <Redacted>.
-
-
-Career Highlights: 
-<Redacted>
-
-
-
-Disciplinary History:
-<Redacted>
-
-
-Decorations and Awards:
-<Redacted>  
 ]])
 space_objects = ScienceDatabase():setName('Protocols and policies')
 item = space_objects:addEntry('Alcohol Policy')
@@ -2166,12 +1771,6 @@ Within ten minutes of declaring Yellow Alert, the commanding officer must provid
 * The Intelligence Room will be manned by atleast 1 SIGI officer.  
 ]])
 space_objects = ScienceDatabase():setName('Ship Systems')
-item = space_objects:addEntry('Ares X-99 EMP')
-item:setLongDescription([[
-# Ares X-99 Long Range EMP Missile 
-
-The Ares X-99, is the Federation’s Navy standard EMP Missile, its main function is to damage the shield system of enemy ships, leaving them vulnerable to other types of weapons.  
-]])
 item = space_objects:addEntry('Automatic Repair System')
 item:setLongDescription([[
 # Automatic Repair System
@@ -2180,23 +1779,6 @@ The automatic repair system is the pinnacle of damage control systems. Developed
 The nanomachines are activated by automatic repair protocol (named ECR) which is loaded and directed in FUGAZI. Note! Due to the wide array of systems and the limited supply of nanomachines available for any federation vessel only one system can be repaired at any given time.
 
 To repair a system the nanomachines rely on a steady power supply. The main power supply the nanomachines will use is the one powering the system they are currently fixing. If the system does not supply enough power the nanomachines will use internal power supply (which would slow down the repair speed by a factor of 2). Due to this, be wary of powering down any switchboards while the repair is ongoing.  
-]])
-item = space_objects:addEntry('Communication Systems')
-item:setLongDescription([[
-# Short Range
-
-The FNS Gravitas Short Range Communication system is the default communication system used by the crew. It allows the ship to communicate to ranges of up to 10U, however, this range can be deminished by various conditions. Reliable range is considered up to 5-10U.
-This system allows for two-way audio communication.
-
-
-# Medium Range
-
-Within 50U, it is possible to establish a communication channel with another vessel using the Medium Range communication system. If the recipient accepts the hail and returns it, direct audio communication can take place.
-
-
-# Long Range
-
-It is possible to send a textual communique to any ship according to it's designated callsign. The signal may take time to reach the recipient, depending on range and environmental conditions. There is no way to confirm whether the transmission is received unless a reply is sent.  
 ]])
 item = space_objects:addEntry('Drones')
 item:setLongDescription([[
@@ -2514,84 +2096,13 @@ Standard procedure demands that 20U of clear space to be available for the safe 
 failure to comply can result in catastrophic damage to the Core and Ship.  
 ]])
 space_objects = ScienceDatabase():setName('Ships')
-space_objects1 = space_objects:addEntry('Ship Types')
-item = space_objects1:addEntry('Battlecruisers')
-item:setLongDescription([[
-# Battlecruisers
-
-Size Class: 5
-
-Battlecruisers are built to 'punch above their weight' - with incredible targeting arrays and long range weaponry, designed to either lay in wait for a target or lunch assault on unprepared targets from beyond the sensor horizon.  
-]])
-item = space_objects1:addEntry('Battleships')
-item:setLongDescription([[
-# Battleships
-
-Size Class: 6
-
-A battleship is a large armored warship with a main battery consisting of high-end ordnance and advanced command-and-control systems. 
-Battleships these days are split between Carrier Ships designed to host swarms of fighters and Ships of the Line, designed to be, in essence, gigantic weapon platforms 
-traversing space, using their bulk and enormous gunnery systems to outfight and outlast any and all opposition.  
-]])
-item = space_objects1:addEntry('Corvettes')
-item:setLongDescription([[
-# Corvettes
-
-Size Class: 2
-
-The smallest tonnage grade of warships that can stand alone in a given fight. A corvette is supposed to either be an exploratory vessel, acting in small squadrons outside a main fleet or as shielding to freighters and other civilian ships.  
-]])
-item = space_objects1:addEntry('Destroyers')
-item:setLongDescription([[
-# Destroyers
-
-Size Class: 4
-
-A destroyer is a fast, maneuverable, long-endurance warship intended to escort larger vessels in a fleet, convoy or battle group and defend them against powerful short range attackers.  
-]])
-item = space_objects1:addEntry('Drones')
-item:setLongDescription([[
-# Drones
-
-Size Class: 0
-
-Drones are the workhorse of anyone that doesn't want to space-walk too much. 
-They have trillions of uses and can often be modified on the fly by any ship larger then a corvette to specifically be used to some new function. 
-Often deployed in teams to take advantage on the superior numbers and multi-direction sensor arrays, resulting in an a unit that can achieve quite a few tasks of relative complexity in a short period of time.  
-]])
-item = space_objects1:addEntry('Fighters')
-item:setLongDescription([[
-# Fighters
-
-Size Class: 1
-
-From small weapon systems driven usually by a single combat pilot to a group of three - Fighters are the mainstay of carrier ships, acting in squadrons to achieve tactical superiority over enemy vessels.  
-]])
-item = space_objects1:addEntry('Freighters')
-item:setLongDescription([[
-# Freighters
-
-Civilization ships that can be used for many applications, mining, transport, etc.
-Mostly used for bulk shipping, either of people or for goods. 
-Freighters have very little in the way of military-grade of anything, but they do have excellent shielding and often very large storage spaces.
-The workhorse of the trade, built in shipyards all around the Solar system is based off the Jin’Dau Corp. Designs.  
-]])
-item = space_objects1:addEntry('Frigates')
-item:setLongDescription([[
-# Frigates
-
-Size Class: 3
-
-Frigates are the hard working sluggers of any fleet. This category encompasses anything from a repair-ship trucking along, attack vessels of median size that can work with Destroyers in tactical engagements and even lynchpins for corvettes and fighters to work with. A frigate can be designed for nearly any combat role, and often are tasked with even more.  
-]])
-space_objects1 = space_objects:addEntry('Specific Ships')
-item = space_objects1:addEntry('FNS Eden')
+item = space_objects:addEntry('FNS Eden')
 item:setLongDescription([[
 # FNS Eden
 
 Comissioned on January 14th, 2162, FNS Eden (MV-128/AV-59) was a mining ship deployed to the Fringe Sector by the Federation Navy Logistics Command. With 40 souls on board and a rather safe route, the Eden served as an outstanding performing vessel for 20 years until it was decomissioned December 21st, 2181.  
 ]])
-item = space_objects1:addEntry('FNS Gogol')
+item = space_objects:addEntry('FNS Gogol')
 item:setLongDescription([[
 # FNS Gogol
 
@@ -2606,7 +2117,7 @@ The sudden depressurization caught the crew of guard, many of whom were experien
 Federation Navy investigators believe that the compromise of hull integrity had caused the automated navigation systems to compensate, while the collision detection computer was not online - possibly due to damage from the hull breach - resulting in the ships course changing directly into Belt object 582c-94X in the Ceres Sector.
 No survivors were found. Final casualty report stated 69 KIA and 6 MIA, presumed dead.  
 ]])
-item = space_objects1:addEntry('FNS Langley')
+item = space_objects:addEntry('FNS Langley')
 item:setLongDescription([[
 # FNS Langley
 
@@ -2621,7 +2132,7 @@ The incident left over 4000 dead and twice as that injured.
 
 An investigation that followed the incident revealed that the overload of the jumpdrive could have been prevented by multiple officers on the ship, at varying stations. It appears that non of the key positions (The Drive Core, The Bridge Engineering Station, The Electronic Warfare Control Station) were manned or correctly controlled at the time of the incident, however, the reason remains unknown.  
 ]])
-item = space_objects1:addEntry('FNS Ramses')
+item = space_objects:addEntry('FNS Ramses')
 item:setLongDescription([[
 # FNS Ramses
 
@@ -2633,7 +2144,7 @@ The FNS Ramses is a 'Stockholm' class sience vessel, a product of a decade-long 
 
 The last contact made by the Ramses was on it's maiden voyage on June 8th, 2092, as it was entering uncharter space, beyond the Kuiper Belt. The reasons or cause of it's disappearance or the fate of it's crew remain unknown.  
 ]])
-item = space_objects1:addEntry('FNS Vladimir')
+item = space_objects:addEntry('FNS Vladimir')
 item:setLongDescription([[
 # FNS Vladimir 
 
@@ -2654,20 +2165,4 @@ Possible reasons for the vanishing of the Vladimir, only to arrive back radar ar
 <!--stackedit_data:
 eyJoaXN0b3J5IjpbLTE0Mzk0OTM0MjZdfQ==
 -->  
-]])
-item = space_objects1:addEntry('The Tamel')
-item:setLongDescription([[
-# The Tamel
-
-The Tamel accident is the common name for the collision of the Garat, a Selucia corporation owned vessel, and the Tamel school transport. 
-
-In November 2290, as the Garat, a Science Exploration ship of the Selucia Corporation, was heading out of Ceres, bound for what was supposed to be a short and routine information  collection mission, it collided with a student transport vessel, carrying7 crew members and 77 children and faculty from the Tamel school on Luna, that were heading for Ceres for a class trip.
-
-In what is considered to be in one of history's most infamous space-travel disasters, the impact between the heavily packed science ship and the slow and bulky transport resulted in multiple casualties.it is believed that 27 children on board the transport were killed instantly from the impact, as well as all 15 crew members of the Garat, including captain Peter Scotts. 8 more children passed away from the injuries they sustained, before the rescue ships could reach the wreckage. 
-
-The incident and its aftermath were heavily covered by the news media. While the rescue efforts were commendable, and 42 children and adults were taken off the Tamel transport alive, the cause of the collision between the Garat and the transport generated much interest in the media and many lawsuits. Largely because of an out-of-court settlement agreement between the Selucia corporation with the family members of 28 of the children killed in the accident, during hearings immediately after the disaster. Eventually, an agreement with the remaining 6 families of the Tamel casualties was also achieved and the entire case was settled out of court.
-
-An investigation as to the cause of the accident later determined that the cause of the collision was the accidental malfunction of the Garat’s reactor, resulting in an explosion that severely impaired their ability to navigate. Salvaged records from the Garat suggested that the swift and decisive actions of captain Scotts and his crew, while costing them their lives, have no doubt saved many people as the original course of the science vessel would have caused it to hit the transport in a way that would have undoubtedly caused a massive hall breach and would have caused the loss of life of every man, woman and child on board. 
-
-As a result of the accident, Selucia corporation have greatly updated it’s safety protocols, and have initiated several precautions to ensure that a single point malfunction could no longer cause such a catastrophic result. Despite the published findings, and the steps that were taken, many theories have been featured in multiple news feeds, suggesting the malfunction of the reactor was not an accident, but a deliberate sabotage directed at both the Selucia Corporation and captain Scotts, which had notably one of the fastest advancements in rank within the corporation.  
 ]])
