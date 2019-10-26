@@ -1,3 +1,4 @@
-REM TODO: replace hard-coded path with smarter WSLENV environment var
-bash -c "~/workspace/EmptyEpsilon/build_release.sh"
+set PROJECT_DIR=%~dp0
+set WSLENV=PROJECT_DIR/p
+bash -c "$PROJECT_DIR/build_release.sh"
 pause

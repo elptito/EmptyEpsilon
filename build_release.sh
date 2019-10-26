@@ -9,7 +9,7 @@
 # sudo apt install mingw-w64 cmake
 # ------
 # assuming ~/workspace contains `drmingw-0.8.2-win32`, and `EmptyEpsilon` and `SeriousProton` src projects
-cd ~/workspace/EmptyEpsilon
+cd "$PROJECT_DIR"
 rm -rf "_build_win32"
 mkdir "_build_win32"
 cd "_build_win32"
