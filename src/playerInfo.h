@@ -26,7 +26,7 @@ enum ECrewPosition
     scienceRadar,
     relayRadar,
     navigation,
-    logView,
+    shipLog,
     internLogView,
     dronePilot,
     droneMaster,

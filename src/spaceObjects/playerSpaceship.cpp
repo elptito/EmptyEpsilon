@@ -280,7 +280,7 @@ PlayerSpaceship::PlayerSpaceship()
 	has_electrical_sensor = false;
 	has_biological_sensor = false;
 	timer_log_intern = 0.0;
-	timer_log_extern = 0.0;
+	timer_log_generic = 0.0;
 	timer_log_docks = 0.0;
 	timer_log_science = 0.0;
 
@@ -311,7 +311,7 @@ PlayerSpaceship::PlayerSpaceship()
     registerMemberReplication(&comms_reply_message);
     registerMemberReplication(&comms_target_name);
     registerMemberReplication(&comms_incomming_message);
-    registerMemberReplication(&ships_log_extern);
+    registerMemberReplication(&ships_log_generic);
     registerMemberReplication(&ships_log_intern);
     registerMemberReplication(&ships_log_docks);
     registerMemberReplication(&ships_log_science);
@@ -343,7 +343,7 @@ PlayerSpaceship::PlayerSpaceship()
     registerMemberReplication(&tactical_radar_range);
     registerMemberReplication(&science_radar_range);
     registerMemberReplication(&timer_log_intern);
-    registerMemberReplication(&timer_log_extern);
+    registerMemberReplication(&timer_log_generic);
     registerMemberReplication(&timer_log_docks);
     registerMemberReplication(&timer_log_science);
 
@@ -375,10 +375,10 @@ PlayerSpaceship::PlayerSpaceship()
     setCallSign("PL" + string(getMultiplayerId()));
 
     // Initialize the ship's log.
-    addToShipLog("Initialisation du log", colorConfig.log_generic,"extern");
-    addToShipLog("Initialisation du log", colorConfig.log_generic,"intern");
-    addToShipLog("Initialisation du log", colorConfig.log_generic,"science");
-    addToShipLog("Initialisation du log", colorConfig.log_generic,"docks");
+    addToShipLog("Initialisation du log general", colorConfig.log_generic,"generic");
+    addToShipLog("Initialisation du log interne", colorConfig.log_generic,"intern");
+    addToShipLog("Initialisation du log scientifique", colorConfig.log_generic,"science");
+    addToShipLog("Initialisation du log hangar", colorConfig.log_generic,"docks");
 }
 
 void PlayerSpaceship::update(float delta)
@@ -399,8 +399,8 @@ void PlayerSpaceship::update(float delta)
     // si log, clignotement durant 5 secondes
     if (timer_log_intern > 0)
         timer_log_intern -= delta;
-    if (timer_log_extern > 0)
-        timer_log_extern -= delta;
+    if (timer_log_generic > 0)
+        timer_log_generic -= delta;
     if (timer_log_docks > 0)
         timer_log_docks -= delta;
     if (timer_log_science > 0)
@@ -986,15 +986,15 @@ void PlayerSpaceship::setRepairCrewCount(int amount)
     }
 }
 
-void PlayerSpaceship::addToShipLog(string message, sf::Color color, string station = "extern")
+void PlayerSpaceship::addToShipLog(string message, sf::Color color, string station = "generic")
 {
-    if (station == "extern")
+    if (station == "generic")
     {
-        if (ships_log_extern.size() > 100)
-            ships_log_extern.erase(ships_log_extern.begin());
+        if (ships_log_generic.size() > 100)
+            ships_log_generic.erase(ships_log_generic.begin());
         // Timestamp a log entry, color it, and add it to the end of the log.
-        ships_log_extern.emplace_back(string(engine->getElapsedTime(), 1) + string(": "), message, color, station);
-        timer_log_extern = 6;
+        ships_log_generic.emplace_back(string(engine->getElapsedTime(), 1) + string(": "), message, color, station);
+        timer_log_generic = 6;
     }
     else if (station == "intern")
     {
@@ -1039,8 +1039,8 @@ void PlayerSpaceship::addToShipLogBy(string message, P<SpaceObject> target)
 const std::vector<PlayerSpaceship::ShipLogEntry>& PlayerSpaceship::getShipsLog(string station) const
 {
     // Return the ship's log.
-    if (station == "extern")
-        return ships_log_extern;
+    if (station == "generic")
+        return ships_log_generic;
     if (station == "intern")
         return ships_log_intern;
     if (station == "docks")

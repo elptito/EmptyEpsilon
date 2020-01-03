@@ -67,7 +67,7 @@ void ShipsLog::onDraw(sf::RenderTarget& window)
         string background = "gui/ButtonBackground.disabled";
         if (my_spaceship &&
             (station == "intern" && my_spaceship->timer_log_intern > 0 && int(my_spaceship->timer_log_intern) % 2 == 0)
-            || (station == "extern" && my_spaceship->timer_log_extern > 0 && int(my_spaceship->timer_log_extern) % 2 == 0)
+            || (station == "generic" && my_spaceship->timer_log_generic > 0 && int(my_spaceship->timer_log_generic) % 2 == 0)
             || (station == "docks" && my_spaceship->timer_log_docks > 0 && int(my_spaceship->timer_log_docks) % 2 == 0)
             || (station == "science" && my_spaceship->timer_log_science > 0 && int(my_spaceship->timer_log_science) % 2 == 0)
         )

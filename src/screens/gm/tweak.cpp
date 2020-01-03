@@ -1481,7 +1481,7 @@ GuiShipTweakMessages::GuiShipTweakMessages(GuiContainer* owner)
 : GuiTweakPage(owner)
 {
     color_message = sf::Color::White;
-    type_log = "extern";
+    type_log = "generic";
     message = "";
 
     (new GuiLabel(this, "", "Message :", 30))->setPosition(0, 30, ATopCenter);
@@ -1548,7 +1548,7 @@ GuiShipTweakMessages::GuiShipTweakMessages(GuiContainer* owner)
         type_log = value;
     });
     log_selector->setSize(GuiElement::GuiSizeMax, 40);
-    log_selector->addEntry("extern", "extern");
+    log_selector->addEntry("generic", "generic");
     log_selector->addEntry("intern", "intern");
     log_selector->addEntry("docks", "docks");
     log_selector->addEntry("science", "science");

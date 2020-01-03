@@ -114,7 +114,7 @@ void Artifact::collide(Collisionable* target, float force)
             on_pickup_callback.call(P<Artifact>(this), player);
         }
         destroy();
-        player->addToShipLog("Objet recupere en soute",sf::Color::White,"extern");
+        player->addToShipLog("Objet recupere en soute",sf::Color::White,"generic");
     }
 }
 

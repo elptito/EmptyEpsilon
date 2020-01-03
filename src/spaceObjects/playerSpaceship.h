@@ -140,7 +140,7 @@ private:
     std::vector<string> comms_reply_message;
     CommsScriptInterface comms_script_interface; // Server only
     // Ship's log container
-    std::vector<ShipLogEntry> ships_log_extern;
+    std::vector<ShipLogEntry> ships_log_generic;
     std::vector<ShipLogEntry> ships_log_intern;
     std::vector<ShipLogEntry> ships_log_docks;
     std::vector<ShipLogEntry> ships_log_science;
@@ -186,7 +186,7 @@ public:
     float science_radar_range;
 
     float timer_log_intern;
-	float timer_log_extern;
+	float timer_log_generic;
 	float timer_log_docks;
 	float timer_log_science;
 

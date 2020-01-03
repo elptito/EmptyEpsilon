@@ -165,8 +165,8 @@ void PlayerInfo::spawnUI()
             screen->addStationTab(new RadarScreen(screen,"relay"), relayRadar, getCrewPositionName(relayRadar), getCrewPositionIcon(relayRadar));
         if (crew_position[navigation])
             screen->addStationTab(new NavigationScreen(screen), navigation, getCrewPositionName(navigation), getCrewPositionIcon(navigation));
-        if (crew_position[logView])
-            screen->addStationTab(new ShipLogScreen(screen,"extern"), logView, getCrewPositionName(logView), getCrewPositionIcon(logView));
+        if (crew_position[shipLog])
+            screen->addStationTab(new ShipLogScreen(screen,"generic"), shipLog, getCrewPositionName(shipLog), getCrewPositionIcon(shipLog));
         if (crew_position[internLogView])
             screen->addStationTab(new ShipLogScreen(screen,"intern"), internLogView, getCrewPositionName(internLogView), getCrewPositionIcon(internLogView));
         if (crew_position[dronePilot])
@@ -178,12 +178,13 @@ void PlayerInfo::spawnUI()
         if (crew_position[oxygenView])
             screen->addStationTab(new OxygenScreen(screen), oxygenView, getCrewPositionName(oxygenView), getCrewPositionIcon(oxygenView));
 
+        //TODO tsht : verifier que c'est bien present avec le truc en bas
         //Ship log screen, if you have comms, you have ships log. (note this is mostly replaced by the [at the bottom of the screen openable log]
-        if (crew_position[singlePilot])
-		{
-            screen->addStationTab(new ShipLogScreen(screen,"extern"), max_crew_positions, "log externe", "");
-            screen->addStationTab(new ShipLogScreen(screen,"intern"), max_crew_positions, "log interne", "");
-        }
+        //if (crew_position[singlePilot])
+		//{
+        //    screen->addStationTab(new ShipLogScreen(screen,"generic"), max_crew_positions, "log externe", "");
+        //    screen->addStationTab(new ShipLogScreen(screen,"intern"), max_crew_positions, "log interne", "");
+        //}
 
         GuiSelfDestructEntry* sde = new GuiSelfDestructEntry(screen, "SELF_DESTRUCT_ENTRY");
         for(int n=0; n<max_crew_positions; n++)
@@ -232,7 +233,7 @@ string getCrewPositionName(ECrewPosition position)
     case scienceRadar: return "Radar Science";
     case relayRadar: return "Radar Auspex LP";
     case navigation: return "Navigation";
-    case logView: return "Log View";
+    case shipLog: return "Log View";
     case internLogView: return "Intern Log View";
     case dronePilot: return "Pilote seul";
     case droneMaster: return "Maitre des docks";
@@ -263,7 +264,7 @@ string getCrewPositionIcon(ECrewPosition position)
     case scienceRadar: return "";
     case relayRadar: return "";
     case navigation: return "";
-    case logView: return "";
+    case shipLog: return "";
     case internLogView: return "";
     case dronePilot: return "";
     case droneMaster: return "";
@@ -319,8 +320,8 @@ template<> void convert<ECrewPosition>::param(lua_State* L, int& idx, ECrewPosit
         cp = relayRadar;
     else if (str == "navigation" || str == "navigationview")
         cp = navigation;
-    else if (str == "log" || str == "logview")
-        cp = logView;
+    else if (str == "log" || str == "shiplog")
+        cp = shipLog;
     else if (str == "internlog" || str == "internlogview")
         cp = internLogView;
     else if (str == "dronepilot" || str == "dronepilotview")
