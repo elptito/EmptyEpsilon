@@ -25,6 +25,8 @@ public:
     virtual bool canBeLandedOn(P<SpaceObject> obj) { return false; }
 
     
+    float getPlanetRadius();
+
     void setPlanetAtmosphereColor(float r, float g, float b);
     void setPlanetAtmosphereTexture(string texture_name);
     void setPlanetSurfaceTexture(string texture_name);
@@ -64,5 +66,5 @@ private:
     void updateCollisionSize();
 };
 
-#endif//WORM_HOLE_H
+#endif//PLANET_H
 
