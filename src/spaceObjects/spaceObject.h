@@ -243,6 +243,7 @@ public:
     virtual string getCallSign() { return callsign; }
     virtual bool canBeDockedBy(P<SpaceObject> obj) { return false; }
     virtual bool canBeLandedOn(P<SpaceObject> obj) { return false; }
+    virtual bool canRestockMissiles() { return false; }
     virtual bool hasShield() { return false; }
     void setHull(float amount) { hull = amount; }
     float getHull() { return hull; }
