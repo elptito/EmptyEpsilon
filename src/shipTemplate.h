@@ -118,6 +118,7 @@ public:
     bool has_reactor;
 
     bool restocks_scan_probes;
+    bool restocks_missiles_docked;
     bool can_scan = true;
     bool can_hack = true;
     bool can_dock = true;
@@ -178,6 +179,7 @@ public:
     void setRepairDocked(bool enabled);
     void setReactor(bool enabled);
     void setRestocksScanProbes(bool enabled);
+    void setRestocksMissilesDocked(bool enabled);
     void setCanScan(bool enabled) { can_scan = enabled; }
     void setCanHack(bool enabled) { can_hack = enabled; }
     void setCanDock(bool enabled) { can_dock = enabled; }
