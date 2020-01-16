@@ -146,6 +146,7 @@ void VisualAsteroid::draw3D()
 
 void VisualAsteroid::setSize(float size)
 {
+    this->size = size;
     setRadius(size);
     while(fabs(z) < size * 2)
         z *= random(1.2, 2.0);

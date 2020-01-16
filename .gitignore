@@ -37,7 +37,6 @@ thumbs.db
 options.ini
 .vscode
 *.html
-logs
 *.log
 EmptyEpsilon.cscope_file_list
 
