@@ -1618,6 +1618,14 @@ void PlayerSpaceship::handleClientCommand(int32_t client_id, int16_t command, sf
             }
         }
         break;
+    case CMD_CLEAR_TASKS:
+        {
+            for(int n = 0; n < max_science_tasks; n++)
+            {
+                scienceTasks[n].clear();
+            }
+        }
+        break;
     case CMD_SEND_QUERY:
         {
             string message, station;
@@ -1949,6 +1957,12 @@ void PlayerSpaceship::commandAddScanTask(P<SpaceObject> object){
 void PlayerSpaceship::commandCompleteScienceTask(int taskIndex, bool success){
     sf::Packet packet;
     packet << CMD_TASK_COMPLETED << taskIndex << success;
+    sendClientCommand(packet);
+}
+
+void PlayerSpaceship::commandClearAllTasks(){
+    sf::Packet packet;
+    packet << CMD_CLEAR_TASKS;
     sendClientCommand(packet);
 }
 

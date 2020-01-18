@@ -69,6 +69,7 @@ protected:
     static const int16_t CMD_ADD_ROUTE_WAYPOINT = 0x0040;
     static const int16_t CMD_REMOVE_ROUTE_WAYPOINT = 0x0041;
     static const int16_t CMD_MOVE_ROUTE_WAYPOINT = 0x0042;
+    static const int16_t CMD_CLEAR_TASKS = 0x0043;
 
 public:
 
@@ -312,6 +313,7 @@ public:
     void commandSendScienceQueryToBridgeDB(string entryName);
     void commandAddHackTask(P<SpaceShip> target, ESystem target_system);
     void commandAddScanTask(P<SpaceObject> object);
+    void commandClearAllTasks();
     void commandCompleteScienceTask(int taskIndex, bool success);
     void commandSendQuery(string message, string station);
     virtual void onReceiveServerCommand(sf::Packet& packet) override;

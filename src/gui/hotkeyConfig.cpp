@@ -47,8 +47,8 @@ HotkeyConfig::HotkeyConfig()
     newCategory("SCIENCE", "Science Officer");
     newKey("POV_SHIP", std::make_tuple("set radar point of view to main ship", "Q"));
     newKey("POV_PROBE", std::make_tuple("set radar point of view to probe", "A"));
+    newKey("CLEAR_TASKS", std::make_tuple("abort all tasks", "[alt];C"));
     newKey("SCAN", std::make_tuple("Scan target", "S"));
-    newKey("CANCEL_SCAN", std::make_tuple("Cancel current scan", "[alt];S"));
     newKey("OPEN_TYPE_IN_DB", std::make_tuple("Open selected ship type in DB", "D"));
     for(int n=0; n<SYS_COUNT; n++) {
         string systemName = getSystemName(ESystem(n));
