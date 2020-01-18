@@ -4,12 +4,14 @@
 #include "epsilonServer.h"
 #include "gameGlobalInfo.h"
 #include "playerInfo.h"
+#include "screens/windowScreen.h"
 
 #include "gui/gui2_label.h"
 
 AutoConnectScreen::AutoConnectScreen(ECrewPosition crew_position, bool control_main_screen, string ship_filter)
 : crew_position(crew_position), control_main_screen(control_main_screen), filter(ship_filter, crew_position)
 {
+    window_angle = PreferencesManager::get("window_angle", "-1").toInt();
     if (!game_client)
     {
         scanner = new ServerScanner(VERSION_NUMBER);
@@ -22,6 +24,8 @@ AutoConnectScreen::AutoConnectScreen(ECrewPosition crew_position, bool control_m
     string position_name = "Main screen";
     if (crew_position < max_crew_positions)
         position_name = getCrewPositionName(crew_position);
+    else if (window_angle != -1)
+        position_name = "Ship window (" + string(window_angle) + " deg.)";
 
     (new GuiLabel(this, "POSITION", position_name, 50))->setPosition(0, 400, ATopCenter)->setSize(0, 30);
     filter.log();
@@ -86,7 +90,11 @@ void AutoConnectScreen::update(float delta)
                         if (my_spaceship->getMultiplayerId() == my_player_info->ship_id && (crew_position == max_crew_positions || my_player_info->crew_position[crew_position]))
                         {
                             destroy();
-                            my_player_info->spawnUI();
+                            if (window_angle == -1){
+                                my_player_info->spawnUI();
+                            } else {
+                                new WindowScreen(window_angle);
+                            }
                         }
                     }
                 }else{

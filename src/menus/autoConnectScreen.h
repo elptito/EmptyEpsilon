@@ -14,7 +14,7 @@ class AutoConnectScreen : public GuiCanvas, public Updatable
     ECrewPosition crew_position;
     bool control_main_screen;
     ShipFilter filter;
-    
+    int window_angle;
     GuiLabel* status_label;
 public:
     AutoConnectScreen(ECrewPosition crew_position, bool control_main_screen, string ship_filter);
