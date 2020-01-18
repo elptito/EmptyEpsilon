@@ -840,11 +840,11 @@ float PlayerSpaceship::getNetSystemEnergyUsage()
         }
         else
         {
-            float powerFactor = 1.f;
+            float shipTypeFactor = 1.f;
             if(ship_template && ship_template->getType() == ShipTemplate::TemplateType::Drone){
-                powerFactor = drones_energy_factor;
+                shipTypeFactor = drones_energy_factor;
             }
-            net_power -= system_power_user_factor[n] * systems[n].power_level;
+            net_power -= system_power_user_factor[n] * systems[n].power_level * shipTypeFactor;
         }
     }
 
