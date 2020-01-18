@@ -1587,7 +1587,7 @@ void PlayerSpaceship::handleClientCommand(int32_t client_id, int16_t command, sf
             packet >> target_id >> target_system;
             P<SpaceShip> target = game_server->getObjectById(target_id);
             if (target && target_system < SYS_COUNT && target->hasSystem(target_system) && target->canBeHackedBy(this))
-                ScienceTask::addHackTask(scienceTasks, my_spaceship->max_science_tasks, target_id, target_system);
+                ScienceTask::addHackTask(scienceTasks, max_science_tasks, target_id, target_system);
         }
         break;
     case CMD_SCAN_TASK:
@@ -1596,7 +1596,7 @@ void PlayerSpaceship::handleClientCommand(int32_t client_id, int16_t command, sf
             packet >> target_id;
             P<SpaceShip> target = game_server->getObjectById(target_id);
             if (target && target->canBeScannedBy(this))
-                ScienceTask::addScanTask(scienceTasks, my_spaceship->max_science_tasks, target_id);
+                ScienceTask::addScanTask(scienceTasks, max_science_tasks, target_id);
         }
         break;
     case CMD_TASK_COMPLETED:

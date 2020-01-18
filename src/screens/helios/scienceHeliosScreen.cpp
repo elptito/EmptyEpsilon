@@ -44,7 +44,7 @@ ScienceHeliosScreen::ScienceHeliosScreen(GuiContainer* owner, ECrewPosition crew
     middle_column->setMargins(0, 0, 10, 0)->setSize(250, GuiElement::GuiSizeMax);
 
     GuiAutoLayout *middle_column_down = new GuiAutoLayout(middle_column, "MIDDLE_COLUMN_DOWN", GuiAutoLayout::LayoutVerticalBottomToTop);
-    middle_column_down->setMargins(0, 0, 10, 0)->setSize(GuiElement::GuiSizeMax, 50 + 30 * my_spaceship->max_science_tasks);
+    middle_column_down->setMargins(0, 0, 10, 0)->setSize(GuiElement::GuiSizeMax, 50 + 30 * PlayerSpaceship::max_science_tasks);
 
     GuiAutoLayout *middle_column_up = new GuiAutoLayout(middle_column, "MIDDLE_COLUMN_UP", GuiAutoLayout::LayoutVerticalTopToBottom);
     middle_column_up->setMargins(0, 0, 10, 0)->setSize(250, GuiElement::GuiSizeMax);
@@ -126,7 +126,7 @@ ScienceHeliosScreen::ScienceHeliosScreen(GuiContainer* owner, ECrewPosition crew
     main_view_display = new GuiLabel(radar_source, "PROBE_VIEW", "Main View", 30);
     main_view_display->addBackground()->setMargins(10, 0)->setSize(GuiElement::GuiSizeMax, 50);
 
-    for(int n = my_spaceship->max_science_tasks - 1; n >= 0; n--){
+    for(int n = PlayerSpaceship::max_science_tasks - 1; n >= 0; n--){
         tasks_queue[n] = new GuiLabel(middle_column_down, "TASK_"+ string(n, 0), "-", 25);
         tasks_queue[n]->addBackground()->setMargins(10, 2)->setSize(250, 30)->hide();
     }
@@ -204,8 +204,8 @@ void ScienceHeliosScreen::onDraw(sf::RenderTarget& window)
     } else if (targets.getWaypointIndex() >= 0) {
         showWaypointInfo();
     }
-    int tasksCount = ScienceTask::countTasks(my_spaceship->scienceTasks, my_spaceship->max_science_tasks);
-    if (tasksCount < my_spaceship->max_science_tasks){
+    int tasksCount = ScienceTask::countTasks(my_spaceship->scienceTasks, PlayerSpaceship::max_science_tasks);
+    if (tasksCount < PlayerSpaceship::max_science_tasks){
         if (target){
             if (target->getScannedStateFor(my_spaceship) == SS_FullScan){
                 scan_status->setText("Scanned")->setColor(grey)->setTextColor(grey);
@@ -233,8 +233,8 @@ void ScienceHeliosScreen::onDraw(sf::RenderTarget& window)
         query_action->setText("No query target")->setColor(grey)->setTextColor(grey);
     }
 
-    tasks_queue_title->setText(string(tasksCount, 0) + "/" + string(my_spaceship->max_science_tasks, 0) + " Tasks");
-    for(int n = 0; n < my_spaceship->max_science_tasks; n++){
+    tasks_queue_title->setText(string(tasksCount, 0) + "/" + string(PlayerSpaceship::max_science_tasks, 0) + " Tasks");
+    for(int n = 0; n < PlayerSpaceship::max_science_tasks; n++){
         if (my_spaceship->scienceTasks[n].type != STT_Empty){
             tasks_queue[n]->setText(my_spaceship->scienceTasks[n].getDescription())->show();
         } else {
@@ -406,28 +406,32 @@ void ScienceHeliosScreen::onHotkey(const HotkeyResult& key)
             target_waypoints = !target_waypoints;
         } 
     } else if (key.category == "SCIENCE" && my_spaceship){
-        int tasksCount = ScienceTask::countTasks(my_spaceship->scienceTasks, my_spaceship->max_science_tasks);
+        int tasksCount = ScienceTask::countTasks(my_spaceship->scienceTasks, PlayerSpaceship::max_science_tasks);
         if (key.hotkey == "POV_SHIP") {
             probe_view = false;
         } else if (key.hotkey == "POV_PROBE") {
             probe_view = true;
-        } else if (key.hotkey == "SCAN") {
-            if (targets.get() && targets.get()->canBeScannedBy(my_spaceship)){
-                my_spaceship->commandAddScanTask(targets.get());
-            }
+        } else if (key.hotkey == "CLEAR_TASKS") {
+            my_spaceship->commandClearAllTasks();
         } else if (key.hotkey == "OPEN_TYPE_IN_DB") {
             P<SpaceShip> ship = targets.get();
             if (ship && ship->getScannedStateFor(my_spaceship) >= SS_SimpleScan){
                 my_spaceship->commandSendScienceQueryToBridgeDB(ship->getTypeName());
             }
-        } else if (tasksCount < my_spaceship->max_science_tasks){
-            for(int n=0; n<SYS_COUNT; n++) {
-                ESystem system = ESystem(n);
-                string systemName = getSystemName(system);
-                if (key.hotkey == "HACK_" + systemName) {
-                    P<SpaceShip> ship = targets.get();
-                    if (ship && ship->canBeHackedBy(my_spaceship) && ship->hasSystem(system)){
-                        my_spaceship->commandAddHackTask(ship, system);
+        } else if (tasksCount < PlayerSpaceship::max_science_tasks){
+            if (key.hotkey == "SCAN") {
+                if (targets.get() && targets.get()->canBeScannedBy(my_spaceship)){
+                    my_spaceship->commandAddScanTask(targets.get());
+                }
+            } else {
+                for(int n=0; n<SYS_COUNT; n++) {
+                    ESystem system = ESystem(n);
+                    string systemName = getSystemName(system);
+                    if (key.hotkey == "HACK_" + systemName) {
+                        P<SpaceShip> ship = targets.get();
+                        if (ship && ship->canBeHackedBy(my_spaceship) && ship->hasSystem(system)){
+                            my_spaceship->commandAddHackTask(ship, system);
+                        }
                     }
                 }
             }
