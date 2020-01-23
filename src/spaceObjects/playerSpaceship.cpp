@@ -145,6 +145,10 @@ REGISTER_SCRIPT_SUBCLASS(PlayerSpaceship, SpaceShip)
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setControlCode);
     /// Apply a rate to energy decrease. Float, default is 1. Won't affect production of energy.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setEnergyConsumptionRatio);
+    // Callback when this ship launches a probe.
+    // Returns the launching PlayerSpaceship and launched ScanProbe.
+    // Example: player:onProbeLaunch(trackProbe)
+    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, onProbeLaunch);
 }
 
 float PlayerSpaceship::system_power_user_factor[] = {
@@ -1747,6 +1751,10 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
             p->setPosition(getPosition());
             p->setTarget(target);
             p->setOwner(this);
+            if (on_probe_launch.isSet())
+            {
+                on_probe_launch.call(P<PlayerSpaceship>(this), P<ScanProbe>(p));
+            }
             scan_probe_stock--;
         }
         break;
@@ -2341,6 +2349,11 @@ bool PlayerSpaceship::canBeLandedOn(P<SpaceObject> obj)
 string PlayerSpaceship::getExportLine()
 {
     return "PlayerSpaceship():setTemplate(\"" + template_name + "\"):setPosition(" + string(getPosition().x, 0) + ", " + string(getPosition().y, 0) + ")" + getScriptExportModificationsOnTemplate();;
+}
+
+void PlayerSpaceship::onProbeLaunch(ScriptSimpleCallback callback)
+{
+    this->on_probe_launch = callback;
 }
 
 #ifndef _MSC_VER

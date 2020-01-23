@@ -8,6 +8,14 @@
 REGISTER_SCRIPT_SUBCLASS_NO_CREATE(ScanProbe, SpaceObject)
 {
     REGISTER_SCRIPT_CLASS_FUNCTION(ScanProbe, setTarget);
+    // Callback when the probe's lifetime expires.
+    // Returns the probe.
+    // Example: probe:onExpiration(probeExpired)
+    REGISTER_SCRIPT_CLASS_FUNCTION(ScanProbe, onExpiration);
+    // Callback when the probe is destroyed by damage.
+    // Returns the probe and instigator.
+    // Example: probe:onDestruction(probeDestroyed)
+    REGISTER_SCRIPT_CLASS_FUNCTION(ScanProbe, onDestruction);
 }
 
 REGISTER_MULTIPLAYER_CLASS(ScanProbe, "ScanProbe");
@@ -43,7 +51,12 @@ void ScanProbe::update(float delta)
 {
     lifetime -= delta;
     if (lifetime <= 0.0)
+    {
+        if (on_expiration.isSet())
+            on_expiration.call(P<ScanProbe>(this));
+
         destroy();
+    }
     if ((target_position - getPosition()) > getRadius() && moving)
     {
         sf::Vector2f v = normalize(target_position - getPosition());
@@ -65,6 +78,25 @@ void ScanProbe::collide(Collisionable* target, float force)
     if ((getTarget() - getPosition()) > getRadius())
         return;
     player -> scan_probe_stock = player -> scan_probe_stock + 1;
+    destroy();
+}
+
+bool ScanProbe::canBeTargetedBy(P<SpaceObject> other)
+{
+    return (getTarget() - getPosition()) < getRadius();
+}
+
+void ScanProbe::takeDamage(float damage_amount, DamageInfo info)
+{
+    if (on_destruction.isSet())
+    {
+        if (info.instigator)
+        {
+            on_destruction.call(P<ScanProbe>(this), P<SpaceObject>(info.instigator));
+        } else {
+            on_destruction.call(P<ScanProbe>(this));
+        }
+    }
     destroy();
 }
 
@@ -97,3 +129,14 @@ void ScanProbe::setOwner(P<SpaceObject> owner)
     setFactionId(owner->getFactionId());
     owner_id = owner->getMultiplayerId();
 }
+
+void ScanProbe::onDestruction(ScriptSimpleCallback callback)
+{
+    this->on_destruction = callback;
+}
+
+void ScanProbe::onExpiration(ScriptSimpleCallback callback)
+{
+    this->on_expiration = callback;
+}
+

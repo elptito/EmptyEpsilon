@@ -165,6 +165,8 @@ public:
 
     float hack_time;
 
+    ScriptSimpleCallback on_probe_launch;
+
     // Main screen content
     EMainScreenSetting main_screen_setting;
     // Content overlaid on the main screen, such as comms
@@ -246,6 +248,7 @@ public:
     void setGravitySensor(bool has_gravity) { has_gravity_sensor = has_gravity; }
     void setElectricalSensor(bool has_electrical) { has_electrical_sensor = has_electrical; }
     void setBiologicalSensor(bool has_biological) { has_biological_sensor = has_biological; }
+    void onProbeLaunch(ScriptSimpleCallback callback);
 
     void addCustomButton(ECrewPosition position, string name, string caption, ScriptSimpleCallback callback);
     void addCustomInfo(ECrewPosition position, string name, string caption);

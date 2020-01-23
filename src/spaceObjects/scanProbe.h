@@ -13,10 +13,14 @@ private:
 public:
     int owner_id;
 
+    ScriptSimpleCallback on_expiration;
+    ScriptSimpleCallback on_destruction;
+
     ScanProbe();
 
     virtual void update(float delta);
-
+    virtual bool canBeTargetedBy(P<SpaceObject> other) override;
+    virtual void takeDamage(float damage_amount, DamageInfo info) override;
     virtual void drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range) override;
     virtual void collide(Collisionable* target, float force) override;
 
@@ -25,6 +29,8 @@ public:
     void setOwner(P<SpaceObject> owner);
 
     float getProbeSpeed() {return probe_speed; }
+    void onExpiration(ScriptSimpleCallback callback);
+    void onDestruction(ScriptSimpleCallback callback);
 };
 
 #endif//SCAN_PROBE_H
