@@ -70,9 +70,9 @@ HotkeyConfig::HotkeyConfig()
     newKey("DISABLE_AIM_LOCK", std::make_tuple("desactiver visee manuelle", ""));
     newKey("AIM_MISSILE_LEFT", std::make_tuple("visee manuelle a gauche", ""));
     newKey("AIM_MISSILE_RIGHT", std::make_tuple("visee manuelle a droite", ""));
-    newKey("SHIELD_CAL_INC", std::make_tuple("Increase shield frequency target", ""));
-    newKey("SHIELD_CAL_DEC", std::make_tuple("Decrease shield frequency target", ""));
-    newKey("SHIELD_CAL_START", std::make_tuple("Start shield calibration", ""));
+    newKey("SHIELD_CAL_INC", std::make_tuple("Augmenter frequence boucliers", ""));
+    newKey("SHIELD_CAL_DEC", std::make_tuple("Diminuer frequence boucliers", ""));
+    newKey("SHIELD_CAL_START", std::make_tuple("Calibrer les boucliers", ""));
 
     newCategory("ENGINEERING", "Ingenieur");
     newKey("SELECT_REACTOR", std::make_tuple("Selectionner systeme reacteur", "Num1"));
@@ -98,9 +98,6 @@ HotkeyConfig::HotkeyConfig()
     newKey("REPAIR_CREW_MOVE_DOWN", std::make_tuple("Deplacer equipe de reparation bas", ""));
     newKey("REPAIR_CREW_MOVE_LEFT", std::make_tuple("Deplacer equipe de reparation gauche", ""));
     newKey("REPAIR_CREW_MOVE_RIGHT", std::make_tuple("Deplacer equipe de reparation droite", ""));
-    newKey("SHIELD_CAL_INC", std::make_tuple("Augmenter frequence boucliers", ""));
-    newKey("SHIELD_CAL_DEC", std::make_tuple("Diminuer frequence boucliers", ""));
-    newKey("SHIELD_CAL_START", std::make_tuple("Calibrer les boucliers", ""));
     newKey("SELF_DESTRUCT_START", std::make_tuple("Activer l'auto destruction", ""));
     newKey("SELF_DESTRUCT_CONFIRM", std::make_tuple("Confirmer l'auto destruction", ""));
     newKey("SELF_DESTRUCT_CANCEL", std::make_tuple("Annuler l'auto destruction", ""));
