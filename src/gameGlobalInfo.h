@@ -144,5 +144,6 @@ string getStringFromPosition(sf::Vector2f position,float correction_x = 0.0, flo
 bool isValidPositionString(string sectorName);
 
 REGISTER_MULTIPLAYER_ENUM(EScanningComplexity);
+REGISTER_MULTIPLAYER_ENUM(EHackingGames);
 
 #endif//GAME_GLOBAL_INFO_H
