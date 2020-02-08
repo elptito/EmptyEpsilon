@@ -133,7 +133,7 @@ Planet::Planet()
 
     collision_size = -2.0f;
 
-    setRadarSignatureInfo(0.5, 0, 0);
+    setRadarSignatureInfo(0.5, 0, 0.3);
 
     addInfos(0,"Rotation",string(irandom(5,45))+ " H.LO");
 	addInfos(1,"Revolution",string(irandom(50,5000))+ " J.LO");

@@ -601,6 +601,25 @@ void PlayerSpaceship::update(float delta)
             addHeat(ESystem(n), delta * systems[n].getHeatingDelta() * system_heatup_per_second);
         }
 
+        // Tdelc : suppression de ce code, je l'ai rajoute en commentaire pour faciliter les merge et 
+        // au cas ou on veille le rajouter sous option
+        
+        // If reactor health is worse than -90% and overheating, it explodes,
+        // destroying the ship and damaging a 0.5U radius.
+        /* if (systems[SYS_Reactor].health < -0.9 && systems[SYS_Reactor].heat_level == 1.0)
+        {
+            ExplosionEffect* e = new ExplosionEffect();
+            e->setSize(1000.0f);
+            e->setPosition(getPosition());
+            e->setRadarSignatureInfo(0.0, 0.4, 0.4);
+
+            DamageInfo info(this, DT_Kinetic, getPosition());
+            SpaceObject::damageArea(getPosition(), 500, 30, 60, info, 0.0);
+
+            destroy();
+            return;
+        }
+        */
         if (energy_level < 0.0)
             energy_level = 0.0;
 
@@ -696,6 +715,7 @@ void PlayerSpaceship::update(float delta)
                         ExplosionEffect* e = new ExplosionEffect();
                         e->setSize(1000.0f);
                         e->setPosition(getPosition() + sf::rotateVector(sf::Vector2f(0, random(0, 500)), random(0, 360)));
+                        e->setRadarSignatureInfo(0.0, 0.6, 0.6);
                     }
 
                     DamageInfo info(this, DT_Kinetic, getPosition());
