@@ -4,14 +4,14 @@
 
 REGISTER_MULTIPLAYER_CLASS(Nuke, "Nuke");
 Nuke::Nuke()
-: MissileWeapon("Nuke", MissileWeaponData::getDataFor(MW_Nuke))
+: MissileWeapon("Nuke", MissileWeaponData::getDataFor(MW_Nuke), DT_Kinetic)
 {
 }
 
 void Nuke::hitObject(P<SpaceObject> object)
 {
-    DamageInfo info(owner, DT_Kinetic, getPosition());
-    SpaceObject::damageArea(getPosition(), blastRange, damageAtEdge, damageAtCenter, info, getRadius());
+    DamageInfo info(owner, damage_type, getPosition());
+    SpaceObject::damageArea(getPosition(), blastRange, damageAtEdge * damage_multiplier, damageAtCenter * damage_multiplier, info, getRadius());
 
     P<ExplosionEffect> e = new ExplosionEffect();
     e->setSize(blastRange);

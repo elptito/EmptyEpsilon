@@ -44,7 +44,7 @@ void PathPlannerManager::update(float delta)
             i = big_objects.erase(i);
         }
     }
-    
+
     std::vector<PathPlannerAvoidObject> add_list;
     for(auto h_it = small_objects.begin(); h_it != small_objects.end(); h_it++)
     {
@@ -82,20 +82,20 @@ void PathPlanner::plan(sf::Vector2f start, sf::Vector2f end)
         route.clear();
         recursivePlan(start, end);
         route.push_back(end);
-        
+
         insert_idx = 0;
         remove_idx = 1;
         remove_idx2 = 1;
     }else{
         route.back() = end;
-        
+
         sf::Vector2f p0 = start;
         if (insert_idx < route.size())
         {
             if (insert_idx > 0)
                 p0 = route[insert_idx - 1];
             sf::Vector2f p1 = route[insert_idx];
-            
+
             sf::Vector2f new_point;
             if (checkToAvoid(p0, p1, new_point))
             {
@@ -186,9 +186,9 @@ bool PathPlanner::checkToAvoid(sf::Vector2f start, sf::Vector2f end, sf::Vector2
             i = manager->big_objects.erase(i);
         }
     }
-    
+
     {
-        // Bresenham's line algorithm to 
+        // Bresenham's line algorithm to
         int x1 = positionToSector(start.x);
         int y1 = positionToSector(start.y);
         int x2 = positionToSector(end.x);
@@ -225,7 +225,14 @@ bool PathPlanner::checkToAvoid(sf::Vector2f start, sf::Vector2f end, sf::Vector2
             {
                 hash = hashSector(x, y);
             }
-            
+
+            if(manager->small_objects.find(hash) == manager->small_objects.end())
+            {
+                //BAD avoid a crash
+                //LOG(WARNING) << "Bad hash for path planner at (" << x << "," << y << ")" << ", skipping";
+                continue;
+            }
+
             for(std::list<PathPlannerManager::PathPlannerAvoidObject>::iterator i = manager->small_objects[hash].begin(); i != manager->small_objects[hash].end(); )
             {
                 if (i->source)
@@ -259,7 +266,7 @@ bool PathPlanner::checkToAvoid(sf::Vector2f start, sf::Vector2f end, sf::Vector2
             }
         }
     }
-    
+
     if (firstAvoidF < startEndLength)
     {
         sf::Vector2f position = avoidObject.source->getPosition();

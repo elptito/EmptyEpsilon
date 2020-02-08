@@ -6,15 +6,9 @@
 #include "modelInfo.h"
 #include "factionInfo.h"
 #include "shipTemplate.h"
+#include "EDamageType.h"
 
 constexpr static int max_oxygen_zones = 10;
-
-enum EDamageType
-{
-    DT_Energy,
-    DT_Kinetic,
-    DT_EMP
-};
 
 class DamageInfo
 {

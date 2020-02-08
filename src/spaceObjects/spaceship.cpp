@@ -31,6 +31,11 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getWeaponStorageMax);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setWeaponStorage);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setWeaponStorageMax);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getCustomWeaponStorage);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getCustomWeaponStorageMax);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setCustomWeaponStorage);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setCustomWeaponStorageMax);
+
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getShieldsFrequency);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setShieldsFrequency);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getOxygenRechargeRate);
@@ -241,6 +246,15 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
         registerMemberReplication(&weapon_storage_max[n]);
     }
 
+    for(auto &kv : custom_weapon_storage_max)
+    {
+        custom_weapon_storage[kv.first] = 0;
+        custom_weapon_storage_max[kv.first] = 0;
+        registerMemberReplication(&custom_weapon_storage[kv.first]);
+        registerMemberReplication(&custom_weapon_storage_max[kv.first]);
+    }
+
+
     for(int n = 0; n < max_docks_count; n++)
     {
         docks[n].setParent(this);
@@ -308,6 +322,14 @@ void SpaceShip::applyTemplateValues()
     }
     for(int n=0; n<MW_Count; n++)
         weapon_storage[n] = weapon_storage_max[n] = ship_template->weapon_storage[n];
+
+    for(auto& kv : ship_template->custom_weapon_storage)
+    {
+        custom_weapon_storage.insert(kv);
+        custom_weapon_storage_max.insert(kv);
+    }
+
+
 
     ship_template->setCollisionData(this);
     model_info.setData(ship_template->model_data);
@@ -1258,7 +1280,7 @@ int SpaceShip::getWeaponTubeCount()
     return weapon_tube_count;
 }
 
-EMissileWeapons SpaceShip::getWeaponTubeLoadType(int index)
+string SpaceShip::getWeaponTubeLoadType(int index)
 {
     if (index < 0 || index >= weapon_tube_count)
         return MW_None;
@@ -1438,6 +1460,12 @@ string SpaceShip::getScriptExportModificationsOnTemplate()
             ret += ":setWeaponStorage(\"" + getMissileWeaponName(EMissileWeapons(n)) + "\", " + string(weapon_storage[n]) + ")";
     }
 
+    for(auto& kv : ship_template->custom_weapon_storage)
+    {
+        ret += ":setCustomWeaponStorage(\"" + kv.first + "\", " + string(kv.second) + ")";
+        ret += ":setCustomWeaponStorageMax(\"" + kv.first + "\", " + string(kv.second) + ")";
+    }
+
     ///Beam weapon data
     for(int n=0; n<max_beam_weapons; n++)
     {
@@ -1474,7 +1502,15 @@ float SpaceShip::getDronesControlRange() {
     return Tween<float>::easeInQuad(getSystemEffectiveness(SYS_Drones), 0.0, 1.5, 0.001, gameGlobalInfo->long_range_radar_range);
 }
 
-string getMissileWeaponName(EMissileWeapons missile)
+namespace
+{
+    bool isNumber(const std::string& s)
+    {
+       return !s.empty() && s.find_first_not_of("-.0123456789") == std::string::npos;
+    }
+
+}
+string getMissileWeaponName(const EMissileWeapons& missile)
 {
     switch(missile)
     {
@@ -1494,6 +1530,19 @@ string getMissileWeaponName(EMissileWeapons missile)
         return "UNK: " + string(int(missile));
     }
 }
+
+string getMissileWeaponName(const string& missile)
+{
+    if(isNumber(missile))
+    {
+        EMissileWeapons num = (EMissileWeapons)std::stoi(missile);
+        return getMissileWeaponName(num);
+    }
+    else return missile;
+
+}
+
+
 
 float frequencyVsFrequencyDamageFactor(int beam_frequency, int shield_frequency)
 {

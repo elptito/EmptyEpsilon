@@ -169,7 +169,9 @@ public:
     float wormhole_alpha;    //Used for displaying the Warp-postprocessor
 
     int weapon_storage[MW_Count];
+    std::map<string, int> custom_weapon_storage;
     int weapon_storage_max[MW_Count];
+    std::map<string, int> custom_weapon_storage_max;
     int8_t weapon_tube_count;
     WeaponTube weapon_tube[max_weapon_tubes];
 
@@ -322,10 +324,16 @@ public:
     bool isDocked() { return docking_state == DS_Docked; }
     bool isDockedWith(P<SpaceObject> target) { return docking_state == DS_Docked && docking_target == target; }
     bool canStartDocking() { return current_warp <= 0.0 && (!has_jump_drive || jump_delay <= 0.0); }
+    int getCustomWeaponStorage(string weapon) { return custom_weapon_storage[weapon]; }
+    int getCustomWeaponStorageMax(string weapon) { return custom_weapon_storage_max[weapon]; }
+    void setCustomWeaponStorage(string weapon, int amount) { custom_weapon_storage.insert(std::map<string,int>::value_type(weapon,amount)); }
+    void setCustomWeaponStorageMax(string weapon, int amount) { custom_weapon_storage_max.insert(std::map<string,int>::value_type(weapon,amount)); custom_weapon_storage[weapon] = std::min(int(custom_weapon_storage[weapon]), amount); }
+
     int getWeaponStorage(EMissileWeapons weapon) { if (weapon == MW_None) return 0; return weapon_storage[weapon]; }
     int getWeaponStorageMax(EMissileWeapons weapon) { if (weapon == MW_None) return 0; return weapon_storage_max[weapon]; }
     void setWeaponStorage(EMissileWeapons weapon, int amount) { if (weapon == MW_None) return; weapon_storage[weapon] = amount; }
     void setWeaponStorageMax(EMissileWeapons weapon, int amount) { if (weapon == MW_None) return; weapon_storage_max[weapon] = amount; weapon_storage[weapon] = std::min(int(weapon_storage[weapon]), amount); }
+
     float getMaxEnergy() { return max_energy_level; }
     void setMaxEnergy(float amount) { if (amount > 0.0) { max_energy_level = amount;} }
     float getEnergy() { return energy_level; }
@@ -453,7 +461,7 @@ public:
 
     void setWeaponTubeCount(int amount);
     int getWeaponTubeCount();
-    EMissileWeapons getWeaponTubeLoadType(int index);
+    string getWeaponTubeLoadType(int index);
     void weaponTubeAllowMissle(int index, EMissileWeapons type);
     void weaponTubeDisallowMissle(int index, EMissileWeapons type);
     void setWeaponTubeExclusiveFor(int index, EMissileWeapons type);
@@ -472,8 +480,10 @@ public:
 
 float frequencyVsFrequencyDamageFactor(int beam_frequency, int shield_frequency);
 
-string getMissileWeaponName(EMissileWeapons missile);
+string getMissileWeaponName(const EMissileWeapons& missile);
+string getMissileWeaponName(const string& missile);
 REGISTER_MULTIPLAYER_ENUM(EMissileWeapons);
+REGISTER_MULTIPLAYER_ENUM(EDamageType);
 REGISTER_MULTIPLAYER_ENUM(EWeaponTubeState);
 REGISTER_MULTIPLAYER_ENUM(EMainScreenSetting);
 REGISTER_MULTIPLAYER_ENUM(EMainScreenOverlay);

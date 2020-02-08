@@ -13,13 +13,16 @@ protected:
     float lifetime; //sec
 
     bool launch_sound_played;
+
 public:
     P<SpaceObject> owner; //Only valid on server.
     int32_t target_id;
     float target_angle;
     float speed;
+    float damage_multiplier;
+    EDamageType damage_type;
 
-    MissileWeapon(string multiplayerName, const MissileWeaponData& data);
+    MissileWeapon(string multiplayerName, const MissileWeaponData& data, const EDamageType &i_damage_type);
 
     virtual void drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range);
     virtual void update(float delta);

@@ -262,7 +262,7 @@ public:
     void commandSetDockTarget(P<SpaceObject> target);
     void commandSetScienceLink(int32_t id);
     void commandSetProbe3DLink(int32_t id);
-    void commandLoadTube(int8_t tubeNumber, EMissileWeapons missileType);
+    void commandLoadTube(int8_t tubeNumber, string missileType);
     void commandUnloadTube(int8_t tubeNumber);
     void commandFireTube(int8_t tubeNumber, float missile_target_angle);
     void commandSetShields(bool enabled);

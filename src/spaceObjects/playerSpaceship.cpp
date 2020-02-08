@@ -1247,7 +1247,7 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
     case CMD_LOAD_TUBE:
         {
             int8_t tube_nr;
-            EMissileWeapons type;
+            string type;
             packet >> tube_nr >> type;
 
             if (tube_nr >= 0 && tube_nr < max_weapon_tubes)
@@ -1814,7 +1814,7 @@ void PlayerSpaceship::commandSetDockTarget(P<SpaceObject> target)
     sendClientCommand(packet);
 }
 
-void PlayerSpaceship::commandLoadTube(int8_t tubeNumber, EMissileWeapons missileType)
+void PlayerSpaceship::commandLoadTube(int8_t tubeNumber, string missileType)
 {
     sf::Packet packet;
     packet << CMD_LOAD_TUBE << tubeNumber << missileType;

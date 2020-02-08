@@ -91,19 +91,33 @@ static int getDirectionIndex(float direction, float arc)
     return -1;
 }
 
-static float getMissileWeaponStrength(EMissileWeapons type)
+namespace
 {
-    switch(type)
+    static float getMissileWeaponStrength(const EMissileWeapons& type)
     {
-    case MW_Nuke:
-        return 250;
-    case MW_EMP:
-        return 150;
-    case MW_HVLI:
-        return 20;
-    default:
-        return 35;
+        switch(type)
+        {
+        case MW_Nuke:
+            return 250;
+        case MW_EMP:
+            return 150;
+        case MW_HVLI:
+            return 20;
+        default:
+            return 35;
+        }
     }
+
+    static float getMissileWeaponStrength(const string& type)
+    {
+        const MissileWeaponData& data = MissileWeaponData::getDataFor(type);
+
+        float strength = getMissileWeaponStrength((EMissileWeapons)data.basetype);
+        strength *= data.damage_multiplier;
+        return strength;
+    }
+
+
 }
 
 void ShipAI::updateWeaponState(float delta)
@@ -205,7 +219,7 @@ void ShipAI::updateWeaponState(float delta)
                 int index = getDirectionIndex(tube.getDirection(), 90);
                 if (index == best_tube_index)
                 {
-                    EMissileWeapons type = tube.getLoadType();
+                    string type = tube.getLoadType();
                     float strenght = getMissileWeaponStrength(type);
                     if (strenght > best_missile_strength)
                     {
@@ -421,7 +435,10 @@ void ShipAI::runOrders()
 void ShipAI::runAttack(P<SpaceObject> target)
 {
     float attack_distance = 4000.0;
-    if (has_missiles && best_missile_type == MW_HVLI)
+
+    EMissileWeapons best_basetype = MissileWeaponData::getDataFor(best_missile_type).basetype;
+
+    if (has_missiles && best_basetype == MW_HVLI)
         attack_distance = 2500.0;
     if (has_beams)
         attack_distance = beam_weapon_range * 0.7;
@@ -656,11 +673,11 @@ float ShipAI::calculateFiringSolution(P<SpaceObject> target, int tube_index)
     if (P<ScanProbe>(target))   //Never fire missiles on scan probes
         return std::numeric_limits<float>::infinity();
 
-    EMissileWeapons type = owner->weapon_tube[tube_index].getLoadType();
+    EMissileWeapons basetype = MissileWeaponData::getDataFor(owner->weapon_tube[tube_index].getLoadType()).basetype;
 
-    if (type == MW_HVLI)    //Custom HVLI targeting for AI, as the calculate firing solution
+    if (basetype == MW_HVLI)    //Custom HVLI targeting for AI, as the calculate firing solution
     {
-        const MissileWeaponData& data = MissileWeaponData::getDataFor(type);
+        const MissileWeaponData& data = MissileWeaponData::getDataFor(owner->weapon_tube[tube_index].getLoadType());
 
         sf::Vector2f target_position = target->getPosition();
         float target_angle = sf::vector2ToAngle(target_position - owner->getPosition());
@@ -681,7 +698,7 @@ float ShipAI::calculateFiringSolution(P<SpaceObject> target, int tube_index)
         return std::numeric_limits<float>::infinity();
     }
 
-    if (type == MW_Nuke || type == MW_EMP)
+    if (basetype == MW_Nuke || basetype == MW_EMP)
     {
         sf::Vector2f target_position = target->getPosition();
 

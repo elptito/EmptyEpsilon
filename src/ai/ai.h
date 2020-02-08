@@ -30,7 +30,7 @@ protected:
         Rear
     };
     EWeaponDirection weapon_direction;
-    EMissileWeapons best_missile_type;
+    string best_missile_type;
 
     float update_target_delay;
 

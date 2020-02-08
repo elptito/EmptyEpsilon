@@ -2,6 +2,8 @@
 #define MISSILE_WEAPON_DATA_H
 
 #include "engine.h"
+#include "EDamageType.h"
+
 
 enum EMissileWeapons
 {
@@ -21,7 +23,9 @@ template<> int convert<EMissileWeapons>::returnType(lua_State* L, EMissileWeapon
 class MissileWeaponData
 {
 public:
-    MissileWeaponData(float speed, float turnrate, float lifetime, sf::Color color, float homing_range, string fire_sound);
+    MissileWeaponData(float speed, float turnrate, float lifetime, sf::Color color, float homing_range, string fire_sound, EMissileWeapons base_type, EDamageType dt);
+
+    EMissileWeapons basetype; //for custom
 
     float speed; //meter/sec
     float turnrate; //deg/sec
@@ -32,7 +36,27 @@ public:
 
     string fire_sound;
 
-    static const MissileWeaponData& getDataFor(EMissileWeapons type);
+    float damage_multiplier;
+    EDamageType damage_type;
+
+    static const MissileWeaponData& getDataFor(const EMissileWeapons& type);
+    static const MissileWeaponData& getDataFor(const string& type);
+};
+
+class CustomMissileWeaponRegistry
+{
+private:
+    using MissileWeaponMap = std::map<string,MissileWeaponData>;
+
+public:
+    static auto getCustomMissileWeapons() -> MissileWeaponMap&
+    {
+        static MissileWeaponMap custom_missile_data{};
+        return custom_missile_data;
+    }
+    static auto getMissileWeapon (const std::string &iName) -> MissileWeaponData& ;
+    static void createMissileWeapon(const EMissileWeapons &iBaseType, const std::string &iNewName, const float &iDamageMultiplier, const float &iSpeed, const EDamageType &iDT);
+
 };
 
 #ifdef _MSC_VER

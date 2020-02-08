@@ -2,8 +2,8 @@
 #include "particleEffect.h"
 #include "explosionEffect.h"
 
-MissileWeapon::MissileWeapon(string multiplayerName, const MissileWeaponData& data)
-: SpaceObject(10, multiplayerName), data(data)
+MissileWeapon::MissileWeapon(string multiplayerName, const MissileWeaponData& data, const EDamageType &itype)
+: SpaceObject(10, multiplayerName), data(data),damage_type(itype)
 {
     target_id = -1;
     target_angle = 0;
@@ -13,6 +13,8 @@ MissileWeapon::MissileWeapon(string multiplayerName, const MissileWeaponData& da
 
     registerMemberReplication(&target_id);
     registerMemberReplication(&target_angle);
+    registerMemberReplication(&damage_multiplier);
+    registerMemberReplication(&damage_type);
 
     launch_sound_played = false;
 }

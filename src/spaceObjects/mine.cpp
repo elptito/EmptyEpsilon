@@ -110,7 +110,7 @@ void Mine::eject()
 void Mine::explode()
 {
     DamageInfo info(owner, DT_Kinetic, getPosition());
-    SpaceObject::damageArea(getPosition(), blastRange, damageAtEdge, damageAtCenter, info, blastRange / 2.0);
+    SpaceObject::damageArea(getPosition(), blastRange, damageAtEdge * damage_multiplier, damageAtCenter * damage_multiplier, info, blastRange / 2.0);
 
     P<ExplosionEffect> e = new ExplosionEffect();
     e->setSize(blastRange);

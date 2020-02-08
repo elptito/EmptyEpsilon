@@ -28,8 +28,8 @@ private:
         GuiAutoLayout* layout;
         GuiToggleButton* button;
     };
-    TypeRow load_type_rows[MW_Count];
-    EMissileWeapons load_type;
+    std::vector<TypeRow> load_type_rows;
+    string load_type;
     bool manual_aim;
     float missile_target_angle;
     GuiPowerDamageIndicator* pdi;

@@ -74,6 +74,8 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setJumpDriveEnergy);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCloaking);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setWeaponStorage);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCustomWeaponStorage);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCustomWeapon);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, addRoom);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, addRoomSystem);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, addDoor);
@@ -255,6 +257,8 @@ void ShipTemplate::setBeamWeapon(int index, float arc, float direction, float ra
     beams[index].setCycleTime(cycle_time);
     beams[index].setDamage(damage);
 }
+
+
 
 void ShipTemplate::setBeamWeaponTurret(int index, float arc, float direction, float rotation_rate)
 {
@@ -446,6 +450,18 @@ void ShipTemplate::setWeaponStorage(EMissileWeapons weapon, int amount)
     }
 }
 
+void ShipTemplate::setCustomWeaponStorage(string weapon, int amount)
+{
+   custom_weapon_storage[weapon] = amount;
+}
+
+
+void ShipTemplate::setCustomWeapon(EMissileWeapons base, string weapon_name, float damage_multiplier, float speed, EDamageType dt)
+{
+    CustomMissileWeaponRegistry::createMissileWeapon(base, weapon_name, damage_multiplier, speed, dt);
+
+}
+
 void ShipTemplate::addRoom(sf::Vector2i position, sf::Vector2i size)
 {
     rooms.push_back(ShipRoomTemplate(position, size, SYS_None));
@@ -525,6 +541,8 @@ P<ShipTemplate> ShipTemplate::copy(string new_name)
     result->has_cloaking = has_cloaking;
     for(int n=0; n<MW_Count; n++)
         result->weapon_storage[n] = weapon_storage[n];
+    result->custom_weapon_storage = custom_weapon_storage;
+
     result->radar_trace = radar_trace;
 
     result->rooms = rooms;

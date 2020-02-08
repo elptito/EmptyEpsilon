@@ -14,6 +14,7 @@ GuiMissileTubeControls::GuiMissileTubeControls(GuiContainer* owner, string id, P
     setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
     rows.resize(max_weapon_tubes);
+    load_type_rows.resize(MW_Count);
 
     for (int n = max_weapon_tubes - 1; n >= 0; n--)
     {
@@ -25,7 +26,7 @@ GuiMissileTubeControls::GuiMissileTubeControls(GuiContainer* owner, string id, P
                 return;
             if (target_spaceship->weapon_tube[n].isEmpty())
             {
-                if (load_type != MW_None)
+                if (load_type != string(MW_None))
                 {
                     target_spaceship->commandLoadTube(n, load_type);
                 }
@@ -76,7 +77,7 @@ GuiMissileTubeControls::GuiMissileTubeControls(GuiContainer* owner, string id, P
             else
                 load_type = MW_None;
             for(int idx = 0; idx < MW_Count; idx++)
-                load_type_rows[idx].button->setValue(idx == load_type);
+                load_type_rows[idx].button->setValue(string(idx) == load_type);
         });
         load_type_rows[n].button->setTextSize(28)->setSize(200, 40);
     }
@@ -85,6 +86,26 @@ GuiMissileTubeControls::GuiMissileTubeControls(GuiContainer* owner, string id, P
     load_type_rows[MW_EMP].button->setIcon("gui/icons/weapon-emp.png");
     load_type_rows[MW_Nuke].button->setIcon("gui/icons/weapon-nuke.png");
     load_type_rows[MW_HVLI].button->setIcon("gui/icons/weapon-hvli.png");
+
+    for(auto& kv : CustomMissileWeaponRegistry::getCustomMissileWeapons())
+    {
+        TypeRow tr;
+        tr.layout = new GuiAutoLayout(this, id + "_ROW_" + string(kv.first), LayoutHorizontalLeftToRight);
+        tr.layout->setSize(GuiElement::GuiSizeMax, 40);
+        const string& str = kv.first;
+        tr.button = new GuiToggleButton(tr.layout, id + "_MW_" + kv.first, kv.first, [this, str](bool value) {
+            if (value)
+                load_type = str;
+            else
+                load_type = MW_None;
+            for(int idx = 0; idx < load_type_rows.size(); idx++)
+                load_type_rows[idx].button->setValue(string(idx) == load_type);
+        });
+        tr.button->setTextSize(28)->setSize(200, 40);
+        tr.button->setIcon(load_type_rows[kv.second.basetype].button->getIcon());
+
+        load_type_rows.push_back(tr);
+    }
 }
 
 void GuiMissileTubeControls::setTargetSpaceship(P<PlayerSpaceship> targetSpaceship){
@@ -99,6 +120,15 @@ void GuiMissileTubeControls::onDraw(sf::RenderTarget& window){
     {
         load_type_rows[n].button->setText(getMissileWeaponName(EMissileWeapons(n)) + " [" + string(target_spaceship->weapon_storage[n]) + "/" + string(target_spaceship->weapon_storage_max[n]) + "]");
         load_type_rows[n].layout->setVisible(target_spaceship->weapon_storage_max[n] > 0);
+    }
+
+    int n = MW_Count;
+    for(auto& kv : CustomMissileWeaponRegistry::getCustomMissileWeapons())
+    {
+        assert(n < load_type_rows.size() && "out of bound for custom weapons");
+        load_type_rows[n].button->setText(kv.first + " [" + string(target_spaceship->custom_weapon_storage[kv.first]) + "/" + string(target_spaceship->custom_weapon_storage_max[kv.first]) + "]");
+        load_type_rows[n].layout->setVisible(target_spaceship->custom_weapon_storage_max[kv.first] > 0);
+        n++;
     }
 
     for (int n = 0; n < target_spaceship->weapon_tube_count; n++)

@@ -13,7 +13,7 @@ WeaponTube::WeaponTube()
     load_time = 8.0;
     direction = 0;
     type_allowed_mask = (1 << MW_Count) - 1;
-    type_loaded = MW_None;
+    type_loaded = "";
     state = WTS_Empty;
     delay = 0.0;
     tube_index = 0;
@@ -58,19 +58,37 @@ float WeaponTube::getDirection()
     return direction;
 }
 
-void WeaponTube::startLoad(EMissileWeapons type)
+namespace
 {
-    if (!canLoad(type))
-        return;
+    bool isNumber(const std::string& s)
+    {
+       return !s.empty() && s.find_first_not_of("-.0123456789") == std::string::npos;
+    }
+}
+
+void WeaponTube::startLoad(string type)
+{
     if (state != WTS_Empty)
         return;
-    if (parent->weapon_storage[type] <= 0)
+    if (!canLoad(type))
         return;
 
+    if(isNumber(type))
+    {
+        int weaponType = std::stoi(type);
+        if (parent->weapon_storage[weaponType] <= 0)
+            return;
+        parent->weapon_storage[weaponType]--;
+    }
+    else
+    {
+        if (parent->custom_weapon_storage[type] <= 0)
+            return;
+        parent->custom_weapon_storage[type]--;
+    }
     state = WTS_Loading;
     delay = load_time;
     type_loaded = type;
-    parent->weapon_storage[type]--;
 }
 
 void WeaponTube::startUnload()
@@ -90,16 +108,20 @@ void WeaponTube::fire(float target_angle)
     if (parent->current_warp > 0.0) return;
     if (state != WTS_Loaded) return;
 
-    if (type_loaded == MW_HVLI)
+    if(isNumber(type_loaded))
     {
-        fire_count = 5;
-        state = WTS_Firing;
-        delay = 0.0;
-    }else{
-        spawnProjectile(target_angle);
-        state = WTS_Empty;
-        type_loaded = MW_None;
+        int typeNumber = std::stoi(type_loaded);
+        if (typeNumber == MW_HVLI)
+        {
+            fire_count = 5;
+            state = WTS_Firing;
+            delay = 0.0;
+            return;
+        }
     }
+    spawnProjectile(target_angle);
+    state = WTS_Empty;
+    type_loaded = "";
 }
 
 void WeaponTube::spawnProjectile(float target_angle)
@@ -107,7 +129,7 @@ void WeaponTube::spawnProjectile(float target_angle)
 //    sf::Vector2f fireLocation = parent->getPosition() + sf::rotateVector(parent->ship_template->model_data->getTubePosition2D(tube_index), parent->getRotation());
     sf::Vector2f fireLocation = parent->getPosition() + sf::rotateVector(sf::Vector2f(parent->getRadius()/2,parent->getRadius()/2),parent->getRotation()+direction-45);
     const MissileWeaponData& data = MissileWeaponData::getDataFor(type_loaded);
-    switch(type_loaded)
+    switch(data.basetype)
     {
     case MW_Homing:
         {
@@ -120,6 +142,8 @@ void WeaponTube::spawnProjectile(float target_angle)
             missile->setRotation(parent->getRotation() + direction);
             missile->target_angle = target_angle;
             missile->speed = data.speed * parent->getSystemEffectiveness(SYS_MissileSystem);
+            missile->damage_multiplier = data.damage_multiplier;
+            missile->damage_type = data.damage_type;
         }
         break;
     case MW_Nuke:
@@ -133,6 +157,8 @@ void WeaponTube::spawnProjectile(float target_angle)
             missile->setRotation(parent->getRotation() + direction);
             missile->target_angle = target_angle;
             missile->speed = data.speed * parent->getSystemEffectiveness(SYS_MissileSystem);
+            missile->damage_multiplier = data.damage_multiplier;
+            missile->damage_type = data.damage_type;
         }
         break;
     case MW_Mine:
@@ -144,6 +170,7 @@ void WeaponTube::spawnProjectile(float target_angle)
 			missile->translate_z = parent->translate_z;
             missile->setRotation(parent->getRotation() + direction);
             missile->speed = data.speed * parent->getSystemEffectiveness(SYS_MissileSystem);
+            missile->damage_multiplier = data.damage_multiplier;
             missile->eject();
         }
         break;
@@ -156,7 +183,9 @@ void WeaponTube::spawnProjectile(float target_angle)
 			missile->translate_z = parent->translate_z;
             missile->setRotation(parent->getRotation() + direction);
             missile->target_angle = parent->getRotation() + direction;
+            missile->damage_multiplier = data.damage_multiplier;
             missile->speed = data.speed * parent->getSystemEffectiveness(SYS_MissileSystem);
+            missile->damage_type = data.damage_type;
         }
         break;
     case MW_EMP:
@@ -169,7 +198,9 @@ void WeaponTube::spawnProjectile(float target_angle)
 			missile->translate_z = parent->translate_z;
             missile->setRotation(parent->getRotation() + direction);
             missile->target_angle = target_angle;
+            missile->damage_multiplier = data.damage_multiplier;
             missile->speed = data.speed * parent->getSystemEffectiveness(SYS_MissileSystem);
+            missile->damage_type = data.damage_type;
         }
         break;
     default:
@@ -177,40 +208,67 @@ void WeaponTube::spawnProjectile(float target_angle)
     }
 }
 
-bool WeaponTube::canLoad(EMissileWeapons type)
+bool WeaponTube::canLoad(string type)
 {
-    if (type <= MW_None || type >= MW_Count)
+    if(isNumber(type))
+    {
+        int numType = std::stoi(type);
+        if (numType <= MW_None || numType >= MW_Count)
+            return false;
+        if (type_allowed_mask & (1 << numType))
+            return true;
         return false;
-    if (type_allowed_mask & (1 << type))
-        return true;
-    return false;
+    }
+    else return true; //FIXME
 }
 
-bool WeaponTube::canOnlyLoad(EMissileWeapons type)
+bool WeaponTube::canOnlyLoad(string type)
 {
-    if (type_allowed_mask == (1U << type))
-        return true;
-    return false;
+    if(isNumber(type))
+    {
+        int numType = std::stoi(type);
+        if (type_allowed_mask == (1U << numType))
+            return true;
+        return false;
+    }
+    else return false;
 }
 
-void WeaponTube::allowLoadOf(EMissileWeapons type)
+void WeaponTube::allowLoadOf(string type)
 {
-    type_allowed_mask |= (1 << type);
+    if(isNumber(type))
+    {
+        int numType = std::stoi(type);
+        type_allowed_mask |= (1 << numType);
+    }
 }
 
-void WeaponTube::disallowLoadOf(EMissileWeapons type)
+void WeaponTube::disallowLoadOf(string type)
 {
-    type_allowed_mask &=~(1 << type);
+    if(isNumber(type))
+    {
+        int numType = std::stoi(type);
+        type_allowed_mask &=~(1 << numType);
+    }
 }
 
 void WeaponTube::forceUnload()
 {
-    if (state != WTS_Empty && type_loaded != MW_None)
+    if (state != WTS_Empty && type_loaded != "")
     {
         state = WTS_Empty;
-        if (parent->weapon_storage[type_loaded] < parent->weapon_storage_max[type_loaded])
-            parent->weapon_storage[type_loaded] ++;
-        type_loaded = MW_None;
+        if(isNumber(type_loaded))
+        {
+            int numType = std::stoi(type_loaded);
+            if (parent->weapon_storage[numType] < parent->weapon_storage_max[numType])
+                parent->weapon_storage[numType] ++;
+        }
+        else
+        {
+            if (parent->custom_weapon_storage[type_loaded] < parent->custom_weapon_storage_max[type_loaded])
+                parent->custom_weapon_storage[type_loaded] ++;
+        }
+        type_loaded = "";
     }
 }
 
@@ -227,9 +285,19 @@ void WeaponTube::update(float delta)
             break;
         case WTS_Unloading:
             state = WTS_Empty;
-            if (parent->weapon_storage[type_loaded] < parent->weapon_storage_max[type_loaded])
-                parent->weapon_storage[type_loaded] ++;
-            type_loaded = MW_None;
+            if(isNumber(type_loaded))
+            {
+                int numLoaded = std::stoi(type_loaded);
+                if (parent->weapon_storage[numLoaded] < parent->weapon_storage_max[numLoaded])
+                    parent->weapon_storage[numLoaded] ++;
+            }
+            else
+            {
+                if (parent->custom_weapon_storage[type_loaded] < parent->custom_weapon_storage_max[type_loaded])
+                    parent->custom_weapon_storage[type_loaded] ++;
+            }
+
+            type_loaded = "";
             break;
         case WTS_Firing:
             {
@@ -243,7 +311,7 @@ void WeaponTube::update(float delta)
                 else
                 {
                     state = WTS_Empty;
-                    type_loaded = MW_None;
+                    type_loaded = "";
                 }
             }
             break;
@@ -288,7 +356,7 @@ float WeaponTube::getUnloadProgress()
     return delay / load_time;
 }
 
-EMissileWeapons WeaponTube::getLoadType()
+string WeaponTube::getLoadType()
 {
     return type_loaded;
 }
