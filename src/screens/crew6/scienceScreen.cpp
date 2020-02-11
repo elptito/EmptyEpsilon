@@ -774,5 +774,19 @@ void ScienceScreen::onHotkey(const HotkeyResult& key)
 			zoom_slider->setValue(view_distance);
 			zoom_label->setText("Zoom: " + string(my_spaceship->science_radar_range / view_distance, 1) + "x");
 		}
-	}
+        if (key.hotkey == "SCAN_OBJECT")
+        {
+            P<SpaceObject> obj = targets.get();
+
+            // Allow scanning only if the object is scannable, and if the player
+            // isn't already scanning something.
+            if (obj &&
+                obj->canBeScannedBy(my_spaceship) &&
+                my_spaceship->scanning_delay == 0.0)
+            {
+                my_spaceship->commandScan(obj);
+                return;
+            }
+        }
+    }
 }
