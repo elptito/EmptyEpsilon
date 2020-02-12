@@ -115,7 +115,7 @@ HotkeyConfig::HotkeyConfig()
 
     newCategory("SCIENCE", "Science");
     newKey("SCAN_OBJECT", std::make_tuple("Lancer le scan", "S"));
-    newKey("NEXT_SCAN", std::make_tuple("Selectionner cible suivant", ""));
+    newKey("NEXT_SCANNABLE_OBJECT", std::make_tuple("Selectionner cible suivante", "C"));
     newKey("SCAN_START", std::make_tuple("Lancer scan", ""));
     newKey("ABORD_SCAN", std::make_tuple("Stopper scan", ""));
     newKey("NEXT_INFO_TARGET", std::make_tuple("Info suivante sur la cible", ""));
