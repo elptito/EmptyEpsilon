@@ -464,6 +464,9 @@
 		<Unit filename="EmptyEpsilon.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
+		<Unit filename="src/EDamageType.cpp" />
+		<Unit filename="src/EDamageType.h" />
+		<Unit filename="src/EDamageType.hpp" />
 		<Unit filename="src/GMActions.cpp" />
 		<Unit filename="src/GMActions.h" />
 		<Unit filename="src/ai/ai.cpp" />

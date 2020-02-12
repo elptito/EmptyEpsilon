@@ -144,6 +144,7 @@ void WeaponTube::spawnProjectile(float target_angle)
             missile->speed = data.speed * parent->getSystemEffectiveness(SYS_MissileSystem);
             missile->damage_multiplier = data.damage_multiplier;
             missile->damage_type = data.damage_type;
+            missile->color = data.color;
         }
         break;
     case MW_Nuke:
@@ -159,6 +160,7 @@ void WeaponTube::spawnProjectile(float target_angle)
             missile->speed = data.speed * parent->getSystemEffectiveness(SYS_MissileSystem);
             missile->damage_multiplier = data.damage_multiplier;
             missile->damage_type = data.damage_type;
+            missile->color = data.color;
         }
         break;
     case MW_Mine:
@@ -186,6 +188,7 @@ void WeaponTube::spawnProjectile(float target_angle)
             missile->damage_multiplier = data.damage_multiplier;
             missile->speed = data.speed * parent->getSystemEffectiveness(SYS_MissileSystem);
             missile->damage_type = data.damage_type;
+            missile->color = data.color;
         }
         break;
     case MW_EMP:
@@ -201,6 +204,7 @@ void WeaponTube::spawnProjectile(float target_angle)
             missile->damage_multiplier = data.damage_multiplier;
             missile->speed = data.speed * parent->getSystemEffectiveness(SYS_MissileSystem);
             missile->damage_type = data.damage_type;
+            missile->color = data.color;
         }
         break;
     default:

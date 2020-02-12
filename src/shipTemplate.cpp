@@ -76,6 +76,7 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setWeaponStorage);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCustomWeaponStorage);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCustomWeapon);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCustomWeaponColor);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, addRoom);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, addRoomSystem);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, addDoor);
@@ -460,6 +461,11 @@ void ShipTemplate::setCustomWeapon(EMissileWeapons base, string weapon_name, flo
 {
     CustomMissileWeaponRegistry::createMissileWeapon(base, weapon_name, damage_multiplier, speed, dt);
 
+}
+
+void ShipTemplate::setCustomWeaponColor(string weapon_name, char color_r, char color_g, char color_b)
+{
+    CustomMissileWeaponRegistry::getMissileWeapon(weapon_name).color = sf::Color(color_r, color_g, color_b);
 }
 
 void ShipTemplate::addRoom(sf::Vector2i position, sf::Vector2i size)

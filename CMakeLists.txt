@@ -103,7 +103,8 @@ set(SOURCES
 	src/scenarioInfo.cpp
 	src/repairCrew.cpp
 	src/tutorialGame.cpp
-	src/menus/joinServerMenu.cpp
+	src/EDamageType.cpp
+        src/menus/joinServerMenu.cpp
 	src/menus/serverBrowseMenu.cpp
 	src/menus/mainMenus.cpp
 	src/menus/serverCreationScreen.cpp

@@ -192,6 +192,7 @@ public:
 	void setJumpDriveEnergy(float charge) { jump_drive_energy_per_km_charge = charge; }
     void setCloaking(bool enabled);
     void setCustomWeapon(EMissileWeapons weapon, string  new_name, float damage_multiplier, float speed, EDamageType dt);
+    void setCustomWeaponColor(string new_name, char color_r, char color_g, char color_b);
     void setWeaponStorage(EMissileWeapons weapon, int amount);
     void setCustomWeaponStorage(string weapon, int amount);
     void addRoom(sf::Vector2i position, sf::Vector2i size);

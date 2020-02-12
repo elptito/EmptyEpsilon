@@ -10,6 +10,7 @@ MissileWeapon::MissileWeapon(string multiplayerName, const MissileWeaponData& da
     lifetime = data.lifetime;
     hull = 5;
     speed = 0;
+    color = data.color;
 
     registerMemberReplication(&target_id);
     registerMemberReplication(&target_angle);
@@ -27,7 +28,7 @@ void MissileWeapon::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position,
     textureManager.setTexture(objectSprite, "RadarArrow.png");
     objectSprite.setRotation(getRotation());
     objectSprite.setPosition(position);
-    objectSprite.setColor(data.color);
+    objectSprite.setColor(color);
     objectSprite.setScale(0.5, 0.5);
     window.draw(objectSprite);
 }

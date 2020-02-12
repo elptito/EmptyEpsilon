@@ -26,7 +26,7 @@ template:setTubes(4, 10.0)
 
 -- Base, New name, Damage Multiplier (0 to infinite), Speed
 template:setCustomWeapon("HVLI", "HVLI_2", 1.5, 200.0, "Emp")
-
+template:setCustomWeaponColor("HVLI_2", 0, 255, 0)
 
 template:setWeaponStorage("HVLI", 20)
 template:setWeaponStorage("Homing", 4)

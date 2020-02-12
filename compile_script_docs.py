@@ -85,12 +85,13 @@ class DocumentationGenerator(object):
         
         self._files.add(filename)
         ext = os.path.splitext(filename)[1].lower()
-        if ext == '.cbp':
-            xml = ElementTree.parse(filename)
-            for project in xml.findall('Project'):
-                for unit in project.findall('Unit'):
-                    self.addFile(unit.attrib['filename'])
-        elif ext == '.c' or ext == '.cpp' or ext == '.h':
+#        if ext == '.cbp':
+#           xml = ElementTree.parse(filename)
+#           for project in xml.findall('Project'):
+#               for unit in project.findall('Unit'):
+#                   self.addFile(unit.attrib['filename'])
+#      elif ext == '.c' or ext == '.cpp' or ext == '.h':
+        if ext == '.c' or ext == '.cpp' or ext == '.h':
             for line in open(filename, "r"):
                 m = re.match('^# *include *[<"](.*)[>"]$', line)
                 if m is not None:

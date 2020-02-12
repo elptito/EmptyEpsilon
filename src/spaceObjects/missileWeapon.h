@@ -21,6 +21,7 @@ public:
     float speed;
     float damage_multiplier;
     EDamageType damage_type;
+    sf::Color color;
 
     MissileWeapon(string multiplayerName, const MissileWeaponData& data, const EDamageType &i_damage_type);
 
