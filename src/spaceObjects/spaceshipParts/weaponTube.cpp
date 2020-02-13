@@ -119,6 +119,19 @@ void WeaponTube::fire(float target_angle)
             return;
         }
     }
+    else
+    {
+        const MissileWeaponData& data = MissileWeaponData::getDataFor(type_loaded);
+        int target_fire_count = data.fire_count;
+
+        if(target_fire_count > 1)
+        {
+            fire_count = target_fire_count;
+            state = WTS_Firing;
+            delay = 0.0;
+            return;
+        }
+    }
     spawnProjectile(target_angle);
     state = WTS_Empty;
     type_loaded = "";

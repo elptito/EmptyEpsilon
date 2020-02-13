@@ -25,7 +25,7 @@ template:setBeam(2,100, 180, 1500.0, 6.0, 8)
 template:setTubes(4, 10.0)
 
 -- Base, New name, Damage Multiplier (0 to infinite), Speed
-template:setCustomWeapon("HVLI", "HVLI_2", 1.5, 200.0, "Emp")
+template:setCustomWeapon("HVLI", "HVLI_2", 1.5, 2000.0, 2, "Emp")
 template:setCustomWeaponColor("HVLI_2", 0, 255, 0)
 
 template:setWeaponStorage("HVLI", 20)

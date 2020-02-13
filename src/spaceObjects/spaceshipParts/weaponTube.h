@@ -67,6 +67,9 @@ public:
     //Will return the angle that the missile needs to turn to to possibly hit this target.
     //Will return infinity when no solution is found.
     float calculateFiringSolution(P<SpaceObject> target);
+
+
+
 private:
     void spawnProjectile(float target_angle);
 

@@ -457,9 +457,9 @@ void ShipTemplate::setCustomWeaponStorage(string weapon, int amount)
 }
 
 
-void ShipTemplate::setCustomWeapon(EMissileWeapons base, string weapon_name, float damage_multiplier, float speed, EDamageType dt)
+void ShipTemplate::setCustomWeapon(EMissileWeapons base, string weapon_name, float damage_multiplier, float speed, int fire_count, EDamageType dt)
 {
-    CustomMissileWeaponRegistry::createMissileWeapon(base, weapon_name, damage_multiplier, speed, dt);
+    CustomMissileWeaponRegistry::createMissileWeapon(base, weapon_name, damage_multiplier, speed, fire_count, dt);
 
 }
 
