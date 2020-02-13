@@ -96,6 +96,16 @@ bool GuiTextEntry::isValid() const
     return valid;
 }
 
+void GuiTextEntry::onFocusGained()
+{
+    sf::Keyboard::setVirtualKeyboardVisible(true);
+}
+
+void GuiTextEntry::onFocusLost()
+{
+    sf::Keyboard::setVirtualKeyboardVisible(false);
+}
+
 string GuiTextEntry::getText() const
 {
     return text;
