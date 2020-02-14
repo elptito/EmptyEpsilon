@@ -146,9 +146,16 @@ void ShipAI::updateWeaponState(float delta)
             tube.startLoad(MW_Homing);
         else if (tube.isEmpty() && owner->weapon_storage[MW_HVLI] > 0 && tube.canLoad(MW_HVLI))
             tube.startLoad(MW_HVLI);
-        else
+        else if (tube.isEmpty())
             {
-                //TODO custom weapons
+                for(auto& kv : CustomMissileWeaponRegistry::getCustomMissileWeapons())
+                {
+                    if(owner->custom_weapon_storage[kv.first] > 0 /* no check on load yet*/)
+                    {
+                        tube.startLoad(kv.first);
+                        break;
+                    }
+                }
             }
 
 
