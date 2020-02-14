@@ -18,6 +18,7 @@ template:setHull(100)
 template:setShields(200, 200, 200, 200)
 template:setSpeed(30, 3.5, 5)
 template:setJumpDrive(true)
+template:setDockClasses("Drone")
 --                  Arc, Dir, Range, CycleTime, Dmg
 template:setBeam(0,100, -20, 1500.0, 6.0, 8)
 template:setBeam(1,100,  20, 1500.0, 6.0, 8)
@@ -36,6 +37,11 @@ template:setTubeDirection(0, -90)
 template:setTubeDirection(1, -90)
 template:setTubeDirection(2,  90)
 template:setTubeDirection(3,  90)
+
+template:setDocks(2, 1, 1, 1, 1, 1, 1)
+template:addDrones("L3 Mouse", 6)
+template:addDrones("L3 Cat", 1)
+
 
 variation = template:copy("Atlantis"):setType("playership")
 variation:setDescription([[A refitted Atlantis X23 for more general tasks. The large shield system has been replaced with an advanced combat maneuvering systems and improved impulse engines. Its missile loadout is also more diverse. Mistaking the modified Atlantis for an Atlantis X23 would be a deadly mistake.]])

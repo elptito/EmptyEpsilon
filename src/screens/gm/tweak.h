@@ -138,8 +138,8 @@ class GuiShipTweakMissileWeapons : public GuiTweakPage
 private:
     P<SpaceShip> target;
 
-    GuiSlider* missile_storage_amount_slider[MW_Count];
-    GuiSlider* missile_current_amount_slider[MW_Count];
+    std::vector<GuiSlider*> missile_storage_amount_slider;
+    std::vector<GuiSlider*> missile_current_amount_slider;
 public:
     GuiShipTweakMissileWeapons(GuiContainer* owner);
 

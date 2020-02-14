@@ -146,6 +146,11 @@ void ShipAI::updateWeaponState(float delta)
             tube.startLoad(MW_Homing);
         else if (tube.isEmpty() && owner->weapon_storage[MW_HVLI] > 0 && tube.canLoad(MW_HVLI))
             tube.startLoad(MW_HVLI);
+        else
+            {
+                //TODO custom weapons
+            }
+
 
         //When the tube is loading or loaded, add the relative strenght of this tube to the direction of this tube.
         if (tube.isLoading() || tube.isLoaded())
