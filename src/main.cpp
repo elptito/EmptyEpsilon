@@ -117,6 +117,9 @@ int main(int argc, char** argv)
 
     new Engine();
 
+    if (PreferencesManager::get("headless") != "")
+        textureManager.setDisabled(true);
+
     if (PreferencesManager::get("mod") != "")
     {
         string mod = PreferencesManager::get("mod");
