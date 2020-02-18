@@ -559,7 +559,8 @@ GuiShipTweakMissileWeapons::GuiShipTweakMissileWeapons(GuiContainer* owner)
 
     for(auto& kv : CustomMissileWeaponRegistry::getCustomMissileWeapons())
     {
-        (new GuiLabel(left_col, "", getMissileWeaponName(kv.first) + ":", 20))->setSize(GuiElement::GuiSizeMax, 30);
+        custom_missile_storage_labels.push_back(new GuiLabel(left_col, "", getMissileWeaponName(kv.first) + ":", 20));
+        custom_missile_storage_labels.back()->setSize(GuiElement::GuiSizeMax, 30);
         missile_storage_amount_slider.push_back(new GuiSlider(left_col, "", 0.0, 50, 0.0, [this, kv](float value) {
             target->custom_weapon_storage_max[kv.first] = int(round(value));
             target->custom_weapon_storage[kv.first] = std::min(target->custom_weapon_storage[kv.first], target->custom_weapon_storage_max[kv.first]);
@@ -581,7 +582,8 @@ GuiShipTweakMissileWeapons::GuiShipTweakMissileWeapons(GuiContainer* owner)
 
     for(auto& kv : CustomMissileWeaponRegistry::getCustomMissileWeapons())
     {
-        (new GuiLabel(right_col, "", getMissileWeaponName(kv.first) + ":", 20))->setSize(GuiElement::GuiSizeMax, 30);
+        custom_missile_current_labels.push_back(new GuiLabel(right_col, "", getMissileWeaponName(kv.first) + ":", 20));
+        custom_missile_current_labels.back()->setSize(GuiElement::GuiSizeMax, 30);
         missile_current_amount_slider.push_back(new GuiSlider(right_col, "", 0.0, 50, 0.0, [this, kv](float value) {
             target->custom_weapon_storage[kv.first] = std::min(int(round(value)), target->custom_weapon_storage_max[kv.first]);
         }));
@@ -599,6 +601,11 @@ void GuiShipTweakMissileWeapons::onDraw(sf::RenderTarget& window)
     int n = MW_Count;
     for(auto& kv : CustomMissileWeaponRegistry::getCustomMissileWeapons())
     {
+        custom_missile_storage_labels[n-MW_Count]->setVisible(target->custom_weapon_storage_max[kv.first]>0);
+        custom_missile_current_labels[n-MW_Count]->setVisible(target->custom_weapon_storage_max[kv.first]>0);
+
+        missile_current_amount_slider[n]->setVisible(target->custom_weapon_storage_max[kv.first]>0);
+        missile_storage_amount_slider[n]->setVisible(target->custom_weapon_storage_max[kv.first]>0);
         if (target->custom_weapon_storage[kv.first] != int(missile_current_amount_slider[n]->getValue()))
             missile_current_amount_slider[n]->setValue(float(target->custom_weapon_storage[kv.first]));
         n++;

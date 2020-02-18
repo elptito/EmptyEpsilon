@@ -140,6 +140,8 @@ private:
 
     std::vector<GuiSlider*> missile_storage_amount_slider;
     std::vector<GuiSlider*> missile_current_amount_slider;
+    std::vector<GuiLabel*> custom_missile_storage_labels;
+    std::vector<GuiLabel*> custom_missile_current_labels;
 public:
     GuiShipTweakMissileWeapons(GuiContainer* owner);
 
