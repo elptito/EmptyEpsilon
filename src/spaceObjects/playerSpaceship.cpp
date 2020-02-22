@@ -385,6 +385,10 @@ PlayerSpaceship::PlayerSpaceship()
     addToShipLog("Initialisation du log hangar", colorConfig.log_generic,"docks");
 }
 
+PlayerSpaceship::~PlayerSpaceship()
+{
+}
+
 void PlayerSpaceship::update(float delta)
 {
     // If we're flashing the screen for hull damage, tick the fade-out.

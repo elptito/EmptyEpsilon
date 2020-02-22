@@ -107,6 +107,7 @@ public:
     ECommsGmInterception intercept_all_comms_to_gm;
 
     GameGlobalInfo();
+    virtual ~GameGlobalInfo();
 
     P<PlayerSpaceship> getPlayerShip(int index);
     void setPlayerShip(int index, P<PlayerSpaceship> ship);

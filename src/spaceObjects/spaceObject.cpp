@@ -212,6 +212,10 @@ SpaceObject::SpaceObject(float collision_range, string multiplayer_name, float m
     registerMemberReplication(&id_galaxy);
 }
 
+SpaceObject::~SpaceObject()
+{
+}
+
 #if FEATURE_3D_RENDERING
 void SpaceObject::draw3D()
 {
