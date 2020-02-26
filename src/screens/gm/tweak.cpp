@@ -609,11 +609,13 @@ void GuiShipTweakMissileWeapons::onDraw(sf::RenderTarget& window)
             missile_current_amount_slider[n]->setValue(float(target->custom_weapon_storage[kv.first]));
         n++;
     }
+
+    int wsIdx = 0;
     while(n<missile_current_amount_slider.size())
     {
-        if (target->weapon_storage[n] != int(missile_current_amount_slider[n]->getValue()))
-            missile_current_amount_slider[n]->setValue(float(target->weapon_storage[n]));
-        n++;
+        if (target->weapon_storage[wsIdx] != int(missile_current_amount_slider[n]->getValue()))
+            missile_current_amount_slider[n]->setValue(float(target->weapon_storage[wsIdx]));
+        n++; wsIdx++;
     }
 }
 
@@ -630,10 +632,12 @@ void GuiShipTweakMissileWeapons::open(P<SpaceObject> target)
         n++;
     }
 
+    int wsIdx = 0;
     while(n<missile_storage_amount_slider.size())
     {
-        missile_storage_amount_slider[n]->setValue(float(ship->weapon_storage_max[n]));
-        n++;
+        missile_storage_amount_slider[n]->setValue(float(ship->weapon_storage_max[wsIdx]));
+        n++; wsIdx++;
+
     }
 
 }

@@ -50,6 +50,7 @@ private:
     using MissileWeaponMap = std::map<string,MissileWeaponData>;
 
 public:
+
     static auto getCustomMissileWeapons() -> MissileWeaponMap&
     {
         static MissileWeaponMap custom_missile_data{};

@@ -246,7 +246,8 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
         registerMemberReplication(&weapon_storage_max[n]);
     }
 
-    for(auto &kv : custom_weapon_storage_max)
+    //for(auto &kv : custom_weapon_storage_max)
+    for(auto &kv : CustomMissileWeaponRegistry::getCustomMissileWeapons())
     {
         custom_weapon_storage[kv.first] = 0;
         custom_weapon_storage_max[kv.first] = 0;
@@ -325,8 +326,8 @@ void SpaceShip::applyTemplateValues()
 
     for(auto& kv : ship_template->custom_weapon_storage)
     {
-        custom_weapon_storage.insert(kv);
-        custom_weapon_storage_max.insert(kv);
+        custom_weapon_storage[kv.first] = kv.second;
+        custom_weapon_storage_max[kv.first] = kv.second;
     }
 
 

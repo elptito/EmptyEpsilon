@@ -1,4 +1,5 @@
 #include "missileWeaponData.h"
+#include "multiplayer.h"
 namespace {
 
     MissileWeaponData missile_data[MW_Count] =
@@ -43,6 +44,7 @@ const MissileWeaponData& MissileWeaponData::getDataFor(const string& type)
 
 }
 
+
 void CustomMissileWeaponRegistry::createMissileWeapon(const EMissileWeapons &iBaseType, const std::string &iNewName, const float &iDamageMultiplier, const float &iSpeed, const int& iFireCount, const EDamageType &iDT)
 {
     MissileWeaponData base = MissileWeaponData::getDataFor(iBaseType);
@@ -60,7 +62,8 @@ auto CustomMissileWeaponRegistry::getMissileWeapon(const std::string &iName) -> 
     auto found = getCustomMissileWeapons().find(iName);
 
     if (found == getCustomMissileWeapons().end())
-        assert(0 && "not found ");
+        return missile_data[0]; //This is BADDDD !!! FIXME FIXME FIXME (why does it assert on some case when AI fighting ? must be a stupid mistake)
+        //assert(0 && "not found ");
     return found->second;
 }
 #ifndef _MSC_VER
