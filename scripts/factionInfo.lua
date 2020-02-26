@@ -1,41 +1,48 @@
-neutral = FactionInfo():setName("Independant")
-neutral:setGMColor(128, 128, 128)
-neutral:setDescription([[Il s'agit des vaisseaux non référencés sous une fédération. Ceci n'est pas une pratique autorisée par les fédérations.]])
+neutre = FactionInfo():setName("Neutre")
+neutre:setGMColor(128, 128, 128)
+neutre:setDescription([[Les neutres se distinguent principalement par le fait qu’ils n’ont aucune affiliation forte avec aucune faction.
+La plupart des commercants se considerent comme independants, bien que la neutralite est une douce Utopie.]])
 
-luxa = FactionInfo():setName("Luxa")
-luxa:setGMColor(255, 0, 0)
-luxa:setDescription([[L’Empire de Luxa est le coeur de la galaxie. C’est l’empire qui a été fondé par les humains lors de leur arrivée dans la galaxie du tourbillon.
+imperial = FactionInfo():setName("Imperium")
+imperial:setGMColor(255, 255, 255)
+imperial:setDescription([[L'Imperium est un empire qui regroupe et defend l’humanite contre les races extraterrestres, les puissances chaotiques et l'heresie.
+Il s'etend jusqu'aux confins de la galaxie et regroupe un nombre incalculable de mondes. Il a ete fonde et depuis dirige au 30e millenaire par le Saint Empereur, etre eternel dont le corps se trouve sur le trone d'or de Terra, la planete mere de l'humanite.
+L'Imperium regente ainsi l'humanite sous un regime a la fois theocratique et totalitaire, qui maintient l'humanite dans l'obscurantisme et assure une devotion complete au culte de l'Empereur.]])
 
-La première planète sur laquelle ils se sont installés a été baptisée Luxa. Elle a été pendant de nombreuses années la planète-abri de l’humanité. Les conditions de vie n’y étaient pas optimales, mais la technologie a permis aux hommes de survivre et de légèrement modifier le climat, la rendant totalement habitable, mais au prix de durs efforts.
+mechanicum = FactionInfo():setName("Adeptus Mechanicus")
+mechanicum:setGMColor(128, 255, 0)
+mechanicum:setDescription([[Les Magos du Clerge de Mars, ou Adeptus Mechanicus, sont les adorateurs de l'Omnimessie, le Dieu Machine. En tant que tels, ils ont pour mission sacree la recherche et le developpement de la Technoarcana, ainsi que la decouverte et la protection du savoir ancien remontant au Moyen-Age Technologique. Leurs milliards de Serviteurs etendent leur domination sur les Mondes Forges de toute la Galaxie.
+Les membres de l'Adeptus Mechanicus sont donc les detenteurs des sombres et antiques mysteres de la technologie. Grace a leur antique technologie de clonage, les Veneres Ancetres de Mars sont capables d'etendre leurs vies sur plusieurs millenaires. Grace a cela, ces carcasses ratatinees maintiennent leur mainmise sur les secrets technologiques enfouis sous la surface de la planete rouge. Mais si les corps des Hauts Techno-Mages sont maintenus en vie, leurs esprits, eux, continuent de vieillir, les plongeant peu a peu dans la folie a mesure que les siecles passent.
+A travers leurs rites mystiques et leurs ceremonies, leurs chants aux phrases entrelacees, leurs huiles et leurs onguents prepares avec soin, les Techno-Pretres benissent les armes et les machines de guerre de l'humanite au nom du Dieu Machine. Mais, a cause de la senilite des Hauts Techno-Mages, cette veneration se transforme parfois en superstition ou en folie, entrainant des sacrifices sanglants.]])
 
-L’Empereur a été choisi par un vote où tout un chacun pouvait faire entendre sa voix, adultes comme enfants. Le choix s’est porté tout naturellement sur l’Amiral de la flotte Terrienne qui les avait menés à bon port en sacrifiant plus de 40 ans de sa propre longévité.
+chaos = FactionInfo():setName("Chaos")
+chaos:setGMColor(255, 0, 0)
+chaos:setEnemy(neutre)
+chaos:setEnemy(imperial)
+chaos:setDescription([[Les Chaotiques sont d’anciens Imperiaux, corrompus par les puissances chaotiques et qui se sont rebelles contre l'empereur pendant l’Heresie d'Horus. Battus, ils ont cherche refuge pour la plupart dans l'Œil de la terreur, ou ils ont developpe des mutations terrifiantes.
+Les membres du Chaos sont generalement plus forts que leur anciens camarades grace a leurs voyages dans le Warp.
+Ils vouent depuis l'Heresie d'Horus une haine farouche et sans limites envers tout ce qui appartient a l'Imperium ainsi que tout ce qu'il represente: l'Humanite.]])
 
-Ainsi naquit le premier Empereur luxien : Stelio Oazio]])
+eldars = FactionInfo():setName("Eldars")
+eldars:setGMColor(255, 128, 0)
+eldars:setEnemy(chaos)
+eldars:setDescription([[Les Eldars sont une des plus anciennes races de la galaxie et une des plus developpees, bien que mourante. En effet leur cycle de reproduction est bien plus lent que le rythme auquel ils sont tues dans les divers conflits de la galaxie.
+Race fiere, elle considere les humains comme un peuple jeune, immature et imbu de lui-meme. Leur reputation de fourberie au sein de l'Imperium vient de leur tendance a la ruse et a l'usage des sous-race (les humains pour ne citer qu'eux) dans leurs conflits. Sans forcement que ces guerriers sachent qu'ils se battent pour les interets Eldars. Leur technologie est meconnue par les technaugures imperiaux, car tres avancee et basee sur des energies etranges, tels les cristaux et d'autres armes redoutables pouvant faire appel a la puissance du Warp.]])
 
-arroya = FactionInfo():setName("Arroya")
-arroya:setGMColor(200, 0, 200)
-arroya:setDescription([[La République Féodale d’Arroya a conservé nombre d’éléments du mode de vie et des lois impériales, principalement en terme de transmission héréditaire des pouvoirs territoriaux.  La grande différence fut certainement l’abolition du Pouvoir Impérial unique au profit du R.A.A.D. (Rassemblement de l’Aristocratie Arroyenne Dirigeante) réunissant les familles les plus influentes. D’une culture relativement uniforme sur l’ensemble de son territoire, l’on trouvera toujours des petites subtilités locales, surtout en matière de complots et d’intrigues politiques.]])
+tau = FactionInfo():setName("Tau")
+tau:setGMColor(0, 0, 255)
+tau:setDescription([[Les Tau forment une civilisation tres jeune (seulement 6 000 ans). D'une peau bleu gris, d'une taille moyenne inferieure a celle des hommes de quelques centimetres, ils ont une allure humanoide mais ont des pieds dotes de sabots et leur esperance de vie est moins longue que les humains. Avant d'etre totalement unie leur espece etait divisee en peuplades, chacune vivant dans des endroits propres.
+A cette epoque tous ces peuples se massacraient et l'ensemble de l'espece etait proche de l'extinction. C'est alors qu'apparurent les Etheres qui unifierent la race et qui donnerent a chaque peuplade une place dans la societe en les separant en cinq castes differentes : les constructeurs devinrent la caste de la terre, les diplomates celle de l'eau, les messagers et pilotes celle de l'air, les guerriers des plaines celle du feu, et les Etheres devinrent la cinquieme caste, a la tete de l'empire. Depuis, tous vivent en harmonie et en paix avec la peur de retourner a cette epoque de terreur, d'ou leur combat pour le bien supreme contre les ennemis de l'exterieur. ]])
+tau:setEnemy(imperial)
 
-nebula = FactionInfo():setName("Trente Nebuleuses")
-nebula:setGMColor(0, 0, 200)
-nebula:setDescription([[La Fédération des Trente Nébuleuses est une des zones les plus “impénétrable” de la Galaxie. Les nébuleuses qui y constellent les amas d’étoiles sont bien plus de trente, et en vérité tellement nombreuses que la plupart des scanners et instruments de détections y sont inopérants.
-
-Si déjà cela y augmente considérablement les risques en terme de navigation spatiale, cela permet aussi d’y dissimuler à peu près ce qu’on veut. Que cela soit des races aliens pendant les guerres de conquêtes ou des humains rebelles pendant celles de sécessions, il est impossible de savoir exactement qui ou quoi se cache parmi tous ces nuages de gaz, et les trente stations et planètes de la Fédération sont le plus souvent des façades vétustes, servant d’abord de points de repère pour le voyageur perdu dans le brouillard des nébuleuses, mais surtout de couverture pour les véritables ressources de la Fédération.
-
-C’est certainement de cette culture du secret que la Fédération tire sa puissance, peut-être même plus que ce qu’elle cache à proprement parler.]])
-
-gcg = FactionInfo():setName("GCG")
-gcg:setGMColor(50, 255, 255)
-gcg:setDescription([[Les explorateurs, les gens sans qui les trous de ver ne seraient pas accessibles. Aventuriers devant l’éternel, la recherche de l’inconnu est leur quotidien.]])
-
-gusm = FactionInfo():setName("GUSM")
-gusm:setGMColor(0, 200, 0)
-gusm:setDescription([[Les Governorats Unis de la Spirale Majeure ne sont pas une fédération à proprement parler.  Du moins, ils n’ont pas de pouvoir centralisé comme l’Empereur de Luxa ou le R.A.A.D. d’Arroya.  La tendance serait plutôt à l’inverse dans ces territoires parmi lesquels se trouvent bon nombre des systèmes ravagés par les guerres de sécession.  Avant les guerres, les Governorats étaient pour la plupart des colonies minières ou agricoles de l’Empire, isolées, peuplées d’aventuriers, de bagnards, d’exilés, avec ici et là des avant-postes impériaux dont les plus gros étaient tenus en garnison par des légions entières.  Certains systèmes prospéraient néanmoins jusqu’à rivaliser avec les planètes impériales, mais la plupart étaient des lieux aux conditions hostiles dont la population hétéroclite et instable avait une propension non négligeable à des soulèvements réguliers. Aussi réguliers que réprimés.  S’il est facile de comprendre que cette répression eut une influence de premier ordre sur les velléités d’indépendance de nombreux systèmes de la Spirale Majeur, il faut noter que c’est un des outils de cette répression qui donna aux sécessionnistes les armes qui leur manquaient pour faire front commun: la géante gazeuse de Bir’Longon, mais surtout le Pénitencier Orbital construit entre ses anneaux.  C’est là que furent incarcérés nombre de rebelles et autres ennemis de l’Empire, là qu’ils purent se rencontrer, apprendre à se connaître, et surtout à se coordonner.]])
-
-ss = FactionInfo():setName("Systèmes Souverains")
-ss:setGMColor(255, 255, 0)
-ss:setDescription([[Nombre de petit systèmes indépendants rassemblés en une seule fédération malgré eux. Ils ont très peu participé à la guerre, et c’était le plus souvent en tant que mercenaires pour l’une ou l’autre grande puissance.]])
-
-ganima = FactionInfo():setName("Ganima")
-ganima:setGMColor(255, 255, 255)
-ganima:setDescription([[Un ramassis de parias, la lie de l’univers, trainer là-bas c’est pour en ressortir les pieds devant. La loi du plus fort est la seule règle en place dans les colonies.]])
+xenos = FactionInfo():setName("Xenos")
+xenos:setGMColor(255, 0, 128)
+xenos:setDescription([[Le terme Xeno designe toute creature extra-terrestre du point de vue humain et recouvre par extention toutes les civilisations non-humaines de la Galaxie; connues ou inconnues, existantes ou eteintes.
+Les relations avec les races xenos sont strictement interdites aux citoyens imperiaux, etant condamnees et abhorrees par la chaire imperiale avec la meme haine que les sorcieres, les mutants et les demons. Pour l’Imperium, les xenos ne meritent que d’etre extermines pour avoir commis le crime fondamental consistant a vouloir disputer la domination du cosmos a l’humanite.
+Apres des millenaires de guerres incessantes et de xenocides, la plupart des especes qui ont survecu au contact avec les hommes ont fini par hair et craindre l’Imperium a leur tour ou, comme les Orks, a se rejouir de ce conflit permanent.]])
+xenos:setEnemy(neutre)
+xenos:setEnemy(imperial)
+xenos:setEnemy(mechanicum)
+xenos:setEnemy(chaos)
+xenos:setEnemy(eldars)
+xenos:setEnemy(tau)

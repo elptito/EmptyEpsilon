@@ -1,6 +1,16 @@
 --[[                  Stations
-These are templates for space stations.
+Rappel des catégories : 
+Vaisseau léger : 1 à 3 places ; aucun moteur Warp ou Jump possible ; shipTemplates_VaisseauxLegers.lua ;
+Frégate : 4 à 9 places ; shipTemplates_Fregates.lua ;
+Destroyer : 10 à 50 places ; shipTemplates_Escorteurs.lua ;
+Croiseur Léger : 50 à 100 places ; shipTemplates_CroiseursLegers.lua ;
+Croiseur : 100 à 250 places ; shipTemplates_Croiseurs.lua ;
+Cuirassé : 250 à 500 places ;
+Stations;
+
+Les Stations apporte un soutien aux vaisseaux de combat et sert d'atelier de réparations.
 ----------------------------------------------------------]]
+
 
 template = ShipTemplate():setName("Small Station"):setModel("space_station_4"):setType("station")
 template:setDescription([[Stations of this size are often used as research outposts, listening stations, and security checkpoints. Crews turn over frequently in a small station's cramped accommodatations, but they are small enough to look like ships on many long-range sensors, and organized raiders sometimes take advantage of this by placing small stations in nebulae to serve as raiding bases. They are lightly shielded and vulnerable to swarming assaults.]])
@@ -25,3 +35,73 @@ template:setDescription([[The size of a sprawling town, stations at this scale r
 template:setHull(800)
 template:setShields(1200, 1200, 1200, 1200)
 template:setRadarTrace("radartrace_hugestation.png")
+
+
+--[[Grande station Imperial]]
+template = ShipTemplate():setName("Grande station Imperial"):setModel("Navy_Station"):setType("station")
+template:setDescription([[De la taille d'une ville tentaculaire, les stations de cette échelle représentent le centre de la puissance spatiale de cette région. Elles remplissent plusieurs fonctions à la fois et représentent un investissement considérable en temps, en argent et en main d'oeuvre. Les boucliers et l'épaisse coque d'une énorme station peuvent la maintenir intacte assez longtemps pour que des renforts arrivent, même en cas de siège ou d'assaut massif parfaitement coordonné.]])
+template:setHull(3000)
+template:setShields(1000, 1000, 1000, 1000)
+template:setRadarTrace("radartrace_hugestation.png")
+--                  Arc, Dir, Range, CycleTime, Dmg
+template:setBeam(0, 10, 1, 100.0, 30.0, 350)
+template:setBeam(1, 10, 180, 100.0, 30.0, 350)
+template:setBeam(2, 10, 90, 100.0, 30.0, 350)
+template:setBeam(3, 10, -90, 100.0, 30.0, 350)
+template:setBeam(4, 10, 45, 2000.0, 7.0, 50)
+template:setBeam(5, 10, -45, 2000.0, 7.0, 50)
+template:setBeam(6, 10, 135, 2000.0, 7.0, 50)
+template:setBeam(7, 10, -135, 2000.0, 7.0, 50)
+template:setBeam(8, 10, 42, 1500.0, 1.5, 12)
+template:setBeam(9, 10, -42, 1500.0, 1.5, 12)
+template:setBeam(10, 15, 48, 1500.0, 1.5, 12)
+template:setBeam(11, 15,-48, 1500.0, 1.5, 12)
+template:setBeam(12, 15, 132, 1500.0, 1.5, 12)
+template:setBeam(13, 15,-132, 1500.0, 1.5, 12)
+template:setBeam(14, 15, 138, 1500.0, 1.5, 12)
+template:setBeam(15, 15,-138, 1500.0, 1.5, 12)
+--                              Arc, Dir, Rotate speed
+template:setBeamWeaponTurret(0, 100,  1, 5)
+template:setBeamWeaponTurret(1, 100, 180, 5)
+template:setBeamWeaponTurret(2, 150,  90, 5)
+template:setBeamWeaponTurret(3, 150, -90, 5)
+template:setBeamWeaponTurret(4, 150,  45, 5)
+template:setBeamWeaponTurret(5, 150, -45, 5)
+template:setBeamWeaponTurret(6, 150,  135, 5)
+template:setBeamWeaponTurret(7, 150, -135, 5)
+template:setBeamWeaponTurret(8, 100,  42, 5)
+template:setBeamWeaponTurret(9, 100, -42, 5)
+template:setBeamWeaponTurret(10, 150,  48, 5)
+template:setBeamWeaponTurret(11, 150, -48, 5)
+template:setBeamWeaponTurret(12, 150,  132, 5)
+template:setBeamWeaponTurret(13, 150, -132, 5)
+template:setBeamWeaponTurret(14, 150,  138, 5)
+template:setBeamWeaponTurret(15, 150, -138, 5)
+--       Tubes
+template:setTubes(10, 12.0)
+template:setTubeDirection(0, 1)
+template:setTubeDirection(1, -1)
+template:setTubeDirection(2, 90)
+template:setTubeDirection(3, -90)
+template:setTubeDirection(4, 90)
+template:setTubeDirection(5, -90)
+template:setTubeDirection(6, 90)
+template:setTubeDirection(7, -90)
+template:setTubeDirection(8, 90)
+template:setTubeDirection(9, -90)
+--TG Seeker (homing) 
+template:setCustomWeapon("Homing", "SEEK", 1.5, 800.0, 1, "Kinetic")
+template:setCustomWeaponColor("SEEK", 255, 204, 0)
+template:setCustomWeaponStorage("SEEK", 60)
+--MGAA Skyreaper (homing trés rapide) fregrate et plus
+template:setCustomWeapon("Homing", "SKYR", 0.75, 1000.0, 3, "Kinetic")
+template:setCustomWeaponColor("SKYR", 255, 204, 0)
+template:setCustomWeaponStorage("SKYR", 60)
+--Macro-canon : (rafale, non homing) 
+template:setCustomWeapon("HVLI", "MCAN", 3, 1000.0, 3, "Kinetic")
+template:setCustomWeaponColor("MCAN", 255, 150, 103)
+template:setCustomWeaponStorage("MCAN", 60)
+--MGAA Flakburst (nuke faible dommage) 
+template:setCustomWeapon("Nuke", "FLAK", 0.5, 500.0, 1, "Kinetic")
+template:setCustomWeaponColor("FLAK", 220, 87, 20)
+template:setCustomWeaponStorage("FLAK", 6)
