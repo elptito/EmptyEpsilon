@@ -24,8 +24,9 @@
 #include "gui/gui2_progressbar.h"
 #include "gui/gui2_textentry.h"
 
-RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
-: GuiOverlay(owner, "RELAY_SCREEN", colorConfig.background), has_comms(has_comms), mode(TargetSelection)
+
+RelayScreen::RelayScreen(GuiContainer* owner, bool allow_comms)
+: GuiOverlay(owner, "RELAY_SCREEN", colorConfig.background), mode(TargetSelection)
 {
     targets.setAllowWaypointSelection();
     radar = new GuiRadarView(this, "RELAY_RADAR", 50000.0f, &targets, my_spaceship);
@@ -305,9 +306,10 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool has_comms)
     hacking_dialog = new GuiHackDialog(this, "");
 
     new ShipsLog(this,"generic");
-
-    if (has_comms)
+    if (allow_comms)
+    {
         (new GuiCommsOverlay(this))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+    }
 }
 
 void RelayScreen::onDraw(sf::RenderTarget& window)

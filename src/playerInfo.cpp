@@ -24,6 +24,7 @@
 #include "screens/extra/droneMasterScreen.h"
 #include "screens/extra/oxygenScreen.h"
 
+#include "screens/extra/commsScreen.h"
 #include "screens/extra/shipLogScreen.h"
 #include "screens/extra/radarScreen.h"
 
@@ -137,8 +138,8 @@ void PlayerInfo::spawnUI()
         if (crew_position[scienceOfficer])
             screen->addStationTab(new ScienceScreen(screen), scienceOfficer, getCrewPositionName(scienceOfficer), getCrewPositionIcon(scienceOfficer));
         if (crew_position[relayOfficer])
-            screen->addStationTab(new RelayScreen(screen), relayOfficer, getCrewPositionName(relayOfficer), getCrewPositionIcon(relayOfficer));
-
+            screen->addStationTab(new RelayScreen(screen, true), relayOfficer, getCrewPositionName(relayOfficer), getCrewPositionIcon(relayOfficer));
+        
         //Crew 4/3
         if (crew_position[tacticalOfficer])
             screen->addStationTab(new TacticalScreen(screen), tacticalOfficer, getCrewPositionName(tacticalOfficer), getCrewPositionIcon(tacticalOfficer));
@@ -165,6 +166,10 @@ void PlayerInfo::spawnUI()
             screen->addStationTab(new RadarScreen(screen,"relay"), relayRadar, getCrewPositionName(relayRadar), getCrewPositionIcon(relayRadar));
         if (crew_position[navigation])
             screen->addStationTab(new NavigationScreen(screen), navigation, getCrewPositionName(navigation), getCrewPositionIcon(navigation));
+        if (crew_position[altRelay])
+            screen->addStationTab(new RelayScreen(screen, false), altRelay, getCrewPositionName(altRelay), getCrewPositionIcon(altRelay));
+        if (crew_position[commsOnly])
+            screen->addStationTab(new CommsScreen(screen), commsOnly, getCrewPositionName(commsOnly), getCrewPositionIcon(commsOnly));
         if (crew_position[shipLog])
             screen->addStationTab(new ShipLogScreen(screen,"generic"), shipLog, getCrewPositionName(shipLog), getCrewPositionIcon(shipLog));
         if (crew_position[internLogView])
@@ -228,7 +233,6 @@ string getCrewPositionName(ECrewPosition position)
     case damageControl: return "Controle des dommages";
     case powerManagement: return "Gestion energie";
     case databaseView: return "Base de donnees";
-    case commsView: return "Comms View";
     case tacticalRadar: return "Radar Tactique";
     case scienceRadar: return "Radar Science";
     case relayRadar: return "Radar Auspex LP";
@@ -239,6 +243,8 @@ string getCrewPositionName(ECrewPosition position)
     case droneMaster: return "Maitre des docks";
     case dockMaster: return "Maitre d'ammarrage";
     case oxygenView: return "Log Oxygen";
+    case altRelay: return "AltRelay";
+    case commsOnly: return "Vox";
     default: return "ErrUnk: " + string(position);
     }
 }
@@ -259,17 +265,19 @@ string getCrewPositionIcon(ECrewPosition position)
     case damageControl: return "";
     case powerManagement: return "";
     case databaseView: return "";
-    case commsView: return "";
-    case tacticalRadar: return "";
-    case scienceRadar: return "";
-    case relayRadar: return "";
-    case navigation: return "";
+    case altRelay: return "gui/icons/station-relay";
+    case commsOnly: return "";
     case shipLog: return "";
     case internLogView: return "";
     case dronePilot: return "";
     case droneMaster: return "";
     case dockMaster: return "";
     case oxygenView: return "";
+    //ajouts Tdelc
+    case tacticalRadar: return "";
+    case scienceRadar: return "";
+    case relayRadar: return "";
+    case navigation: return "";
     default: return "ErrUnk: " + string(position);
     }
 }
@@ -310,18 +318,13 @@ template<> void convert<ECrewPosition>::param(lua_State* L, int& idx, ECrewPosit
         cp = powerManagement;
     else if (str == "database" || str == "databaseview")
         cp = databaseView;
-    else if (str == "comms" || str == "commsview")
-        cp = commsView;
-    else if (str == "tacticalradar" || str == "tacticalradarview")
-        cp = tacticalRadar;
-    else if (str == "scienceradar" || str == "scienceradarview")
-        cp = scienceRadar;
-    else if (str == "relayradar" || str == "relayradarview")
-        cp = relayRadar;
-    else if (str == "navigation" || str == "navigationview")
-        cp = navigation;
-    else if (str == "log" || str == "shiplog")
+    else if (str == "altrelay")
+        cp = altRelay;
+    else if (str == "commsonly")
+        cp = commsOnly;
+    else if (str == "shiplog")
         cp = shipLog;
+    //Ajouts Tdelc
     else if (str == "internlog" || str == "internlogview")
         cp = internLogView;
     else if (str == "dronepilot" || str == "dronepilotview")
@@ -332,6 +335,15 @@ template<> void convert<ECrewPosition>::param(lua_State* L, int& idx, ECrewPosit
         cp = dockMaster;
     else if (str == "oxygen" || str == "oxygenview")
         cp = oxygenView;
+    else if (str == "tacticalradar" || str == "tacticalradarview")
+        cp = tacticalRadar;
+    else if (str == "scienceradar" || str == "scienceradarview")
+        cp = scienceRadar;
+    else if (str == "relayradar" || str == "relayradarview")
+        cp = relayRadar;
+    else if (str == "navigation" || str == "navigationview")
+        cp = navigation;
+    else if (str == "log" || str == "shiplog")
     else
         luaL_error(L, "Unknown value for crew position: %s", str.c_str());
 }

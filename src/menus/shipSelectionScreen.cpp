@@ -464,6 +464,7 @@ void ShipSelectionScreen::updateCrewTypeOptions()
         crew_position_button[scienceRadar]->show();
         crew_position_button[relayRadar]->show();
         crew_position_button[navigation]->show();
+        crew_position_button[altRelay]->show();
         crew_position_button[shipLog]->show();
         crew_position_button[internLogView]->show();
         crew_position_button[oxygenView]->show();

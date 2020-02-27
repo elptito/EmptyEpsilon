@@ -139,6 +139,7 @@ set(SOURCES
 	src/screens/extra/oxygenScreen.cpp
 	src/screens/extra/powerManagement.cpp
 	src/screens/extra/databaseScreen.cpp
+	src/screens/extra/commsScreen.cpp
 	src/screens/extra/shipLogScreen.cpp
 	src/screens/extra/radarScreen.cpp
 	src/screens/extra/navigationScreen.cpp

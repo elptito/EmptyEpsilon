@@ -19,9 +19,6 @@ class GuiProgressbar;
 
 class RelayScreen : public GuiOverlay
 {
-public:
-    bool has_comms;
-
 private:
     enum EMode
     {
@@ -76,7 +73,7 @@ private:
     const float min_distance = 6250.0f;
     float distance;
 public:
-    RelayScreen(GuiContainer* owner, bool has_comms = true);
+    RelayScreen(GuiContainer* owner, bool allow_comms);
 
     virtual void onDraw(sf::RenderTarget& window);
     virtual void onHotkey(const HotkeyResult& key) override;
