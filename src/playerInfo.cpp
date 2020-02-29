@@ -243,7 +243,7 @@ string getCrewPositionName(ECrewPosition position)
     case droneMaster: return "Maitre des docks";
     case dockMaster: return "Maitre d'ammarrage";
     case oxygenView: return "Log Oxygen";
-    case altRelay: return "AltRelay";
+    case altRelay: return "Strategic Map";
     case commsOnly: return "Vox";
     default: return "ErrUnk: " + string(position);
     }
@@ -265,7 +265,7 @@ string getCrewPositionIcon(ECrewPosition position)
     case damageControl: return "";
     case powerManagement: return "";
     case databaseView: return "";
-    case altRelay: return "gui/icons/station-relay";
+    case altRelay: return "";
     case commsOnly: return "";
     case shipLog: return "";
     case internLogView: return "";
