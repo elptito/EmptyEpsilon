@@ -13,10 +13,15 @@ model:setIllumination("textures/Eldar_Corsair_Fighter_Full.jpg")
 model:setScale(20)
 model:setRadius(30)
 -- Visual positions of the beams/missiletubes (blender: -X, Y, Z)
-model:addBeamPosition(21, -28.2, -2)
-model:addBeamPosition(21,  28.2, -2)
-model:addEngineEmitter(-28, -1.5, -5,  1.0, 0.2, 0.2, 3.0)
-model:addEngineEmitter(-28,  1.5, -5,  1.0, 0.2, 0.2, 3.0)
+--model:addBeamPosition(21, -28.2, -2)
+--model:addBeamPosition(21,  28.2, -2)
+model:addEngineEmitter(-1.5, 0.42, -0.13,  0.5, 0.5, 1.0, 0.5)
+model:addEngineEmitter(-1.5,-0.42, -0.13,  0.5, 0.5, 1.0, 0.5)
+model:addEngineEmitter(-1.5, 0.42, 0.33,  0.5, 0.5, 1.0, 0.5)
+model:addEngineEmitter(-1.5,-0.42, 0.33,  0.5, 0.5, 1.0, 0.5)
+
+--model:addEngineEmitter(-28, -1.5, -5,  1.0, 0.2, 0.2, 3.0)
+--model:addEngineEmitter(-28,  1.5, -5,  1.0, 0.2, 0.2, 3.0)
 
 
 --[[Bombardier Corsair]]
@@ -52,7 +57,7 @@ model:setRadius(80)
 
 model:addEngineEmitter(-0.75, 0.2,-0.03,  0.5, 0.5, 1.0, 0.2)
 model:addEngineEmitter(-0.75,-0.2,-0.03,  0.5, 0.5, 1.0, 0.2)
-
+model:addEngineEmitter(-8,  0, 0.3,  0.2, 0.2, 1.0, 2.0)
 
 --[[Transport Leger Civil]]
 model = ModelData()
@@ -65,9 +70,10 @@ model:setScale(8)
 model:setRadius(60)
 -- Visual positions of the beams/missiletubes (blender: -X, Y, Z)
 
-model:addEngineEmitter(-0.75, 0.2,-0.03,  0.5, 0.5, 1.0, 0.2)
-model:addEngineEmitter(-0.75,-0.2,-0.03,  0.5, 0.5, 1.0, 0.2)
 
+--model:addEngineEmitter(-0.75, 0.2,-0.03,  0.5, 0.5, 1.0, 0.2)
+--model:addEngineEmitter(-0.75,-0.2,-0.03,  0.5, 0.5, 1.0, 0.2)
+model:addEngineEmitter(-10,  0, 0.3,  0.2, 0.2, 1.0, 3.0)
 
 --[[Destroyer Imperial Cobra]]
 model = ModelData()
@@ -80,9 +86,10 @@ model:setScale(8)
 model:setRadius(100)
 -- Visual positions of the beams/missiletubes (blender: -X, Y, Z)
 
-model:addEngineEmitter(-0.75, 0.2,-0.03,  0.5, 0.5, 1.0, 0.2)
-model:addEngineEmitter(-0.75,-0.2,-0.03,  0.5, 0.5, 1.0, 0.2)
-
+--model:addEngineEmitter(-0.75, 0.2,-0.03,  0.5, 0.5, 1.0, 0.2)
+--model:addEngineEmitter(-0.75,-0.2,-0.03,  0.5, 0.5, 1.0, 0.2)
+model:addEngineEmitter(-8, -2.1500, 0.3,  0.2, 0.2, 1.0, 2.0)
+model:addEngineEmitter(-8,  2.1500, 0.3,  0.2, 0.2, 1.0, 2.0)
 
 --[[Destroyer du chaos Iconoclast]]
 model = ModelData()
@@ -95,9 +102,11 @@ model:setScale(8)
 model:setRadius(100)
 -- Visual positions of the beams/missiletubes (blender: -X, Y, Z)
 
-model:addEngineEmitter(-0.75, 0.2,-0.03,  0.5, 0.5, 1.0, 0.2)
-model:addEngineEmitter(-0.75,-0.2,-0.03,  0.5, 0.5, 1.0, 0.2)
+--model:addEngineEmitter(-0.75, 0.2,-0.03,  0.5, 0.5, 1.0, 3.0)
+--model:addEngineEmitter(-0.75,-0.2,-0.03,  0.5, 0.5, 1.0, 3.0)
 
+model:addEngineEmitter(-8, -2.1500, 0.3,  1, 0.2, 0.2, 2.0)
+model:addEngineEmitter(-8,  2.1500, 0.3,  1, 0.2, 0.2, 2.0)
 
 --[[Croiseur leger Dauntless]]
 model = ModelData()
@@ -110,9 +119,10 @@ model:setScale(8)
 model:setRadius(150)
 -- Visual positions of the beams/missiletubes (blender: -X, Y, Z)
 
-model:addEngineEmitter(-0.75, 0.2,-0.03,  0.5, 0.5, 1.0, 0.2)
-model:addEngineEmitter(-0.75,-0.2,-0.03,  0.5, 0.5, 1.0, 0.2)
-
+--model:addEngineEmitter(-0.75, 0.2,-0.03,  0.5, 0.5, 1.0, 0.2)
+--model:addEngineEmitter(-0.75,-0.2,-0.03,  0.5, 0.5, 1.0, 0.2)
+model:addEngineEmitter(-25, -2.1500, 0.3,  0.2, 0.2, 1.0, 3.0)
+model:addEngineEmitter(-25,  2.1500, 0.3,  0.2, 0.2, 1.0, 3.0)
 --[[Croiseur leger Corsaire]]
 model = ModelData()
 model:setName("Eldar_Corsair_Light_Cruiser")
@@ -124,9 +134,11 @@ model:setScale(10)
 model:setRadius(100)
 -- Visual positions of the beams/missiletubes (blender: -X, Y, Z)
 
-model:addEngineEmitter(-0.75, 0.2,-0.03,  0.5, 0.5, 1.0, 0.2)
-model:addEngineEmitter(-0.75,-0.2,-0.03,  0.5, 0.5, 1.0, 0.2)
-
+--model:addEngineEmitter(-0.75, 0.2,-0.03,  0.5, 0.5, 1.0, 0.2)
+--model:addEngineEmitter(-0.75,-0.2,-0.03,  0.5, 0.5, 1.0, 0.2)
+model:addEngineEmitter(-5,  0, 0.3,  0.2, 0.2, 1.0, 2.0)
+--model:addEngineEmitter(-25, -2.1500, 0.3,  0.2, 0.2, 1.0, 3.0)
+--model:addEngineEmitter(-25,  2.1500, 0.3,  0.2, 0.2, 1.0, 3.0)
 
 --[[Croiseur leger du chaos Slaughter]]
 model = ModelData()
@@ -139,8 +151,10 @@ model:setScale(8)
 model:setRadius(150)
 -- Visual positions of the beams/missiletubes (blender: -X, Y, Z)
 
-model:addEngineEmitter(-0.75, 0.2,-0.03,  0.5, 0.5, 1.0, 0.2)
-model:addEngineEmitter(-0.75,-0.2,-0.03,  0.5, 0.5, 1.0, 0.2)
+--model:addEngineEmitter(-0.75, 0.2,-0.03,  0.5, 0.5, 1.0, 0.2)
+--model:addEngineEmitter(-0.75,-0.2,-0.03,  0.5, 0.5, 1.0, 0.2)
+model:addEngineEmitter(-20, -2.1500, 0.3,  1, 0.2, 0.2, 3.0)
+model:addEngineEmitter(-20,  2.1500, 0.3,  1, 0.2, 0.2, 3.0)
 
 
 --[[Croiseur Gothic]]
@@ -154,8 +168,8 @@ model:setScale(8)
 model:setRadius(250)
 -- Visual positions of the beams/missiletubes (blender: -X, Y, Z)
 
-model:addEngineEmitter(-30, -2.1500, 0.3,  0.2, 0.2, 1.0, 3.0)
-model:addEngineEmitter(-30,  2.1500, 0.3,  0.2, 0.2, 1.0, 3.0)
+model:addEngineEmitter(-25, -2.1500, 0.3,  0.2, 0.2, 1.0, 3.0)
+model:addEngineEmitter(-25,  2.1500, 0.3,  0.2, 0.2, 1.0, 3.0)
 
 
 --[[Croiseur Inquisitoriale]]
@@ -169,8 +183,9 @@ model:setScale(8)
 model:setRadius(250)
 -- Visual positions of the beams/missiletubes (blender: -X, Y, Z)
 
-model:addEngineEmitter(-30, -2.1500, 0.3,  0.2, 0.2, 1.0, 3.0)
-model:addEngineEmitter(-30,  2.1500, 0.3,  0.2, 0.2, 1.0, 3.0)
+model:addEngineEmitter(-25, -2.1500, 0.3,  0.2, 0.2, 1.0, 3.0)
+model:addEngineEmitter(-25,  2.1500, 0.3,  0.2, 0.2, 1.0, 3.0)
+
 
 
 --[[Croiseur Corsair Torture]]
@@ -184,9 +199,7 @@ model:setScale(8)
 model:setRadius(200)
 -- Visual positions of the beams/missiletubes (blender: -X, Y, Z)
 
-model:addEngineEmitter(-30, -2.1500, 0.3,  0.2, 0.2, 1.0, 3.0)
-model:addEngineEmitter(-30,  2.1500, 0.3,  0.2, 0.2, 1.0, 3.0)
-
+model:addEngineEmitter(-5,  0, 0.3,  0.2, 0.2, 1.0, 2.5)
 
 --[[Croiseur du Chaos Carnage]]
 model = ModelData()
@@ -199,8 +212,12 @@ model:setScale(8)
 model:setRadius(300)
 -- Visual positions of the beams/missiletubes (blender: -X, Y, Z)
 
-model:addEngineEmitter(-30, -2.1500, 0.3,  0.2, 0.2, 1.0, 3.0)
-model:addEngineEmitter(-30,  2.1500, 0.3,  0.2, 0.2, 1.0, 3.0)
+--model:addEngineEmitter(-25, -2.1500, 0.3,  1.0, 0.2, 0.1, 3.0)
+--model:addEngineEmitter(-25,  2.1500, 0.3,  1.0, 0.2, 0.1, 3.0)
+model:addEngineEmitter(-20, -2.1500, 0.3,  1, 0.2, 0.2, 3.0)
+model:addEngineEmitter(-20,  2.1500, 0.3,  1, 0.2, 0.2, 3.0)
+--1.0, 0.2, 0.1, 17.0)
+
 
 
 --[[Croiseur Marchand Civil]]
@@ -208,14 +225,14 @@ model = ModelData()
 model:setName("Civilian_Transport_Cruiser")
 model:setMesh("model3d/Civilian_Transport_Cruiser.obj")
 model:setTexture("textures/Civilian_Transport_Cruiser_Full.jpg")
-model:setSpecular("")
+model:setSpecular("") 
 model:setIllumination("textures/Civilian_Transport_Cruiser_Full.jpg")
 model:setScale(8)
 model:setRadius(200)
 -- Visual positions of the beams/missiletubes (blender: -X, Y, Z)
 
-model:addEngineEmitter(-30, -2.1500, 0.3,  0.2, 0.2, 1.0, 3.0)
-model:addEngineEmitter(-30,  2.1500, 0.3,  0.2, 0.2, 1.0, 3.0)
+--model:addEngineEmitter(-30, -2.1500, 0.3,  0.2, 0.2, 1.0, 3.0)
+--model:addEngineEmitter(-30,  2.1500, 0.3,  0.2, 0.2, 1.0, 3.0)
 
 
 --[[Croiseur Marchand Rogue]]
@@ -229,8 +246,8 @@ model:setScale(8)
 model:setRadius(250)
 -- Visual positions of the beams/missiletubes (blender: -X, Y, Z)
 
-model:addEngineEmitter(-30, -2.1500, 0.3,  0.2, 0.2, 1.0, 3.0)
-model:addEngineEmitter(-30,  2.1500, 0.3,  0.2, 0.2, 1.0, 3.0)
+model:addEngineEmitter(-15, -2.1500, 0.3,  0.2, 0.2, 1.0, 3.0)
+model:addEngineEmitter(-15,  2.1500, 0.3,  0.2, 0.2, 1.0, 3.0)
 
 
 --[[Croiseur Marchand Il'porrui]]
@@ -260,8 +277,9 @@ model:setRadius(500)
 model:setCollisionBox(2000, 600)
 -- Visual positions of the beams/missiletubes (blender: -X, Y, Z)
 
-model:addEngineEmitter(-180, -30, 1.2,  0.2, 0.2, 1.0, 30.0)
-model:addEngineEmitter(-180,  30, 1.2,  0.2, 0.2, 1.0, 30.0)
+-- Engin emitter to do 
+--model:addEngineEmitter(-180, -30, 1.2,  0.2, 0.2, 1.0, 30.0)
+--model:addEngineEmitter(-180,  30, 1.2,  0.2, 0.2, 1.0, 30.0)
 
 
 --[[Cuirassé du Chaos Despoiler]]
@@ -276,8 +294,8 @@ model:setRadius(500)
 model:setCollisionBox(2000, 600)
 -- Visual positions of the beams/missiletubes (blender: -X, Y, Z)
 
-model:addEngineEmitter(-180, -30, 1.2,  0.2, 0.2, 1.0, 30.0)
-model:addEngineEmitter(-180,  30, 1.2,  0.2, 0.2, 1.0, 30.0)
+--model:addEngineEmitter(-30, -30, 1.2,  1, 0.2, 0.2, 30.0)
+--model:addEngineEmitter(-30,  30, 1.2,  1, 0.2, 0.2, 30.0)
 
 
 --[[Arche Mechanicus]]
@@ -292,8 +310,8 @@ model:setRadius(500)
 model:setCollisionBox(2000, 600)
 -- Visual positions of the beams/missiletubes (blender: -X, Y, Z)
 
-model:addEngineEmitter(-180, -30, 1.2,  0.2, 0.2, 1.0, 30.0)
-model:addEngineEmitter(-180,  30, 1.2,  0.2, 0.2, 1.0, 30.0)
+--model:addEngineEmitter(-30, -30, 1.2,  0.2, 0.2, 1.0, 30.0)
+--model:addEngineEmitter(-30,  30, 1.2,  0.2, 0.2, 1.0, 30.0)
 
 
 --[[Barge de Bataille]]
@@ -308,8 +326,8 @@ model:setRadius(500)
 model:setCollisionBox(2000, 600)
 -- Visual positions of the beams/missiletubes (blender: -X, Y, Z)
 
-model:addEngineEmitter(-180, -30, 1.2,  0.2, 0.2, 1.0, 30.0)
-model:addEngineEmitter(-180,  30, 1.2,  0.2, 0.2, 1.0, 30.0)
+--model:addEngineEmitter(-180, -30, 1.2,  0.2, 0.2, 1.0, 30.0)
+--model:addEngineEmitter(-180,  30, 1.2,  0.2, 0.2, 1.0, 30.0)
 
 
 --[[Grande station Imperial]]
@@ -437,8 +455,8 @@ model:setMesh("dark_fighter_6.model")
 model:setTexture("dark_fighter_6_color.png")
 model:setSpecular("dark_fighter_6_specular.png")
 model:setIllumination("dark_fighter_6_illumination.png")
-model:setScale(5)
-model:setRadius(140)
+model:setScale(1)
+model:setRadius(60)
 -- Visual positions of the beams/missiletubes (blender: -X, Y, Z)
 model:addBeamPosition(21, -28.2, -2)
 model:addBeamPosition(21,  28.2, -2)

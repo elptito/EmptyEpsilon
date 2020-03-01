@@ -39,14 +39,12 @@ template = ShipTemplate():setName("Fregate Imperial Sword"):setClass("Fregate", 
 template:setDescription([[Les fregates de classe Sword sont des vaisseaux dont la conception remonte a des milliers d'annee et qui servent la Flotte Imperiale depuis lors sans faillir.
 Les nombreux conflits auxquels les fregates Sword prirent part permirent de valider l'ensemble des composantes de ce type de vaisseau.]])
 template:setHull(650)
-template:setShields(100, 100)
-template:setSpeed(65, 10, 12)
+template:setShields(250, 250)
+template:setSpeed(95, 10, 12)
 --                  Arc, Dir, Range, CycleTime, Dmg
-template:setBeam(0, 15, 90, 1500.0, 1.5, 12)
-template:setBeam(1, 15,-90, 1200.0, 1.5, 12)
+template:setBeam(0, 100, 90, 1200.0, 1.5, 12)
+template:setBeam(1, 100,-90, 1200.0, 1.5, 12)
 --                                Arc, Dir, Rotate speed
-template:setBeamWeaponTurret(0, 150,  90, 5)
-template:setBeamWeaponTurret(1, 150, -90, 5)
 --       Tubes
 template:setTubes(3, 12.0)
 template:setTubeDirection(0, 0)
@@ -55,9 +53,9 @@ template:setTubeDirection(2, -90)
 --Macro-canon : (rafale, non homing) 
 template:setCustomWeapon("HVLI", "MCAN", 3, 1000.0, 3, "Kinetic")
 template:setCustomWeaponColor("MCAN", 255, 150, 103)
-template:setCustomWeaponStorage("MCAN", 24)
+template:setCustomWeaponStorage("MCAN", 30)
 --TG Seeker ( homing) 
-template:setCustomWeapon("Homing", "SEEK", 1.5, 800.0, 1, "Kinetic")
+template:setCustomWeapon("Homing", "SEEK", 2.5, 600.0, 1, "Kinetic")
 template:setCustomWeaponColor("SEEK", 255, 204, 0)
 template:setCustomWeaponStorage("SEEK", 12)
 --DockClasses
@@ -69,17 +67,17 @@ variation:setPublicName("Fregate Imperial Firestorm")
 variation:setDescription([[La fregate de classe Firestorm est une variante recente de la Fregate Sword destine a associer la rapidite de manœuvre de l'escorteur a la puissance de feu superieure d'une Piece d'artillerie navale.
 La fregate Sword fut donc modifiee pour pouvoir diriger une partie du flux laser du vaisseau vers le canon imposant monte sous sa proue.]])
 variation:setHull(800)
-variation:setShields(125, 125)
-variation:setSpeed(70, 12, 15)
+variation:setShields(250, 250)
+variation:setSpeed(95, 12, 15)
 --                  Arc, Dir, Range, CycleTime, Dmg
-variation:setBeam(2,10, 0, 100.0, 30.0, 150)
+variation:setBeam(2,30, 0, 3500.0, 30.0, 150)
 
 --[[Frégate Firestorm]]
 variation = variation:copy("Fregate Firestorm"):setType("playership")
 variation:setPublicName("Fregate Firestorm")
 variation:setHull(800)
 variation:setShields(125, 125)
-variation:setSpeed(70, 12, 15)
+variation:setSpeed(95, 12, 15)
 --                  Arc, Dir, Range, CycleTime, Dmg
 variation:setBeam(2,10, 0, 3500.0, 30.0, 150)
 -- PJ
@@ -118,13 +116,13 @@ variation:addDoor(8, 4, false);
 --[[Transport Leger Civil]]
 template = ShipTemplate():setName("Transport Leger Civil"):setClass("Fregate", "Transport Leger"):setModel("Civilian_Transport_Ship")
 template:setRadarTrace("radar_tug.png")
-template:setDescription([[Ce transport leger civil est fait de bric et de broc, souvent utilise par les marchands au porteufeuil leger. Ne cherchez pas la fiabilite il vol c'est deja pas mal !]])
+template:setDescription([[Ce transport leger civil est fait de bric et de broc, souvent utilise par les marchands au portefeuille leger. Ne cherchez pas la fiabilite il vol c'est deja pas mal !]])
 template:setHull(600)
-template:setShields(50, 50)
-template:setSpeed(65, 10, 12)
+template:setShields(100, 100)
+template:setSpeed(95, 10, 12)
 --                  Arc, Dir, Range, CycleTime, Dmg
-template:setBeam(0, 150, 90, 1500.0, 1.5, 6)
-template:setBeam(1, 150, -90, 1500.0, 1.5, 6)
+template:setBeam(0, 100, 90, 1500.0, 1.5, 6)
+template:setBeam(1, 100, -90, 1500.0, 1.5, 6)
 --       Tubes
 template:setTubes(2, 12.0)
 template:setTubeDirection(0, 90)

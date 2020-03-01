@@ -33,16 +33,9 @@ tau = FactionInfo():setName("Tau")
 tau:setGMColor(0, 0, 255)
 tau:setDescription([[Les Tau forment une civilisation tres jeune (seulement 6 000 ans). D'une peau bleu gris, d'une taille moyenne inferieure a celle des hommes de quelques centimetres, ils ont une allure humanoide mais ont des pieds dotes de sabots et leur esperance de vie est moins longue que les humains. Avant d'etre totalement unie leur espece etait divisee en peuplades, chacune vivant dans des endroits propres.
 A cette epoque tous ces peuples se massacraient et l'ensemble de l'espece etait proche de l'extinction. C'est alors qu'apparurent les Etheres qui unifierent la race et qui donnerent a chaque peuplade une place dans la societe en les separant en cinq castes differentes : les constructeurs devinrent la caste de la terre, les diplomates celle de l'eau, les messagers et pilotes celle de l'air, les guerriers des plaines celle du feu, et les Etheres devinrent la cinquieme caste, a la tete de l'empire. Depuis, tous vivent en harmonie et en paix avec la peur de retourner a cette epoque de terreur, d'ou leur combat pour le bien supreme contre les ennemis de l'exterieur. ]])
-tau:setEnemy(imperial)
 
 xenos = FactionInfo():setName("Xenos")
 xenos:setGMColor(255, 0, 128)
 xenos:setDescription([[Le terme Xeno designe toute creature extra-terrestre du point de vue humain et recouvre par extention toutes les civilisations non-humaines de la Galaxie; connues ou inconnues, existantes ou eteintes.
 Les relations avec les races xenos sont strictement interdites aux citoyens imperiaux, etant condamnees et abhorrees par la chaire imperiale avec la meme haine que les sorcieres, les mutants et les demons. Pour l’Imperium, les xenos ne meritent que d’etre extermines pour avoir commis le crime fondamental consistant a vouloir disputer la domination du cosmos a l’humanite.
 Apres des millenaires de guerres incessantes et de xenocides, la plupart des especes qui ont survecu au contact avec les hommes ont fini par hair et craindre l’Imperium a leur tour ou, comme les Orks, a se rejouir de ce conflit permanent.]])
-xenos:setEnemy(neutre)
-xenos:setEnemy(imperial)
-xenos:setEnemy(mechanicum)
-xenos:setEnemy(chaos)
-xenos:setEnemy(eldars)
-xenos:setEnemy(tau)

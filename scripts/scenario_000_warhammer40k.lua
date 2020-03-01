@@ -1545,6 +1545,19 @@ function init()
 	addGMFunction("Vague Imperium", function()
 		addWave(enemyList,1,'Bombardier Imperial Starhawk','Intercepteur Imperial Fury',"Imperium",setWaveAngle(math.random(20), math.random(20)),setWaveDistance(math.random(5)))
 	end)	
+	
+		addGMFunction("Vague Imperium intercept", function()
+		addWave(enemyList,1,'Intercepteur Imperial Fury','Intercepteur Imperial Fury',"Imperium",setWaveAngle(math.random(20), math.random(20)),setWaveDistance(math.random(5)))
+	end)
+	
+			addGMFunction("Vague Imperium Chasse", function()
+		addWave(enemyList,1,'Chasseur Lourd','Chasseur',"Imperium",setWaveAngle(math.random(20), math.random(20)),setWaveDistance(math.random(5)))
+	end)
+	
+			addGMFunction("Vague chaos Chasse", function()
+		addWave(enemyList,1,'Chasseur Lourd','Chasseur',"Chaos",setWaveAngle(math.random(20), math.random(20)),setWaveDistance(math.random(5)))
+	end)
+	
 	-- GM functions to manually trigger enemy waves.
 	addGMFunction("Vague Chaos", function()
 		addWave(enemyList,1,'Bombardier du Chaos Doomfire','Chasseur',"Chaos",setWaveAngle(math.random(20), math.random(20)),setWaveDistance(math.random(5)))
@@ -1552,6 +1565,11 @@ function init()
 	-- GM functions to manually trigger enemy waves.
 	addGMFunction("Vague Corsair", function()
 		addWave(enemyList,1,'Bombardier Corsair','Chasseur Corsair',"Eldars",setWaveAngle(math.random(20), math.random(20)),setWaveDistance(math.random(5)))
+	end)
+	
+		-- GM functions to manually trigger enemy waves.
+	addGMFunction("Vague Corsair chass ", function()
+		addWave(enemyList,1,'Chasseur Corsair','Chasseur Corsair',"Eldars",setWaveAngle(math.random(20), math.random(20)),setWaveDistance(math.random(5)))
 	end)
 	
 	-- GM functions to manually add Warp Wormhole.

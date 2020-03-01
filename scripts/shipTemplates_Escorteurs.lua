@@ -31,14 +31,13 @@ end
 template = ShipTemplate():setName("Destroyer Imperial Cobra"):setClass("Destroyer", "Combat"):setModel("Navy_Destroyer")
 template:setDescription([[Les destroyers de classe Cobra composent la majeure partie de la flotte d'escorteurs de la Flotte de Guerre Obscuras notamment en raison de sa grande vitesse lui permettant de rivaliser avec la plupart des autres vaisseaux, y compris Eldar.]])
 template:setHull(700)
-template:setShields(100, 100)
-template:setSpeed(75, 20, 25)
+template:setShields(200, 200)
+template:setSpeed(105, 20, 25)
 --                  Arc, Dir, Range, CycleTime, Dmg
-template:setBeam(0, 15, 90, 1500.0, 1.5, 12)
-template:setBeam(1, 15,-90, 1500.0, 1.5, 12)
+template:setBeam(0, 100, 90, 1500.0, 1.5, 12)
+template:setBeam(1, 100,-90, 1500.0, 1.5, 12)
 --                                Arc, Dir, Rotate speed
-template:setBeamWeaponTurret(0, 150,  90, 5)
-template:setBeamWeaponTurret(1, 150, -90, 5)
+
 --       Tubes
 template:setTubes(4, 12.0)
 template:setTubeDirection(0, 1)
@@ -46,7 +45,7 @@ template:setTubeDirection(1, -1)
 template:setTubeDirection(2, 90)
 template:setTubeDirection(3, -90)
 --TG Seeker ( homing)
-template:setCustomWeapon("Homing", "SEEK", 1.5, 800.0, 1, "Kinetic")
+template:setCustomWeapon("Homing", "SEEK", 2.5, 600.0, 1, "Kinetic")
 template:setCustomWeaponColor("SEEK", 255, 204, 0)
 template:setCustomWeaponStorage("SEEK", 18)
 --MGAA Skyreaper ( homing trés rapide ) fregrate et plus
