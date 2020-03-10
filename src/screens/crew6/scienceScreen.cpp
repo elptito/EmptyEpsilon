@@ -460,7 +460,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
             if (ship)
             {
 				P<ShipTemplate> st = ship->ship_template;
-                info_faction->setValue(factionInfo[ship->getFactionId()]->getName());
+                info_faction->setValue(factionInfo[ship->getFactionId()]->getLocaleName());
 //                if (factionInfo[ship->getFactionId()]->getIcon() != "")
 //                    info_faction->setIcon("gui/icons/" + factionInfo[ship->getFactionId()]->getIcon());
 //                else
@@ -474,7 +474,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
             if (station)
             {
 				P<ShipTemplate> st = station->ship_template;
-                info_faction->setValue(factionInfo[station->getFactionId()]->getName());
+                info_faction->setValue(factionInfo[station->getFactionId()]->getLocaleName());
                 info_type_button->show();
                 info_type->setValue(st->getPublicName());
                 info_shields->setValue(station->getShieldDataString());

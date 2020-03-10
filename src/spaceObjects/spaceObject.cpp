@@ -39,7 +39,13 @@ REGISTER_SCRIPT_CLASS_NO_CREATE(SpaceObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setFaction);
     /// Gets the faction name to which this object belongs.
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getFaction);
-    /// Sets the faction to which this object belongs. Requires a index in the faction list.
+    /// Gets the localized name of the faction to which this object belongs, for displaying to the players.
+    /// Example: local faction = obj:getLocaleFaction()
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getLocaleFaction);
+    /// Sets the faction to which this object belongs, by the faction's index
+    /// in the faction list.
+    /// Requires the index of a faction in the faction list.
+    /// Example: local faction_id = obj:getFactionId()
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setFactionId);
     /// Gets the index in the faction list from this object.
     /// Can be used in combination with setFactionId to make sure two objects have the same faction.
