@@ -1,3 +1,4 @@
+#include <i18n.h>
 #include "tweak.h"
 #include "playerInfo.h"
 #include "spaceObjects/spaceship.h"
@@ -910,7 +911,7 @@ GuiShipTweakSystems::GuiShipTweakSystems(GuiContainer* owner)
     {
         ESystem system = ESystem(n);
 
-        system_name[n] = new GuiLabel(col_1, "", getSystemName(system), 20);
+        system_name[n] = new GuiLabel(col_1, "", getLocaleSystemName(system), 20);
         system_name[n]->setSize(GuiElement::GuiSizeMax, 30);
 
         temp_1[n] = new GuiLabel(col_2, "", " ", 20);

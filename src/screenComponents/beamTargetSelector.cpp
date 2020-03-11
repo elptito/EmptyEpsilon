@@ -43,7 +43,7 @@ void GuiBeamTargetSelector::onDraw(sf::RenderTarget& window)
             if (ship->hasSystem(ESystem(n)))
             {
                 if (selector->indexByValue(string(n)) == -1)
-                    selector->addEntry(getSystemName(ESystem(n)), string(n));
+                    selector->addEntry(getLocaleSystemName(ESystem(n)), string(n));
             }
             else
                 selector->removeEntry(selector->indexByValue(string(n)));

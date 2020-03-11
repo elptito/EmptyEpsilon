@@ -232,6 +232,7 @@ public:
     static std::vector<string> getTemplateClassList(TemplateType type);
 };
 string getSystemName(ESystem system);
+string getLocaleSystemName(ESystem system);
 REGISTER_MULTIPLAYER_ENUM(ESystem);
 
 /* Define script conversion function for the ShipTemplate::TemplateType enum. */
