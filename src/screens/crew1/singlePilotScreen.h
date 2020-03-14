@@ -29,7 +29,7 @@ public:
     SinglePilotScreen(GuiContainer* owner, P<PlayerSpaceship> targetSpaceship);
 
     void setTargetSpaceship(P<PlayerSpaceship> targetSpaceship);
-    virtual void onDraw(sf::RenderTarget& window);
+    virtual void onDraw(sf::RenderTarget& window) override;
 };
 
 #endif//SINGLE_PILOT_SCREEN_H

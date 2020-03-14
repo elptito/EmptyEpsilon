@@ -398,7 +398,7 @@ public:
     virtual bool canBeLandedOn(P<SpaceObject> obj);
 
     // Script export function
-    virtual string getExportLine();
+    virtual string getExportLine() override;
 };
 REGISTER_MULTIPLAYER_ENUM(ECommsState);
 template<> int convert<EAlertLevel>::returnType(lua_State* L, EAlertLevel l);

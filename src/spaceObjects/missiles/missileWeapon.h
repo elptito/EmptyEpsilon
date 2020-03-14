@@ -31,8 +31,8 @@ public:
 
     MissileWeapon(string multiplayer_name, const MissileWeaponData& data, const EDamageType &i_damage_type);
 
-    virtual void drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range);
-    virtual void update(float delta);
+    virtual void drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range) override;
+    virtual void update(float delta) override;
 
     virtual void collide(Collisionable* target, float force) override;
     virtual void takeDamage(float damage_amount, DamageInfo info) override;
