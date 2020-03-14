@@ -80,6 +80,7 @@ ScreenMainScreen::ScreenMainScreen()
 
     rotatetime = 0.0007;
     angle = 0.0f;
+    first_person = PreferencesManager::get("first_person") == "1";
 }
 
 void ScreenMainScreen::update(float delta)
