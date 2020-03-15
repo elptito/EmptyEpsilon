@@ -38,7 +38,7 @@ ShipSelectionScreen::ShipSelectionScreen()
 
     // List the station types and stations in the right column.
     GuiAutoLayout* stations_layout = new GuiAutoLayout(right_container, "CREW_POSITION_BUTTON_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
-    stations_layout->setPosition(0, 50, ATopCenter)->setSize(400, 800);
+    stations_layout->setPosition(0, 50, ATopCenter)->setSize(400, 600);
     (new GuiLabel(stations_layout, "CREW_POSITION_SELECT_LABEL", "Choisissez votre poste", 30))->addBackground()->setSize(GuiElement::GuiSizeMax, 50);
 
     // Crew type selector
