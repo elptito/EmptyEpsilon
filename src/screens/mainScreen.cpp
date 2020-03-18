@@ -277,16 +277,15 @@ void ScreenMainScreen::update(float delta)
             {
                 impulse_sound = soundManager->playSound(impulse_sound_file, std::max(0.7f * impulse_ability, fabsf(my_spaceship->current_impulse) + 0.2f * impulse_ability), std::max(30.0f, fabsf(my_spaceship->current_impulse) * 100.0f * impulse_ability), true);
             }
-        }
-        // If we don't have impulse available, stop the engine sound.
-        else if (impulse_sound > -1)
+        } else if (impulse_sound > -1) 
         {
+            // If we don't have impulse available, stop the engine sound.
             soundManager->stopSound(impulse_sound);
-            // TODO: Play an engine failure sound.
             impulse_sound = -1;
+            // TODO: Play an engine failure sound.
         }
 
-        // If we have an impulse power, loop the engine sound.
+        // If we have warp power, loop the warp engine sound.
         float warp_ability = std::max(0.0f, std::min(my_spaceship->getSystemEffectiveness(SYS_Warp), my_spaceship->getSystemPower(SYS_Warp)));
         string warp_sound_file = my_spaceship->warp_sound_file;
         if (warp_ability > 0 && warp_sound_file.length() > 0 && my_spaceship->current_warp > 0)
@@ -305,8 +304,8 @@ void ScreenMainScreen::update(float delta)
         else if (warp_sound > -1 || my_spaceship->current_warp == 0)
         {
             soundManager->stopSound(warp_sound);
-            // TODO: Play an engine failure sound.
             warp_sound = -1;
+            // TODO: Play an engine failure sound.
         }
 
     }

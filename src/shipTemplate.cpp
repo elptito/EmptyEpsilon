@@ -104,6 +104,7 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setEnergyConsumptionRatio);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setLongRangeRadarRange);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setShortRangeRadarRange);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setImpulseSoundFile);
     /// Return a new template with the given name, which is an exact copy of this template.
     /// Used to make easy variations of templates.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, copy);
@@ -182,6 +183,7 @@ ShipTemplate::ShipTemplate()
     system_damage_ratio =1.0f;
     system_damage_hull_threshold = 0.0f;
     energy_consumption_ratio = 1.0f;
+    impulse_sound_file = "engine.wav";
 }
 
 void ShipTemplate::setBeamTexture(int index, string texture)
@@ -573,6 +575,11 @@ void ShipTemplate::setShortRangeRadarRange(float range)
     range = std::max(range, 100.0f);
     short_range_radar_range = range;
     long_range_radar_range = std::max(long_range_radar_range, range);
+}
+
+void ShipTemplate::setImpulseSoundFile(string sound)
+{
+    impulse_sound_file = sound;
 }
 
 P<ShipTemplate> ShipTemplate::copy(string new_name)

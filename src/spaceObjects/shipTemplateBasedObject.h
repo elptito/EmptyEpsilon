@@ -25,7 +25,7 @@ public:
     int hack_diff;
     bool hack_protect;
     string radar_trace;
-    string impulse_sound_file = "engine.wav";
+    string impulse_sound_file;
     string warp_sound_file = "warp.wav";
     P<ShipTemplate> ship_template;
 
@@ -121,6 +121,7 @@ public:
     void setRearShieldMax(float amount) { if (amount < 0) return; shield_max[1] = amount; shield_level[1] = std::min(shield_level[1], shield_max[1]); }
 
     void setRadarTrace(string trace) { radar_trace = trace; }
+    void setImpulseSoundFile(string sound) { impulse_sound_file = sound; }
 
     bool getSharesEnergyWithDocked() { return shares_energy_with_docked; }
     void setSharesEnergyWithDocked(bool enabled) { shares_energy_with_docked = enabled; }
