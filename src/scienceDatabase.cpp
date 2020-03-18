@@ -161,14 +161,14 @@ void fillDefaultDatabaseData()
         {
             if (ship_template->weapon_storage[n] > 0)
             {
-                entry->addKeyValue("Stock " + getMissileWeaponName(EMissileWeapons(n)), string(ship_template->weapon_storage[n]));
+                entry->addKeyValue("Stock " + getLocaleMissileWeaponName(EMissileWeapons(n)), string(ship_template->weapon_storage[n]));
             }
         }
         for(auto& kv : ship_template->custom_weapon_storage)
         {
             if(kv.second > 0)
             {
-                entry->addKeyValue("Stock " + getMissileWeaponName(kv.first), string(kv.second));
+                entry->addKeyValue("Stock " + getLocaleMissileWeaponName(kv.first), string(kv.second));
             }
         }
         if (ship_template->getDescription().length() > 0)
