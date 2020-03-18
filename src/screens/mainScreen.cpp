@@ -263,54 +263,58 @@ void ScreenMainScreen::update(float delta)
             break;
         }
 
+        int engine_volume = PreferencesManager::get("engine_volume", "50").toInt();
+
         // If we have an impulse power, loop the engine sound.
-        float impulse_ability = std::max(0.0f, std::min(my_spaceship->getSystemEffectiveness(SYS_Impulse), my_spaceship->getSystemPower(SYS_Impulse)));
-        string impulse_sound_file = my_spaceship->impulse_sound_file;
-        if (impulse_ability > 0 && impulse_sound_file.length() > 0)
+        if (PreferencesManager::get("engine_enabled") != "0" && engine_volume > 0)
         {
-            if (impulse_sound > -1)
+            float impulse_ability = std::max(0.0f, std::min(my_spaceship->getSystemEffectiveness(SYS_Impulse), my_spaceship->getSystemPower(SYS_Impulse)));
+            string impulse_sound_file = my_spaceship->impulse_sound_file;
+            if (impulse_ability > 0 && impulse_sound_file.length() > 0)
             {
-                soundManager->setSoundVolume(impulse_sound, std::max(10.0f * impulse_ability, fabsf(my_spaceship->current_impulse) * 30.0f * 100.0f * std::max(0.1f, impulse_ability)));
-                soundManager->setSoundPitch(impulse_sound, std::max(0.7f * impulse_ability, fabsf(my_spaceship->current_impulse) + 0.2f * std::max(0.1f, impulse_ability)));
-            }
-            else
+               if (impulse_sound > -1)
+                {
+                    soundManager->setSoundVolume(impulse_sound, (std::max(10.0f * impulse_ability, fabsf(my_spaceship->current_impulse) * 30.0f * std::max(0.1f, impulse_ability))) * (engine_volume / 100));
+                    soundManager->setSoundPitch(impulse_sound, std::max(0.7f * impulse_ability, fabsf(my_spaceship->current_impulse) + 0.2f * std::max(0.1f, impulse_ability)));
+                } else {
+                    impulse_sound = soundManager->playSound(impulse_sound_file, std::max(0.7f * impulse_ability, fabsf(my_spaceship->current_impulse) + 0.2f * impulse_ability), (std::max(30.0f, fabsf(my_spaceship->current_impulse) * 10.0f * impulse_ability)) * (engine_volume / 100), true);
+                }
+            } else if (impulse_sound > -1) 
             {
-                impulse_sound = soundManager->playSound(impulse_sound_file, std::max(0.7f * impulse_ability, fabsf(my_spaceship->current_impulse) + 0.2f * impulse_ability), std::max(30.0f, fabsf(my_spaceship->current_impulse) * 100.0f * impulse_ability), true);
+                // If we don't have impulse available, stop the engine sound.
+                soundManager->stopSound(impulse_sound);
+                impulse_sound = -1;
+                // TODO: Play an engine failure sound.
             }
-        } else if (impulse_sound > -1) 
-        {
+
+            // If we have warp power, loop the warp engine sound.
+            float warp_ability = std::max(0.0f, std::min(my_spaceship->getSystemEffectiveness(SYS_Warp), my_spaceship->getSystemPower(SYS_Warp)));
+            string warp_sound_file = my_spaceship->warp_sound_file;
+            if (warp_ability > 0 && warp_sound_file.length() > 0 && my_spaceship->current_warp > 0)
+            {
+                if (warp_sound > -1)
+                {
+                    soundManager->setSoundVolume(warp_sound, (std::max(0.0f * warp_ability, fabsf(my_spaceship->current_warp) * 10.0f * 100.0f * std::max(0.1f, warp_ability))) * (engine_volume / 100));
+                    soundManager->setSoundPitch(warp_sound, std::max(0.7f * warp_ability, fabsf(my_spaceship->current_warp) + 0.2f * std::max(0.1f, warp_ability)));
+                }
+                else
+                {
+                    warp_sound = soundManager->playSound(warp_sound_file, std::max(0.7f * warp_ability, fabsf(my_spaceship->current_warp) + 0.2f * warp_ability), (std::max(30.0f, fabsf(my_spaceship->current_warp) * 100.0f * warp_ability) * (engine_volume / 100)), true);
+                }
+            }
             // If we don't have impulse available, stop the engine sound.
-            soundManager->stopSound(impulse_sound);
-            impulse_sound = -1;
-            // TODO: Play an engine failure sound.
-        }
-
-        // If we have warp power, loop the warp engine sound.
-        float warp_ability = std::max(0.0f, std::min(my_spaceship->getSystemEffectiveness(SYS_Warp), my_spaceship->getSystemPower(SYS_Warp)));
-        string warp_sound_file = my_spaceship->warp_sound_file;
-        if (warp_ability > 0 && warp_sound_file.length() > 0 && my_spaceship->current_warp > 0)
-        {
-            if (warp_sound > -1)
+            else if (warp_sound > -1 || my_spaceship->current_warp == 0)
             {
-                soundManager->setSoundVolume(warp_sound, std::max(0.0f * warp_ability, fabsf(my_spaceship->current_warp) * 10.0f * 100.0f * std::max(0.1f, warp_ability)));
-                soundManager->setSoundPitch(warp_sound, std::max(0.7f * warp_ability, fabsf(my_spaceship->current_warp) + 0.2f * std::max(0.1f, warp_ability)));
+                soundManager->stopSound(warp_sound);
+                warp_sound = -1;
+                // TODO: Play an engine failure sound.
             }
-            else
-            {
-                warp_sound = soundManager->playSound(warp_sound_file, std::max(0.7f * warp_ability, fabsf(my_spaceship->current_warp) + 0.2f * warp_ability), std::max(30.0f, fabsf(my_spaceship->current_warp) * 100.0f * warp_ability), true);
-            }
-        }
-        // If we don't have impulse available, stop the engine sound.
-        else if (warp_sound > -1 || my_spaceship->current_warp == 0)
-        {
-            soundManager->stopSound(warp_sound);
-            warp_sound = -1;
-            // TODO: Play an engine failure sound.
-        }
 
-    } else 
+        } 
+    }
+    else 
     {
-        // If we don't have ship available, stop engine sounds.
+        // If we're not the player ship (ie. we exploded), don't play engine sfx.
         soundManager->stopSound(impulse_sound);
         impulse_sound = -1;
         soundManager->stopSound(warp_sound);
