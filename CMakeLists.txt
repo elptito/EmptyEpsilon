@@ -62,11 +62,6 @@ if(APPLE)
 	set(MACOSX_DEPLOYMENT_TARGET "10.10")
 endif()
 
-# Set minimum target macOS version
-if(APPLE)
-	set(MACOSX_DEPLOYMENT_TARGET "10.10")
-endif()
-
 if(CONFIG_DIR)
     add_definitions(-DCONFIG_DIR="${CONFIG_DIR}")
 elseif(UNIX)
