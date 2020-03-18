@@ -1,3 +1,4 @@
+#include <i18n.h>
 #include "hotkeyConfig.h"
 #include "preferenceManager.h"
 #include "shipTemplate.h"
@@ -14,6 +15,16 @@ HotkeyConfig::HotkeyConfig()
     newKey("STATION_ENGINEERING", std::make_tuple("Station ingenieur", "F4"));
     newKey("STATION_SCIENCE", std::make_tuple("Station Auspex CP", "F5"));
     newKey("STATION_RELAY", std::make_tuple("Station Auspex LP", "F6"));
+
+    newCategory("MAIN_SCREEN", "Ecran Principal");
+    newKey("VIEW_FORWARD", std::make_tuple("Vue avant", "Up"));
+    newKey("VIEW_LEFT", std::make_tuple("Vue babord", "Left"));
+    newKey("VIEW_RIGHT", std::make_tuple("Vue tribord", "Right"));
+    newKey("VIEW_BACK", std::make_tuple("Vue arriere", "Down"));
+    newKey("VIEW_TARGET", std::make_tuple("Verouiller la vue sur la cible", "T"));
+    newKey("TACTICAL_RADAR", std::make_tuple("Voir l'auspex courte portee", "Tab"));
+    newKey("LONG_RANGE_RADAR", std::make_tuple("Voir l'auspex longue portee", "Q"));
+    newKey("FIRST_PERSON", std::make_tuple("Permuter vue a la premiere personne", "F"));
 
     newCategory("HELMS", "Pilote");
     newKey("INC_IMPULSE", std::make_tuple("Augmenter Impulsion", "Up"));

@@ -8,6 +8,7 @@
 #include "screenComponents/indicatorOverlays.h"
 #include "screenComponents/noiseOverlay.h"
 #include "screenComponents/shipDestroyedPopup.h"
+#include "screenComponents/helpOverlay.h"
 
 #include "gui/gui2_togglebutton.h"
 #include "gui/gui2_panel.h"
