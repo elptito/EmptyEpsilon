@@ -5,6 +5,7 @@
 #include "singlePilotView.h"
 #include "gui/gui2_element.h"
 #include "gui/gui2_togglebutton.h"
+#include "preferenceManager.h"
 
 #include "screenComponents/viewport3d.h"
 
@@ -29,6 +30,8 @@ void SinglePilotScreen::init(GuiContainer* owner, P<PlayerSpaceship> targetSpace
     viewport = new GuiViewport3D(this, "3D_VIEW");
     viewport->setPosition(1000, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
     viewport->hide();
+
+    first_person = PreferencesManager::get("first_person") == "1";
 
     // Create left panel for controls.
     left_panel = new GuiElement(this, "LEFT_PANEL");
@@ -85,6 +88,13 @@ void SinglePilotScreen::onDraw(sf::RenderTarget& window)
 
         const float camera_ship_distance = 420.0f;
         const float camera_ship_height = 420.0f;
+        if (first_person)
+        {
+            camera_ship_distance = -(current_spaceship->getRadius() * 1.5);
+            camera_ship_height = current_spaceship->getRadius() / 10.f;
+            camera_pitch = 0;
+        }
+
         sf::Vector2f cameraPosition2D = current_spaceship->getPosition() + sf::vector2FromAngle(target_camera_yaw) * -camera_ship_distance;
         sf::Vector3f targetCameraPosition(cameraPosition2D.x, cameraPosition2D.y, camera_ship_height);
 #ifdef DEBUG
@@ -96,8 +106,14 @@ void SinglePilotScreen::onDraw(sf::RenderTarget& window)
             camera_pitch = 90.0f;
         }
 #endif
-        camera_position = camera_position * 0.9f + targetCameraPosition * 0.1f;
-        camera_yaw += sf::angleDifference(camera_yaw, target_camera_yaw) * 0.1f;
+        if (first_person)
+        {
+            camera_position = targetCameraPosition;
+            camera_yaw = target_camera_yaw;
+        } else {
+            camera_position = camera_position * 0.9f + targetCameraPosition * 0.1f;
+            camera_yaw += sf::angleDifference(camera_yaw, target_camera_yaw) * 0.1f;
+        }
     }
 }
 

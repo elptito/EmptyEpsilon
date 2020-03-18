@@ -13,6 +13,8 @@ class GuiToggleButton;
 class SinglePilotScreen : public GuiOverlay
 {
 private:
+    bool first_person;
+
     GuiOverlay* background_crosses;
     SinglePilotView* single_pilot_view;
 
