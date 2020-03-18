@@ -308,6 +308,13 @@ void ScreenMainScreen::update(float delta)
             // TODO: Play an engine failure sound.
         }
 
+    } else 
+    {
+        // If we don't have ship available, stop engine sounds.
+        soundManager->stopSound(impulse_sound);
+        impulse_sound = -1;
+        soundManager->stopSound(warp_sound);
+        warp_sound = -1;
     }
 }
 

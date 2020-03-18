@@ -183,7 +183,7 @@ ShipTemplate::ShipTemplate()
     system_damage_ratio =1.0f;
     system_damage_hull_threshold = 0.0f;
     energy_consumption_ratio = 1.0f;
-    impulse_sound_file = "engine.wav";
+    impulse_sound_file = "sfx/engine.wav";
 }
 
 void ShipTemplate::setBeamTexture(int index, string texture)
