@@ -1,3 +1,4 @@
+#include <i18n.h>
 #include "aimLock.h"
 
 #include "playerInfo.h"
@@ -7,7 +8,7 @@
 #include "gui/gui2_rotationdial.h"
 
 AimLockButton::AimLockButton(GuiContainer* owner, string id, GuiMissileTubeControls* tube_controls, GuiRotationDial* missile_aim, P<PlayerSpaceship> targetSpaceship)
-: GuiToggleButton(owner, id, "Verrouiller", [this](bool value){setAimLock(value);}), target_spaceship(targetSpaceship)
+: GuiToggleButton(owner, id, tr("missile","Lock"), [this](bool value){setAimLock(value);}), target_spaceship(targetSpaceship)
 {
     this->tube_controls = tube_controls;
     this->missile_aim = missile_aim;

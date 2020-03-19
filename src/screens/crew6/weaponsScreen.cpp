@@ -1,3 +1,4 @@
+#include <i18n.h>
 #include "playerInfo.h"
 #include "gameGlobalInfo.h"
 #include "weaponsScreen.h"
@@ -81,7 +82,7 @@ WeaponsScreen::WeaponsScreen(GuiContainer* owner)
         }
     }
 
-    energy_display = new GuiKeyValueDisplay(this, "ENERGY_DISPLAY", 0.45, "Energie", "");
+    energy_display = new GuiKeyValueDisplay(this, "ENERGY_DISPLAY", 0.45, tr("Energy"), "");
     energy_display->setIcon("gui/icons/energy")->setTextSize(20)->setPosition(20, 100, ATopLeft)->setSize(240, 40);
     target_display = new GuiKeyValueDisplay(this, "TARGET_DISPLAY", 0.45, "Cible", "");
     target_display->setIcon("gui/icons/lock")->setTextSize(20)->setPosition(20, 180, ATopLeft)->setSize(240, 40);

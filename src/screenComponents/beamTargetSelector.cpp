@@ -1,3 +1,4 @@
+#include <i18n.h>
 #include "playerInfo.h"
 #include "gameGlobalInfo.h"
 #include "beamTargetSelector.h"
@@ -15,7 +16,7 @@ GuiBeamTargetSelector::GuiBeamTargetSelector(GuiContainer* owner, string id, P<P
     });
     selector->setPosition(0, 0, ABottomLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
-    selector->addEntry("Carlingue", "-1");
+    selector->addEntry(tr("target","Hull"), "-1");
 
     if (!gameGlobalInfo->use_system_damage)
         hide();

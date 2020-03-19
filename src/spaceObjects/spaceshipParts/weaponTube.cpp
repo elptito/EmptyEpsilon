@@ -402,13 +402,13 @@ string WeaponTube::getLoadType()
 string WeaponTube::getTubeName()
 {
     if (std::abs(sf::angleDifference(0.0f, direction)) <= 45)
-        return "Avant";
+        return tr("tube","Front");
     if (std::abs(sf::angleDifference(90.0f, direction)) < 45)
-        return "Droite";
+        return tr("tube","Right");
     if (std::abs(sf::angleDifference(-90.0f, direction)) < 45)
-        return "Gauche";
+        return tr("tube","Left");
     if (std::abs(sf::angleDifference(180.0f, direction)) <= 45)
-        return "Arriere";
+        return tr("tube","Rear");
     return "?" + string(direction);
 }
 
