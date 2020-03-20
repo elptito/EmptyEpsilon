@@ -193,9 +193,12 @@ int main(int argc, char** argv)
     joystick.load();
 
     if (PreferencesManager::get("username", "") == "")
-        PreferencesManager::set("username", getenv("USERNAME"));
-    if (PreferencesManager::get("username", "") == "")
-        PreferencesManager::set("username", getenv("USER"));
+    {
+        if (getenv("USERNAME"))
+            PreferencesManager::set("username", getenv("USERNAME"));
+        else if (getenv("USER"))
+            PreferencesManager::set("username", getenv("USER"));
+    }
 
     if (PreferencesManager::get("headless") == "")
     {
