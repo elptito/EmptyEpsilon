@@ -33,6 +33,7 @@ enum EScanningComplexity
     SC_Simple,
     SC_Normal,
     SC_Advanced,
+    SC_NbItem
 };
 enum ECommsGmInterception
 {
