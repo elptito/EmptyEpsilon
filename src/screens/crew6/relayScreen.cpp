@@ -95,10 +95,10 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool allow_comms)
     info_radar_range = new GuiKeyValueDisplay(sidebar, "DISTANCE", 0.4, "Portee radar", "");
     info_radar_range->setSize(GuiElement::GuiSizeMax, 30);
 
-    info_callsign = new GuiKeyValueDisplay(sidebar, "SCIENCE_CALLSIGN", 0.4, "ID", "");
+    info_callsign = new GuiKeyValueDisplay(sidebar, "SCIENCE_CALLSIGN", 0.4, tr("Callsign"), "");
     info_callsign->setSize(GuiElement::GuiSizeMax, 30);
 
-    info_faction = new GuiKeyValueDisplay(sidebar, "SCIENCE_FACTION", 0.4, "Faction", "");
+    info_faction = new GuiKeyValueDisplay(sidebar, "SCIENCE_FACTION", 0.4, tr("Faction"), "");
     info_faction->setSize(GuiElement::GuiSizeMax, 30);
 
     info_probe = new GuiKeyValueDisplay(sidebar, "RADAR_RANGE", 0.4, "Temps", "");
@@ -107,8 +107,8 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool allow_comms)
     // Controls for the radar view
     view_controls = new GuiAutoLayout(this, "VIEW_CONTROLS", GuiAutoLayout::LayoutVerticalBottomToTop);
     view_controls->setPosition(20, -70, ABottomLeft)->setSize(250, GuiElement::GuiSizeMax);
-    zoom_slider = new GuiSlider(view_controls, "ZOOM_SLIDER", max_distance, min_distance, radar->getDistance(), [this](float value) {
-        zoom_label->setText("Zoom: " + string(max_distance / value, 1.0f) + "x");
+    zoom_slider = new GuiSlider(this, "ZOOM_SLIDER", 50000.0f, 6250.0f, 50000.0f, [this](float value) {
+        zoom_label->setText(tr("Zoom: {zoom}x").format({{"zoom", string(50000.0f / value, 1.0f)}}));
         radar->setDistance(value);
     });
     zoom_slider->setPosition(20, -70, ABottomLeft)->setSize(GuiElement::GuiSizeMax, 50);
@@ -170,13 +170,13 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool allow_comms)
 
     (new GuiLabel(waypoints_layout, "", "Marqueur", 30))->setAlignment(ACenter)->setSize(150, 50);
 
-    add_waypoint_button = new GuiButton(waypoints_layout, "WAYPOINT_PLACE_BUTTON", "+", [this]() {
+    add_waypoint_button = new GuiButton(waypoints_layout, "WAYPOINT_PLACE_BUTTON", tr("Place Waypoint"), [this]() {
         mode = WaypointPlacement;
         option_buttons->hide();
     });
     add_waypoint_button->setSize(50, 50);
 
-    delete_waypoint_button = new GuiButton(waypoints_layout, "WAYPOINT_DELETE_BUTTON", "-", [this]() {
+    delete_waypoint_button = new GuiButton(waypoints_layout, "WAYPOINT_DELETE_BUTTON", tr("Delete Waypoint"), [this]() {
         if (my_spaceship && targets.getWaypointIndex() >= 0)
         {
             my_spaceship->commandRemoveWaypoint(targets.getWaypointIndex());
@@ -190,13 +190,13 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool allow_comms)
 
     // Open comms button.
     if (allow_comms == true)
-        (new GuiOpenCommsButton(option_buttons, "OPEN_COMMS_BUTTON", "Comm Vox", &targets))->setSize(GuiElement::GuiSizeMax, 50);
+        (new GuiOpenCommsButton(option_buttons, "OPEN_COMMS_BUTTON", tr("Open Comms"), &targets))->setSize(GuiElement::GuiSizeMax, 50);
     else
-        (new GuiOpenCommsButton(option_buttons, "OPEN_COMMS_BUTTON", "Relai Comm Vox", &targets))->setSize(GuiElement::GuiSizeMax, 50);
+        (new GuiOpenCommsButton(option_buttons, "OPEN_COMMS_BUTTON", tr("Link to Comms"), &targets))->setSize(GuiElement::GuiSizeMax, 50);
     
 
     // Hack target
-    hack_target_button = new GuiButton(option_buttons, "HACK_TARGET", "Invite de commande", [this](){
+    hack_target_button = new GuiButton(option_buttons, "HACK_TARGET", tr("Start hacking"), [this](){
         P<SpaceObject> target = targets.get();
 //        if (my_spaceship && target && target->canBeHackedBy(my_spaceship))
         if (my_spaceship)
@@ -213,7 +213,7 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool allow_comms)
     (new GuiLabel(option_buttons, "", " ", 30))->setSize(GuiElement::GuiSizeMax, 50);
 
     // Launch probe button.
-    launch_probe_button = new GuiButton(option_buttons, "LAUNCH_PROBE_BUTTON", "Sonde", [this]() {
+    launch_probe_button = new GuiButton(option_buttons, "LAUNCH_PROBE_BUTTON", tr("Launch Probe"), [this]() {
         mode = LaunchProbe;
         option_buttons->hide();
     });
@@ -226,7 +226,7 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool allow_comms)
     progress_probe->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
     // Link probe to science button.
-    link_to_science_button = new GuiToggleButton(option_buttons, "LINK_TO_SCIENCE", "Lier a Auspex CP", [this](bool value){
+    link_to_science_button = new GuiToggleButton(option_buttons, "LINK_TO_SCIENCE", tr("Link to Science"), [this](bool value){
         if (value)
             my_spaceship->commandSetScienceLink(targets.get()->getMultiplayerId());
         else
@@ -273,7 +273,7 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool allow_comms)
 //    probe_selector->setLabel("Choix Sonde");
 
     // Reputation display.
-    //info_reputation = new GuiKeyValueDisplay(option_buttons, "INFO_REPUTATION", 0.7, "Reputation:", "");
+    //info_reputation = new GuiKeyValueDisplay(option_buttons, "INFO_REPUTATION", 0.7,  tr("Reputation:"), "");
     //info_reputation->setSize(GuiElement::GuiSizeMax, 40);
 
     // Bottom layout.
@@ -281,7 +281,7 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool allow_comms)
     layout->setPosition(-20, -70, ABottomRight)->setSize(250, GuiElement::GuiSizeMax);
 
     // Alert level buttons.
-    alert_level_button = new GuiToggleButton(layout, "", "Niveau Alerte", [this](bool value)
+    alert_level_button = new GuiToggleButton(layout, "", tr("Alert level"), [this](bool value)
     {
         for(GuiButton* button : alert_level_buttons)
             button->setVisible(value);
