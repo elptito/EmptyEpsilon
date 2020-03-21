@@ -78,7 +78,7 @@ public:
     void setTemplate(string template_name);
     void setShipTemplate(string template_name) { LOG(WARNING) << "Deprecated \"setShipTemplate\" function called."; setTemplate(template_name); }
     void setTypeName(string type_name) { this->type_name = type_name; }
-    void setPublicName(string locale_name) { this->locale_name = locale_name; }
+    void setLocaleName(string locale_name) { this->locale_name = locale_name; }
     string getTypeName() { return type_name; }
     string getLocaleName() { return locale_name; }
 

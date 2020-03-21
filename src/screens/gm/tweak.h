@@ -130,6 +130,8 @@ private:
     GuiSlider* jump_drive_energy_slider;
     GuiSlider* jump_delay_slider;
     GuiSlider* warp_speed_slider;
+    GuiSlider* short_range_radar_slider;
+    GuiSlider* long_range_radar_slider;
 
 public:
     GuiShipTweak(GuiContainer* owner);
