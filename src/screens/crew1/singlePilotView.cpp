@@ -37,7 +37,7 @@ SinglePilotView::SinglePilotView(GuiContainer* owner, P<PlayerSpaceship> targetS
     background_gradient->setTextureCenter("gui/BackgroundGradientSingle");
 
     // 5U tactical radar with piloting features.
-    radar = new GuiRadarView(this, "TACTICAL_RADAR", 5000.0, &targets, (P<SpaceShip>)target_spaceship);
+    radar = new GuiRadarView(this, "TACTICAL_RADAR", target_spaceship->getShortRangeRadarRange(), &targets, (P<SpaceShip>)target_spaceship);
     radar->setPosition(0, 0, ACenter)->setSize(GuiElement::GuiSizeMatchHeight, 750);
     radar->setRangeIndicatorStepSize(1000.0)->shortRange()->enableGhostDots()->enableWaypoints()->enableCallsigns()->enableHeadingIndicators()->setStyle(GuiRadarView::Circular);
     radar->setCallbacks(
@@ -204,7 +204,7 @@ void SinglePilotView::onHotkey(const HotkeyResult& key)
                         current_found = true;
                         continue;
                     }
-                    if (current_found && sf::length(obj->getPosition() - target_spaceship->getPosition()) < 5000 && target_spaceship->isEnemy(obj) && target_spaceship->getScannedStateFor(obj) >= SS_FriendOrFoeIdentified && obj->canBeTargetedBy(target_spaceship))
+                    if (current_found && sf::length(obj->getPosition() - target_spaceship->getPosition()) < target_spaceship->getShortRangeRadarRange() && target_spaceship->isEnemy(obj) && target_spaceship->getScannedStateFor(obj) >= SS_FriendOrFoeIdentified && obj->canBeTargetedBy(target_spaceship))
                     {
                         targets.set(obj);
                         target_spaceship->commandSetTarget(targets.get());
@@ -217,7 +217,7 @@ void SinglePilotView::onHotkey(const HotkeyResult& key)
                     {
                         continue;
                     }
-                    if (target_spaceship->isEnemy(obj) && sf::length(obj->getPosition() - target_spaceship->getPosition()) < 5000 && target_spaceship->getScannedStateFor(obj) >= SS_FriendOrFoeIdentified && obj->canBeTargetedBy(target_spaceship))
+                    if (target_spaceship->isEnemy(obj) && sf::length(obj->getPosition() - target_spaceship->getPosition()) < target_spaceship->getShortRangeRadarRange() && target_spaceship->getScannedStateFor(obj) >= SS_FriendOrFoeIdentified && obj->canBeTargetedBy(target_spaceship))
                     {
                         targets.set(obj);
                         target_spaceship->commandSetTarget(targets.get());
@@ -237,7 +237,7 @@ void SinglePilotView::onHotkey(const HotkeyResult& key)
                     }
                     if (obj == target_spaceship)
                         continue;
-                    if (current_found && sf::length(obj->getPosition() - target_spaceship->getPosition()) < 5000 && obj->canBeTargetedBy(target_spaceship))
+                    if (current_found && sf::length(obj->getPosition() - target_spaceship->getPosition()) < target_spaceship->getShortRangeRadarRange() && obj->canBeTargetedBy(target_spaceship))
                     {
                         targets.set(obj);
                         target_spaceship->commandSetTarget(targets.get());
@@ -248,7 +248,7 @@ void SinglePilotView::onHotkey(const HotkeyResult& key)
                 {
                     if (obj == targets.get() || obj == target_spaceship)
                         continue;
-                    if (sf::length(obj->getPosition() - target_spaceship->getPosition()) < 5000 && obj->canBeTargetedBy(target_spaceship))
+                    if (sf::length(obj->getPosition() - target_spaceship->getPosition()) < target_spaceship->getShortRangeRadarRange() && obj->canBeTargetedBy(target_spaceship))
                     {
                         targets.set(obj);
                         target_spaceship->commandSetTarget(targets.get());

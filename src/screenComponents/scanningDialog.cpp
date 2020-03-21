@@ -88,7 +88,7 @@ bool GuiScanningDialog::onJoystickAxis(const AxisAction& axisAction){
                     updateSignal();
                     return true;
                 }
-            }   
+            }
         }
     }
     return false;

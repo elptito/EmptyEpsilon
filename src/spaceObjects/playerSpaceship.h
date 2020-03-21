@@ -146,6 +146,8 @@ private:
     std::vector<ShipLogEntry> ships_log_science;
 
 
+    float long_range_radar_range = 50000.0f;
+    float short_range_radar_range = 5000.0f;
 public:
     ESystem auto_repairing_system;
     std::vector<CustomShipFunction> custom_functions;
@@ -396,6 +398,11 @@ public:
     * \param object Object that wants to land
     */
     virtual bool canBeLandedOn(P<SpaceObject> obj);
+    // Radar range
+    float getLongRangeRadarRange();
+    float getShortRangeRadarRange();
+    void setLongRangeRadarRange(float range);
+    void setShortRangeRadarRange(float range);
 
     // Script export function
     virtual string getExportLine() override;

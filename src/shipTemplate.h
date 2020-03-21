@@ -151,6 +151,8 @@ public:
     int stock_dock_count;
     string radar_trace;
     float energy_consumption_ratio;
+    float long_range_radar_range = 30000.0f;
+    float short_range_radar_range = 5000.0f;
 
     std::vector<ShipRoomTemplate> rooms;
     std::vector<ShipDoorTemplate> doors;
@@ -218,6 +220,8 @@ public:
     void setSystemDamageRatio(float ratio) { system_damage_ratio = ratio ;}
     void setSystemDamageHullThreshold(float ratio) {system_damage_hull_threshold = ratio;}
 
+    void setLongRangeRadarRange(float range);
+    void setShortRangeRadarRange(float range);
 
     P<ShipTemplate> copy(string new_name);
 
