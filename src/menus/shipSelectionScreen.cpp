@@ -8,6 +8,7 @@
 #include "screens/extra/probeScreen.h"
 #include "screens/topDownScreen.h"
 #include "screens/cinematicViewScreen.h"
+#include "screens/spectatorScreen.h"
 #include "screens/gm/gameMasterScreen.h"
 
 #include "gui/gui2_autolayout.h"
@@ -80,6 +81,7 @@ ShipSelectionScreen::ShipSelectionScreen()
         probe_button->setValue(false);
         topdown_button->setValue(false);
         cinematic_view_button->setValue(false);
+        spectator_button->setValue(false);
     });
     game_master_button->setSize(GuiElement::GuiSizeMax, 50);
 
@@ -91,6 +93,7 @@ ShipSelectionScreen::ShipSelectionScreen()
         game_master_button->setValue(false);
         topdown_button->setValue(false);
         cinematic_view_button->setValue(false);
+        spectator_button->setValue(false);
     });
     window_button->setSize(175, 50);
 
@@ -116,6 +119,7 @@ ShipSelectionScreen::ShipSelectionScreen()
         probe_button->setValue(false);
         window_button->setValue(false);
         cinematic_view_button->setValue(false);
+        spectator_button->setValue(false);
     });
     topdown_button->setSize(GuiElement::GuiSizeMax, 50);
 
@@ -125,8 +129,18 @@ ShipSelectionScreen::ShipSelectionScreen()
         probe_button->setValue(false);
         window_button->setValue(false);
         topdown_button->setValue(false);
+        spectator_button->setValue(false);
     });
     cinematic_view_button->setSize(GuiElement::GuiSizeMax, 50);
+
+    // Spectator view button
+    spectator_button = new GuiToggleButton(stations_layout, "SPECTATOR_BUTTON", "Spectate (view all)", [this](bool value) {
+        game_master_button->setValue(false);
+        window_button->setValue(false);
+        topdown_button->setValue(false);
+        cinematic_view_button->setValue(false);
+    });
+    spectator_button->setSize(GuiElement::GuiSizeMax, 50);
 
     // If this is the server, add a panel to create player ships.
     if (game_server)
@@ -402,7 +416,7 @@ void ShipSelectionScreen::updateReadyButton()
             ready_button->enable();
         // If the GM or spectator buttons are enabled, enable the Ready button.
         // TODO: Allow GM or spectator screens to require a control code.
-        else if (game_master_button->getValue() || topdown_button->getValue() || cinematic_view_button->getValue())
+        else if (game_master_button->getValue() || topdown_button->getValue() || cinematic_view_button->getValue() || spectator_button->getValue())
             ready_button->enable();
         // If a player ship and the window view are selected, enable the Ready
         // button.
@@ -434,6 +448,7 @@ void ShipSelectionScreen::updateCrewTypeOptions()
     window_angle->hide();
     topdown_button->hide();
     cinematic_view_button->hide();
+    spectator_button->hide();
     main_screen_button->setVisible(canDoMainScreen());
     main_screen_button->setValue(false);
     main_screen_controls_button->setVisible(crew_type_selector->getSelectionIndex() != 4);
@@ -442,6 +457,7 @@ void ShipSelectionScreen::updateCrewTypeOptions()
     probe_button->setValue(false);
     topdown_button->setValue(false);
     cinematic_view_button->setValue(false);
+    spectator_button->setValue(false);
 
     // Hide and unselect each crew position button.
     for(int n = 0; n < max_crew_positions; n++)
@@ -489,6 +505,7 @@ void ShipSelectionScreen::updateCrewTypeOptions()
         window_angle->setVisible(canDoMainScreen());
         topdown_button->setVisible(canDoMainScreen());
         cinematic_view_button->setVisible(canDoMainScreen());
+        spectator_button->setVisible(true);
         break;
     }
 
@@ -542,8 +559,13 @@ void ShipSelectionScreen::onReadyClick()
         destroy();
         new CinematicViewScreen();
     }
-    else
+    else if(spectator_button->getValue())
     {
+        my_player_info->commandSetShipId(-1);
+        destroy();
+        new SpectatorScreen();
+    }
+    else{
         destroy();
         my_player_info->spawnUI();
     }
