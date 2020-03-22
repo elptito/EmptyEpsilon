@@ -9,6 +9,7 @@
 #include "screenComponents/noiseOverlay.h"
 #include "screenComponents/shipDestroyedPopup.h"
 #include "screenComponents/helpOverlay.h"
+#include "screenComponents/impulseSound.h"
 
 #include "gui/gui2_togglebutton.h"
 #include "gui/gui2_panel.h"
@@ -52,7 +53,7 @@ CrewStationScreen::CrewStationScreen()
     for (std::pair<string, string> shortcut : listControlsByCategory("General"))
         keyboard_general += shortcut.second + ":\t" + shortcut.first + "\n";
 
-//#ifndef __ANDROID__
+#ifndef __ANDROID__
     if (PreferencesManager::get("music_enabled") == "1")
     {
         threat_estimate = new ThreatLevelEstimate();
@@ -64,7 +65,10 @@ CrewStationScreen::CrewStationScreen()
             soundManager->playMusicSet(findResources("music/combat/*.ogg"));
         });
     }
-//#endif
+#endif
+
+    // Initialize and play the impulse engine sound.
+    impulse_sound = new ImpulseSound();
 }
 
 void CrewStationScreen::addStationTab(GuiElement* element, ECrewPosition position, string name, string icon)
@@ -130,21 +134,26 @@ void CrewStationScreen::update(float delta)
     {
         destroy();
         soundManager->stopMusic();
+        impulse_sound->stop();
         disconnectFromServer();
         returnToMainMenu();
         return;
     }
+
     if (my_spaceship)
     {
         if (my_spaceship->id_dock != PreferencesManager::get("id_dock"))
         {
             destroy();
             soundManager->stopMusic();
+            impulse_sound->stop();
             disconnectFromServer();
             returnToMainMenu();
             return;
         }
+        // Show custom ship function messages.
         message_frame->hide();
+
         for(PlayerSpaceship::CustomShipFunction& csf : my_spaceship->custom_functions)
         {
             if (csf.crew_position == current_position && csf.type == PlayerSpaceship::CustomShipFunction::Type::Message)
@@ -154,6 +163,13 @@ void CrewStationScreen::update(float delta)
                 break;
             }
         }
+
+        // Update the impulse engine sound.
+        impulse_sound->update(delta);
+    } else {
+        // If we're not the player ship (ie. we exploded), stop playing the
+        // impulse engine sound.
+        impulse_sound->stop();
     }
 }
 
@@ -187,6 +203,7 @@ void CrewStationScreen::onKey(sf::Event::KeyEvent key, int unicode)
     case sf::Keyboard::Home:
         destroy();
         soundManager->stopMusic();
+        impulse_sound->stop();
         returnToShipSelection();
         break;
     case sf::Keyboard::Slash:

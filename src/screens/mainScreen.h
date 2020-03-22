@@ -16,6 +16,7 @@ class DamageControlScreen;
 class ProbeScreen;
 class RelayScreen;
 class GuiHelpOverlay;
+class ImpulseSound;
 
 class ScreenMainScreen : public GuiCanvas, public Updatable
 {
@@ -35,8 +36,7 @@ private:
     float rotatetime;
     P<ScanProbe> probe;
     GuiCommsOverlay* onscreen_comms;
-    int impulse_sound = -1;
-    int warp_sound = -1;
+    ImpulseSound* impulse_sound;
 public:
     ScreenMainScreen();
 
