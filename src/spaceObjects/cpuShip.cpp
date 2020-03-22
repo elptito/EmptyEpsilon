@@ -239,7 +239,7 @@ void CpuShip::orderDock(P<SpaceObject> object)
 void CpuShip::drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range)
 {
     SpaceShip::drawOnGMRadar(window, position, scale, long_range);
-    if (ai)
+    if (ai && game_server)
         ai->drawOnGMRadar(window, position, scale);
 }
 
