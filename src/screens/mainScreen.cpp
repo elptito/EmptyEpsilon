@@ -33,12 +33,12 @@ ScreenMainScreen::ScreenMainScreen()
     //TODO : voir pourquoi c'est commente
     //(new GuiRadarView(viewport, "VIEWPORT_RADAR", my_spaceship->getShortRangeRadarRange(), nullptr, my_spaceship))->setStyle(GuiRadarView::CircularMasked)->setSize(200, 200)->setPosition(-20, 20, ATopRight);
     
-    tactical_radar = new GuiRadarView(this, "TACTICAL", my_spaceship ? my_spaceship->getShortRangeRadarRange() : 5000.0f, nullptr, my_spaceship);
+    tactical_radar = new GuiRadarView(this, "TACTICAL", nullptr, my_spaceship);
     tactical_radar->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
     tactical_radar->setRangeIndicatorStepSize(1000.0f)->shortRange()->enableCallsigns()->hide();
     if (my_spaceship)
     {
-        long_range_radar = new GuiRadarView(this, "TACTICAL", my_spaceship ? my_spaceship->getLongRangeRadarRange() : 30000.0f, nullptr, my_spaceship);
+        long_range_radar = new GuiRadarView(this, "TACTICAL", nullptr, my_spaceship);
         long_range_radar->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
         long_range_radar->setRangeIndicatorStepSize(5000.0f)->longRange()->enableCallsigns()->hide();
         long_range_radar->setFogOfWarStyle(GuiRadarView::NebulaFogOfWar);

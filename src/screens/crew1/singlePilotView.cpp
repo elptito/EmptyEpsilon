@@ -37,7 +37,7 @@ SinglePilotView::SinglePilotView(GuiContainer* owner, P<PlayerSpaceship> targetS
     background_gradient->setTextureCenter("gui/BackgroundGradientSingle");
 
     // 5U tactical radar with piloting features.
-    radar = new GuiRadarView(this, "TACTICAL_RADAR", target_spaceship->getShortRangeRadarRange(), &targets, (P<SpaceShip>)target_spaceship);
+    radar = new GuiRadarView(this, "TACTICAL_RADAR", &targets, (P<SpaceShip>)target_spaceship);
     radar->setPosition(0, 0, ACenter)->setSize(GuiElement::GuiSizeMatchHeight, 750);
     radar->setRangeIndicatorStepSize(1000.0)->shortRange()->enableGhostDots()->enableWaypoints()->enableCallsigns()->enableHeadingIndicators()->setStyle(GuiRadarView::Circular);
     radar->setCallbacks(

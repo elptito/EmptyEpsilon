@@ -48,6 +48,9 @@ private:
     GuiMissileTubeControls* missile_tube_controls;
 
     P<PlayerSpaceship> target_spaceship;
+    bool auto_distance = false;
+    float distance;
+    sf::Vector2f view_position;
     bool long_range;
     bool show_ghost_dots;
     bool show_waypoints;
@@ -64,6 +67,7 @@ private:
     func_t mouse_drag_func;
     func_t mouse_up_func;
 public:
+    GuiRadarView(GuiContainer* owner, string id, TargetsContainer* targets, P<PlayerSpaceship> targetSpaceship);
     GuiRadarView(GuiContainer* owner, string id, float distance, TargetsContainer* targets, P<PlayerSpaceship> targetSpaceship);
 
     virtual void onDraw(sf::RenderTarget& window);
