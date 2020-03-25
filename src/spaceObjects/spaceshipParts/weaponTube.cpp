@@ -339,6 +339,7 @@ void WeaponTube::update(float delta)
             type_loaded = "";
             break;
         case WTS_Firing:
+            if (game_server)
             {
                 spawnProjectile(0);
 
