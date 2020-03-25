@@ -28,7 +28,8 @@ void WeaponTube::setParent(SpaceShip* parent)
     parent->registerMemberReplication(&load_time);
     parent->registerMemberReplication(&type_allowed_mask);
     parent->registerMemberReplication(&direction);
-
+    parent->registerMemberReplication(&size);
+    
     parent->registerMemberReplication(&type_loaded);
     parent->registerMemberReplication(&state);
     parent->registerMemberReplication(&delay, 0.5);
