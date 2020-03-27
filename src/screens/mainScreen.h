@@ -36,7 +36,7 @@ private:
     float rotatetime;
     P<ScanProbe> probe;
     GuiCommsOverlay* onscreen_comms;
-    ImpulseSound* impulse_sound;
+    std::unique_ptr<ImpulseSound> impulse_sound;
 public:
     ScreenMainScreen();
 
