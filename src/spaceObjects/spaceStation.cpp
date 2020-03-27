@@ -26,7 +26,7 @@ SpaceStation::SpaceStation()
     callsign = "DS" + string(getMultiplayerId());
 }
 
-void SpaceStation::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range)
+void SpaceStation::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, float rotation, bool long_range)
 {
     sf::Sprite objectSprite;
     // If the object is a station that hasn't been scanned, draw the default icon.

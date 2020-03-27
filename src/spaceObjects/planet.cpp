@@ -372,7 +372,7 @@ void Planet::draw3DTransparent()
 }
 #endif
 
-void Planet::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range)
+void Planet::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, float rotation, bool long_range)
 {
     if (long_range){
         sf::Sprite object_sprite;
@@ -405,7 +405,7 @@ void Planet::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float 
     }
 }
 
-void Planet::drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range)
+void Planet::drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, float rotation, bool long_range)
 {
     sf::CircleShape radar_radius(planet_size * scale);
     radar_radius.setOrigin(planet_size * scale, planet_size * scale);

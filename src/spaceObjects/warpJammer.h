@@ -17,7 +17,7 @@ public:
 
     void setRange(float range) { this->range = range; }
 
-    virtual void drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range) override;
+    virtual void drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, float rotation, bool long_range) override;
 
     static bool isWarpJammed(sf::Vector2f position);
     static sf::Vector2f getFirstNoneJammedPosition(sf::Vector2f start, sf::Vector2f end);
