@@ -592,10 +592,10 @@ void SpaceShip::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, flo
         if (!my_spaceship || getScannedStateFor(my_spaceship) >= SS_SimpleScan)
         {
             // ... draw and show shield indicators on our radar.
-            drawShieldsOnRadar(window, position, scale, scale_radius, true);
+            drawShieldsOnRadar(window, position, scale, rotation, scale_radius, true);
         } else {
             // Otherwise, draw the indicators, but don't show them.
-            drawShieldsOnRadar(window, position, scale, scale_radius, false);
+            drawShieldsOnRadar(window, position, scale, rotation, scale_radius, false);
         }
     }
 
