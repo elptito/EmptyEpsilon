@@ -432,6 +432,7 @@ public:
             warp_speed_per_warp_level = 0;
         }
     }
+    void setWarpSpeed(float speed) { warp_speed_per_warp_level = std::max(0.0f, speed); }
 
 	void setCloaking(bool enabled) { has_cloaking = enabled; }
 	bool hasCloaking() { return has_cloaking; }

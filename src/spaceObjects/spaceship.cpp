@@ -85,6 +85,12 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getJumpDriveEnergy);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, hasWarpDrive);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setWarpDrive);
+    /// Set the warp speed for this ship's warp level 1.
+    /// Setting this is equivalent to also setting setWarpDrive(true).
+    /// If a value isn't specified in the ship template, the default is 1000.
+    /// Requires a numeric value.
+    /// Example: ship:setWarpSpeed(500);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setWarpSpeed);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getBeamWeaponArc);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getBeamWeaponDirection);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getBeamWeaponRange);
@@ -134,6 +140,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     has_warp_drive = true;
     warp_request = 0.0;
     current_warp = 0.0;
+    warp_speed_per_warp_level = 1000.0;
     has_jump_drive = true;
     has_reactor = true;
     has_cloaking = false;
@@ -149,7 +156,6 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     beam_weapons_count = 0;
     turn_speed = 10.0;
     impulse_max_speed = 600.0;
-    warp_speed_per_warp_level = 1000.0;
     combat_maneuver_charge = 1.0;
     combat_maneuver_boost_request = 0.0;
     combat_maneuver_boost_active = 0.0;
@@ -1613,6 +1619,9 @@ string SpaceShip::getScriptExportModificationsOnTemplate()
         ret += ":setRotationMaxSpeed(" + string(turn_speed, 1) + ")";
     if (has_jump_drive != ship_template->has_jump_drive)
         ret += ":setJumpDrive(" + string(has_jump_drive ? "true" : "false") + ")";
+    if (jump_drive_min_distance != ship_template->jump_drive_min_distance
+        || jump_drive_max_distance != ship_template->jump_drive_max_distance)
+        ret += ":setJumpDriveRange(" + string(jump_drive_min_distance) + ", " + string(jump_drive_max_distance) + ")";
     if (has_warp_drive != (ship_template->warp_speed > 0))
         ret += ":setWarpDrive(" + string(has_warp_drive ? "true" : "false") + ")";
     if(system_damage_ratio != ship_template->system_damage_ratio)
@@ -1623,6 +1632,9 @@ string SpaceShip::getScriptExportModificationsOnTemplate()
     {
         ret +=":setSystemDamageHullThreshold(" + string(system_damage_hull_threshold) + ")";
     }
+    if (warp_speed_per_warp_level != ship_template->warp_speed)
+        ret += ":setWarpSpeed(" + string(warp_speed_per_warp_level) + ")";
+
     // Shield data
     // Determine whether to export shield data.
     bool add_shields_max_line = getShieldCount() != ship_template->shield_count;
@@ -1672,7 +1684,7 @@ string SpaceShip::getScriptExportModificationsOnTemplate()
         ret += ")";
     }
 
-    ///Missile weapon data
+    // Missile weapon data
     if (weapon_tube_count != ship_template->weapon_tube_count)
         ret += ":setWeaponTubeCount(" + string(weapon_tube_count) + ")";
 
