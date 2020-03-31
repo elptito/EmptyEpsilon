@@ -453,37 +453,8 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
     }
     if (my_spaceship)
     {
-        //info_reputation->setValue(string(my_spaceship->getReputationPoints(), 0));
-        launch_probe_button->setText("Sonde (" + string(my_spaceship->scan_probe_stock) + "/" + string(my_spaceship->max_scan_probes) + ")");
-
-        // Add and remove entries from the CPU ship and space station list.
-//        int n = 0;
-//        foreach(SpaceObject, obj, space_object_list)
-//        {
-//            P<ScanProbe> probe = obj;
-//            P<SpaceStation> station = obj;
-//
-//            if (station && my_spaceship->isFriendly(station) && station->isFriendly(my_spaceship) && station->getPosition() - my_spaceship->getPosition() < 1000000.0f)
-//            {
-//                if (station_selector->indexByValue(string(n)) == -1)
-//                    station_selector->addEntry(station->getTypeName() + " " + station->getCallSign(), string(n));
-//            }else{
-//                probe_selector->show();
-//                if (station_selector->indexByValue(string(n)) != -1)
-//                    station_selector->removeEntry(station_selector->indexByValue(string(n)));
-//            }
-//            if (probe && probe->owner_id == my_spaceship->getMultiplayerId())
-//            {
-//                if (probe_selector->indexByValue(string(n)) == -1)
-//                    probe_selector->addEntry(probe->getCallSign(), string(n));
-//            }else{
-//                if (probe_selector->indexByValue(string(n)) != -1)
-//                    probe_selector->removeEntry(probe_selector->indexByValue(string(n)));
-//            }
-//        n += 1;
-//        }
-//        station_selector->setVisible(station_selector->entryCount()>0);
-//        probe_selector->setVisible(probe_selector->entryCount()>0);
+        info_reputation->setValue(string(my_spaceship->getReputationPoints(), 0)); //tsht : TODO reajout par rapport a suppression de  tdelc
+        launch_probe_button->setText(tr("Launch Probe") + " (" + string(my_spaceship->scan_probe_stock) + "/" + string(my_spaceship->max_scan_probes) + ")");
     }
 
     if (targets.getWaypointIndex() >= 0)
