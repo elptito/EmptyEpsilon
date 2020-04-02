@@ -119,7 +119,6 @@ public:
 
     bool restocks_scan_probes;
     bool can_scan = true;
-    bool can_full_scan = true;
     bool can_hack = true;
     bool can_dock = true;
     bool can_combat_maneuver = true;
@@ -180,7 +179,6 @@ public:
     void setReactor(bool enabled);
     void setRestocksScanProbes(bool enabled);
     void canScan(bool enabled) { can_scan = enabled; }
-    void canFullScan(bool enabled) { can_scan = true; can_full_scan = enabled; }
     void canHack(bool enabled) { can_hack = enabled; }
     void canDock(bool enabled) { can_dock = enabled; }
     void canCombatManeuver(bool enabled) { can_combat_maneuver = enabled; }

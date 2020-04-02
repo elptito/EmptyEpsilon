@@ -4,6 +4,7 @@
 #include "helmsScreen.h"
 #include "preferenceManager.h"
 
+#include "screenComponents/combatManeuver.h"
 #include "screenComponents/radarView.h"
 #include "screenComponents/impulseControls.h"
 #include "screenComponents/warpControls.h"
@@ -33,7 +34,7 @@ HelmsScreen::HelmsScreen(GuiContainer* owner)
     GuiRadarView* radar = new GuiRadarView(this, "HELMS_RADAR", nullptr, my_spaceship);
 
     combat_maneuver = new GuiCombatManeuver(this, "COMBAT_MANEUVER", my_spaceship);
-    combat_maneuver->setPosition(-20, -20, ABottomRight)->setSize(280, 215);
+    combat_maneuver->setPosition(-20, -20, ABottomRight)->setSize(280, 215)->setVisible(my_spaceship && my_spaceship->getCanCombatManeuver());
 
     radar->setPosition(0, 0, ACenter)->setSize(GuiElement::GuiSizeMatchHeight, 800);
     radar->setRangeIndicatorStepSize(1000.0)->shortRange()->enableGhostDots()->enableWaypoints()->enableCallsigns()->enableHeadingIndicators()->setStyle(GuiRadarView::Circular);
@@ -78,6 +79,9 @@ HelmsScreen::HelmsScreen(GuiContainer* owner)
     (new GuiImpulseControls(engine_layout, "IMPULSE", my_spaceship))->setSize(100, GuiElement::GuiSizeMax);
     warp_controls = (new GuiWarpControls(engine_layout, "WARP", my_spaceship))->setSize(100, GuiElement::GuiSizeMax);
     jump_controls = (new GuiJumpControls(engine_layout, "JUMP", my_spaceship))->setSize(100, GuiElement::GuiSizeMax);
+    
+    docking_button = new GuiDockingButton(this, "DOCKING", my_spaceship);
+    docking_button->setPosition(20, -20, ABottomLeft)->setSize(280, 50)->setVisible(my_spaceship && my_spaceship->getCanDock());
 
     (new GuiDockingButton(this, "DOCKING", my_spaceship))->setPosition(20, -20, ABottomLeft)->setSize(280, 50);
 
@@ -88,13 +92,16 @@ void HelmsScreen::onDraw(sf::RenderTarget& window)
 {
     if (my_spaceship)
     {
+        // Toggle ship capabilities.
+        combat_maneuver->setVisible(my_spaceship->getCanCombatManeuver());
+        docking_button->setVisible(my_spaceship->getCanDock());
+
         energy_display->setValue(string(int(my_spaceship->energy_level/my_spaceship->max_energy_level * 100)) + "%");
         if (my_spaceship->energy_level < 100)
             energy_display->setColor(sf::Color::Red);
         else
             energy_display->setColor(sf::Color::White);
-
-        heading_display->setValue(string(my_spaceship->getHeading(), 1) + "�");
+        heading_display->setValue(string(my_spaceship->getHeading(), 1));
         float velocity = sf::length(my_spaceship->getVelocity()) / 1000 * 60;
         velocity_display->setValue(tr("{value} {unit}/min").format({{"value", string(velocity, 1)}, {"unit", DISTANCE_UNIT_1K}}));
         

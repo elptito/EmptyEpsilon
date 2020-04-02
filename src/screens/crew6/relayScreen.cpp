@@ -232,45 +232,28 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool allow_comms)
         else
             my_spaceship->commandSetScienceLink(-1);
     });
-    link_to_science_button->setSize(GuiElement::GuiSizeMax, 50);
-    link_to_science_button->setIcon("gui/icons/station-science");
+    link_to_science_button->setSize(GuiElement::GuiSizeMax, 50)->setVisible(my_spaceship && my_spaceship->getCanLaunchProbe());
 
-    // Link probe to 3D port button.
-//    link_to_3D_port_button = new GuiToggleButton(option_buttons, "LINK_TO_3D_PORT", "Camera Sonde", [this](bool value){
-//        if (value)
-//            my_spaceship->commandSetProbe3DLink(targets.get()->getMultiplayerId());
-//        else
-//            my_spaceship->commandSetProbe3DLink(-1);
-//    });
-//    link_to_3D_port_button->setSize(GuiElement::GuiSizeMax, 50);
-//    link_to_3D_port_button->setIcon("gui/icons/camera");
+    // Manage waypoints.
+    (new GuiButton(option_buttons, "WAYPOINT_PLACE_BUTTON", tr("Place Waypoint"), [this]() {
+        mode = WaypointPlacement;
+        option_buttons->hide();
+    }))->setSize(GuiElement::GuiSizeMax, 50);
 
-    // Station selector
-//    station_selector = new GuiSelector(option_buttons, "SPACE_STATION_SELECTOR", [this](int index, string value) {
-//        P<SpaceObject> obj = space_object_list[value.toInt()];
-//        P<SpaceStation> station = obj;
-//        if (station)
-//        {
-//            target = station;
-//            radar->setViewPosition(station->getPosition());
-//            targets.set(station);
-//        }
-//    });
-//    station_selector->setSize(GuiElement::GuiSizeMax, 50);
-//    station_selector->setLabel("Choix Station");
-//
-//    probe_selector = new GuiSelector(option_buttons, "PROBE_SELECTOR", [this](int index, string value) {
-//        P<SpaceObject> obj = space_object_list[value.toInt()];
-//        P<ScanProbe> probe = obj;
-//        if (probe)
-//        {
-//            target = probe;
-//            radar->setViewPosition(probe->getPosition());
-//            targets.set(probe);
-//        }
-//    });
-//    probe_selector->setSize(GuiElement::GuiSizeMax, 50);
-//    probe_selector->setLabel("Choix Sonde");
+    delete_waypoint_button = new GuiButton(option_buttons, "WAYPOINT_DELETE_BUTTON", tr("Delete Waypoint"), [this]() {
+        if (my_spaceship && targets.getWaypointIndex() >= 0)
+        {
+            my_spaceship->commandRemoveWaypoint(targets.getWaypointIndex());
+        }
+    });
+    delete_waypoint_button->setSize(GuiElement::GuiSizeMax, 50);
+
+    // Launch probe button.
+    launch_probe_button = new GuiButton(option_buttons, "LAUNCH_PROBE_BUTTON", tr("Launch Probe"), [this]() {
+        mode = LaunchProbe;
+        option_buttons->hide();
+    });
+    launch_probe_button->setSize(GuiElement::GuiSizeMax, 50)->setVisible(my_spaceship && my_spaceship->getCanLaunchProbe());
 
     // Reputation display.
     //info_reputation = new GuiKeyValueDisplay(option_buttons, "INFO_REPUTATION", 0.7,  tr("Reputation:"), "");
@@ -453,7 +436,12 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
     }
     if (my_spaceship)
     {
-       // info_reputation->setValue(string(my_spaceship->getReputationPoints(), 0)); //tsht : TODO reajout par rapport a suppression de  tdelc
+        // Toggle ship capabilities.
+        launch_probe_button->setVisible(my_spaceship->getCanLaunchProbe());
+        link_to_science_button->setVisible(my_spaceship->getCanLaunchProbe());
+        hack_target_button->setVisible(my_spaceship->getCanHack());
+
+        //info_reputation->setValue(string(my_spaceship->getReputationPoints(), 0)); //tsht : TODO voir si on peut reajouter
         launch_probe_button->setText(tr("Launch Probe") + " (" + string(my_spaceship->scan_probe_stock) + "/" + string(my_spaceship->max_scan_probes) + ")");
     }
 

@@ -349,7 +349,6 @@ PlayerSpaceship::PlayerSpaceship()
 
     updateMemberReplicationUpdateDelay(&target_rotation, 0.1);
     registerMemberReplication(&can_scan);
-    registerMemberReplication(&can_full_scan);
     registerMemberReplication(&can_hack);
     registerMemberReplication(&can_dock);
     registerMemberReplication(&can_combat_maneuver);
@@ -852,7 +851,6 @@ void PlayerSpaceship::applyTemplateValues()
 
     // Set the ship's capabilities.
     can_scan = ship_template->can_scan;
-    can_full_scan = ship_template->can_full_scan;
     can_hack = ship_template->can_hack;
     can_dock = ship_template->can_dock;
     can_combat_maneuver = ship_template->can_combat_maneuver;

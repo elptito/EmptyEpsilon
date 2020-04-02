@@ -5,6 +5,7 @@
 #include "shipTemplate.h"
 #include "playerInfo.h"
 
+class GuiSelfDestructButton;
 class GuiKeyValueDisplay;
 class GuiLabel;
 class GuiSlider;
@@ -27,6 +28,7 @@ private:
     GuiKeyValueDisplay* shields_display;
     GuiKeyValueDisplay* oxygen_display;
     GuiKeyValueDisplay* coolant_display;
+    GuiSelfDestructButton* self_destruct_button;
     GuiLabel* power_label;
     GuiSlider* power_slider;
     GuiLabel* coolant_label;
