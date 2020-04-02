@@ -118,6 +118,13 @@ public:
     bool has_reactor;
 
     bool restocks_scan_probes;
+    bool can_scan = true;
+    bool can_full_scan = true;
+    bool can_hack = true;
+    bool can_dock = true;
+    bool can_combat_maneuver = true;
+    bool can_self_destruct = true;
+    bool can_launch_probe = true;
     
     float energy_storage_amount;
     int repair_crew_count;
@@ -172,6 +179,13 @@ public:
     void setRepairDocked(bool enabled);
     void setReactor(bool enabled);
     void setRestocksScanProbes(bool enabled);
+    void canScan(bool enabled) { can_scan = enabled; }
+    void canFullScan(bool enabled) { can_scan = true; can_full_scan = enabled; }
+    void canHack(bool enabled) { can_hack = enabled; }
+    void canDock(bool enabled) { can_dock = enabled; }
+    void canCombatManeuver(bool enabled) { can_combat_maneuver = enabled; }
+    void canSelfDestruct(bool enabled) { can_self_destruct = enabled; }
+    void canLaunchProbe(bool enabled) { can_launch_probe = enabled; }
     void setMesh(string model, string color_texture, string specular_texture, string illumination_texture);
     void setEnergyStorage(float energy_amount);
     void setRepairCrewCount(int amount);
