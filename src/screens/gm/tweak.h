@@ -247,6 +247,12 @@ private:
     GuiToggleButton* biological_toggle;
     GuiLabel* position_count;
     GuiKeyValueDisplay* position[max_crew_positions];
+    GuiToggleButton* can_scan;
+    GuiToggleButton* can_hack;
+    GuiToggleButton* can_dock;
+    GuiToggleButton* can_combat_maneuver;
+    GuiToggleButton* can_self_destruct;
+    GuiToggleButton* can_launch_probe;
 public:
     GuiShipTweakPlayer(GuiContainer* owner);
 

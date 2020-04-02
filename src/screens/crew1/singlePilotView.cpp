@@ -59,7 +59,7 @@ SinglePilotView::SinglePilotView(GuiContainer* owner, P<PlayerSpaceship> targetS
     );
 
     // Ship stats and combat maneuver at bottom right corner of left panel.
-    combat_maneuver = new GuiCombatManeuver(left_panel, "COMBAT_MANEUVER", target_spaceship);
+    combat_maneuver = new GuiCombatManeuver(this, "COMBAT_MANEUVER", target_spaceship);
     combat_maneuver->setPosition(-20, -180, ABottomRight)->setSize(200, 150)->setVisible(target_spaceship && target_spaceship->getCanCombatManeuver());
 
     heat_display = new GuiKeyValueDisplay(this, "HEAT_DISPLAY", 0.45, "Surchauffe", "");
