@@ -59,8 +59,8 @@ SinglePilotView::SinglePilotView(GuiContainer* owner, P<PlayerSpaceship> targetS
     );
 
     // Ship stats and combat maneuver at bottom right corner of left panel.
-    combat_maneuver = new GuiCombatManeuver(this, "COMBAT_MANEUVER", target_spaceship);
-    combat_maneuver->setPosition(-20, -260, ABottomRight)->setSize(200, 150);
+    combat_maneuver = new GuiCombatManeuver(left_panel, "COMBAT_MANEUVER", target_spaceship);
+    combat_maneuver->setPosition(-20, -180, ABottomRight)->setSize(200, 150)->setVisible(target_spaceship && target_spaceship->getCanCombatManeuver());
 
     heat_display = new GuiKeyValueDisplay(this, "HEAT_DISPLAY", 0.45, "Surchauffe", "");
     heat_display->setIcon("gui/icons/status_overheat")->setTextSize(20)->setPosition(-20, -220, ABottomRight)->setSize(240, 40);
@@ -148,6 +148,9 @@ void SinglePilotView::onDraw(sf::RenderTarget& window)
 {
     if (target_spaceship)
     {
+        // Toggle ship capabilities.
+        combat_maneuver->setVisible(my_spaceship->getCanCombatManeuver());
+
         float totalHeat = 0;
         for(unsigned int n=0; n<SYS_COUNT; n++)
             totalHeat += target_spaceship->getSystemHeat(ESystem(n));
