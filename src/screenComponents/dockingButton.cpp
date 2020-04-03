@@ -30,6 +30,11 @@ void GuiDockingButton::click()
     }
 }
 
+void GuiDockingButton::onUpdate()
+{
+    setVisible(my_spaceship && my_spaceship->getCanDock());
+}
+
 void GuiDockingButton::onDraw(sf::RenderTarget& window)
 {
     if (target_spaceship)

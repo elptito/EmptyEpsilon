@@ -36,6 +36,11 @@ GuiCombatManeuver::GuiCombatManeuver(GuiContainer* owner, string id, P<PlayerSpa
     boost_pdi->setTargetSpaceship(target_spaceship);
 }
 
+void GuiCombatManeuver::onUpdate()
+{
+    setVisible(my_spaceship && my_spaceship->getCanCombatManeuver());
+}
+
 void GuiCombatManeuver::onDraw(sf::RenderTarget& window)
 {
     if (target_spaceship)
@@ -57,7 +62,7 @@ void GuiCombatManeuver::onDraw(sf::RenderTarget& window)
 
 void GuiCombatManeuver::onHotkey(const HotkeyResult& key)
 {
-    if (key.category == "HELMS" && target_spaceship)
+    if (key.category == "HELMS" && target_spaceship && isVisible())
     {
         if (key.hotkey == "COMBAT_LEFT")
         {

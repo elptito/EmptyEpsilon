@@ -92,10 +92,6 @@ void HelmsScreen::onDraw(sf::RenderTarget& window)
 {
     if (my_spaceship)
     {
-        // Toggle ship capabilities.
-        combat_maneuver->setVisible(my_spaceship->getCanCombatManeuver());
-        docking_button->setVisible(my_spaceship->getCanDock());
-
         energy_display->setValue(string(int(my_spaceship->energy_level/my_spaceship->max_energy_level * 100)) + "%");
         if (my_spaceship->energy_level < 100)
             energy_display->setColor(sf::Color::Red);
