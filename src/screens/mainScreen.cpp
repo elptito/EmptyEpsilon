@@ -91,7 +91,7 @@ ScreenMainScreen::ScreenMainScreen()
     rotatetime = 0.0007;
     angle = 0.0f;
     // Initialize and play the impulse engine sound.
-    impulse_sound = std::unique_ptr<ImpulseSound>( new ImpulseSound(PreferencesManager::get("impulse_sound_enabled") != "0") );
+    impulse_sound = std::unique_ptr<ImpulseSound>( new ImpulseSound(PreferencesManager::get("impulse_sound_enabled", "2") != "0") );
 
     first_person = PreferencesManager::get("first_person") == "1";
 }
