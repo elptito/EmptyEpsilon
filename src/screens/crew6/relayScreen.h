@@ -44,6 +44,8 @@ private:
     GuiButton* center_screen_button;
     GuiSelector* station_selector;
     GuiSelector* probe_selector;
+    //GuiKeyValueDisplay* info_reputation;
+    GuiKeyValueDisplay* info_clock;
     GuiAutoLayout* option_buttons;
 //    GuiButton* comm_icon;
     GuiButton* hack_target_button;

@@ -259,6 +259,10 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool allow_comms)
     //info_reputation = new GuiKeyValueDisplay(option_buttons, "INFO_REPUTATION", 0.7,  tr("Reputation:"), "");
     //info_reputation->setSize(GuiElement::GuiSizeMax, 40);
 
+    // Mission clock display.
+    info_clock = new GuiKeyValueDisplay(option_buttons, "INFO_CLOCK", 0.7, tr("Mission Clock:"), "");
+    info_clock->setSize(GuiElement::GuiSizeMax, 40);
+
     // Bottom layout.
     GuiAutoLayout* layout = new GuiAutoLayout(this, "", GuiAutoLayout::LayoutVerticalBottomToTop);
     layout->setPosition(-20, -70, ABottomRight)->setSize(250, GuiElement::GuiSizeMax);
@@ -442,6 +446,7 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
         hack_target_button->setVisible(my_spaceship->getCanHack());
 
         //info_reputation->setValue(string(my_spaceship->getReputationPoints(), 0)); //tsht : TODO voir si on peut reajouter
+        info_clock->setValue(string(engine->getElapsedTime(), 0));
         launch_probe_button->setText(tr("Launch Probe") + " (" + string(my_spaceship->scan_probe_stock) + "/" + string(my_spaceship->max_scan_probes) + ")");
     }
 
