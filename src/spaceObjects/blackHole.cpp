@@ -78,22 +78,25 @@ void BlackHole::collide(Collisionable* target, float collision_force)
 
     sf::Vector2f diff = getPosition() - target->getPosition();
     float distance = sf::length(diff);
-    float force = (size * size * 50.0f) / (distance * distance);
-    if (distance < 1000.0)
+    float force = (getRadius() * getRadius() * 50.0f) / (distance * distance);
+    DamageInfo info(NULL, DT_Kinetic, getPosition());
+    if (force > 10000.0)
+    {
+        force = 10000.0;
         if (isServer())
-            target->destroy();
-//    if (force > 10000000.0)
-//    {
-//        force = 10000.0;
-//        if (isServer())
-//            target->destroy();
-//    }
-    // DamageInfo info(NULL, DT_Kinetic, getPosition());
-    // if (force > 100.0 && isServer())
-    // {
-        // P<SpaceObject> obj = P<Collisionable>(target);
-        // if (obj)
-            // obj->takeDamage(force * update_delta / 10.0f, info);
-    // }
+        {
+            P<SpaceObject> obj = P<Collisionable>(target);
+            if (obj)
+                obj->takeDamage(100000.0, info); //try to destroy the object by inflicting a huge amount of damage
+            if (target)
+                target->destroy();
+        }
+    }
+    if (force > 100.0 && isServer())
+    {
+        P<SpaceObject> obj = P<Collisionable>(target);
+        if (obj)
+            obj->takeDamage(force * update_delta / 10.0f, info);
+    }
     target->setPosition(target->getPosition() + diff / distance * update_delta * force);
 }
