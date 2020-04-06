@@ -147,6 +147,8 @@ REGISTER_SCRIPT_CLASS_NO_CREATE(SpaceObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setScanned);
     /// Set if this object is scanned or not by a particular faction.
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setScannedByFaction);
+    // Register a callback that is called when this object is destroyed, by any means.
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, onDestroyed);
 }
 
 PVector<SpaceObject> space_object_list;
@@ -239,7 +241,7 @@ void SpaceObject::drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f position,
 
 void SpaceObject::destroy()
 {
-    onDestroyed();
+    on_destroyed.call(P<SpaceObject>(this));
     MultiplayerObject::destroy();
 }
 
