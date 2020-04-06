@@ -7,7 +7,7 @@
 #include "threatLevelEstimate.h"
 #include "spaceObjects/scanProbe.h"
 
-class GuiViewport3D;
+class GuiViewportMainScreen;
 class GuiRadarView;
 class GuiCommsOverlay;
 class GuiPanel;
@@ -22,7 +22,7 @@ class ScreenMainScreen : public GuiCanvas, public Updatable
 {
     P<ThreatLevelEstimate> threat_estimate;
 private:
-    GuiViewport3D* viewport;
+    GuiViewportMainScreen* viewport;
     GuiHelpOverlay* keyboard_help;
     string keyboard_general = "";
     GuiRadarView* tactical_radar;

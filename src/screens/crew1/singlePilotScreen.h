@@ -13,15 +13,8 @@ class GuiToggleButton;
 class SinglePilotScreen : public GuiOverlay
 {
 private:
-    bool first_person;
-
     GuiOverlay* background_crosses;
     SinglePilotView* single_pilot_view;
-
-    GuiViewport3D* viewport;
-    GuiElement* left_panel;
-    GuiToggleButton* show_3d_button;
-
     P<PlayerSpaceship> current_spaceship;
 
     void init(GuiContainer* owner, P<PlayerSpaceship> targetSpaceship);
