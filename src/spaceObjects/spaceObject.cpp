@@ -231,6 +231,7 @@ void SpaceObject::draw3D()
 }
 #endif//FEATURE_3D_RENDERING
 
+
 void SpaceObject::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, float rotation, bool longRange)
 {
 }

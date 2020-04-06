@@ -48,9 +48,10 @@ private:
     GuiMissileTubeControls* missile_tube_controls;
 
     P<PlayerSpaceship> target_spaceship;
+    bool auto_center_on_my_ship;
+    bool auto_rotate_on_my_ship;
     bool auto_distance = false;
     float distance;
-    sf::Vector2f view_position;
     bool long_range;
     bool show_ghost_dots;
     bool show_waypoints;
@@ -59,8 +60,6 @@ private:
     bool show_callsigns;
     bool show_heading_indicators;
     bool show_game_master_data;
-    bool auto_center_on_my_ship;
-    bool auto_rotate_on_my_ship;
     float range_indicator_step_size;
     ERadarStyle style;
     EFogOfWarStyle fog_style;

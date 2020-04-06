@@ -120,8 +120,6 @@ public:
     float energy_consumption_ratio;
 
 private:
-    // soundManager index of the shield object
-    int shield_sound;
     // Comms variables
     ECommsState comms_state;
     float comms_open_delay;

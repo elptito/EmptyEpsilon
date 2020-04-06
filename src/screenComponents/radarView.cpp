@@ -13,22 +13,51 @@
 #include "targetsContainer.h"
 
 GuiRadarView::GuiRadarView(GuiContainer* owner, string id, TargetsContainer* targets, P<PlayerSpaceship> targetSpaceship)
-: SectorsView(owner, id, 5000.0f, targets), next_ghost_dot_update(0.0), missile_tube_controls(nullptr), target_spaceship(targetSpaceship), long_range(false), show_ghost_dots(false)
-, show_waypoints(false), show_target_projection(false), show_missile_tubes(false), show_callsigns(false), show_heading_indicators(false), show_game_master_data(false)
-, range_indicator_step_size(0.0f), style(Circular), fog_style(NoFogOfWar), mouse_down_func(nullptr), mouse_drag_func(nullptr), mouse_up_func(nullptr)
+: SectorsView(owner, id, 5000.0f, targets), 
+    next_ghost_dot_update(0.0), 
+    missile_tube_controls(nullptr), 
+    auto_center_on_my_ship(true),
+    auto_rotate_on_my_ship(false),
+    auto_distance(true),
+    target_spaceship(targetSpaceship), 
+    long_range(false), 
+    show_ghost_dots(false),
+    show_waypoints(false), 
+    show_target_projection(false), 
+    show_missile_tubes(false), 
+    show_callsigns(false), 
+    show_heading_indicators(false), 
+    show_game_master_data(false), 
+    range_indicator_step_size(0.0f), 
+    style(Circular), 
+    fog_style(NoFogOfWar), 
+    mouse_down_func(nullptr), 
+    mouse_drag_func(nullptr), 
+    mouse_up_func(nullptr)
 {
-    auto_center_on_my_ship = true;
-    auto_rotate_on_my_ship = false;
-    auto_distance = true;
 }
 
 GuiRadarView::GuiRadarView(GuiContainer* owner, string id, float distance, TargetsContainer* targets, P<PlayerSpaceship> targetSpaceship)
-: SectorsView(owner, id, distance, targets), next_ghost_dot_update(0.0), missile_tube_controls(nullptr), target_spaceship(targetSpaceship), long_range(false), show_ghost_dots(false)
-, show_waypoints(false), show_target_projection(false), show_missile_tubes(false), show_callsigns(false), show_heading_indicators(false), show_game_master_data(false)
-, range_indicator_step_size(0.0f), style(Circular), fog_style(NoFogOfWar), mouse_down_func(nullptr), mouse_drag_func(nullptr), mouse_up_func(nullptr)
+: SectorsView(owner, id, distance, targets), 
+    next_ghost_dot_update(0.0), 
+    missile_tube_controls(nullptr), 
+    auto_center_on_my_ship(true),
+    auto_rotate_on_my_ship(false),
+    target_spaceship(targetSpaceship), 
+    long_range(false), 
+    show_ghost_dots(false),
+    show_waypoints(false), 
+    show_target_projection(false), 
+    show_missile_tubes(false), 
+    show_callsigns(false), 
+    show_heading_indicators(false), 
+    show_game_master_data(false), 
+    range_indicator_step_size(0.0f), style(Circular), 
+    fog_style(NoFogOfWar), 
+    mouse_down_func(nullptr), 
+    mouse_drag_func(nullptr), 
+    mouse_up_func(nullptr)
 {
-    auto_center_on_my_ship = true;
-    auto_rotate_on_my_ship = false;
 }
 
 void GuiRadarView::onDraw(sf::RenderTarget& window)
