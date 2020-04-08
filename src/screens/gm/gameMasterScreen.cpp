@@ -210,6 +210,9 @@ GameMasterScreen::GameMasterScreen()
     info_layout = new GuiAutoLayout(this, "INFO_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
     info_layout->setPosition(-20, 20, ATopRight)->setSize(300, GuiElement::GuiSizeMax);
 
+    info_clock = new GuiKeyValueDisplay(info_layout, "INFO_CLOCK", 0.5, tr("Mission Clock"), "");
+    info_clock->setSize(GuiElement::GuiSizeMax, 30);
+
     gm_script_options = new GuiListbox(this, "GM_SCRIPT_OPTIONS", [this](int index, string value)
     {
         gm_script_options->setSelectionIndex(-1);
@@ -376,6 +379,9 @@ void GameMasterScreen::update(float delta)
     order_layout->setVisible(has_cpu_ship);
     player_comms_hail->setVisible(has_player_ship);
 
+    // Update mission clock
+    info_clock->setValue(string(gameGlobalInfo->elapsed_time, 0));
+
     std::unordered_map<string, string> selection_info;
 
     // For each selected object, determine and report their type.
@@ -410,7 +416,7 @@ void GameMasterScreen::update(float delta)
             }
         }
     }
-
+ 
     unsigned int cnt = 0;
     for(std::unordered_map<string, string>::iterator i = selection_info.begin(); i != selection_info.end(); i++)
     {
