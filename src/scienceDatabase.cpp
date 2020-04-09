@@ -50,6 +50,20 @@ void ScienceDatabase::setLongDescription(string text)
     longDescription = text;
 }
 
+string directionLabel(float direction)
+{
+    string name = "?";
+    if (std::abs(sf::angleDifference(0.0f, direction)) <= 45)
+        name = "Front";
+    if (std::abs(sf::angleDifference(90.0f, direction)) < 45)
+        name = "Right";
+    if (std::abs(sf::angleDifference(-90.0f, direction)) < 45)
+        name = "Left";
+    if (std::abs(sf::angleDifference(180.0f, direction)) <= 45)
+        name = "Rear";
+    return name;
+}
+
 void fillDefaultDatabaseData()
 {
     P<ScienceDatabase> factionDatabase = new ScienceDatabase();
@@ -129,14 +143,25 @@ void fillDefaultDatabaseData()
         string shield_info = "";
         for(int n=0; n<ship_template->shield_count; n++)
         {
-            if (n > 0)
-                shield_info += "/";
-            shield_info += string(int(ship_template->shield_level[n]));
+            string shield_info = "";
+            for(int n=0; n<ship_template->shield_count; n++)
+            {
+                if (n > 0)
+                    shield_info += "/";
+                shield_info += string(int(ship_template->shield_level[n]));
+            }
+            entry->addKeyValue("Shield", shield_info);
         }
         entry->addKeyValue(tr("database", "Shield"), shield_info);
         entry->addKeyValue(tr("Hull"), string(int(ship_template->hull)));
-        entry->addKeyValue(tr("database", "Move speed"), string(int(ship_template->impulse_speed)));
-        entry->addKeyValue(tr("database", "Turn speed"), string(int(ship_template->turn_speed)));
+        if (ship_template->impulse_speed > 0.0)
+        {
+            entry->addKeyValue(tr("database", "Move speed"), string(int(ship_template->impulse_speed)));
+        }
+        if (ship_template->turn_speed > 0.0) 
+        {
+            entry->addKeyValue(tr("database", "Turn speed"), string(int(ship_template->turn_speed)));
+        }
         if (ship_template->warp_speed > 0.0)
         {
             entry->addKeyValue(tr("database", "Has warp drive"), tr("hasdrive","True"));
@@ -156,23 +181,30 @@ void fillDefaultDatabaseData()
         {
 	        if (ship_template->beams[n].getRange() > 0)
             {
-                string name = "?";
-                if (std::abs(sf::angleDifference(0.0f, ship_template->beams[n].getDirection())) <= 45)
-                    name = tr("database", "Front beam weapon");
-                if (std::abs(sf::angleDifference(90.0f, ship_template->beams[n].getDirection())) < 45)
-                    name = tr("database", "Right beam weapon");
-                if (std::abs(sf::angleDifference(-90.0f, ship_template->beams[n].getDirection())) < 45)
-                    name = tr("database", "Left beam weapon");
-                if (std::abs(sf::angleDifference(180.0f, ship_template->beams[n].getDirection())) <= 45)
-                    name = tr("database", "Rear beam weapon");
-
-                entry->addKeyValue(name, string(ship_template->beams[n].getDamage() / ship_template->beams[n].getCycleTime(), 2) + " "+ tr("damage","DPS"));
+                entry->addKeyValue(
+                    directionLabel(ship_template->beams[n].getDirection()) + " beam weapon",
+                    string(ship_template->beams[n].getDamage(), 1) + " Dmg / " +
+                    string(ship_template->beams[n].getCycleTime(), 1) + " sec"
+                );
             }
         }
-        if (ship_template->weapon_tube_count > 0)
+        for(int n=0; n<ship_template->weapon_tube_count; n++)
         {
             entry->addKeyValue(tr("database", "Missile tubes"), string(ship_template->weapon_tube_count));
-            entry->addKeyValue(tr("database", "Missile load time"), string(int(ship_template->weapon_tube[0].load_time)));
+            string tube_info = string(int(ship_template->weapon_tube[n].load_time)) + " sec";
+            if (ship_template->weapon_tube[n].size == MS_Small)
+            {
+                tube_info += ", small";
+            }
+            if (ship_template->weapon_tube[n].size == MS_Large)
+            {
+                tube_info += ", large";
+            }
+
+            entry->addKeyValue(
+                directionLabel(ship_template->weapon_tube[n].direction) + " tube",
+                tube_info
+            );
         }
         for(int n=0; n < MW_Count; n++)
         {
