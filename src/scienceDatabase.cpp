@@ -135,6 +135,7 @@ void fillDefaultDatabaseData()
         P<ScienceDatabase> entry = class_database_entries[ship_template->getClass()]->addEntry(ship_template->getLocaleName());
 
         entry->model_data = ship_template->model_data;
+        entry->setImage(ship_template->radar_trace);
 
         entry->addKeyValue("Type", ship_template->getLocaleName());
         entry->addKeyValue(tr("database", "Class"), ship_template->getClass());
