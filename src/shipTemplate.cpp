@@ -125,8 +125,9 @@ ShipTemplate::ShipTemplate()
     if (game_server) { LOG(ERROR) << "ShipTemplate objects can not be created during a scenario."; destroy(); return; }
 
     type = Ship;
-    class_name = "Sans classe";
-    class_name = "Sans sous-classe";
+    class_name = tr("No class");
+    sub_class_name = tr("No sub-class");
+    shares_energy_with_docked = false;
     secret = false;
     hack_diff = 2;
 
@@ -145,8 +146,7 @@ ShipTemplate::ShipTemplate()
     case 8: os_name = "hub" + string(os_name_counter); break;
     case 9: os_name = "zer" + string(os_name_counter); break;
     }
-
-    shares_energy_with_docked = false;
+    
     repair_docked = false;
     restocks_scan_probes = false;
     energy_storage_amount = 1000;
