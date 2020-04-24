@@ -17,7 +17,7 @@ public:
     ScriptSimpleCallback on_destruction;
 
     ScanProbe();
-    virtual ~ScanProbe();
+    virtual ~ScanProbe() = default;
 
     virtual void update(float delta) override;
     virtual bool canBeTargetedBy(P<SpaceObject> other) override;

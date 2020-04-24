@@ -121,7 +121,7 @@ public:
     void setTranslateZ(float z) { translate_z = z; }
 
     SpaceObject(float collisionRange, string multiplayerName, float multiplayer_significant_range=-1);
-    virtual ~SpaceObject();
+    virtual ~SpaceObject() = default;
 
     float getRadius() { return object_radius; }
     void setRadius(float radius) { object_radius = radius; setCollisionRadius(radius); }
