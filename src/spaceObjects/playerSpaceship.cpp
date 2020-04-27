@@ -141,9 +141,9 @@ REGISTER_SCRIPT_SUBCLASS(PlayerSpaceship, SpaceShip)
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setControlCode);
     /// Apply a rate to energy decrease. Float, default is 1. Won't affect production of energy.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setEnergyConsumptionRatio);
-    // Callback when this ship launches a probe.
-    // Returns the launching PlayerSpaceship and launched ScanProbe.
-    // Example: player:onProbeLaunch(trackProbe)
+    /// Callback when this ship launches a probe.
+    /// Returns the launching PlayerSpaceship and launched ScanProbe.
+    /// Example: player:onProbeLaunch(trackProbe)
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, onProbeLaunch);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getLongRangeRadarRange);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getShortRangeRadarRange);
