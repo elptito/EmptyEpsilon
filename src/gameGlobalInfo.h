@@ -104,6 +104,9 @@ public:
     //When active, all comms request goto the GM as chat, and normal scripted converstations are disabled. This does not disallow player<->player ship comms.
     ECommsGmInterception intercept_all_comms_to_gm;
 
+    //Callback called when a new player ship is created on the ship selection screen.
+    ScriptSimpleCallback on_new_player_ship;
+
     GameGlobalInfo();
     virtual ~GameGlobalInfo() = default;
 
