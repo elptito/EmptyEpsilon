@@ -464,6 +464,11 @@ PlayerSpaceship::PlayerSpaceship()
     
 }
 
+//due to a suspected compiler bug this deconstructor needs to be explicitly defined
+PlayerSpaceship::~PlayerSpaceship()
+{
+}
+
 void PlayerSpaceship::update(float delta)
 {
     // If we're flashing the screen for hull damage, tick the fade-out.

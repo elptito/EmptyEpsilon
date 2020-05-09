@@ -220,12 +220,18 @@ SpaceObject::SpaceObject(float collision_range, string multiplayer_name, float m
     registerMemberReplication(&id_galaxy);
 }
 
-#if FEATURE_3D_RENDERING
+//due to a suspected compiler bug this deconstructor needs to be explicitly defined
+SpaceObject::~SpaceObject()
+{
+}
+
 void SpaceObject::draw3D()
 {
+#if FEATURE_3D_RENDERING
     model_info.render(getPosition(), getRotation(), 1 - transparency);
-}
 #endif//FEATURE_3D_RENDERING
+}
+
 
 
 void SpaceObject::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, float rotation, bool longRange)

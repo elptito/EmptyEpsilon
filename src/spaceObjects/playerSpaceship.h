@@ -216,7 +216,7 @@ public:
     int32_t linked_science_probe_id;
     int32_t linked_probe_3D_id;
     PlayerSpaceship();
-    virtual ~PlayerSpaceship() = default;
+    virtual ~PlayerSpaceship();
 
     // Comms functions
     bool isCommsInactive() { return comms_state == CS_Inactive; }
