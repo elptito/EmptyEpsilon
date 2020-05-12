@@ -3,6 +3,7 @@
 
 #include "gui/gui2_overlay.h"
 #include "shipTemplate.h"
+#include "gui/gui2_listbox.h"
 
 class GuiSelector;
 class GuiContainer;
@@ -23,8 +24,11 @@ private:
     GuiListbox* listbox_other;
     GuiListbox* listbox_station;
     GuiListbox* listbox_ship;
+    GuiSelector* player_cpu_selector;
     func_t enterCreateMode;
 public:
+    GuiListbox* cpu_ship_listbox;
+    GuiListbox* player_ship_listbox;
     GuiObjectCreationView(GuiContainer* owner, func_t enterCreateMode);
 
     virtual bool onMouseDown(sf::Vector2f position);
