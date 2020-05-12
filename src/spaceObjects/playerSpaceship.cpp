@@ -2516,6 +2516,8 @@ string PlayerSpaceship::getExportLine()
         result += ":setCanLaunchProbe(" + string(can_launch_probe, true) + ")";
     if (auto_coolant_enabled)
         result += ":setAutoCoolant(true)";
+    if (auto_repair_enabled)
+        result += ":commandSetAutoRepair(true)";
     return result;
 }
 
