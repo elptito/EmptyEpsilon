@@ -1095,7 +1095,7 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
     repair_team_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
     auto_repair_toogle = new GuiToggleButton(left_col, "", "Reparation auto", [this](bool value) {
-        target->auto_repair_enabled = value;
+        target->commandSetAutoRepair(value);
     });
     auto_repair_toogle->setSize(GuiElement::GuiSizeMax, 40);
 
@@ -1155,7 +1155,7 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
     max_coolant_slider->addSnapValue(300.0, 1.0);
 
     auto_coolant_toogle = new GuiToggleButton(left_col, "", "Refroidissement auto", [this](bool value) {
-        target->auto_coolant_enabled = value;
+        target->setAutoCoolant(value);
     });
     auto_coolant_toogle->setSize(GuiElement::GuiSizeMax, 40);
 
