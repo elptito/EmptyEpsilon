@@ -1,3 +1,4 @@
+#include <i18n.h>
 #include "playerInfo.h"
 #include "screens/mainScreen.h"
 #include "screens/crewStationScreen.h"
@@ -252,30 +253,30 @@ string getCrewPositionName(ECrewPosition position)
 {
     switch(position)
     {
-    case helmsOfficer: return "Pilote";
-    case weaponsOfficer: return "Artilleur";
-    case engineering: return "Ingenieur";
-    case scienceOfficer: return "Auspex CP";
-    case relayOfficer: return "Auspex LP";
-    case tacticalOfficer: return "Tactique";
-    case engineeringAdvanced: return "Engineering+";
-    case operationsOfficer: return "Operations";
-    case singlePilot: return "Pilote a tout faire";
-    case damageControl: return "Controle des dommages";
-    case powerManagement: return "Gestion energie";
-    case databaseView: return "Base de donnees";
+    case helmsOfficer: return tr("station","Helms");
+    case weaponsOfficer: return tr("station","Weapons");
+    case engineering: return tr("station","Engineering");
+    case scienceOfficer: return tr("station","Science");
+    case relayOfficer: return tr("station","Relay");
+    case tacticalOfficer: return tr("station","Tactical");
+    case engineeringAdvanced: return tr("station","Engineering+");
+    case operationsOfficer: return tr("station","Operations");
+    case singlePilot: return tr("station","Single Pilot");
+    case damageControl: return tr("station","Damage Control");
+    case powerManagement: return tr("station","Power Management");
+    case databaseView: return tr("station","Database");
+    case altRelay: return tr("station","Strategic Map");
+    case commsOnly: return tr("station","Comms");
+    case shipLog: return tr("station","Ship's Log");
     case tacticalRadar: return "Radar Tactique";
     case scienceRadar: return "Radar Science";
     case relayRadar: return "Radar Auspex LP";
     case navigation: return "Navigation";
-    case shipLog: return "Log View";
     case internLogView: return "Intern Log View";
     case dronePilot: return "Pilote seul";
     case droneMaster: return "Maitre des docks";
     case dockMaster: return "Maitre d'ammarrage";
     case oxygenView: return "Log Oxygen";
-    case altRelay: return "Strategic Map";
-    case commsOnly: return "Vox";
     default: return "ErrUnk: " + string(position);
     }
 }
