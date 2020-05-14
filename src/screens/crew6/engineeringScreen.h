@@ -41,6 +41,7 @@ private:
         GuiPowerDamageIndicator* state;
         GuiProgressbar* max_health_bar;
         GuiProgressbar* damage_bar;
+        GuiProgressbar* health_max_bar;
         GuiLabel* damage_label;
         GuiProgressbar* heat_bar;
         GuiArrow* heat_arrow;

@@ -245,15 +245,15 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
             systems[n].power_request = 0.0;
         }
 
-        registerMemberReplication(&systems[n].health);
-        registerMemberReplication(&systems[n].health_max);
-        registerMemberReplication(&systems[n].power_level);
-        registerMemberReplication(&systems[n].power_request);
-        registerMemberReplication(&systems[n].coolant_level);
-        registerMemberReplication(&systems[n].coolant_request);
-        registerMemberReplication(&systems[n].heat_level);
-        registerMemberReplication(&systems[n].hacked_level);
-        registerMemberReplication(&systems[n].coolant_max);
+        registerMemberReplication(&systems[n].health, 0.1);
+        registerMemberReplication(&systems[n].health_max, 0.1);
+        registerMemberReplication(&systems[n].power_level, 0.1);
+        registerMemberReplication(&systems[n].power_request, 0.1);
+        registerMemberReplication(&systems[n].coolant_level, 0.1);
+        registerMemberReplication(&systems[n].coolant_request, 0.1);
+        registerMemberReplication(&systems[n].heat_level, 0.1);
+        registerMemberReplication(&systems[n].hacked_level, 0.1);
+        registerMemberReplication(&systems[n].coolant_max, 0.1);
     }
 
     for(int n = 0; n < max_beam_weapons; n++)
