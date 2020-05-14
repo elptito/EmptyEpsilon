@@ -975,17 +975,18 @@ GuiShipTweakSystems::GuiShipTweakSystems(GuiContainer* owner)
         system_damage[n]->addSnapValue( 0.5, 0.01);
         system_damage[n]->addSnapValue( 1.0, 0.01);
 
-        system_health[n] = new GuiSlider(col_2, "", 0.0, 1.0, 0.0, [this, n](float value) {
+        (new GuiLabel(col_2, "", tr("{system} health max").format({{"system", getLocaleSystemName(system)}}), 20))->setSize(GuiElement::GuiSizeMax, 30);
+        system_health_max[n] = new GuiSlider(col_2, "", -1.0, 1.0, 1.0, [this, n](float value) {
             target->systems[n].health_max = value;
             target->systems[n].health = std::min(value,target->systems[n].health);
         });
-        system_health[n]->setSize(GuiElement::GuiSizeMax, 30);
-        system_health[n]->setPosition(0,30);
-        system_health[n]->addSnapValue( 0.0, 0.01);
-        system_health[n]->addSnapValue( 0.5, 0.01);
-        system_health[n]->addSnapValue( 1.0, 0.01);
+        system_health_max[n]->setSize(GuiElement::GuiSizeMax, 30);
+        system_health_max[n]->addSnapValue(-1.0, 0.01);
+        system_health_max[n]->addSnapValue( 0.0, 0.01);
+        system_health_max[n]->addSnapValue( 1.0, 0.01);
 
-        system_heat[n] = new GuiSlider(col_3, "", 0.0, 1.0, 0.0, [this, n](float value) {
+        (new GuiLabel(col_3, "", tr("{system} heat").format({{"system", getLocaleSystemName(system)}}), 20))->setSize(GuiElement::GuiSizeMax, 30);
+        system_heat[n] = new GuiSlider(right_col, "", 0.0, 1.0, 0.0, [this, n](float value) {
             target->systems[n].heat_level = value;
         });
         system_heat[n]->setSize(GuiElement::GuiSizeMax, 30);

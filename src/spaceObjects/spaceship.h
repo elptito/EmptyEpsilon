@@ -386,8 +386,8 @@ public:
     void setSystemHealthMax(ESystem system, float health_max) {
         if (system >= SYS_COUNT) return;
         if (system <= SYS_None) return;
-        systems[system].health_max = std::min(1.0f, std::max(0.0f, health_max));
-        systems[system].health = std::min(systems[system].health, systems[system].health_max); }
+        systems[system].health_max = std::min(1.0f, std::max(-1.0f, health_max));
+        }
     float getSystemHeat(ESystem system) { if (system >= SYS_COUNT) return 0.0; if (system <= SYS_None) return 0.0; return systems[system].heat_level; }
     void setSystemHeat(ESystem system, float heat) { if (system >= SYS_COUNT) return; if (system <= SYS_None) return; systems[system].heat_level = std::min(1.0f, std::max(0.0f, heat)); }
     float getSystemPower(ESystem system) { if (system >= SYS_COUNT) return 0.0; if (system <= SYS_None) return 0.0; return systems[system].power_level; }
