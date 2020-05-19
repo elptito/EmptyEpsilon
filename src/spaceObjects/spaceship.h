@@ -364,6 +364,7 @@ public:
 
     bool isDocked() { return docking_state == DS_Docked; }
     bool isDockedWith(P<SpaceObject> target) { return docking_state == DS_Docked && docking_target == target; }
+    P<SpaceObject> getDockedWith() { if (docking_state == DS_Docked) return docking_target; return NULL; }
     bool canStartDocking() { return current_warp <= 0.0 && (!has_jump_drive || jump_delay <= 0.0); }
     bool canStartLanding() { return current_warp <= 0.0 && (!has_jump_drive || jump_delay <= 0.0); }
     int getCustomWeaponStorage(string weapon) { return custom_weapon_storage[weapon]; }
