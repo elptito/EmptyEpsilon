@@ -105,6 +105,8 @@ public:
     int scanning_complexity_value;
     int scanning_depth_value;
     string callsign;
+    
+    int docking_complexity_value;
 
     SpaceObject(float collisionRange, string multiplayerName, float multiplayer_significant_range=-1);
     virtual ~SpaceObject();
@@ -176,6 +178,8 @@ public:
     virtual void setCallSign(string new_callsign) { callsign = new_callsign; }
     virtual string getCallSign() { return callsign; }
     virtual bool canBeDockedBy(P<SpaceObject> obj) { return false; }
+    virtual int dockingComplexity(P<SpaceObject> target) { return docking_complexity_value; }
+    void setDockingComplexity(int complexity);
     virtual bool hasShield() { return false; }
     virtual bool canHideInNebula() { return true; }
     virtual bool canBeTargetedBy(P<SpaceObject> other);

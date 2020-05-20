@@ -32,7 +32,7 @@ void GuiImpulseControls::onDraw(sf::RenderTarget& window)
 
 void GuiImpulseControls::onHotkey(const HotkeyResult& key)
 {
-    if (key.category == "HELMS" && my_spaceship)
+    if (key.category == "HELMS" && my_spaceship && my_spaceship->docking_complexity == 0)
     {
         if (key.hotkey == "INC_IMPULSE")
             my_spaceship->commandImpulse(std::min(1.0f, slider->getValue() + 0.1f));

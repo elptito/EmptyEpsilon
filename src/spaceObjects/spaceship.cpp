@@ -828,7 +828,12 @@ void SpaceShip::collide(Collisionable* other, float force)
     if (docking_state == DS_Docking && fabs(sf::angleDifference(target_rotation, getRotation())) < 10.0)
     {
         P<SpaceObject> dock_object = P<Collisionable>(other);
-        if (dock_object == docking_target)
+        P<SpaceObject> obj = this;
+        bool dock_valid = true;
+        P<PlayerSpaceship> ship = obj;
+        if (ship->docking_complexity)
+            dock_valid = ship->docking_complexity == 0;
+        if (dock_object == docking_target && dock_valid)
         {
             docking_state = DS_Docked;
             docking_offset = sf::rotateVector(getPosition() - other->getPosition(), -other->getRotation());

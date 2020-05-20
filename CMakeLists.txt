@@ -174,6 +174,7 @@ set(SOURCES
 	src/screenComponents/commsOverlay.cpp
 	src/screenComponents/jumpIndicator.cpp
 	src/screenComponents/scanningDialog.cpp
+	src/screenComponents/dockingDialog.cpp
 	src/screenComponents/signalQualityIndicator.cpp
 	src/screenComponents/mainScreenControls.cpp
 	src/screenComponents/databaseView.cpp

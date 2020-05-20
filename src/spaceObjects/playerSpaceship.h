@@ -138,6 +138,10 @@ public:
     bool can_hack = true;
     // Capable of docking with a target
     bool can_dock = true;
+    // Target of a dock. Server-only value
+    P<SpaceObject> docking_target;
+    // Complexity for the dock
+    int docking_complexity = 0;
     // Capable of combat maneuvers
     bool can_combat_maneuver = true;
 

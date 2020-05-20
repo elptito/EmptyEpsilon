@@ -329,6 +329,7 @@ PlayerSpaceship::PlayerSpaceship()
     registerMemberReplication(&main_screen_setting);
     registerMemberReplication(&main_screen_overlay);
     registerMemberReplication(&scanning_delay, 0.5);
+    registerMemberReplication(&docking_complexity);
     registerMemberReplication(&scanning_complexity);
     registerMemberReplication(&scanning_depth);
     registerMemberReplication(&shields_active);
@@ -426,6 +427,8 @@ void PlayerSpaceship::update(float delta)
     {
         P<ShipTemplateBasedObject> docked_with_template_based = docking_target;
         P<SpaceShip> docked_with_ship = docking_target;
+        
+        docking_complexity = 0;
 
         // Derive a base energy request rate from the player ship's maximum
         // energy capacity.
@@ -1331,7 +1334,14 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
         {
             int32_t id;
             packet >> id;
-            requestDock(game_server->getObjectById(id));
+
+            P<SpaceObject> obj = game_server->getObjectById(id);
+            if (obj)
+            {
+                docking_target = obj;
+                docking_complexity = obj->dockingComplexity(this);
+                requestDock(docking_target);
+            }
         }
         break;
     case CMD_UNDOCK:
@@ -1339,6 +1349,7 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
         break;
     case CMD_ABORT_DOCK:
         abortDock();
+        docking_complexity = 0;
         break;
     case CMD_OPEN_TEXT_COMM:
         if (comms_state == CS_Inactive || comms_state == CS_BeingHailed || comms_state == CS_BeingHailedByGM || comms_state == CS_ChannelClosed)

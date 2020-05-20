@@ -254,6 +254,8 @@ REGISTER_SCRIPT_CLASS_NO_CREATE(SpaceObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, isScannedByFaction);
     // Register a callback that is called when this object is destroyed, by any means.
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, onDestroyed);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setDockingComplexity);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, dockingComplexity);
 }
 
 PVector<SpaceObject> space_object_list;
@@ -267,6 +269,8 @@ SpaceObject::SpaceObject(float collision_range, string multiplayer_name, float m
 
     scanning_complexity_value = 0;
     scanning_depth_value = 0;
+    
+    docking_complexity_value = 0;
 
     registerMemberReplication(&callsign);
     registerMemberReplication(&faction_id);
@@ -435,6 +439,11 @@ void SpaceObject::setScanningParameters(int complexity, int depth)
     scanning_depth_value = std::max(0, depth);
 
     scanned_by_faction.clear();
+}
+
+void SpaceObject::setDockingComplexity(int complexity)
+{
+    docking_complexity_value = std::min(4, std::max(0, complexity));
 }
 
 bool SpaceObject::isEnemy(P<SpaceObject> obj)
