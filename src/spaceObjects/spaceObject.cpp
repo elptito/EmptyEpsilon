@@ -60,8 +60,40 @@ REGISTER_SCRIPT_CLASS_NO_CREATE(SpaceObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getPersonality);
     /// Gets the personality ID to which this object belongs.
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getPersonalityId);
-
+    
+    /// Gets the friend-or-foe status of the parameter's faction relative to
+    /// this object's faction.
+    /// Requires a SpaceObject.
+    /// Returns true if the parameter's faction is hostile to this object's.
+    /// Example: local is_enemy = obj:isEnemy()
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, isEnemy);
+    /// Requires a SpaceObject.
+    /// Returns true if the parameter's faction is friendly to this object's.
+    /// If an object is neither friendly nor enemy, it is neutral.
+    /// Example: local is_friendly = obj:isFriendly()
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, isFriendly);
+    /// Sets the communications script used when this object is hailed.
+    /// Accepts the filename of a Lua script as a string, or can be set to an
+    /// empty string to disable comms with this object.
+    /// In the script, `player` (PlayerSpaceship) and `comms_target` are available.
+    /// Compare `setCommsFunction`.
+    /// Examples:
+    ///   obj:setCommsScript("")
+    ///   obj:setCommsScript("comms_custom_script.lua")
+    /// Defaults:
+    ///   "comms_station.lua" (in `spaceStation.cpp`)
+    ///   "comms_ship.lua" (in `cpuShip.cpp`)
+    /// Call `setCommsMessage` once and `addCommsReply` zero or more times in each dialogue.
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setCommsScript);
+    /// Defines a callback function to use when handling hails, in lieu of any
+    /// current or default comms script.
+    /// For a detailed example, see scenario_53_escape.lua.
+    /// Requires a function to call back to when hailed.
+    /// The function has no parameters, but `comms_source` (PlayerSpaceship) and `comms_target` are available.
+    /// Compare `setCommsScript`.
+    /// Example: obj:setCommsFunction(commsStation)
+    /// where commsStation is a function
+    /// calling `setCommsMessage` once and `addCommsReply` zero or more times.
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setCommsFunction);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, isEnemy);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, isFriendly);
