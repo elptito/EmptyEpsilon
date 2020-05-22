@@ -104,7 +104,13 @@ HotkeyConfig::HotkeyConfig()
     newKey("COOLANT_MAX", std::make_tuple("refroidissement max du systeme", ""));
     newKey("COOLANT_MIN", std::make_tuple("refroidissement min du systeme", ""));
     newKey("RESET", std::make_tuple("Remise a zero du systeme", "Gauche"));
+    newKey("SET_POWER_000", std::make_tuple("Set system power to 0%", ""));
+    newKey("SET_POWER_030", std::make_tuple("Set system power to 30%", ""));
     newKey("SET_POWER_100", std::make_tuple("Set system power to 100%", "Space"));
+    newKey("SET_POWER_150", std::make_tuple("Set system power to 150%", ""));
+    newKey("SET_POWER_200", std::make_tuple("Set system power to 200%", ""));
+    newKey("SET_POWER_250", std::make_tuple("Set system power to 250%", ""));
+    newKey("SET_POWER_300", std::make_tuple("Set system power to 300%", ""));
     newKey("NEXT_REPAIR_CREW", std::make_tuple("Equipe de reparation suivante", ""));
     newKey("REPAIR_CREW_MOVE_UP", std::make_tuple("Deplacer equipe de reparation haut", ""));
     newKey("REPAIR_CREW_MOVE_DOWN", std::make_tuple("Deplacer equipe de reparation bas", ""));
