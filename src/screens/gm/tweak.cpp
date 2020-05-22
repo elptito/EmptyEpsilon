@@ -31,16 +31,22 @@ GuiObjectTweak::GuiObjectTweak(GuiContainer* owner, ETweakType tweak_type)
     list->setSize(300, GuiElement::GuiSizeMax);
     list->setPosition(25, 25, ATopLeft);
 
-    pages.push_back(new GuiObjectTweakBase(this));
-    list->addEntry("Base", "");
-
+    if (tweak_type == TW_Object || tweak_type == TW_Station || tweak_type == TW_Ship || tweak_type == TW_Player)
+    {
+        pages.push_back(new GuiObjectTweakBase(this));
+        list->addEntry("Base", "");
+    }
+    
     pages.push_back(new GuiShipTweakInfos(this));
     list->addEntry("Infos", "");
 
-    if (tweak_type == TW_Template || tweak_type == TW_Ship || tweak_type == TW_Player)
+    if (tweak_type == TW_Template || tweak_type == TW_Ship || tweak_type == TW_Player || tweak_type == TW_Station)
     {
         pages.push_back(new GuiTemplateTweak(this));
-        list->addEntry("Structure fixe", "");
+        list->addEntry("Modele de structure", "");
+    }
+    if (tweak_type == TW_Ship || tweak_type == TW_Player || tweak_type == TW_Station)
+    {
         pages.push_back(new GuiShipTweakShields(this));
         list->addEntry("Boucliers", "");
     }
@@ -48,7 +54,7 @@ GuiObjectTweak::GuiObjectTweak(GuiContainer* owner, ETweakType tweak_type)
     if (tweak_type == TW_Ship || tweak_type == TW_Player)
     {
         pages.push_back(new GuiShipTweak(this));
-        list->addEntry("Structure mobile", "");
+        list->addEntry("Vaisseau", "");
         pages.push_back(new GuiShipTweakMissileTubes(this));
         list->addEntry("Tubes", "");
         pages.push_back(new GuiShipTweakMissileWeapons(this));
@@ -392,38 +398,18 @@ void GuiShipTweakShields::onDraw(sf::RenderTarget& window)
 
 void GuiShipTweakShields::open(P<SpaceObject> target)
 {
-    P<SpaceShip> ship = target;
-    P<SpaceStation> station = target;
+    P<ShipTemplateBasedObject> ship = target;
+    this->target = ship;
 
     if (ship)
     {
-        this->target = ship;
-
         for(int n = 0; n < max_shield_count; n++)
         {
             shield_max_slider[n]->setValue(ship->shield_max[n]);
             shield_max_slider[n]->clearSnapValues()->addSnapValue(ship->ship_template->shield_level[n], 5.0f);
         }
         shield_recharge_slider->setValue(ship->shield_recharge_rate * 100);
-        //shield_recharge_slider->clearSnapValues()->addSnapValue(2, 0.1f);
     }
-
-    if (station)
-    {
-        this->target = station;
-
-        for(int n = 0; n < max_shield_count; n++)
-        {
-            shield_max_slider[n]->setValue(station->shield_max[n]);
-            shield_max_slider[n]->clearSnapValues()->addSnapValue(station->ship_template->shield_level[n], 5.0f);
-        }
-        shield_recharge_slider->setValue(station->shield_recharge_rate * 100);
-        //shield_recharge_slider->clearSnapValues()->addSnapValue(2, 0.1f);
-
-    }
-
-        
-    
 
 }
 

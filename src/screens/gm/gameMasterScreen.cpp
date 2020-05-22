@@ -185,6 +185,11 @@ GameMasterScreen::GameMasterScreen()
                 planet_tweak_dialog->open(obj);
                 break;
             }
+            else if (P<SpaceStation>(obj))
+            {
+                station_tweak_dialog->open(obj);
+                break;
+            }
             else
             {
                 object_tweak_dialog->open(obj);
@@ -263,6 +268,8 @@ GameMasterScreen::GameMasterScreen()
     object_tweak_dialog->hide();
     planet_tweak_dialog = new GuiObjectTweak(this, TW_Planet);
     planet_tweak_dialog->hide();
+    station_tweak_dialog = new GuiObjectTweak(this, TW_Station);
+    station_tweak_dialog->hide();
 
     global_message_entry = new GuiGlobalMessageEntryView(this);
     global_message_entry->hide();
