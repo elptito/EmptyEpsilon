@@ -428,6 +428,7 @@ void EngineeringScreen::onHotkey(const HotkeyResult& key)
 
         if (selected_system != SYS_None)
         {
+            // Note the code duplication with extra/powerManagement
             if (key.hotkey == "SET_POWER_000")
             {
                 power_slider->setValue(0.0f);
@@ -436,6 +437,11 @@ void EngineeringScreen::onHotkey(const HotkeyResult& key)
             if (key.hotkey == "SET_POWER_030")
             {
                 power_slider->setValue(0.3f);
+                my_spaceship->commandSetSystemPowerRequest(selected_system, power_slider->getValue());
+            }
+            if (key.hotkey == "SET_POWER_050")
+            {
+                power_slider->setValue(0.5f);
                 my_spaceship->commandSetSystemPowerRequest(selected_system, power_slider->getValue());
             }
             if (key.hotkey == "SET_POWER_100")

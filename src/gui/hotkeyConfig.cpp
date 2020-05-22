@@ -106,6 +106,7 @@ HotkeyConfig::HotkeyConfig()
     newKey("RESET", std::make_tuple("Remise a zero du systeme", "Gauche"));
     newKey("SET_POWER_000", std::make_tuple("Set system power to 0%", ""));
     newKey("SET_POWER_030", std::make_tuple("Set system power to 30%", ""));
+    newKey("SET_POWER_050", std::make_tuple("Set system power to 50%", ""));
     newKey("SET_POWER_100", std::make_tuple("Set system power to 100%", "Space"));
     newKey("SET_POWER_150", std::make_tuple("Set system power to 150%", ""));
     newKey("SET_POWER_200", std::make_tuple("Set system power to 200%", ""));
