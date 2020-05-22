@@ -94,6 +94,7 @@ public:
     bool allow_main_screen_ship_state;
     string gm_control_code;
     float elapsed_time;
+    string scenario;
     string variation = "None";
 
     //List of script functions that can be called from the GM interface (Server only!)
