@@ -47,6 +47,7 @@ private:
     bool position_text_custom;
     GuiTextEntry* position_text;
     GuiObjectTweak* station_tweak_dialog;
+    GuiObjectTweak* jammer_tweak_dialog;
     
     GuiAutoLayout* info_layout;
     std::vector<GuiKeyValueDisplay*> info_items;

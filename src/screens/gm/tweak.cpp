@@ -31,7 +31,8 @@ GuiObjectTweak::GuiObjectTweak(GuiContainer* owner, ETweakType tweak_type)
     list->setSize(300, GuiElement::GuiSizeMax);
     list->setPosition(25, 25, ATopLeft);
 
-    if (tweak_type == TW_Object || tweak_type == TW_Station || tweak_type == TW_Ship || tweak_type == TW_Player)
+    if (tweak_type == TW_Object || tweak_type == TW_Station || tweak_type==TW_Jammer
+        || tweak_type == TW_Ship || tweak_type == TW_Player)
     {
         pages.push_back(new GuiObjectTweakBase(this));
         list->addEntry("Base", "");
@@ -45,6 +46,13 @@ GuiObjectTweak::GuiObjectTweak(GuiContainer* owner, ETweakType tweak_type)
         pages.push_back(new GuiTemplateTweak(this));
         list->addEntry("Modele de structure", "");
     }
+
+    if (tweak_type == TW_Jammer)
+    {
+        pages.push_back(new GuiJammerTweak(this));
+        list->addEntry("Jammer", "");
+    }
+
     if (tweak_type == TW_Ship || tweak_type == TW_Player || tweak_type == TW_Station)
     {
         pages.push_back(new GuiShipTweakShields(this));
@@ -647,6 +655,30 @@ GuiShipTweakMissileWeapons::GuiShipTweakMissileWeapons(GuiContainer* owner)
     }
 
 
+}
+
+GuiJammerTweak::GuiJammerTweak(GuiContainer* owner)
+: GuiTweakPage(owner)
+{
+    GuiAutoLayout* left_col = new GuiAutoLayout(this, "LEFT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    left_col->setPosition(50, 25, ATopLeft)->setSize(300, GuiElement::GuiSizeMax);
+
+    GuiAutoLayout* right_col = new GuiAutoLayout(this, "RIGHT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    right_col->setPosition(-25, 25, ATopRight)->setSize(300, GuiElement::GuiSizeMax);
+
+    (new GuiLabel(left_col, "", "Jammer Range:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    jammer_range_slider = new GuiSlider(left_col, "", 0, 20000, 0, [this](float value) {
+        target->setRange(value);
+    });
+    jammer_range_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+}
+
+void GuiJammerTweak::open(P<SpaceObject> target)
+{
+    P<WarpJammer> jammer = target;
+    this->target = jammer;
+
+    jammer_range_slider->setValue(this->target->getRange());
 }
 
 void GuiShipTweakMissileWeapons::onDraw(sf::RenderTarget& window)

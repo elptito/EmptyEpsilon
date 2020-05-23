@@ -190,6 +190,10 @@ GameMasterScreen::GameMasterScreen()
                 station_tweak_dialog->open(obj);
                 break;
             }
+            else if (P<WarpJammer>(obj))
+            {
+                jammer_tweak_dialog->open(obj);
+            }
             else
             {
                 object_tweak_dialog->open(obj);
@@ -270,6 +274,8 @@ GameMasterScreen::GameMasterScreen()
     planet_tweak_dialog->hide();
     station_tweak_dialog = new GuiObjectTweak(this, TW_Station);
     station_tweak_dialog->hide();
+    jammer_tweak_dialog = new GuiObjectTweak(this, TW_Jammer);
+    jammer_tweak_dialog->hide();
 
     global_message_entry = new GuiGlobalMessageEntryView(this);
     global_message_entry->hide();

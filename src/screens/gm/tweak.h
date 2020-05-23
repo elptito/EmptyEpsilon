@@ -7,6 +7,7 @@
 #include "playerInfo.h"
 #include "spaceObjects/planet.h"
 #include "spaceObjects/playerSpaceship.h"
+#include "spaceObjects/warpJammer.h"
 
 class SpaceShip;
 class GuiKeyValueDisplay;
@@ -21,6 +22,7 @@ class GuiListbox;
 enum ETweakType
 {
     TW_Object,  // TODO: Space object
+    TW_Jammer,  // WarpJammer
     TW_Ship,    // Ships
     TW_Template,// Template : Ships & station
     TW_Station, // TODO: Space stations
@@ -136,6 +138,18 @@ private:
 public:
     GuiShipTweak(GuiContainer* owner);
     virtual void onDraw(sf::RenderTarget& window) override;
+    virtual void open(P<SpaceObject> target) override;
+};
+
+class GuiJammerTweak : public GuiTweakPage
+{
+private:
+    P<WarpJammer> target;
+
+    GuiSlider* jammer_range_slider;
+public:
+    GuiJammerTweak(GuiContainer* owner);
+
     virtual void open(P<SpaceObject> target) override;
 };
 
