@@ -68,6 +68,7 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     /// Sets by how much the shields recharge over time for all shields. Default value is 0.3. Value is a float.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setShieldRechargeRate);
     /// Set the impulse speed, rotation speed and impulse acceleration for this ship.
+    /// Compare SpaceShip:setImpulseMaxSpeed, :setRotationMaxSpeed, :setAcceleration.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setSpeed);
     /// Sets the combat maneuver power of this ship.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCombatManeuver);
