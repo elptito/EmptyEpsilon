@@ -412,7 +412,6 @@ public:
 	float getJumpDelay() { return jump_delay; }
 	float getJumpDriveMaxDistance() { return jump_drive_max_distance; }
 	float getJumpDriveMinDistance() { return jump_drive_min_distance; }
-	float getJumpDriveCharge() { return jump_drive_charge; }
 	float getJumpDriveChargeTime() { return jump_drive_charge_time; }
 	float getJumpDriveEnergy() { return jump_drive_energy_per_km_charge; }
 
@@ -440,6 +439,8 @@ public:
             return 0.0f;
         }
      }
+    float getJumpDriveCharge() { return jump_drive_charge; }
+    void setJumpDriveCharge(float charge) { jump_drive_charge = charge; }
 
 	void setCloaking(bool enabled) { has_cloaking = enabled; }
 	bool hasCloaking() { return has_cloaking; }

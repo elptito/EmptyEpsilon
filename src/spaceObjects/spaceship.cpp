@@ -80,9 +80,15 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getJumpDelay);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getJumpDriveMaxDistance);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getJumpDriveMinDistance);
-    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getJumpDriveCharge);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getJumpDriveChargeTime);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getJumpDriveEnergy);
+    /// sets the current jump range charged.
+    /// ships will be able to jump when this is equal to their max jump drive range. 
+    /// Example ship:setJumpCharge(50000)
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setJumpDriveCharge);
+    /// returns the current amount of jump charged. 
+    /// Example ship:getJumpCharge()
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getJumpDriveCharge);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, hasWarpDrive);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setWarpDrive);
     /// Set the warp speed for this ship's warp level 1.
