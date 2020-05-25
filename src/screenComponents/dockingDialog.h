@@ -15,7 +15,7 @@ class GuiOverlay;
 class GuiDockingDialog : public GuiElement
 {
 private:
-    static constexpr int max_bars = 4;
+    static constexpr int max_bars = 100;
     static constexpr float lock_delay = 2.0f;
 
     sf::RenderTexture background_texture;
@@ -36,7 +36,7 @@ private:
     string target_radar = "radartrace_hugestation";
     sf::Color ship_color = sf::Color::White;
     sf::Color target_color = sf::Color::White;
-    float angle = 90.0f;
+    float ship_angle = 90.0f;
     
     // ship position
     float ship_position_x;
@@ -44,10 +44,14 @@ private:
     
     // docking position
     float dock_center[max_bars];
-    float dock_width = 25;
+    float dock_width[max_bars];
+    int dock_direction[max_bars];
     
+    int dock_complexity;
+    
+    bool started;
     bool locked;
-    float lock_start_time;
+    bool finished;
 public:
     GuiDockingDialog(GuiContainer* owner, string id);
 

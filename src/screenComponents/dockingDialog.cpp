@@ -12,8 +12,9 @@
 GuiDockingDialog::GuiDockingDialog(GuiContainer* owner, string id)
 : GuiElement(owner, id)
 {
+    started = false;
     locked = false;
-    lock_start_time = 0;
+    finished = false;
 
     setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
     
@@ -30,17 +31,10 @@ GuiDockingDialog::GuiDockingDialog(GuiContainer* owner, string id)
     {
         ship_radar = my_spaceship->radar_trace;
         ship_color = factionInfo[my_spaceship->getFactionId()]->gm_color;
-        //target_color = factionInfo[my_spaceship->docking_target->getFactionId()]->gm_color;
-        //P<SpaceShip> target = my_spaceship->docking_target;
-        //if (target)
-        //    target_radar = target->radar_trace;
-        //P<SpaceStation> target_alt = my_spaceship->docking_target;
-        //if (target_alt)
-        //    target_radar = target_alt->radar_trace;
     }
         
     ship_icon = new GuiImage(docking_map, "", ship_radar);
-    ship_icon->setColor(ship_color)->setPosition(490/2, 0, ATopCenter)->setSize(25,25);
+    ship_icon->setColor(ship_color)->setPosition(490/2, 100, ATopCenter)->setSize(25,25);
     
     locked_label = new GuiLabel(docking_map, id + "_LOCK_LABEL", "Docking in progress...", 40);
     locked_label->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
@@ -48,7 +42,7 @@ GuiDockingDialog::GuiDockingDialog(GuiContainer* owner, string id)
     for(int n=0; n<max_bars; n++)
     {
         dock[n] = new GuiElement(docking_map, id + "_" + string(n) + "_DOCK");
-        dock[n]->setPosition(0, 100 + 75*n, ATopCenter)->setSize(GuiElement::GuiSizeMax, 25);
+        dock[n]->setPosition(0, 200 + 5*n, ATopCenter)->setSize(GuiElement::GuiSizeMax, 5);
         
         left_dock[n] = new GuiOverlay(dock[n], id + "_" + string(n) + "_LEFT_DOCK", sf::Color(128, 128, 128, 128));
         left_dock[n]->setSize(200, GuiElement::GuiSizeMax)->setPosition(0, 0, ATopLeft);
@@ -60,9 +54,10 @@ GuiDockingDialog::GuiDockingDialog(GuiContainer* owner, string id)
     target_icon = new GuiImage(box, "", target_radar);
     target_icon->setColor(target_color)->setPosition(0, -80, ABottomCenter)->setSize(30,30);
         
-    cancel_button = new GuiButton(box, id + "_CANCEL", "Cancel", []() {
+    cancel_button = new GuiButton(box, id + "_CANCEL", "Cancel", [this]() {
         if (my_spaceship)
             my_spaceship->commandAbortDock();
+        this->setupParameters();
     });
     cancel_button->setPosition(0, -20, ABottomCenter)->setSize(300, 50);
 
@@ -70,9 +65,7 @@ GuiDockingDialog::GuiDockingDialog(GuiContainer* owner, string id)
 }
 
 void GuiDockingDialog::onDraw(sf::RenderTarget& window)
-{
-    updateDocking();
-    
+{   
     if (my_spaceship)
     {
         if (my_spaceship->docking_complexity > 0)
@@ -82,13 +75,12 @@ void GuiDockingDialog::onDraw(sf::RenderTarget& window)
                 box->show();
                 setupParameters();
             }
-            if (angle < 270)
+            updateDocking();
+            if (finished)
             {
-                angle += 1.0f;
-                ship_icon->setAngle(angle);
-            }
-            if (locked && engine->getElapsedTime() - lock_start_time > lock_delay)
                 my_spaceship->docking_complexity = 0;
+                setupParameters();
+            }
         }else{
             box->hide();
         }
@@ -99,30 +91,68 @@ void GuiDockingDialog::setupParameters()
 {
     if (!my_spaceship)
         return;
-        
+    
+    ship_angle = 90;
+    ship_icon->setPosition(490/2, 100, ATopCenter);
+    ship_position_x = ship_icon->getPositionOffset().x;
+    ship_position_y = ship_icon->getPositionOffset().y;
+    ship_icon->setPosition(ship_position_x,ship_position_y);
+    
+    started = false;
+    locked = false;
+    finished = false;
+    locked_label->hide();
+    dock_complexity = 50 - 10 * my_spaceship->docking_complexity;
+    
     for(int n=0; n<max_bars; n++)
     {
-        if (n < my_spaceship->docking_complexity)
-        {
+        dock[n]->setPosition(0, 200 + 5*n, ATopCenter);
+        // Initial visibility
+        float dock_position = dock[n]->getPositionOffset().y;
+        if (dock_position > 300)
+             dock[n]->hide();
+        else
             dock[n]->show();
-            dock_center[n] = random(25, 465); // max 490 +/- 25*2
-            left_dock[n]->setSize(dock_center[n] - dock_width, GuiElement::GuiSizeMax);
-            right_dock[n]->setSize(490 - dock_center[n] - dock_width, GuiElement::GuiSizeMax);
+            
+        if (n == 0)
+        {
+            dock_direction[n] = (random(0, 100)<50)? 1 : 0;
+            dock_width[n] = 75;
+            dock_center[n] = 245;
+            left_dock[n]->setSize(dock_center[n] - dock_width[n], GuiElement::GuiSizeMax);
+            right_dock[n]->setSize(490 - dock_center[n] - dock_width[n], GuiElement::GuiSizeMax);
         }
         else
-            dock[n]->hide();
+        {
+            dock_direction[n] = (random(0, 100)<90)? dock_direction[n-1] : 1 - dock_direction[n-1];
+            dock_width[n] = dock_width[n-1] + random(-3, 2);
+            dock_width[n] = (dock_width[n] > dock_complexity)? dock_width[n] : dock_complexity;
+            dock_center[n] = dock_center[n-1] + (dock_direction[n] * random(0, 5));
+            left_dock[n]->setSize(dock_center[n] - dock_width[n], GuiElement::GuiSizeMax);
+            right_dock[n]->setSize(490 - dock_center[n] - dock_width[n], GuiElement::GuiSizeMax);
+        }
     }
-    box->setSize(500, 300 + 100 * my_spaceship->docking_complexity);
-    
-    docking_map->setSize(490, 100 + 100 * my_spaceship->docking_complexity);
 
-    ship_icon->setAngle(90);
-    locked = false;
-    locked_label->hide();
 }
 
 void GuiDockingDialog::updateDocking()
 {
+    if (ship_angle < 270)
+    {
+        ship_angle += 1.0f;
+        ship_icon->setAngle(ship_angle);
+    }
+    if (abs(270 - ship_angle) < 1 && !started)
+        started = true;
+        
+    if (!started)
+        return;
+    
+    // Ship position
+    ship_position_x = ship_icon->getPositionOffset().x;
+    ship_position_y = ship_icon->getPositionOffset().y;
+    
+    // Ship position noise
     float random1 = random(-2, 2);
     float random2 = random(-2, 2);
     if (my_spaceship)
@@ -130,48 +160,68 @@ void GuiDockingDialog::updateDocking()
         random1 *= std::max(0.0f,1.5f-my_spaceship->getSystemEffectiveness(SYS_Maneuver));
         random2 *= std::max(0.0f,1.5f-my_spaceship->getSystemEffectiveness(SYS_Impulse));
     }
-    ship_position_x = ship_icon->getPositionOffset().x + random1;
-    ship_position_y = ship_icon->getPositionOffset().y + random2;
-    ship_position_x = std::max(std::min(ship_position_x,465.0f),0.0f);
-    ship_position_y = std::max(ship_position_y,0.0f);
-    
-    ship_icon->setPosition(ship_position_x,ship_position_y);
-    
-    float success_y;
-    if (my_spaceship)
-        success_y = 75 + 100 * my_spaceship->docking_complexity;
-        
-    if (ship_position_y > success_y && !locked)
+    if (!locked)
     {
-        ship_icon->hide();
-        target_icon->hide();
-        for(int n=0; n<max_bars; n++)
-            dock[n]->hide();
-        lock_start_time = engine->getElapsedTime();
-        locked = true;
-        locked_label->show();
+        ship_position_x += random1;
+        ship_position_y += random2;
+        ship_position_x = std::max(std::min(ship_position_x,465.0f),0.0f);
+        ship_position_y = std::max(ship_position_y,0.0f);
+        ship_icon->setPosition(ship_position_x,ship_position_y);
     }
-
-    if (!my_spaceship)
-        return;
     
+    // Finish mini game
+    if (locked && !finished)
+    {
+        ship_position_x += (ship_position_x < 245)? 0.5 : -0.5;
+        ship_position_y += (ship_position_y < 300)? 0.5 : -0.5;
+        ship_icon->setPosition(ship_position_x,ship_position_y);
+        if (abs(ship_position_x - 245) < 25 && abs(ship_position_y - 300) < 25)
+            finished = true;
+    }
+    
+    // Bars move
     for(int n=0; n<max_bars; n++)
     {
-        if (n < my_spaceship->docking_complexity)
-        {
-            float diff_x = ship_position_x - dock_center[n];
-            float diff_y = ship_position_y - dock[n]->getPositionOffset().y;
+        float dock_position = dock[n]->getPositionOffset().y;
+        if (dock_position > 300 || dock_position < 0)
+             dock[n]->hide();
+        else
+            dock[n]->show();
             
-            if ((diff_x < -25 || diff_x > 0) && abs(diff_y) < 25)
+        // Lock mini game
+        if (n == max_bars - 1 && dock_position < ship_position_y && !locked)
+        {
+            locked = true;
+            locked_label->show();
+        }
+        
+        // Dock move
+        dock[n]-> setPosition(0, dock_position - 0.5, ATopCenter);
+        
+        // Damage
+        // Only if y near
+        float diff_y = ship_position_y - dock[n]->getPositionOffset().y;
+        if (abs(diff_y) < 30)
+        {
+            // Left damage
+            float left_x = ship_position_x - (dock_center[n] - dock_width[n]);
+            if (left_x < 0 && my_spaceship)
             {
-                ship_position_y -= 10;
+                ship_position_x += 5;
+                ship_icon->setPosition(ship_position_x,ship_position_y);
+                DamageInfo info(NULL, DT_Kinetic, my_spaceship->getPosition());
+                my_spaceship->takeDamage(10, info);
+            }
+            // Right damage
+            float right_x = (dock_center[n] + dock_width[n]) - (ship_position_x + 25);
+            if (right_x < 0 && my_spaceship)
+            {
+                ship_position_x -= 5;
                 ship_icon->setPosition(ship_position_x,ship_position_y);
                 DamageInfo info(NULL, DT_Kinetic, my_spaceship->getPosition());
                 my_spaceship->takeDamage(10, info);
             }
         }
-        else
-            dock[n]->hide();
     }
 }
 
