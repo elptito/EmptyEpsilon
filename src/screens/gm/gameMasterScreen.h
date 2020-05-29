@@ -84,7 +84,7 @@ private:
     const float max_distance = 30000000.0f;
     const float min_distance = 6250.0f;
     GuiButton* create_button;
-    GuiButton* cancel_create_button;
+    GuiButton* cancel_action_button;
 public:
 
     GameMasterScreen();
