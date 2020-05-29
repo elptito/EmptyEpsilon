@@ -13,7 +13,6 @@ class GuiTextEntry;
 
 class GuiObjectCreationView : public GuiOverlay
 {
-    typedef std::function<void()> func_t;
 private:
     string script;
     string create_script;
@@ -25,11 +24,10 @@ private:
     GuiListbox* listbox_station;
     GuiListbox* listbox_ship;
     GuiSelector* player_cpu_selector;
-    func_t enterCreateMode;
 public:
     GuiListbox* cpu_ship_listbox;
     GuiListbox* player_ship_listbox;
-    GuiObjectCreationView(GuiContainer* owner, func_t enterCreateMode);
+    GuiObjectCreationView(GuiContainer* owner);
 
     virtual void onDraw(sf::RenderTarget& window) override;
 
