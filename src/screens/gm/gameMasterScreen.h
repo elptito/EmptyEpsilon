@@ -83,9 +83,9 @@ private:
     sf::Vector2f drag_previous_position;
     const float max_distance = 30000000.0f;
     const float min_distance = 6250.0f;
-public:
     GuiButton* create_button;
     GuiButton* cancel_create_button;
+public:
 
     GameMasterScreen();
     virtual ~GameMasterScreen();
