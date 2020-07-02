@@ -1056,7 +1056,8 @@ bool SpaceShip::canBeDockedBy(P<SpaceObject> obj)
     P<SpaceShip> ship = obj;
     if (!ship || !ship->ship_template)
         return false;
-    // return ship_template->can_be_docked_by_class.count(ship->ship_template->getClass()) > 0;
+    //return (ship_template->can_be_docked_by_class.count(ship->ship_template->getClass()) +
+	//   ship_template->can_be_docked_by_class.count(ship->ship_template->getSubClass())) > 0;
     return true;
 }
 
