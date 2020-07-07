@@ -162,13 +162,6 @@ int main(int argc, char** argv)
     new DirectoryResourceProvider("packs/SolCommand/");
     new DirectoryResourceProvider("packs/PZ/");
     PackResourceProvider::addPackResourcesForDirectory("packs");
-#ifdef RESOURCE_BASE_DIR
-    new DirectoryResourceProvider(RESOURCE_BASE_DIR "resources/");
-    new DirectoryResourceProvider(RESOURCE_BASE_DIR "scripts/");
-    new DirectoryResourceProvider(RESOURCE_BASE_DIR "packs/SolCommand/");
-    new DirectoryResourceProvider(RESOURCE_BASE_DIR "packs/PZ/");
-    PackResourceProvider::addPackResourcesForDirectory(RESOURCE_BASE_DIR "packs");
-#endif
     if (getenv("HOME"))
     {
         new DirectoryResourceProvider(string(getenv("HOME")) + "/.emptyepsilon/resources/");
@@ -176,6 +169,13 @@ int main(int argc, char** argv)
         new DirectoryResourceProvider(string(getenv("HOME")) + "/.emptyepsilon/packs/SolCommand/");
         new DirectoryResourceProvider(string(getenv("HOME")) + "/.emptyepsilon/packs/PZ/");
     }
+#ifdef RESOURCE_BASE_DIR
+    new DirectoryResourceProvider(RESOURCE_BASE_DIR "resources/");
+    new DirectoryResourceProvider(RESOURCE_BASE_DIR "scripts/");
+    new DirectoryResourceProvider(RESOURCE_BASE_DIR "packs/SolCommand/");
+    new DirectoryResourceProvider(RESOURCE_BASE_DIR "packs/PZ/");
+    PackResourceProvider::addPackResourcesForDirectory(RESOURCE_BASE_DIR "packs");
+#endif
     textureManager.setDefaultSmooth(true);
     textureManager.setDefaultRepeated(true);
     textureManager.setAutoSprite(false);
