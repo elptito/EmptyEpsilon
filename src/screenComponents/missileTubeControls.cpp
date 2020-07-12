@@ -179,6 +179,11 @@ void GuiMissileTubeControls::onDraw(sf::RenderTarget& window){
             rows[n].fire_button->setText(tr("missile","Firing"));
             rows[n].loading_bar->hide();
         }
+
+        if (my_spaceship->current_warp > 0.0)
+        {
+            rows[n].fire_button->disable();
+        }
     }
     for(int n=target_spaceship->weapon_tube_count; n<max_weapon_tubes; n++)
         rows[n].layout->hide();
