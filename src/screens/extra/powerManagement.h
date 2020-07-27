@@ -14,6 +14,7 @@ class PowerManagementScreen : public GuiOverlay
 private:
     GuiKeyValueDisplay* energy_display;
     GuiKeyValueDisplay* coolant_display;
+    GuiKeyValueDisplay* oxygen_display;
 
     float previous_energy_measurement;
     float previous_energy_level;

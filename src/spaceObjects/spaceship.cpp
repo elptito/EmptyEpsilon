@@ -35,6 +35,10 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setMaxEnergy);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getEnergy);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setEnergy);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getMaxOxygen);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setMaxOxygen);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getOxygen);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setOxygen);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getSystemHealth);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setSystemHealth);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getSystemHealthMax);
@@ -153,6 +157,8 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     impulse_acceleration = 20.0;
     energy_level = 1000;
     max_energy_level = 1000;
+    oxygen_level = 100;
+    max_oxygen_level = 100;
     turnSpeed = 0.0f;
 
     registerMemberReplication(&target_rotation, 1.5);
@@ -781,6 +787,10 @@ void SpaceShip::update(float delta)
         systems[n].hacked_level = std::max(0.0f, systems[n].hacked_level - delta / unhack_time);
         systems[n].health = std::min(systems[n].health,systems[n].health_max);
     }
+    
+    // Oxygen Variation
+    oxygen_level += (getSystemEffectiveness(SYS_Reactor) - 1.0f) * delta;
+    oxygen_level = std::max(0.0f, std::min(max_oxygen_level, oxygen_level));
 
     model_info.engine_scale = std::min(1.0f, (float) std::max(fabs(getAngularVelocity() / turn_speed), fabs(current_impulse)));
     if (has_jump_drive && jump_delay > 0.0f)

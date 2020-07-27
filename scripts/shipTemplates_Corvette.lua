@@ -46,6 +46,8 @@ variation:weaponTubeDisallowMissle(0, "Mine"):weaponTubeDisallowMissle(1, "Mine"
 variation:weaponTubeDisallowMissle(2, "Mine"):weaponTubeDisallowMissle(3, "Mine")
 variation:setTubeDirection(4, 180):setWeaponTubeExclusiveFor(4, "Mine")
 
+variation:setRepairCrewCount(8)
+
 variation:addRoomSystem(1, 0, 2, 1, "Maneuver");
 variation:addRoomSystem(1, 1, 2, 1, "BeamWeapons");
 variation:addRoom(2, 2, 2, 1);

@@ -17,6 +17,7 @@
 
 #include "screens/extra/damcon.h"
 #include "screens/extra/powerManagement.h"
+#include "screens/extra/oxygenScreen.h"
 #include "screens/extra/databaseScreen.h"
 #include "screens/extra/commsScreen.h"
 #include "screens/extra/shipLogScreen.h"
@@ -180,6 +181,8 @@ void PlayerInfo::spawnUI()
             screen->addStationTab(new DamageControlScreen(container), damageControl, getCrewPositionName(damageControl), getCrewPositionIcon(damageControl));
         if (crew_position[powerManagement])
             screen->addStationTab(new PowerManagementScreen(container), powerManagement, getCrewPositionName(powerManagement), getCrewPositionIcon(powerManagement));
+        if (crew_position[oxygenScreen])
+            screen->addStationTab(new OxygenScreen(container), oxygenScreen, getCrewPositionName(oxygenScreen), getCrewPositionIcon(oxygenScreen));
         if (crew_position[databaseView])
             screen->addStationTab(new DatabaseScreen(container), databaseView, getCrewPositionName(databaseView), getCrewPositionIcon(databaseView));
         if (crew_position[altRelay])
@@ -230,6 +233,7 @@ string getCrewPositionName(ECrewPosition position)
     case singlePilot: return tr("station","Single Pilot");
     case damageControl: return tr("station","Damage Control");
     case powerManagement: return tr("station","Power Management");
+    case oxygenScreen: return tr("station","Oxygen");
     case databaseView: return tr("station","Database");
     case altRelay: return tr("station","Strategic Map");
     case commsOnly: return tr("station","Comms");
@@ -253,6 +257,7 @@ string getCrewPositionIcon(ECrewPosition position)
     case singlePilot: return "";
     case damageControl: return "";
     case powerManagement: return "";
+    case oxygenScreen: return "";
     case databaseView: return "";
     case altRelay: return "";
     case commsOnly: return "";
@@ -295,6 +300,8 @@ template<> void convert<ECrewPosition>::param(lua_State* L, int& idx, ECrewPosit
         cp = damageControl;
     else if (str == "powermanagement")
         cp = powerManagement;
+    else if (str == "oxygen" || "oxygenScreen")
+        cp = oxygenScreen;
     else if (str == "database" || str == "databaseview")
         cp = databaseView;
     else if (str == "altrelay")

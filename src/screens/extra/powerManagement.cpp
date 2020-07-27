@@ -20,6 +20,8 @@ PowerManagementScreen::PowerManagementScreen(GuiContainer* owner)
     energy_display->setIcon("gui/icons/energy")->setTextSize(20)->setPosition(20, 20, ATopLeft)->setSize(285, 40);
     coolant_display = new GuiKeyValueDisplay(this, "COOLANT_DISPLAY", 0.45, "Coolant", "");
     coolant_display->setIcon("gui/icons/coolant")->setTextSize(20)->setPosition(315, 20, ATopLeft)->setSize(280, 40);
+    oxygen_display = new GuiKeyValueDisplay(this, "OXYGEN_DISPLAY", 0.45, tr("Oxygen"), "");
+    oxygen_display->setIcon("gui/icons/speed")->setTextSize(20)->setPosition(610, 20, ATopLeft)->setSize(280, 40);
     GuiAutoLayout* layout = new GuiAutoLayout(this, "", GuiAutoLayout::LayoutHorizontalLeftToRight);
     layout->setPosition(20, 60, ATopLeft)->setSize(GuiElement::GuiSizeMax, 400);
     for(int n=0; n<SYS_COUNT; n++)
@@ -95,6 +97,8 @@ void PowerManagementScreen::onDraw(sf::RenderTarget& window)
         }
         energy_display->setValue(string(int(my_spaceship->energy_level)) + " (" + string(int(average_energy_delta * 60.0f)) + "/m)");
         coolant_display->setValue(string(int(my_spaceship->max_coolant * 10)) + "%");
+        string oxygen = string(my_spaceship->getOxygen() / my_spaceship->getMaxOxygen() * 100, 0) + "%";
+        oxygen_display->setValue(oxygen);
 
         for(int n=0; n<SYS_COUNT; n++)
         {

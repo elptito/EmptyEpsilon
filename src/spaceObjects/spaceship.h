@@ -70,6 +70,8 @@ public:
 
     float energy_level;
     float max_energy_level;
+    float oxygen_level;
+    float max_oxygen_level;
     ShipSystem systems[SYS_COUNT];
     /*!
      *[input] Ship will try to aim to this rotation. (degrees)
@@ -312,6 +314,10 @@ public:
     void setMaxEnergy(float amount) { if (amount > 0.0) { max_energy_level = amount;} }
     float getEnergy() { return energy_level; }
     void setEnergy(float amount) { if ( (amount > 0.0) && (amount <= max_energy_level)) { energy_level = amount; } }
+    float getMaxOxygen() { return max_oxygen_level; }
+    void setMaxOxygen(float amount) { if (amount > 0.0) { max_oxygen_level = amount;} }
+    float getOxygen() { return oxygen_level; }
+    void setOxygen(float amount) { if ( (amount > 0.0) && (amount <= max_oxygen_level)) { oxygen_level = amount; } }
     float getSystemHealth(ESystem system) { if (system >= SYS_COUNT) return 0.0; if (system <= SYS_None) return 0.0; return systems[system].health; }
     void setSystemHealth(ESystem system, float health) { if (system >= SYS_COUNT) return; if (system <= SYS_None) return; systems[system].health = std::min(1.0f, std::max(-1.0f, health)); }
     float getSystemHealthMax(ESystem system) { if (system >= SYS_COUNT) return 0.0; if (system <= SYS_None) return 0.0; return systems[system].health_max; }
