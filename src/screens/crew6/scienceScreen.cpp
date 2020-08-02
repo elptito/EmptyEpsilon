@@ -75,7 +75,7 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
 
     sidebar_selector = new GuiSelector(radar_view, "", [this](int index, string value)
     {
-        info_sidebar->setVisible(index == 0);    
+        info_sidebar->setVisible(index == 0);
         custom_function_sidebar->setVisible(index == 1);
     });
     sidebar_selector->setOptions({"Scanning", "Other"});
@@ -292,7 +292,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
         if (targets.get() && !P<Nebula>(targets.get()) && Nebula::blockedByNebula(my_spaceship->getPosition(), targets.get()->getPosition()))
             targets.clear();
     }
-    
+
     sidebar_selector->setVisible(sidebar_selector->getSelectionIndex() > 0 || custom_function_sidebar->hasEntries());
 
     info_callsign->setValue("-");
@@ -536,6 +536,41 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
                     else
                         info_oxygen->setColor(sf::Color::White);
                 }
+        // Tsht : copie en commentaire depuis le merge du master. A voir si on veut reutiliser le module oxygene de tdelc larp et revenir a un ecran plus proche du master
+        //         else
+        //         {
+        //             LOG(WARNING) << "Invalid pager state: " << sidebar_pager_selection;
+        //         }
+
+        //         // If beam and shield frequencies are enabled on the server,
+        //         // populate their graphs.
+        //         if (gameGlobalInfo->use_beam_shield_frequencies)
+        //         {
+        //             info_shield_frequency->setFrequency(ship->shield_frequency);
+        //             info_beam_frequency->setFrequency(ship->beam_frequency);
+        //         }
+
+        //         // Show the status of each subsystem.
+        //         for(int n = 0; n < SYS_COUNT; n++)
+        //         {
+        //             float system_health = ship->systems[n].health;
+        //             info_system[n]->setValue(string(int(system_health * 100.0f)) + "%")->setColor(sf::Color(255, 127.5 * (system_health + 1), 127.5 * (system_health + 1), 255));
+        //         }
+        //     }
+        // }
+
+        // // If the target isn't a ship, show basic info.
+        // else
+        // {
+        //     sidebar_pager->hide();
+        //     info_faction->setValue(factionInfo[obj->getFactionId()]->getLocaleName());
+
+        //     // If the target is a station, show basic tactical info.
+        //     if (station)
+        //     {
+        //         info_type->setValue(station->template_name);
+        //         info_shields->setValue(station->getShieldDataString());
+        //         info_hull->setValue(int(station->getHull()));
             }
 //            sidebar_pager->setVisible(sidebar_pager->entryCount() > 1);
         }

@@ -63,7 +63,7 @@ HelmsScreen::HelmsScreen(GuiContainer* owner)
         }
     );
     radar->setAutoRotating(PreferencesManager::get("helms_radar_lock","0")=="1");
-    
+
     heading_hint = new GuiLabel(this, "HEADING_HINT", "", 30);
     heading_hint->setAlignment(ACenter)->setSize(0, 0);
 
@@ -100,7 +100,7 @@ void HelmsScreen::onDraw(sf::RenderTarget& window)
         heading_display->setValue(string(my_spaceship->getHeading(), 1));
         float velocity = sf::length(my_spaceship->getVelocity()) / 1000 * 60;
         velocity_display->setValue(tr("{value} {unit}/min").format({{"value", string(velocity, 1)}, {"unit", DISTANCE_UNIT_1K}}));
-        
+
         warp_controls->setVisible(my_spaceship->has_warp_drive);
         jump_controls->setVisible(my_spaceship->has_jump_drive);
     }

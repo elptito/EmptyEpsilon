@@ -187,7 +187,6 @@ public:
     GuiShipTweakMissileTubes(GuiContainer* owner);
 
     virtual void onDraw(sf::RenderTarget& window) override;
-
     virtual void open(P<SpaceObject> target) override;
 };
 

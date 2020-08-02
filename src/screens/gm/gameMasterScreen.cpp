@@ -227,7 +227,7 @@ GameMasterScreen::GameMasterScreen()
         gameMasterActions->commandCallGmScript(index, getSelection());
     });
     gm_script_options->setPosition(20, 130, ATopLeft)->setSize(250, 500);
-    
+
     order_layout = new GuiAutoLayout(this, "ORDER_LAYOUT", GuiAutoLayout::LayoutVerticalBottomToTop);
     order_layout->setPosition(-20, -90, ABottomRight)->setSize(300, GuiElement::GuiSizeMax);
 
@@ -425,7 +425,7 @@ void GameMasterScreen::update(float delta)
             }
         }
     }
- 
+
     unsigned int cnt = 0;
     for(std::unordered_map<string, string>::iterator i = selection_info.begin(); i != selection_info.end(); i++)
     {

@@ -77,7 +77,7 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner, ECrewPosition crew_pos
         info.heat_arrow = new GuiArrow(info.heat_bar, id + "_HEAT_ARROW", 0);
         info.heat_arrow->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
         info.heat_icon = new GuiImage(info.heat_bar, "", "gui/icons/status_overheat");
-        info.heat_icon->setColor(colorConfig.overlay_overheating)->setPosition(0, 0, ACenter)->setSize(GuiElement::GuiSizeMatchHeight, GuiElement::GuiSizeMax);        
+        info.heat_icon->setColor(colorConfig.overlay_overheating)->setPosition(0, 0, ACenter)->setSize(GuiElement::GuiSizeMatchHeight, GuiElement::GuiSizeMax);
         info.power_bar = new GuiProgressSlider(info.layout, id + "_POWER", 0.0, 3.0, 0.0, [this,n](float value){
             if (my_spaceship)
                 my_spaceship->commandSetSystemPowerRequest(ESystem(n), value);
@@ -386,12 +386,12 @@ bool EngineeringScreen::onJoystickAxis(const AxisAction& axisAction){
                     power_slider->setValue((axisAction.value + 1) * 3.0 / 2.0);
                     my_spaceship->commandSetSystemPowerRequest(selected_system, power_slider->getValue());
                     return true;
-                } 
+                }
                 if (axisAction.action == "COOLANT" || axisAction.action == std::string("COOLANT_") + getSystemName(selected_system)){
                     coolant_slider->setValue((axisAction.value + 1) * 10.0 / 2.0);
                     my_spaceship->commandSetSystemCoolantRequest(selected_system, coolant_slider->getValue());
                     return true;
-                } 
+                }
             } else {
                 for(int n=0; n<SYS_COUNT; n++)
                 {
@@ -399,7 +399,7 @@ bool EngineeringScreen::onJoystickAxis(const AxisAction& axisAction){
                     if (axisAction.action == std::string("POWER_") + getSystemName(system)){
                         my_spaceship->commandSetSystemPowerRequest(system, (axisAction.value + 1) * 3.0 / 2.0);
                         return true;
-                    } 
+                    }
                     if (axisAction.action == std::string("COOLANT_") + getSystemName(system)){
                         my_spaceship->commandSetSystemCoolantRequest(system, (axisAction.value + 1) * 10.0 / 2.0);
                         return true;
