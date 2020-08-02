@@ -27,8 +27,6 @@ public:
     virtual void update(float delta) override;
     virtual void collide(Collisionable* target, float force) override;
 
-//    virtual bool canHideInNebula()  override { return false; }
-
     void setTargetPosition(sf::Vector2f v);   /* Where to jump to */
     sf::Vector2f getTargetPosition();
     void onTeleportation(ScriptSimpleCallback callback);

@@ -98,7 +98,7 @@ void WormHole::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, floa
 
 // Draw a line toward the target position
 void WormHole::drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, float rotation, bool long_range)
-{    
+{
     sf::VertexArray a(sf::Lines, 2);
     a[0].position = position;
     a[1].position = position + (target_position - getPosition()) * scale;
@@ -141,7 +141,7 @@ void WormHole::collide(Collisionable* target, float collision_force)
     // Warp postprocessor-alpha is calculated using alpha = (1 - (delay/10))
     if (spaceship)
         spaceship->wormhole_alpha = ((distance / getRadius()) * ALPHA_MULTIPLIER);
-    
+
     if (force > FORCE_MAX)
     {
         force = FORCE_MAX;
@@ -158,7 +158,7 @@ void WormHole::collide(Collisionable* target, float collision_force)
             spaceship->wormhole_alpha = 0.0;
         }
     }
-    
+
     // TODO: Escaping is impossible. Change setPosition to something Newtonianish.
     target->setPosition(target->getPosition() + diff / distance * update_delta * force);
 }

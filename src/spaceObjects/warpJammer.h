@@ -15,7 +15,7 @@ class WarpJammer : public SpaceObject
 public:
     WarpJammer();
     ~WarpJammer();
-    
+
     void setRange(float range) { this->range = range; }
     float getRange() { return range; }
 

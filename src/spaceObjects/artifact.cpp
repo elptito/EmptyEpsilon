@@ -93,9 +93,9 @@ void Artifact::setOrbitDistance(float orbit_distance)
 void Artifact::draw3D()
 {
 #if FEATURE_3D_RENDERING
-	if (artifact_spin != 0.0) {
-		glRotatef(engine->getElapsedTime() * artifact_spin, 0, 0, 1);
-	}
+    if (artifact_spin != 0.0) {
+        glRotatef(engine->getElapsedTime() * artifact_spin, 0, 0, 1);
+    }
     SpaceObject::draw3D();
 #endif//FEATURE_3D_RENDERING
 }

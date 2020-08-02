@@ -41,7 +41,7 @@ public:
     void setAxialRotationTime(float time);
     void setAxialRotation(float axis);
     void setOrbit(P<SpaceObject> target, float orbit_time);
-    
+
     virtual string getExportLine() override;
 
 private:
