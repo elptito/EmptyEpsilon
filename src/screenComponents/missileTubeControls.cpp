@@ -70,7 +70,7 @@ GuiMissileTubeControls::GuiMissileTubeControls(GuiContainer* owner, string id, P
     {
         load_type_rows[n].layout = new GuiAutoLayout(this, id + "_ROW_" + string(n), LayoutHorizontalLeftToRight);
         load_type_rows[n].layout->setSize(GuiElement::GuiSizeMax, 40);
-        
+
         load_type_rows[n].button = new GuiToggleButton(load_type_rows[n].layout, id + "_MW_" + string(n), getLocaleMissileWeaponName(EMissileWeapons(n)), [this, n](bool value) {
             if (value)
                 load_type = EMissileWeapons(n);
