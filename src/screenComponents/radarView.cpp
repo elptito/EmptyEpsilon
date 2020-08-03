@@ -463,7 +463,7 @@ void GuiRadarView::drawTargetProjections(sf::RenderTarget& window)
                     p = worldToScreen(fire_position + (turn_exit + sf::vector2FromAngle(missile_target_angle) * (offset - turn_distance)));
                     n = sf::vector2FromAngle(missile_target_angle + 90.0f);
                 }
-				n = sf::rotateVector(n, -view_rotation);
+				n = sf::rotateVector(n, -getViewRotation());
 				n = sf::normalize(n);
                 sf::VertexArray a(sf::Lines, 2);
                 a[0].position = p - n * 10.0f;
