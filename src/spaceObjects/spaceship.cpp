@@ -86,10 +86,10 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getJumpDriveChargeTime);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getJumpDriveEnergy);
     /// sets the current jump range charged.
-    /// ships will be able to jump when this is equal to their max jump drive range. 
+    /// ships will be able to jump when this is equal to their max jump drive range.
     /// Example ship:setJumpCharge(50000)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setJumpDriveCharge);
-    /// returns the current amount of jump charged. 
+    /// returns the current amount of jump charged.
     /// Example ship:getJumpCharge()
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getJumpDriveCharge);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, hasWarpDrive);
@@ -1481,7 +1481,7 @@ int SpaceShip::countSystems()
 float SpaceShip::getSystemEffectiveness(ESystem system)
 {
     float power = systems[system].power_level;
-    
+
     // Substract the hacking from the power, making double hacked systems run at 25% efficiency.
     power = std::max(0.0f, power - systems[system].hacked_level * 0.75f);
 

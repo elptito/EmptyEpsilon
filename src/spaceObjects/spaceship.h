@@ -100,7 +100,7 @@ public:
      *[input] Ship will try to aim to this rotation. (degrees)
      */
     float target_rotation;
-    
+
     /*!
      *[input] Ship will rotate in this velocity. ([-1,1], overrides target_rotation)
      */
@@ -517,7 +517,7 @@ public:
     int getWeaponTubeCount();
     string getWeaponTubeLoadType(int index);
     EMissileSizes getWeaponTubeSize(int index);
-    
+
     void weaponTubeAllowMissle(int index, EMissileWeapons type);
     void weaponTubeDisallowMissle(int index, EMissileWeapons type);
     void setWeaponTubeExclusiveFor(int index, EMissileWeapons type);
