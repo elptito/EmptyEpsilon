@@ -73,8 +73,8 @@ void ExplosionEffect::draw3DTransparent()
     glVertex3f(v4.x, v4.y, v4.z);
     glEnd();
     glPopMatrix();
-    
-    
+
+
     ShaderManager::getShader("billboardShader")->setUniform("textureMap", *textureManager.getTexture("particle.png"));
     sf::Shader::bind(ShaderManager::getShader("billboardShader"));
     scale = Tween<float>::easeInCubic(f, 0.0, 1.0, 0.3f, 5.0f);

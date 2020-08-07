@@ -45,7 +45,7 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setBeamTexture);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setBeamWeaponEnergyPerFire);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setBeamWeaponHeatPerFire);
-    
+
     /// Set the amount of missile tubes, limited to a maximum of 16.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setTubes);
     /// set the amount of docks (launcher, energy, weapon, thermic, mainteance, stock)
@@ -59,7 +59,7 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     ///Set tube size, this will increase damage and blast radius.
     ///Possible values are : Small, Medium or Large
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setTubeSize);
-    
+
     /// Set the amount of starting hull
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setHull);
     /// Set the shield levels, amount of parameters defines the amount of shields. (Up to a maximum of 8 shields)

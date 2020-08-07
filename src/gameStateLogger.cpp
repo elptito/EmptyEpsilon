@@ -282,7 +282,7 @@ void GameStateLogger::writeObjectEntry(JSONGenerator& json, P<SpaceObject> obj)
             {
                 writePlanetEntry(json, planet);
             }
-	}
+    }
     }
 }
 
