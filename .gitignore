@@ -40,3 +40,6 @@ options.ini
 logs
 *.log
 EmptyEpsilon.cscope_file_list
+
+#build directories and temp directories
+_*

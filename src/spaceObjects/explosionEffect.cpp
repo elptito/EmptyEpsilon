@@ -51,7 +51,8 @@ void ExplosionEffect::draw3DTransparent()
     ShaderManager::getShader("basicShader")->setParameter("textureMap", *textureManager.getTexture("fire_sphere_texture.png"));
     sf::Shader::bind(ShaderManager::getShader("basicShader"));
     Mesh* m = Mesh::getMesh("sphere.obj");
-    m->render();
+    if(m)
+        m->render();
 
     ShaderManager::getShader("basicShader")->setParameter("textureMap", *textureManager.getTexture("fire_ring.png"));
     sf::Shader::bind(ShaderManager::getShader("basicShader"));

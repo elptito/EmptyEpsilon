@@ -984,11 +984,6 @@ const std::vector<PlayerSpaceship::ShipLogEntry>& PlayerSpaceship::getShipsLog(s
     if (station == "science")
         return ships_log_science;
      else 
-     {
-       //FIXME OKE
-       std::vector<PlayerSpaceship::ShipLogEntry> fixme;
-       return fixme; 
-     }
 }
 
 void PlayerSpaceship::transferPlayersToShip(P<PlayerSpaceship> other_ship)

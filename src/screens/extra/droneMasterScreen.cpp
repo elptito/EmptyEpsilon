@@ -65,7 +65,7 @@ DroneMasterScreen::DroneMasterScreen(GuiContainer *owner)
     bottomPanel->setPosition(0, 500, ATopRight);
 
     // Dock actions
-    (new GuiLabel(topPanel, "TITLE", "Transfert des drones", 30))
+    (new GuiLabel(topPanel, "TITLE", "Transfert des astronefs", 30))
         ->addBackground()
         ->setAlignment(ACenter)
         ->setPosition(0, 0, ABottomCenter)
@@ -86,7 +86,7 @@ DroneMasterScreen::DroneMasterScreen(GuiContainer *owner)
                 Dock &dockData = my_spaceship->docks[index];
                 P<Cargo> cargo = dockData.getCargo();
 
-                my_spaceship->addToShipLog("Transfert du drone " + cargo->getCallSign(),colorConfig.log_generic,"docks");
+                my_spaceship->addToShipLog("Transfert de l'astronef " + cargo->getCallSign(),colorConfig.log_generic,"docks");
                 my_spaceship->commandMoveCargo(index);
             }
     });
@@ -105,15 +105,15 @@ DroneMasterScreen::DroneMasterScreen(GuiContainer *owner)
     action_launch->setSize(GuiElement::GuiSizeMax, 50)->setPosition(0, 50, ATopCenter);
 
     (new GuiLabel(action_launch, "SPACE", " ", 30));
-    (new GuiLabel(action_launch, "ACTION_LAUNCH_LABEL", "Lancement du drone :", 30))->setAlignment(ACenterRight)->setMargins(20,20,20,20);
-    action_launch_button = new GuiButton(action_launch, "LAUNCH_DRONE_BUTTON", "Lancer drone", [this]() {
+    (new GuiLabel(action_launch, "ACTION_LAUNCH_LABEL", "Lancer dans l'espace :", 30))->setAlignment(ACenterRight)->setMargins(20,20,20,20);
+    action_launch_button = new GuiButton(action_launch, "LAUNCH_DRONE_BUTTON", "Décollage", [this]() {
         if (my_spaceship)
             if (my_spaceship->getSystemEffectiveness(SYS_Docks) > 0)
             {
                 Dock &dockData = my_spaceship->docks[index];
                 P<Cargo> cargo = dockData.getCargo();
 
-                my_spaceship->addToShipLog("Lancement du drone " + cargo->getCallSign(),colorConfig.log_generic,"docks");
+                my_spaceship->addToShipLog("Faire décoller " + cargo->getCallSign(),colorConfig.log_generic,"docks");
                 my_spaceship->commandLaunchCargo(index);
             }
     });
@@ -154,7 +154,7 @@ DroneMasterScreen::DroneMasterScreen(GuiContainer *owner)
     weapons_layout_label -> setSize(GuiElement::GuiSizeMax, 40);
     (new GuiLabel(weapons_layout_label, "", "Missile", 20));
     (new GuiLabel(weapons_layout_label, "", "Station", 20));
-    (new GuiLabel(weapons_layout_label, "", "Drone", 20));
+    (new GuiLabel(weapons_layout_label, "", "Astronef", 20));
     (new GuiLabel(weapons_layout_label, "", " ", 20));
     (new GuiLabel(weapons_layout_label, "", " ", 20));
 
@@ -188,11 +188,11 @@ DroneMasterScreen::DroneMasterScreen(GuiContainer *owner)
 
                 if (cargo->getWeaponStorageMax(EMissileWeapons(n)) == cargo->getWeaponStorage(EMissileWeapons(n)))
                 {
-                    my_spaceship->addToShipLog("Transfert de missile impossible. Stock maximum dans le drone",colorConfig.log_generic,"docks");
+                    my_spaceship->addToShipLog("Transfert de missile impossible. Stock maximum dans l'astronef",colorConfig.log_generic,"docks");
                     return;
                 }
 
-                my_spaceship->addToShipLog("Transfert de 1 " + getMissileWeaponName(EMissileWeapons(n)) + " Vers le drone",colorConfig.log_generic,"docks");
+                my_spaceship->addToShipLog("Transfert de 1 " + getMissileWeaponName(EMissileWeapons(n)) + " Vers l'astronef",colorConfig.log_generic,"docks");
 
                 my_spaceship->weapon_storage[n] -= 1;
                 cargo->setWeaponStorage(EMissileWeapons(n), cargo->getWeaponStorage(EMissileWeapons(n)) + 1);
@@ -211,7 +211,7 @@ DroneMasterScreen::DroneMasterScreen(GuiContainer *owner)
 
                 if (cargo->getWeaponStorage(EMissileWeapons(n)) <= 0)
                 {
-                    my_spaceship->addToShipLog("Transfert de missile impossible. Aucun stock dans le drone",colorConfig.log_generic,"docks");
+                    my_spaceship->addToShipLog("Transfert de missile impossible. Aucun stock dans l'astronef",colorConfig.log_generic,"docks");
                     return;
                 }
 
@@ -235,7 +235,7 @@ DroneMasterScreen::DroneMasterScreen(GuiContainer *owner)
 
     (new GuiLabel(bottomPanel, "SPACE", " ", 30))->setSize(GuiElement::GuiSizeMax, 50);
 
-    droneTitle = new GuiLabel(bottomPanel, "DRONE_TITLE", "Drone x", 30);
+    droneTitle = new GuiLabel(bottomPanel, "DRONE_TITLE", "Astronef x", 30);
     droneTitle->addBackground()
         ->setAlignment(ACenter)
         ->setPosition(0, 0, ATopCenter)

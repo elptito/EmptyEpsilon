@@ -47,7 +47,9 @@ public:
     virtual void onDraw(sf::RenderTarget& window);
 private:
     void disconnected();
-    bool isConnectable(P<PlayerSpaceship> ship);
+    bool isOperated(P<PlayerSpaceship> ship);
+    bool isConnectableDrone(P<PlayerSpaceship> ship);
+    bool isShip(P<PlayerSpaceship> ship);
     float getConnectionQuality(P<PlayerSpaceship> ship);
 };
 

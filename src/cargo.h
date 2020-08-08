@@ -16,8 +16,9 @@ public:
 
 private:
   string callsign;
-  float heat;
+
   float energy_level;
+  float heat;
   int weapon_storage[MW_Count];
   int weapon_storage_max[MW_Count];
 

@@ -16,6 +16,7 @@ class GuiSlider;
 class GuiSelector;
 class GuiToggleButton;
 class GuiButton;
+class GuiListbox;
 
 enum ETweakType
 {
@@ -229,6 +230,7 @@ private:
     GuiSlider* probe_max_slider;
 //    GuiSlider* oxygen_point_slider;
 //    GuiSlider* max_oxygen_point_slider;
+    GuiListbox* list_ships_box;
     GuiSlider* energy_level_slider;
     GuiSlider* max_energy_level_slider;
     GuiSlider* max_coolant_slider;
@@ -245,6 +247,19 @@ public:
     virtual void open(P<SpaceObject> target);
 
     virtual void onDraw(sf::RenderTarget& window) override;
+};
+
+class GuiShipTweakDock : public GuiTweakPage
+{
+private:
+    P<PlayerSpaceship> target;
+    std::vector<GuiListbox*> list_state_boxes;
+public:
+    GuiShipTweakDock(GuiContainer* owner);
+    virtual void open(P<SpaceObject> target);
+
+    virtual void onDraw(sf::RenderTarget& window) override;
+
 };
 
 class GuiShipTweakOxygen : public GuiTweakPage

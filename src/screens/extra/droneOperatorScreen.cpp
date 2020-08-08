@@ -72,14 +72,28 @@ void DroneOperatorScreen::disconnected()
     selected_drone = NULL;
     single_pilot_view->setTargetSpaceship(selected_drone);
 }
-bool DroneOperatorScreen::isConnectable(P<PlayerSpaceship> ship)
+bool DroneOperatorScreen::isOperated(P<PlayerSpaceship> ship)
 {
-    return ship
+    return (isConnectableDrone(ship) || isShip(ship));
+}
+
+bool DroneOperatorScreen::isConnectableDrone(P<PlayerSpaceship> ship)
+{
+     return ship
     && ship->ship_template
     && ship->ship_template->getType() == ShipTemplate::TemplateType::Drone
     && ship->getFactionId() == my_spaceship->getFactionId()
     && getConnectionQuality(ship) >= 0.01f;
 }
+
+bool DroneOperatorScreen::isShip(P<PlayerSpaceship> ship)
+{
+    return ship
+    && ship->ship_template
+    && ship->ship_template->getType() == ShipTemplate::TemplateType::Ship
+    && ship->getFactionId() == my_spaceship->getFactionId();
+}
+
 float DroneOperatorScreen::getConnectionQuality(P<PlayerSpaceship> ship)
 {
     float distance_min = length(ship->getPosition() - my_spaceship->getPosition());
@@ -103,18 +117,23 @@ void DroneOperatorScreen::onDraw(sf::RenderTarget &window)
         // Update the player ship list with all player ships.
         std::vector<string> options;
         std::vector<string> values;
-        no_drones_label->setText("Aucun drone actif dans la zone de portee de radar (" + string(my_spaceship->getDronesControlRange() / 1000.0,1) + "U)");
+        no_drones_label->setText("Aucun drone ni chasseur actif dans la zone de portee de radar (" + string(my_spaceship->getDronesControlRange() / 1000.0,1) + "U)");
         for (int n = 0; n < GameGlobalInfo::max_player_ships; n++)
         {
             P<PlayerSpaceship> ship = gameGlobalInfo->getPlayerShip(n);
-            if (isConnectable(ship)) {
-                options.push_back(ship->getTypeName() + " " + ship->getCallSign() + " (Connexion radar : " + string(int(getConnectionQuality(ship) * 100)) + "%)");
+            if (isConnectableDrone(ship)) {
+                options.push_back("Drone - " + ship->getTypeName() + " " + ship->getCallSign() + " (Connexion radar : " + string(int(getConnectionQuality(ship) * 100)) + "%)");
+                values.push_back(ship->getMultiplayerId());
+            }
+            else if(isShip(ship))
+            {
+                options.push_back("Chasseur - " + ship->getTypeName() + " " + ship->getCallSign());
                 values.push_back(ship->getMultiplayerId());
             }
         }
         drone_list->setOptions(options, values);
         // automatically change mode if needed
-        if (!selected_drone || !isConnectable(selected_drone) || selected_drone->isDestroyed())
+        if (!selected_drone || !isOperated(selected_drone) || selected_drone->isDestroyed())
         {
            disconnected();
         }
@@ -136,8 +155,11 @@ void DroneOperatorScreen::onDraw(sf::RenderTarget &window)
             disconnect_button->setText("Se deconnecter de " + selected_drone->callsign);
             disconnect_button->show();
             custom_functions->show();
-            connection_label->setText("Connexion radar : " + string(int(getConnectionQuality(selected_drone) * 100)) + "%");
-            connection_label->show();
+            if(isConnectableDrone(selected_drone))
+            {
+                connection_label->setText("Connexion radar : " + string(int(getConnectionQuality(selected_drone) * 100)) + "%");
+                connection_label->show();
+            }
             break;
         case NoDrones:
             no_drones_label->show();

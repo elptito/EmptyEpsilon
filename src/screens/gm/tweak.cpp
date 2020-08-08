@@ -58,6 +58,8 @@ GuiObjectTweak::GuiObjectTweak(GuiContainer* owner, ETweakType tweak_type)
         list->addEntry("Systemes", "");
         pages.push_back(new GuiShipTweakOxygen(this));
         list->addEntry("Oxygene", "");
+        //pages.push_back(new GuiShipTweakDock(this));
+        //list->addEntry("Dock", "");
     }
 
     if (tweak_type == TW_Player)
@@ -1100,26 +1102,48 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
 //        position[n]->setSize(GuiElement::GuiSizeMax, 30);
 //    }
 
-    (new GuiLabel(right_col, "", "Ajouter un drone:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    {
+        (new GuiLabel(right_col, "", "Ajouter un drone:", 30))->setSize(GuiElement::GuiSizeMax, 50);
 
-    std::vector<string> drones_names = ShipTemplate::getTemplateNameList(ShipTemplate::Drone);
-    std::sort(drones_names.begin(), drones_names.end());
-    GuiListbox* listDronesBox = new GuiListbox(right_col, "CREATE_SHIPS", [this](int index, string value)
-    {
-        P<ShipTemplate> drone_ship_template = ShipTemplate::getTemplate(value);
-        P<SpaceShip> ship = target;
-        Dock* dock = Dock::findOpenForDocking(ship->docks, max_docks_count);
-        if (dock)
+        std::vector<string> drones_names = ShipTemplate::getTemplateNameList(ShipTemplate::Drone);
+        std::sort(drones_names.begin(), drones_names.end());
+        GuiListbox* listDronesBox = new GuiListbox(right_col, "CREATE_SHIPS", [this](int index, string value)
         {
-            P<ShipCargo> cargo = new ShipCargo(drone_ship_template);
-            dock->dock(cargo);
+            P<ShipTemplate> drone_ship_template = ShipTemplate::getTemplate(value);
+            P<SpaceShip> ship = target;
+            Dock* dock = Dock::findOpenForDocking(ship->docks, max_docks_count);
+            if (dock)
+            {
+                P<ShipCargo> cargo = new ShipCargo(drone_ship_template);
+                dock->dock(cargo);
+            }
+        });
+        listDronesBox->setTextSize(20)->setButtonHeight(30)->setPosition(-20, 20, ATopRight)->setSize(300, 200);
+        for(string drones_name : drones_names)
+        {
+            listDronesBox->addEntry(drones_name, drones_name);
         }
-    });
-    listDronesBox->setTextSize(20)->setButtonHeight(30)->setPosition(-20, 20, ATopRight)->setSize(300, 200);
-    for(string drones_name : drones_names)
-    {
-        listDronesBox->addEntry(drones_name, drones_name);
     }
+    {
+
+        (new GuiLabel(right_col, "", "Rajouter au hangar :", 30))->setSize(GuiElement::GuiSizeMax, 50);
+
+        list_ships_box = new GuiListbox(right_col, "CREATE_SHIPS2", [this](int index, string value)
+        {
+            P<ShipTemplate> drone_ship_template = ShipTemplate::getTemplate(value);
+            P<SpaceShip> ship = target;
+            Dock* dock = Dock::findOpenForDocking(ship->docks, max_docks_count);
+            if (dock)
+            {
+                P<ShipCargo> cargo = new ShipCargo(drone_ship_template);
+                dock->dock(cargo);
+            }
+        });
+        list_ships_box->setTextSize(20)->setButtonHeight(30)->setPosition(-20, 20, ATopRight)->setSize(300, 200);
+
+
+    }
+
 }
 
 void GuiShipTweakPlayer::onDraw(sf::RenderTarget& window)
@@ -1156,7 +1180,30 @@ void GuiShipTweakPlayer::open(P<SpaceObject> target)
 
         auto_repair_toogle->setValue(player->auto_repair_enabled);
         auto_coolant_toogle->setValue(player->auto_coolant_enabled);
+        if(!list_ships_box->entryCount())
+        {
+            for (auto &droneTemplate : player->ship_template->drones) // access by reference to avoid copying
+            {
+                list_ships_box->addEntry(droneTemplate.template_name,droneTemplate.template_name);
+            }
+        }
     }
+}
+
+GuiShipTweakDock::GuiShipTweakDock(GuiContainer* owner)
+: GuiTweakPage(owner)
+{
+
+}
+
+void GuiShipTweakDock::open(P<SpaceObject> target)
+{
+
+}
+
+void GuiShipTweakDock::onDraw(sf::RenderTarget& window)
+{
+
 }
 
 GuiShipTweakOxygen::GuiShipTweakOxygen(GuiContainer* owner)
