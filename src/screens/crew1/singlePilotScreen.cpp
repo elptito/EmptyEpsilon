@@ -4,6 +4,7 @@
 #include "singlePilotScreen.h"
 #include "singlePilotView.h"
 #include "gui/gui2_element.h"
+#include "gui/gui2_togglebutton.h"
 
 #include "screenComponents/viewport3d.h"
 
@@ -15,6 +16,7 @@ SinglePilotScreen::SinglePilotScreen(GuiContainer* owner)
     // Create a 3D viewport behind everything, to serve as the right-side panel
     viewport = new GuiViewport3D(this, "3D_VIEW");
     viewport->setPosition(1000, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+    viewport->hide();
 
     // Create left panel for controls.
     left_panel = new GuiElement(this, "LEFT_PANEL");
@@ -29,6 +31,21 @@ SinglePilotScreen::SinglePilotScreen(GuiContainer* owner)
 
     // Render the alert level color overlay.
     (new AlertLevelOverlay(this));
+
+    show_3d_button = new GuiToggleButton(this, "SHOW_3D_BUTTON", "Vue exterieure", [this](bool value)
+        {
+          if(true == value)
+          {
+              viewport->show();
+              left_panel->setSize(1000, GuiElement::GuiSizeMax);
+          }
+          else
+          {
+              viewport->hide();
+              left_panel->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+          }
+        });
+    show_3d_button->setPosition(-20, 100, ATopRight)->setSize(250, 50);
 }
 
 void SinglePilotScreen::onDraw(sf::RenderTarget& window)
@@ -36,16 +53,16 @@ void SinglePilotScreen::onDraw(sf::RenderTarget& window)
     GuiOverlay::onDraw(window);
 
     // Responsively show/hide the 3D viewport.
-    if (viewport->getRect().width < viewport->getRect().height / 3.0f)
-    {
-        viewport->hide();
-        left_panel->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
-    }
-    else
-    {
-        viewport->show();
-        left_panel->setSize(1000, GuiElement::GuiSizeMax);
-    }
+//    if (viewport->getRect().width < viewport->getRect().height / 3.0f)
+//    {
+//        viewport->hide();
+//        left_panel->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+//    }
+//    else
+//    {
+//        viewport->show();
+//        left_panel->setSize(1000, GuiElement::GuiSizeMax);
+//    }
 
     if (my_spaceship)
     {

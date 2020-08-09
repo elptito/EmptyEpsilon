@@ -7,6 +7,7 @@
 #include "screenComponents/targetsContainer.h"
 
 class GuiViewport3D;
+class GuiToggleButton;
 
 class SinglePilotScreen : public GuiOverlay
 {
@@ -16,9 +17,11 @@ private:
 
     GuiViewport3D* viewport;
     GuiElement* left_panel;
+    GuiToggleButton* show_3d_button;
+
 public:
     SinglePilotScreen(GuiContainer* owner);
-    
+
     virtual void onDraw(sf::RenderTarget& window);
 };
 
