@@ -13,6 +13,7 @@
 #include "screenComponents/warpControls.h"
 #include "screenComponents/jumpControls.h"
 #include "screenComponents/dockingButton.h"
+#include "screenComponents/landingButton.h"
 
 #include "screenComponents/missileTubeControls.h"
 #include "screenComponents/aimLock.h"
@@ -123,7 +124,7 @@ SinglePilotView::SinglePilotView(GuiContainer* owner, P<PlayerSpaceship> targetS
 
     // Engine layout in top left corner of left panel.
     GuiAutoLayout* engine_layout = new GuiAutoLayout(this, "ENGINE_LAYOUT", GuiAutoLayout::LayoutHorizontalLeftToRight);
-    engine_layout->setPosition(20, 80, ATopLeft)->setSize(GuiElement::GuiSizeMax, 250);
+    engine_layout->setPosition(20, 120, ATopLeft)->setSize(GuiElement::GuiSizeMax, 250);
 
     impulse_controls = new GuiImpulseControls(engine_layout, "IMPULSE", target_spaceship);
     impulse_controls->setSize(100, GuiElement::GuiSizeMax);
@@ -135,6 +136,8 @@ SinglePilotView::SinglePilotView(GuiContainer* owner, P<PlayerSpaceship> targetS
     // Docking, comms, and shields buttons across top.
     docking_button = new GuiDockingButton(this, "DOCKING", target_spaceship);
     docking_button->setPosition(20, 20, ATopLeft)->setSize(250, 50);
+    landing_button = new GuiLandingButton(this, "LANDING", target_spaceship);
+    landing_button->setPosition(20, 60, ATopLeft)->setSize(250, 50);
     if (target_spaceship == my_spaceship)
     {
         (new GuiOpenCommsButton(this, "OPEN_COMMS_BUTTON", &targets))->setPosition(270, 20, ATopLeft)->setSize(250, 50);
@@ -160,6 +163,7 @@ void SinglePilotView::setTargetSpaceship(P<PlayerSpaceship> targetSpaceship){
     warp_controls->setTargetSpaceship(target_spaceship);
     jump_controls->setTargetSpaceship(target_spaceship);
     docking_button->setTargetSpaceship(target_spaceship);
+    landing_button->setTargetSpaceship(target_spaceship);
     shields_enable_button->setTargetSpaceship(target_spaceship);
     lock_aim->setTargetSpaceship(target_spaceship);
     custom_ship_functions->setTargetSpaceship(target_spaceship);

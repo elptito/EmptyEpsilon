@@ -10,6 +10,7 @@
 #include "spaceObjects/warpJammer.h"
 #include "gameGlobalInfo.h"
 #include "shipCargo.h"
+#include "gui/colorConfig.h"
 
 #include "scriptInterface.h"
 
@@ -153,6 +154,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     beam_system_target = SYS_None;
     shield_frequency = irandom(0, max_frequency);
     docking_state = DS_NotDocking;
+    landing_state = LS_NotLanding;
     impulse_acceleration = 20.0;
     energy_level = 1000;
     max_energy_level = 1000;
@@ -179,6 +181,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     registerMemberReplication(&beam_weapons_count);
     registerMemberReplication(&target_id);
     registerMemberReplication(&dock_target_id);
+    registerMemberReplication(&landing_target_id);
     registerMemberReplication(&turn_speed);
     registerMemberReplication(&impulse_max_speed);
     registerMemberReplication(&impulse_acceleration);
@@ -567,6 +570,20 @@ void SpaceShip::update(float delta)
             else
                 impulse_request = 0.0;
         }
+
+        if (landing_state == LS_Landing)
+        {
+            if (energy_level == 0)
+                energy_level += 5;
+            if (!landing_target)
+                landing_state = LS_NotLanding;
+            else
+                target_rotation = sf::vector2ToAngle(getPosition() - landing_target->getPosition());
+            if (fabs(sf::angleDifference(target_rotation, getRotation())) < 10.0)
+                impulse_request = -1.0;
+            else
+                impulse_request = 0.0;
+        }
         if (docking_state == DS_Docked)
         {
             if (!docking_target)
@@ -590,6 +607,8 @@ void SpaceShip::update(float delta)
             impulse_request = 0.0;
         }
         if ((docking_state == DS_Docked) || (docking_state == DS_Docking))
+            warp_request = 0.0;
+        if (landing_state == LS_Landing)
             warp_request = 0.0;
     }
 
@@ -858,6 +877,13 @@ P<SpaceObject> SpaceShip::getDockTarget()
     return game_client->getObjectById(dock_target_id);
 }
 
+P<SpaceObject> SpaceShip::getLandingTarget()
+{
+    if (game_server)
+        return game_server->getObjectById(landing_target_id);
+    return game_client->getObjectById(landing_target_id);
+}
+
 void SpaceShip::executeJump(float distance)
 {
     float f = systems[SYS_JumpDrive].health;
@@ -907,6 +933,36 @@ void SpaceShip::collide(Collisionable* other, float force)
             docking_offset = docking_offset / length * (length + 2.0f);
         }
     }
+
+    if (landing_state == LS_Landing)
+    {
+        P<SpaceShip> land_object = P<Collisionable>(other);
+        if (land_object && (land_object == landing_target))
+        {
+            Dock* dock = Dock::findOpenForDocking(land_object->docks, max_docks_count);
+            if (dock)
+            {
+                landing_state = LS_Landed;
+                P<ShipCargo> cargo = new ShipCargo(this); //should keep current parameters
+                dock->dock(cargo);
+                for(int n=0; n<GameGlobalInfo::max_player_ships; n++)
+                {
+
+                    P<PlayerSpaceship> ship = gameGlobalInfo->getPlayerShip(n);
+                    if(ship)
+                        ship->addToShipLog("Atterrissage de " + getCallSign() + " dans un dock de " + land_object->getCallSign(),colorConfig.log_generic,"docks");
+                }
+                destroy();
+
+            }
+            else
+            {
+                //TODO put a message
+            }
+
+            //TODO landing
+        }
+    }
 }
 
 void SpaceShip::initializeJump(float distance)
@@ -938,6 +994,25 @@ void SpaceShip::requestDock(P<SpaceObject> target)
     warp_request = 0.0;
 }
 
+void SpaceShip::requestLanding(P<SpaceObject> target)
+{
+    if (!target || landing_state != LS_NotLanding || !target->canBeLandedOn(this))
+        return;
+    if (sf::length(getPosition() - target->getPosition()) > 1000 + target->getRadius())
+        return;
+    if (!canStartLanding())
+        return;
+    P<SpaceShip> ship = target;
+    if(!ship)
+        return;
+    if(!Dock::findOpenForDocking(ship->docks, max_docks_count))
+        return;
+
+    landing_state = LS_Landing;
+    landing_target = target;
+    warp_request = 0.0;
+}
+
 void SpaceShip::requestUndock()
 {
     if (docking_state == DS_Docked)
@@ -954,6 +1029,18 @@ void SpaceShip::abortDock()
     if (docking_state == DS_Docking)
     {
         docking_state = DS_NotDocking;
+        impulse_request = 0.0;
+        warp_request = 0.0;
+        target_rotation = getRotation();
+    }
+}
+
+
+void SpaceShip::abortLanding()
+{
+    if (landing_state == LS_Landing)
+    {
+        landing_state = LS_NotLanding;
         impulse_request = 0.0;
         warp_request = 0.0;
         target_rotation = getRotation();

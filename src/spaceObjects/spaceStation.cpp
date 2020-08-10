@@ -96,6 +96,19 @@ bool SpaceStation::canBeDockedBy(P<SpaceObject> obj)
     return true;
 }
 
+bool SpaceStation::canBeLandedOn(P<SpaceObject> obj)
+{
+    if (isEnemy(obj) || !ship_template)
+        return false;
+    P<SpaceShip> ship = obj;
+    if (!ship || !ship->ship_template)
+        return false;
+    if (ship->getFactionId() != getFactionId())
+        return false;
+    // return ship_template->can_be_docked_by_class.count(ship->ship_template->getClass()) > 0;
+    return true;
+}
+
 string SpaceStation::getExportLine()
 {
     return "SpaceStation():setTemplate(\"" + template_name + "\"):setFaction(\"" + getFaction() + "\"):setCallSign(\"" + getCallSign() + "\"):setPosition(" + string(getPosition().x, 0) + ", " + string(getPosition().y, 0) + ")";

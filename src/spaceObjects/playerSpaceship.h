@@ -260,6 +260,7 @@ public:
     void commandJump(float distance);
     void commandSetTarget(P<SpaceObject> target);
     void commandSetDockTarget(P<SpaceObject> target);
+    void commandSetLandingTarget(P<SpaceObject> target);
     void commandSetScienceLink(int32_t id);
     void commandSetProbe3DLink(int32_t id);
     void commandLoadTube(int8_t tubeNumber, string missileType);
@@ -271,9 +272,11 @@ public:
     void commandScan(P<SpaceObject> object);
     void commandSetSystemPowerRequest(ESystem system, float power_level);
     void commandSetSystemCoolantRequest(ESystem system, float coolant_level);
-    void commandDock(P<SpaceObject> station);
+    void commandDock(P<SpaceObject> obj);
     void commandUndock();
     void commandAbortDock();
+    void commandLand(P<SpaceObject> obj);
+    void commandAbortLanding();
     void commandOpenTextComm(P<SpaceObject> obj);
     void commandCloseTextComm();
     void commandAnswerCommHail(bool awnser);
@@ -373,6 +376,13 @@ public:
 
     // Radar function
     virtual void drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range) override;
+
+    //specific to player ship
+    /*!
+    * Check if object can accept landing from this ship
+    * \param object Object that wants to land
+    */
+    virtual bool canBeLandedOn(P<SpaceObject> obj);
 
     // Script export function
     virtual string getExportLine();

@@ -98,6 +98,8 @@ REGISTER_SCRIPT_SUBCLASS(PlayerSpaceship, SpaceShip)
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandDock);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandUndock);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandAbortDock);
+    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandLand);
+    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandAbortLanding);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandOpenTextComm);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandCloseTextComm);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandAnswerCommHail);
@@ -201,6 +203,9 @@ static const int16_t CMD_SET_DOCK_MOVE_TARGET = 0x0034;
 static const int16_t CMD_SET_DOCK_ENERGY_REQUEST = 0x0035;
 static const int16_t CMD_SET_AUTO_REPAIR_SYSTEM_TARGET = 0x0036;
 static const int16_t CMD_SET_DOCK_TARGET = 0x0037;
+static const int16_t CMD_LAND = 0x0038;
+static const int16_t CMD_ABORT_LANDING = 0x0039;
+static const int16_t CMD_SET_LANDING_TARGET = 0x0040;
 
 string alertLevelToString(EAlertLevel level)
 {
@@ -983,11 +988,11 @@ const std::vector<PlayerSpaceship::ShipLogEntry>& PlayerSpaceship::getShipsLog(s
         return ships_log_docks;
     if (station == "science")
         return ships_log_science;
-     else 
+     else
      {
        //FIXME OKE
-       std::vector<PlayerSpaceship::ShipLogEntry> fixme;
-       return fixme; 
+       static std::vector<PlayerSpaceship::ShipLogEntry> fixme;
+       return fixme;
      }
 }
 
@@ -1250,6 +1255,13 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
                 addToShipLog("Cible du docking : " + string(SpaceShip::getDockTarget()->SpaceObject::getCallSign()),sf::Color::Yellow,"intern");
         }
         break;
+    case CMD_SET_LANDING_TARGET:
+        {
+            packet >> landing_target_id;
+            if (landing_target_id != int32_t(-1))
+                addToShipLog("Cible de l'atterrissage : " + string(SpaceShip::getLandingTarget()->SpaceObject::getCallSign()),sf::Color::Yellow,"intern");
+        }
+        break;
     case CMD_LOAD_TUBE:
         {
             int8_t tube_nr;
@@ -1365,6 +1377,14 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
             addToShipLog("Procedure de dock demandee",sf::Color::Cyan,"intern");
         }
         break;
+    case CMD_LAND:
+        {
+            int32_t id;
+            packet >> id;
+            requestLanding(game_server->getObjectById(id));
+            addToShipLog("Procedure d'atterrissage",sf::Color::Cyan,"intern");
+        }
+        break;
     case CMD_UNDOCK:
         {
             requestUndock();
@@ -1375,6 +1395,12 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
         {
             abortDock();
             addToShipLog("Procedure de dedock abandonnee",sf::Color::Cyan,"intern");
+        }
+        break;
+    case CMD_ABORT_LANDING:
+        {
+            abortLanding();
+            addToShipLog("Procedure d'atterrissage abandonnee",sf::Color::Cyan,"intern");
         }
         break;
     case CMD_OPEN_TEXT_COMM:
@@ -1820,6 +1846,16 @@ void PlayerSpaceship::commandSetDockTarget(P<SpaceObject> target)
     sendClientCommand(packet);
 }
 
+void PlayerSpaceship::commandSetLandingTarget(P<SpaceObject> target)
+{
+    sf::Packet packet;
+    if (target)
+        packet << CMD_SET_LANDING_TARGET << target->getMultiplayerId();
+    else
+        packet << CMD_SET_LANDING_TARGET << int32_t(-1);
+    sendClientCommand(packet);
+}
+
 void PlayerSpaceship::commandLoadTube(int8_t tubeNumber, string missileType)
 {
     sf::Packet packet;
@@ -1904,6 +1940,21 @@ void PlayerSpaceship::commandAbortDock()
 {
     sf::Packet packet;
     packet << CMD_ABORT_DOCK;
+    sendClientCommand(packet);
+}
+
+void PlayerSpaceship::commandLand(P<SpaceObject> object)
+{
+    if (!object) return;
+    sf::Packet packet;
+    packet << CMD_LAND << object->getMultiplayerId();
+    sendClientCommand(packet);
+}
+
+void PlayerSpaceship::commandAbortLanding()
+{
+    sf::Packet packet;
+    packet << CMD_ABORT_LANDING;
     sendClientCommand(packet);
 }
 
@@ -2180,6 +2231,22 @@ void PlayerSpaceship::drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f posit
         short_radar_radius.setOutlineThickness(3.0);
         window.draw(short_radar_radius);
     }
+}
+
+bool PlayerSpaceship::canBeLandedOn(P<SpaceObject> obj)
+{
+    if (isEnemy(obj) || !ship_template)
+        return false;
+    P<SpaceShip> ship = obj;
+    if (!ship || !ship->ship_template)
+        return false;
+    if (ship->getFactionId() != getFactionId())
+        return false;
+    Dock* dock = Dock::findOpenForDocking(docks, max_docks_count);
+    if (!dock)
+        return false; //TODO message dans le log
+    // return ship_template->can_be_docked_by_class.count(ship->ship_template->getClass()) > 0;
+    return true;
 }
 
 string PlayerSpaceship::getExportLine()

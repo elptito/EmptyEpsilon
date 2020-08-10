@@ -106,14 +106,14 @@ DroneMasterScreen::DroneMasterScreen(GuiContainer *owner)
 
     (new GuiLabel(action_launch, "SPACE", " ", 30));
     (new GuiLabel(action_launch, "ACTION_LAUNCH_LABEL", "Lancer dans l'espace :", 30))->setAlignment(ACenterRight)->setMargins(20,20,20,20);
-    action_launch_button = new GuiButton(action_launch, "LAUNCH_DRONE_BUTTON", "Décollage", [this]() {
+    action_launch_button = new GuiButton(action_launch, "LAUNCH_DRONE_BUTTON", "Decollage", [this]() {
         if (my_spaceship)
             if (my_spaceship->getSystemEffectiveness(SYS_Docks) > 0)
             {
                 Dock &dockData = my_spaceship->docks[index];
                 P<Cargo> cargo = dockData.getCargo();
 
-                my_spaceship->addToShipLog("Faire décoller " + cargo->getCallSign(),colorConfig.log_generic,"docks");
+                my_spaceship->addToShipLog("Faire decoller " + cargo->getCallSign(),colorConfig.log_generic,"docks");
                 my_spaceship->commandLaunchCargo(index);
             }
     });

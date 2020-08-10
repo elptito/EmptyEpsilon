@@ -281,7 +281,7 @@ void GuiHackDialog::commandHack()
 
                     P<PlayerSpaceship> player_target = obj;
                     if (player_target)
-                        player_target -> addToShipLog("Intruision informatique en cours",colorConfig.log_receive_enemy,"intern");
+                        player_target -> addToShipLog("Intrusion informatique en cours",colorConfig.log_receive_enemy,"intern");
                     hack_step = 2;
                     break;
                 }

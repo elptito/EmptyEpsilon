@@ -36,6 +36,13 @@ enum EDockingState
     DS_Docked
 };
 
+enum ELandingState
+{
+    LS_NotLanding = 0,
+    LS_Landing,
+    LS_Landed
+};
+
 class ShipSystem
 {
 public:
@@ -192,9 +199,12 @@ public:
     /// MultiplayerObjectID of the targeted object, or -1 when no target is selected.
     int32_t target_id;
     int32_t dock_target_id;
+    int32_t landing_target_id;
 
     EDockingState docking_state;
+    ELandingState landing_state;
     P<SpaceObject> docking_target; //Server only
+    P<SpaceObject> landing_target; // Server only
     sf::Vector2f docking_offset; //Server only
 
     SpaceShip(string multiplayerClassName, float multiplayer_significant_range=-1);
@@ -252,6 +262,8 @@ public:
      */
     virtual bool canBeDockedBy(P<SpaceObject> obj);
 
+
+
     virtual void collide(Collisionable* other, float force) override;
 
     /*!
@@ -264,6 +276,11 @@ public:
      */
     void requestDock(P<SpaceObject> target);
 
+        /*!
+     * Request to land with target.
+     */
+    void requestLanding(P<SpaceObject> target);
+
     /*!
      * Request undock with current docked object
      */
@@ -273,6 +290,11 @@ public:
      * Abort the current dock request
      */
     void abortDock();
+
+    /*!
+     * Abort the current landing request
+     */
+    void abortLanding();
 
     /// Dummy virtual function to use energy. Only player ships currently model energy use.
     virtual bool useEnergy(float amount) { return true; }
@@ -313,6 +335,7 @@ public:
 
     P<SpaceObject> getTarget();
     P<SpaceObject> getDockTarget();
+    P<SpaceObject> getLandingTarget();
 
     virtual std::unordered_map<string, string> getGMInfo();
 
@@ -324,6 +347,7 @@ public:
     bool isDocked() { return docking_state == DS_Docked; }
     bool isDockedWith(P<SpaceObject> target) { return docking_state == DS_Docked && docking_target == target; }
     bool canStartDocking() { return current_warp <= 0.0 && (!has_jump_drive || jump_delay <= 0.0); }
+    bool canStartLanding() { return current_warp <= 0.0 && (!has_jump_drive || jump_delay <= 0.0); }
     int getCustomWeaponStorage(string weapon) { return custom_weapon_storage[weapon]; }
     int getCustomWeaponStorageMax(string weapon) { return custom_weapon_storage_max[weapon]; }
     void setCustomWeaponStorage(string weapon, int amount) { custom_weapon_storage.insert(std::map<string,int>::value_type(weapon,amount)); }
@@ -488,6 +512,7 @@ REGISTER_MULTIPLAYER_ENUM(EWeaponTubeState);
 REGISTER_MULTIPLAYER_ENUM(EMainScreenSetting);
 REGISTER_MULTIPLAYER_ENUM(EMainScreenOverlay);
 REGISTER_MULTIPLAYER_ENUM(EDockingState);
+REGISTER_MULTIPLAYER_ENUM(ELandingState)
 REGISTER_MULTIPLAYER_ENUM(EScannedState);
 REGISTER_MULTIPLAYER_ENUM(EDockType);
 REGISTER_MULTIPLAYER_ENUM(EDockState);

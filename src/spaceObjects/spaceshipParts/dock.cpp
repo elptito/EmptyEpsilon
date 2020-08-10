@@ -216,7 +216,7 @@ string getDockTypeName(EDockType dockType)
     switch (dockType)
     {
     case Dock_Launcher:
-        return "Lanceur";
+        return "Pont d'envol";
     case Dock_Energy:
         return "Energie";
     case Dock_Weapons:
