@@ -163,7 +163,16 @@ REGISTER_SCRIPT_CLASS_NO_CREATE(SpaceObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getRadarSignatureGravity);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getRadarSignatureElectrical);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getRadarSignatureBiological);
-    ///Get the scanning complexity of this object (amount of bars in the minigame)
+    /// Sets this object's scanning complexity (number of bars in the scanning
+    /// minigame) and depth (number of scanning minigames to complete).
+    /// Also clears the scanned state.
+    /// Requires two integer values.
+    /// Example: obj:setScanningParameters(2, 3)
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setScanningParameters);
+    /// Gets the scanning complexity for the parameter object.
+    /// Requires a SpaceObject.
+    /// Returns an integer value.
+    /// Example: local scan_complexity = obj:scanningComplexity(obj)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, scanningComplexity);
     ///Get the scanning depth of this object (number of minigames to complete)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, scanningChannelDepth);
