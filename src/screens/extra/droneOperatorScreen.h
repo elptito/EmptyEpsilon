@@ -2,7 +2,7 @@
 #define DRONE_OPERATOR_SCREEN_H
 
 #include "playerInfo.h"
-#include "screens/crew1/singlePilotView.h"
+#include "screens/crew1/singlePilotScreen.h"
 
 #include "gui/gui2_overlay.h"
 
@@ -33,7 +33,7 @@ private:
     EMode mode;
     P<PlayerSpaceship> selected_drone;
 
-    SinglePilotView* single_pilot_view;
+    SinglePilotScreen* single_pilot_screen;
     GuiOverlay* background_crosses;
     GuiAutoLayout* droneSelection;
     GuiLabel* connection_label;

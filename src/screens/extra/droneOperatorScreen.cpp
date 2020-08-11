@@ -42,14 +42,14 @@ DroneOperatorScreen::DroneOperatorScreen(GuiContainer *owner)
         {
             mode = Piloting;
             selected_drone = ship;
-            single_pilot_view->setTargetSpaceship(selected_drone);
+            single_pilot_screen->setTargetSpaceship(selected_drone);
         }
     });
     drone_list->setPosition(0, -100, ABottomCenter)->setSize(500, 1000);
 
     // single pilot UI
-    single_pilot_view = new SinglePilotView(this, selected_drone);
-    single_pilot_view->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+    single_pilot_screen = new SinglePilotScreen(this, selected_drone);
+    single_pilot_screen->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
     connection_label = new GuiLabel(this, "CONNECTION_LABEL", "0%", 30);
     connection_label->setPosition(0, -50, ABottomCenter)->setSize(460, 50);
@@ -70,7 +70,7 @@ void DroneOperatorScreen::disconnected()
 {
     mode = drone_list->entryCount() == 0 ? NoDrones : DroneSelection;
     selected_drone = NULL;
-    single_pilot_view->setTargetSpaceship(selected_drone);
+    single_pilot_screen->setTargetSpaceship(selected_drone);
 }
 bool DroneOperatorScreen::isOperated(P<PlayerSpaceship> ship)
 {
@@ -143,7 +143,7 @@ void DroneOperatorScreen::onDraw(sf::RenderTarget &window)
         case DroneSelection:
             no_drones_label->hide();
             droneSelection->show();
-            single_pilot_view->hide();
+            single_pilot_screen->hide();
             disconnect_button->hide();
             custom_functions->hide();
             connection_label->hide();
@@ -151,7 +151,7 @@ void DroneOperatorScreen::onDraw(sf::RenderTarget &window)
         case Piloting:
             no_drones_label->hide();
             droneSelection->hide();
-            single_pilot_view->show();
+            single_pilot_screen->show();
             disconnect_button->setText("Se deconnecter de " + selected_drone->callsign);
             disconnect_button->show();
             custom_functions->show();
@@ -164,7 +164,7 @@ void DroneOperatorScreen::onDraw(sf::RenderTarget &window)
         case NoDrones:
             no_drones_label->show();
             droneSelection->hide();
-            single_pilot_view->hide();
+            single_pilot_screen->hide();
             disconnect_button->hide();
             custom_functions->hide();
             connection_label->hide();
