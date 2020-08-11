@@ -5,6 +5,7 @@
 #include "spaceObjects/playerSpaceship.h"
 #include "screenComponents/shipsLogControl.h"
 #include "screenComponents/customShipFunctions.h"
+#include "shipCargo.h"
 
 #include "gui/gui2_listbox.h"
 #include "gui/gui2_autolayout.h"
@@ -366,7 +367,13 @@ void DroneMasterScreen::displayDroneDetails(Dock &dockData)
     P<Cargo> cargo = dockData.getCargo();
 
     droneTitle->setVisible(true);
-    droneTitle->setText("Drone " + cargo->getCallSign());
+
+    P<ShipCargo> shipCargo = cargo;
+    if(shipCargo)
+    {
+        std::string type = (ShipTemplate::TemplateType::Drone==shipCargo->getTemplate()->getType()) ? "Drone " : "Vaisseau ";
+        droneTitle->setText(type + cargo->getCallSign());
+    }
 
     unsigned int cnt = 0;
     for(std::tuple<string, string, string> e : cargo->Cargo::getEntries())

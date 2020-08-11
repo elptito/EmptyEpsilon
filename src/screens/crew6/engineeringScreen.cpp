@@ -347,7 +347,7 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
                 }
                 break;
             case SYS_Docks:
-                addSystemEffect("Vitesse de transfert drones", string(int(effectiveness * 100)) + "%");
+                addSystemEffect("Vitesse de transfert astronefs", string(int(effectiveness * 100)) + "%");
                 addSystemEffect("Vitesse de transfert energie", string(effectiveness * PlayerSpaceship::energy_transfer_per_second) + "/s");
                 break;
             case SYS_Drones:
