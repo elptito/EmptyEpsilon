@@ -58,8 +58,8 @@ GuiObjectTweak::GuiObjectTweak(GuiContainer* owner, ETweakType tweak_type)
         list->addEntry("Systemes", "");
         pages.push_back(new GuiShipTweakOxygen(this));
         list->addEntry("Oxygene", "");
-        //pages.push_back(new GuiShipTweakDock(this));
-        //list->addEntry("Dock", "");
+        pages.push_back(new GuiShipTweakDock(this));
+        list->addEntry("Dock", "");
     }
 
     if (tweak_type == TW_Player)
@@ -1193,12 +1193,66 @@ void GuiShipTweakPlayer::open(P<SpaceObject> target)
 GuiShipTweakDock::GuiShipTweakDock(GuiContainer* owner)
 : GuiTweakPage(owner)
 {
+    // Add two columns, hangar and flying.
+    GuiAutoLayout* dock_col = new GuiAutoLayout(this, "DOCK_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    dock_col->setPosition(50, 30, ATopLeft)->setSize(80, GuiElement::GuiSizeMax);
+    GuiAutoLayout* type_col = new GuiAutoLayout(this, "DOCK_TYPE_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    type_col->setPosition(130, 30, ATopLeft)->setSize(170, GuiElement::GuiSizeMax);
+    GuiAutoLayout* content_col = new GuiAutoLayout(this, "DOCK_TYPE_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    content_col->setPosition(300, 30, ATopLeft)->setSize(150, GuiElement::GuiSizeMax);
 
+
+    GuiAutoLayout* envol_col = new GuiAutoLayout(this, "RIGHT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    envol_col->setPosition(-25, 25, ATopRight)->setSize(300, GuiElement::GuiSizeMax);
+
+    (new GuiLabel(dock_col, "", "Dock :", 30))->setSize(GuiElement::GuiSizeMax, 40);
+    (new GuiLabel(envol_col, "", "En vol :", 30))->setSize(GuiElement::GuiSizeMax, 40);
+    (new GuiLabel(type_col, "", "", 30))->setSize(GuiElement::GuiSizeMax, 40);
+    (new GuiLabel(content_col, "", "", 30))->setSize(GuiElement::GuiSizeMax, 40);
+
+    for (int n = 0; n < max_docks_count; n++)
+    {
+        {
+            GuiLabel *label = new GuiLabel(dock_col, "", "Dock" + std::to_string(n+1), 20);
+            label->setSize(GuiElement::GuiSizeMax, 40);
+        }
+        {
+            type_selector.push_back(new GuiSelector(type_col, "", [this, n](int index, string value)
+            {
+                target->docks[n].dock_type = getDockTypeEnum(value);
+            }));
+
+            type_selector[n]->setSize(GuiElement::GuiSizeMax, 40);
+            int nbDockTypes = 0;
+            for(; nbDockTypes < EDockType::nbElems; nbDockTypes++)
+            {
+                type_selector[n]->addEntry(getDockTypeName((EDockType)nbDockTypes), getDockTypeName((EDockType)nbDockTypes));
+            }
+            type_selector[n]->setSelectionIndex(nbDockTypes-1);
+
+        }
+
+        {
+            GuiLabel *label = new GuiLabel(content_col, "", "Content" + std::to_string(n+1), 20);
+            label->setSize(GuiElement::GuiSizeMax, 40);
+        }
+
+    }
 }
 
 void GuiShipTweakDock::open(P<SpaceObject> target)
 {
 
+    P<PlayerSpaceship> player = target;
+    this->target = player;
+
+    if (player)
+    {
+        for(int i=0; i < max_docks_count; i++)
+        {
+            type_selector[i]->setSelectionIndex((int)player->docks[i].dock_type);
+        }
+    }
 }
 
 void GuiShipTweakDock::onDraw(sf::RenderTarget& window)

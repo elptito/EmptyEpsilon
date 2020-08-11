@@ -231,3 +231,21 @@ string getDockTypeName(EDockType dockType)
         return "Unknown";
     }
 }
+
+EDockType getDockTypeEnum(std::string dockType)
+{
+    if("Pont d'envol"==dockType)
+        return Dock_Launcher;
+    if("Energie"==dockType)
+        return Dock_Energy;
+    if("Missiles"==dockType)
+        return Dock_Weapons;
+    if("Thermique"==dockType)
+        return Dock_Thermic;
+    if("Reparation"==dockType)
+        return Dock_Repair;
+    if("Stock"==dockType)
+        return Dock_Stock;
+    return Dock_Disabled;
+
+}

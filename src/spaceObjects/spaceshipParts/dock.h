@@ -17,9 +17,11 @@ enum EDockType
     Dock_Thermic,
     Dock_Repair,
     Dock_Stock,
-    Dock_Disabled
+    Dock_Disabled,
+    nbElems
 };
 string getDockTypeName(EDockType dockType);
+EDockType getDockTypeEnum(std::string dockType);
 
 class SpaceShip;
 

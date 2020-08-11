@@ -253,7 +253,8 @@ class GuiShipTweakDock : public GuiTweakPage
 {
 private:
     P<PlayerSpaceship> target;
-    std::vector<GuiListbox*> list_state_boxes;
+    //std::vector<GuiListbox*> list_state_boxes;
+    std::vector<GuiSelector*> type_selector;
 public:
     GuiShipTweakDock(GuiContainer* owner);
     virtual void open(P<SpaceObject> target);
