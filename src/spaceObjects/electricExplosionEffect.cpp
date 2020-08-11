@@ -46,9 +46,11 @@ void ElectricExplosionEffect::draw3DTransparent()
     ShaderManager::getShader("basicShader")->setParameter("textureMap", *textureManager.getTexture("electric_sphere_texture.png"));
     sf::Shader::bind(ShaderManager::getShader("basicShader"));
     Mesh* m = Mesh::getMesh("sphere.obj");
-    m->render();
+    if(m)
+        m->render();
     glScalef(0.5, 0.5, 0.5);
-    m->render();
+    if(m)
+        m->render();
     glPopMatrix();
 
     ShaderManager::getShader("billboardShader")->setParameter("textureMap", *textureManager.getTexture("particle.png"));
