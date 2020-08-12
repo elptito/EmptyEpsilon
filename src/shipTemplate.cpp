@@ -82,6 +82,8 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, addDoor);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, addDrones);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setRadarTrace);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setSystemDamageRatio);//multiplies the damage applied to systems when hit
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setSystemDamageHullThreshold);//if the hull has a higher percentage than this, no damage to systems occur
     /// Return a new template with the given name, which is an exact copy of this template.
     /// Used to make easy variations of templates.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, copy);
@@ -154,6 +156,8 @@ ShipTemplate::ShipTemplate()
     thermic_dock_count = 0;
     repair_dock_count = 0;
     stock_dock_count = 0;
+    system_damage_ratio =1.0f;
+    system_damage_hull_threshold = 0.0f;
 }
 
 void ShipTemplate::setBeamTexture(int index, string texture)
@@ -548,7 +552,8 @@ P<ShipTemplate> ShipTemplate::copy(string new_name)
     for(int n=0; n<MW_Count; n++)
         result->weapon_storage[n] = weapon_storage[n];
     result->custom_weapon_storage = custom_weapon_storage;
-
+    result->system_damage_ratio = system_damage_ratio;
+    result->system_damage_hull_threshold = system_damage_hull_threshold;
     result->radar_trace = radar_trace;
 
     result->rooms = rooms;

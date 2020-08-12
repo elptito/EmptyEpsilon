@@ -253,6 +253,8 @@ GuiTemplateTweak::GuiTemplateTweak(GuiContainer* owner)
     });
     heading_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
+
+
     (new GuiLabel(left_col, "", "Rotation:", 30))->setSize(GuiElement::GuiSizeMax, 50);
     rotation_slider = new GuiSlider(left_col, "", -100.0, 100.0, 0.0, [this](float value) {
         target->setRotationSpeed(value/10.0);
@@ -295,6 +297,18 @@ GuiTemplateTweak::GuiTemplateTweak(GuiContainer* owner)
        target->setCanBeDestroyed(value);
    });
    can_be_destroyed_toggle->setSize(GuiElement::GuiSizeMax, 40);
+
+    (new GuiLabel(right_col, "", "Ratio de degats aux systemes :", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    system_damage_ratio_slider = new GuiSlider(right_col, "", 0.0, 100.0, 0.0, [this](float value) {
+        target->system_damage_ratio = value / 100.0f;
+    });
+    system_damage_ratio_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
+    (new GuiLabel(right_col, "", "Min% hull avant degats systeme :", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    system_damage_hull_threshold_slider = new GuiSlider(right_col, "", 0.0, 100.0, 0.0, [this](float value) {
+        target->system_damage_hull_threshold = value / 100.0f;
+    });
+    system_damage_hull_threshold_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 }
  void GuiTemplateTweak::onDraw(sf::RenderTarget& window)
 {
@@ -302,6 +316,8 @@ GuiTemplateTweak::GuiTemplateTweak(GuiContainer* owner)
     rotation_slider->setValue(target->getRotationSpeed()*10.0);
     hull_slider->setValue(target->hull_strength);
     transparency_slider->setValue(target->getTransparency() * 100.0);
+    system_damage_ratio_slider->setValue(target->system_damage_ratio * 100.0);
+    system_damage_hull_threshold_slider->setValue(target->system_damage_hull_threshold * 100.0);
 }
 
  void GuiTemplateTweak::open(P<SpaceObject> target)

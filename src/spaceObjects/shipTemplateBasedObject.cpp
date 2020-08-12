@@ -69,6 +69,9 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(ShipTemplateBasedObject, SpaceObject)
 
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, setRotationSpeed);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, getRotationSpeed);
+
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, setSystemDamageRatio);//multiplies the damage applied to systems when hit
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, setSystemDamageHullThreshold);//if the hull has a higher percentage than this, no damage to systems occur.
 }
 
 ShipTemplateBasedObject::ShipTemplateBasedObject(float collision_range, string multiplayer_name, float multiplayer_significant_range)
@@ -115,6 +118,12 @@ ShipTemplateBasedObject::ShipTemplateBasedObject(float collision_range, string m
 
     rotation_speed = 0.0;
     registerMemberReplication(&rotation_speed);
+
+    system_damage_ratio = 1.0f;
+    registerMemberReplication(&system_damage_ratio);
+
+    system_damage_hull_threshold = 0.0f;
+    registerMemberReplication(&system_damage_hull_threshold);
 }
 
 void ShipTemplateBasedObject::drawShieldsOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, float sprite_scale, bool show_levels)
@@ -337,6 +346,9 @@ void ShipTemplateBasedObject::setTemplate(string template_name)
 
     ship_template->setCollisionData(this);
     model_info.setData(ship_template->model_data);
+
+    system_damage_ratio = ship_template->system_damage_ratio;
+    system_damage_hull_threshold = ship_template->system_damage_hull_threshold;
 
     //Call the virtual applyTemplateValues function so subclasses can get extra values from the ship templates.
     applyTemplateValues();

@@ -36,7 +36,6 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getCustomWeaponStorageMax);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setCustomWeaponStorage);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setCustomWeaponStorageMax);
-
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getShieldsFrequency);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setShieldsFrequency);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getOxygenRechargeRate);
@@ -112,6 +111,7 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setRadarTrace);
 
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, addBroadcast);
+
 }
 
 SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_range)
@@ -199,6 +199,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     registerMemberReplication(&radar_trace);
     registerMemberReplication(&passagers_count);
     registerMemberReplication(&max_passagers_count);
+
 
     // Initialize each subsystem to be powered with no coolant or heat.
     for(int n=0; n<SYS_COUNT; n++)
@@ -332,8 +333,6 @@ void SpaceShip::applyTemplateValues()
         custom_weapon_storage[kv.first] = kv.second;
         custom_weapon_storage_max[kv.first] = kv.second;
     }
-
-
 
     ship_template->setCollisionData(this);
     model_info.setData(ship_template->model_data);
@@ -1213,12 +1212,14 @@ void SpaceShip::didAnOffensiveAction()
 
 void SpaceShip::takeHullDamage(float damage_amount, DamageInfo& info)
 {
-    if (gameGlobalInfo->use_system_damage)
+    if (gameGlobalInfo->use_system_damage
+        && (damage_amount / hull_max) > system_damage_hull_threshold)
     {
         if (info.system_target != SYS_None)
         {
             //Target specific system
-            float system_damage = (damage_amount / hull_max) * 2.0;
+
+            float system_damage = (damage_amount / hull_max) * 2.0 * system_damage_ratio;
             if (info.type == DT_Energy)
                 system_damage *= 3.0;   //Beam weapons do more system damage, as they penetrate the hull easier.
             systems[info.system_target].health -= system_damage;
@@ -1236,7 +1237,7 @@ void SpaceShip::takeHullDamage(float damage_amount, DamageInfo& info)
                         find_system = false;
                 }
                 //Damage the system compared to the amount of hull damage you would do. If we have less hull strength you get more system damage.
-                float system_damage = (damage_amount / hull_max) * 1.0;
+                float system_damage = (damage_amount / hull_max) * 1.0 * system_damage_ratio;
                 systems[random_system].health -= system_damage;
                 if (systems[random_system].health < -1.0)
                     systems[random_system].health = -1.0;
@@ -1257,7 +1258,7 @@ void SpaceShip::takeHullDamage(float damage_amount, DamageInfo& info)
             }
 
             //Damage the system compared to the amount of hull damage you would do. If we have less hull strength you get more system damage.
-            float system_damage = (damage_amount / hull_max) * 3.0;
+            float system_damage = (damage_amount / hull_max) * 3.0 * system_damage_ratio;
             if (info.type == DT_Energy)
                 system_damage *= 2.5;   //Beam weapons do more system damage, as they penetrate the hull easier.
             systems[random_system].health -= system_damage;
@@ -1478,7 +1479,14 @@ string SpaceShip::getScriptExportModificationsOnTemplate()
         ret += ":setJumpDrive(" + string(has_jump_drive ? "true" : "false") + ")";
     if (has_warp_drive != (ship_template->warp_speed > 0))
         ret += ":setWarpDrive(" + string(has_warp_drive ? "true" : "false") + ")";
-
+    if(system_damage_ratio != ship_template->system_damage_ratio)
+    {
+        ret +=":setSystemDamageRatio(" + string(system_damage_ratio) + ")";
+    }
+    if(system_damage_hull_threshold != ship_template->system_damage_hull_threshold)
+    {
+        ret +=":setSystemDamageHullThreshold(" + string(system_damage_hull_threshold) + ")";
+    }
     // Shield data
     // Determine whether to export shield data.
     bool add_shields_max_line = getShieldCount() != ship_template->shield_count;
@@ -1553,6 +1561,8 @@ string SpaceShip::getScriptExportModificationsOnTemplate()
         ret += ":setCustomWeaponStorage(\"" + kv.first + "\", " + string(kv.second) + ")";
         ret += ":setCustomWeaponStorageMax(\"" + kv.first + "\", " + string(kv.second) + ")";
     }
+
+
 
     ///Beam weapon data
     for(int n=0; n<max_beam_weapons; n++)

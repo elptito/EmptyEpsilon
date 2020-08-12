@@ -83,6 +83,8 @@ private:
     GuiSlider* rotation_slider;
     GuiSlider* hull_max_slider;
     GuiSlider* hull_slider;
+    GuiSlider* system_damage_ratio_slider;
+    GuiSlider* system_damage_hull_threshold_slider;
     GuiToggleButton* can_be_destroyed_toggle;
     GuiSlider* transparency_slider;
 public:

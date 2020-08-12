@@ -136,6 +136,8 @@ public:
     float jump_drive_energy_per_km_charge;
     int weapon_storage[MW_Count];
     std::map<string, int> custom_weapon_storage;
+    float system_damage_ratio;
+    float system_damage_hull_threshold;
     int launcher_dock_count;
     int energy_dock_count;
     int weapons_dock_count;
@@ -202,6 +204,9 @@ public:
     void setDocks(int launchers, int energy, int weapons, int thermic, int repair, int stock);
     int getDocksCount() {return launcher_dock_count + energy_dock_count + weapons_dock_count + thermic_dock_count + repair_dock_count + stock_dock_count;}
     void setRadarTrace(string trace);
+    void setSystemDamageRatio(float ratio) { system_damage_ratio = ratio ;}
+    void setSystemDamageHullThreshold(float ratio) {system_damage_hull_threshold = ratio;}
+
 
     P<ShipTemplate> copy(string new_name);
 
