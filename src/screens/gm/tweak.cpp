@@ -1206,7 +1206,7 @@ GuiShipTweakDock::GuiShipTweakDock(GuiContainer* owner)
     envol_col->setPosition(-25, 25, ATopRight)->setSize(300, GuiElement::GuiSizeMax);
 
     (new GuiLabel(dock_col, "", "Dock :", 30))->setSize(GuiElement::GuiSizeMax, 40);
-    (new GuiLabel(envol_col, "", "En vol :", 30))->setSize(GuiElement::GuiSizeMax, 40);
+    (new GuiLabel(envol_col, "", "Recall :", 30))->setSize(GuiElement::GuiSizeMax, 40);
     (new GuiLabel(type_col, "", "", 30))->setSize(GuiElement::GuiSizeMax, 40);
     (new GuiLabel(content_col, "", "", 30))->setSize(GuiElement::GuiSizeMax, 40);
 
@@ -1233,11 +1233,36 @@ GuiShipTweakDock::GuiShipTweakDock(GuiContainer* owner)
         }
 
         {
-            GuiLabel *label = new GuiLabel(content_col, "", "Content" + std::to_string(n+1), 20);
-            label->setSize(GuiElement::GuiSizeMax, 40);
+
+            content_button.push_back(new GuiButton(content_col, "", "", [this, n]() {
+                if(target->docks[n].getCargo())
+                {
+                    target->docks[n].getCargo()->onLaunch(target->docks[n]);
+                    target->docks[n].getCargo()->destroy();
+                    target->docks[n].empty();
+                }
+            }));
+            content_button[n]->setSize(150, 40);
         }
 
     }
+    list_envol_box = new GuiListbox(envol_col, "ENVOL", [this](int index, string value)
+    {
+        P<SpaceShip> ship = gameGlobalInfo->getPlayerShip(value.toInt());
+        if(ship)
+        {
+            Dock* dock = Dock::findOpenForDocking(target->docks, max_docks_count);
+            if (dock)
+            {
+                P<ShipCargo> cargo = new ShipCargo(ship); //should keep current parameters
+                dock->dock(cargo);
+                ship->destroy();
+            }
+        }
+    });
+    //TODO : selectionner ça puis un dock pour choisir le dock
+    //list_envol_box->setTextSize(20)->setButtonHeight(30)->setPosition(-20, 20, ATopRight)->setSize(300, 200);
+    list_envol_box->setSize(150, GuiElement::GuiSizeMax);
 }
 
 void GuiShipTweakDock::open(P<SpaceObject> target)
@@ -1251,12 +1276,59 @@ void GuiShipTweakDock::open(P<SpaceObject> target)
         for(int i=0; i < max_docks_count; i++)
         {
             type_selector[i]->setSelectionIndex((int)player->docks[i].dock_type);
+            std::string text = (player->docks[i].getCargo()) ? player->docks[i].getCargo()->getCallSign():"Vide";
+            content_button[i]->setText(text);
         }
     }
 }
 
 void GuiShipTweakDock::onDraw(sf::RenderTarget& window)
 {
+    P<PlayerSpaceship> player = target;
+    if (player)
+    {
+        for(int i=0; i < max_docks_count; i++)
+        {
+            std::string text = (player->docks[i].getCargo()) ? player->docks[i].getCargo()->getCallSign():"Vide";
+            content_button[i]->setText(text);
+        }
+
+
+        for(int n = 0; n < GameGlobalInfo::max_player_ships; n++)
+        {
+
+            P<PlayerSpaceship> ship = gameGlobalInfo->getPlayerShip(n);
+
+            int index_in_list = list_envol_box->indexByValue(string(n)); //at the end, we should have scanned the whole list, [0,max_player_ship[ only possible values
+            if(ship)
+            {
+                if(target->canBeLandedOn(ship)) //no check on position here.
+                {
+                    if (index_in_list != -1)
+                    {
+
+                        if(ship && ship->getCallSign() == list_envol_box->getEntryName(index_in_list)) //ugly, suppose callsign is unique... should do with some kind of uuid (multiplayerid for entry name ?)
+                            continue;
+                        else
+                        {
+                            list_envol_box->removeEntry(index_in_list); //we are not synchronized, correct one will be added just after
+                        }
+                    }
+
+                    list_envol_box->addEntry(ship->getCallSign(), std::to_string(n));
+                }
+                else if (index_in_list != -1) //should never happen, suppose canbelandedonby property changed over time
+                {
+                    list_envol_box->removeEntry(index_in_list);
+                }
+            }
+            else if (index_in_list != -1) //no ship in game but still ship in list
+            {
+                list_envol_box->removeEntry(index_in_list);
+            }
+        }
+    }
+
 
 }
 

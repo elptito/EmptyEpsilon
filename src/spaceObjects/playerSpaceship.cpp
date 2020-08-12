@@ -2240,6 +2240,8 @@ bool PlayerSpaceship::canBeLandedOn(P<SpaceObject> obj)
     P<SpaceShip> ship = obj;
     if (!ship || !ship->ship_template)
         return false;
+    if(getMultiplayerId() == ship->getMultiplayerId())
+        return false;
     if (ship->getFactionId() != getFactionId())
         return false;
     Dock* dock = Dock::findOpenForDocking(docks, max_docks_count);

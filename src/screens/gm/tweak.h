@@ -255,6 +255,8 @@ private:
     P<PlayerSpaceship> target;
     //std::vector<GuiListbox*> list_state_boxes;
     std::vector<GuiSelector*> type_selector;
+    std::vector<GuiButton*> content_button;
+    GuiListbox* list_envol_box;
 public:
     GuiShipTweakDock(GuiContainer* owner);
     virtual void open(P<SpaceObject> target);
