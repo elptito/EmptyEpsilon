@@ -124,6 +124,8 @@ public:
     // Password to join a ship. Default is empty.
     string control_code;
 
+    float energy_consumption_ratio;
+
 private:
     // soundManager index of the shield object
     int shield_sound;
@@ -342,6 +344,8 @@ public:
     int getRepairCrewCount();
     void setRepairCrewCount(int amount);
     EAlertLevel getAlertLevel() { return alert_level; }
+
+    void setEnergyConsumptionRatio(float ratio) { energy_consumption_ratio = ratio;}
 
     // Ship update functions
     virtual void update(float delta) override;

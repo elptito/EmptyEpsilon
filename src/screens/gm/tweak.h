@@ -235,6 +235,7 @@ private:
 //    GuiSlider* max_oxygen_point_slider;
     GuiListbox* list_ships_box;
     GuiSlider* energy_level_slider;
+    GuiSlider* energy_conso_ratio_slider;
     GuiSlider* max_energy_level_slider;
     GuiSlider* max_coolant_slider;
     GuiToggleButton* auto_repair_toogle;

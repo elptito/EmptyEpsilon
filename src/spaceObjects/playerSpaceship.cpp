@@ -11,28 +11,28 @@
 // PlayerSpaceship are ships controlled by a player crew.
 REGISTER_SCRIPT_SUBCLASS(PlayerSpaceship, SpaceShip)
 {
-    // Returns the sf::Vector2f of a specific waypoint set by this ship.
-    // Takes the index of the waypoint as its parameter.
+    /// Returns the sf::Vector2f of a specific waypoint set by this ship.
+    /// Takes the index of the waypoint as its parameter.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getWaypoint);
-    // Returns the total number of this ship's active waypoints.
+    /// Returns the total number of this ship's active waypoints.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getWaypointCount);
-    // Returns the ship's EAlertLevel.
+    /// Returns the ship's EAlertLevel.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getAlertLevel);
-    // Sets whether this ship's shields are raised or lowered.
-    // Takes a Boolean value.
+    /// Sets whether this ship's shields are raised or lowered.
+    /// Takes a Boolean value.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setShieldsActive);
-    // Adds a message to the ship's log. Takes a string as the message and a
-    // sf::Color.
+    /// Adds a message to the ship's log. Takes a string as the message and a
+    /// sf::Color.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, addToShipLog);
-    // Move all players connected to this ship to the same stations on a
-    // different PlayerSpaceship. If the target isn't a PlayerSpaceship, this
-    // function does nothing.
-    // This can be used in scenarios to change the crew's ship.
+    /// Move all players connected to this ship to the same stations on a
+    /// different PlayerSpaceship. If the target isn't a PlayerSpaceship, this
+    /// function does nothing.
+    /// This can be used in scenarios to change the crew's ship.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, transferPlayersToShip);
-    // Transfers only the crew members who fill a specific station to another
-    // PlayerSpaceship.
+    /// Transfers only the crew members who fill a specific station to another
+    /// PlayerSpaceship.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, transferPlayersAtPositionToShip);
-    // Returns true if a station is occupied by a player, and false if not.
+    /// Returns true if a station is occupied by a player, and false if not.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, hasPlayerAtPosition);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setTexture);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setTextureColor);
@@ -105,9 +105,9 @@ REGISTER_SCRIPT_SUBCLASS(PlayerSpaceship, SpaceShip)
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandAnswerCommHail);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSendComm);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSendCommPlayer);
-    // Command repair crews to automatically move to damaged subsystems.
-    // Use this command on ships to require less player interaction, especially
-    // when combined with setAutoCoolant/auto_coolant_enabled.
+    /// Command repair crews to automatically move to damaged subsystems.
+    /// Use this command on ships to require less player interaction, especially
+    /// when combined with setAutoCoolant/auto_coolant_enabled.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetAutoRepair);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetBeamFrequency);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetBeamSystemTarget);
@@ -123,19 +123,21 @@ REGISTER_SCRIPT_SUBCLASS(PlayerSpaceship, SpaceShip)
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetProbe3DLink);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetAlertLevel);
 
-    // Return the number of Engineering repair crews on the ship.
+    /// Return the number of Engineering repair crews on the ship.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getRepairCrewCount);
-    // Set the total number of Engineering repair crews. If this value is less
-    // than the number of repair crews, this function removes repair crews.
-    // If the value is greater, it adds new repair crews at random locations.
+    /// Set the total number of Engineering repair crews. If this value is less
+    /// than the number of repair crews, this function removes repair crews.
+    /// If the value is greater, it adds new repair crews at random locations.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setRepairCrewCount);
-    // Sets whether automatic coolant distribution is enabled. This sets the
-    // amount of coolant proportionally to the amount of heat in that system.
-    // Use this command on ships to require less player interaction, especially
-    // when combined with commandSetAutoRepair/auto_repair_enabled.
+    /// Sets whether automatic coolant distribution is enabled. This sets the
+    /// amount of coolant proportionally to the amount of heat in that system.
+    /// Use this command on ships to require less player interaction, especially
+    /// when combined with commandSetAutoRepair/auto_repair_enabled.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setAutoCoolant);
-    // Set a password to join the ship.
+    /// Set a password to join the ship.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setControlCode);
+    /// Apply a rate to energy decrease. Float, default is 1. Won't affect production of energy.
+    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setEnergyConsumptionRatio);
 }
 
 float PlayerSpaceship::system_power_user_factor[] = {
@@ -349,6 +351,9 @@ PlayerSpaceship::PlayerSpaceship()
         registerMemberReplication(&self_destruct_code_show_position[n]);
     }
 
+    energy_consumption_ratio = 1.0f;
+    registerMemberReplication(&energy_consumption_ratio);
+
     if (game_server)
     {
         if (gameGlobalInfo->insertPlayerShip(this) < 0)
@@ -537,7 +542,14 @@ void PlayerSpaceship::update(float delta)
             useEnergy(delta * energy_shield_use_per_second);
 
         // Consume power based on subsystem requests and state.
-        energy_level += delta * getNetSystemEnergyUsage();
+        {
+            float request = delta * getNetSystemEnergyUsage();
+            if(request < 0)
+            {
+                request*=energy_consumption_ratio;
+            }
+            energy_level += request;
+        }
 
         for(int n = 0; n < SYS_COUNT; n++)
         {
@@ -736,6 +748,8 @@ void PlayerSpaceship::applyTemplateValues()
         // Set the ship's number of repair crews in Engineering from the ship's template.
         setRepairCrewCount(ship_template->repair_crew_count);
     }
+
+    energy_consumption_ratio = ship_template->energy_consumption_ratio;
 }
 
 void PlayerSpaceship::executeJump(float distance)
@@ -820,6 +834,9 @@ bool PlayerSpaceship::useEnergy(float amount)
 {
     // Try to consume an amount of energy. If it works, return true.
     // If it doesn't, return false.
+
+    amount *= energy_consumption_ratio;
+
     if (energy_level >= amount)
     {
         energy_level -= amount;

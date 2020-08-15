@@ -1075,6 +1075,12 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
     });
     energy_level_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
+    (new GuiLabel(left_col, "", "Ratio de consommation d'energie:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    energy_conso_ratio_slider = new GuiSlider(left_col, "", 0.0, 200, 0.0, [this](float value) {
+        target->energy_consumption_ratio = value/100.0f;
+    });
+    energy_conso_ratio_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
     (new GuiLabel(left_col, "", "Total de Coolant:", 30))->setSize(GuiElement::GuiSizeMax, 50);
 
     max_coolant_slider = new GuiSlider(left_col, "", 0.0, 300.0, 0.0, [this](float value) {
@@ -1181,6 +1187,7 @@ void GuiShipTweakPlayer::onDraw(sf::RenderTarget& window)
     // Update the ship's energy level.
     energy_level_slider->setValue(target->energy_level);
     max_energy_level_slider->setValue(target->max_energy_level);
+    energy_conso_ratio_slider->setValue(target->energy_consumption_ratio * 100);
 
     // Update Max of coolant level
     max_coolant_slider->setValue(target->max_coolant * 100.0);
@@ -1217,6 +1224,7 @@ void GuiShipTweakPlayer::open(P<SpaceObject> target)
                 list_ships_box->addEntry(droneTemplate.template_name,droneTemplate.template_name);
             }
         }
+        energy_conso_ratio_slider->setValue(player->energy_consumption_ratio * 100);
     }
 }
 

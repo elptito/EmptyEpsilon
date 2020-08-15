@@ -146,6 +146,7 @@ public:
     int repair_dock_count;
     int stock_dock_count;
     string radar_trace;
+    float energy_consumption_ratio;
 
     std::vector<ShipRoomTemplate> rooms;
     std::vector<ShipDoorTemplate> doors;
@@ -166,6 +167,7 @@ public:
     void setMesh(string model, string color_texture, string specular_texture, string illumination_texture);
     void setEnergyStorage(float energy_amount);
     void setRepairCrewCount(int amount);
+    void setEnergyConsumptionRatio(float ratio) { energy_consumption_ratio = ratio;}
 
     void setBeam(int index, float arc, float direction, float range, float cycle_time, float damage);
     void setBeamWeapon(int index, float arc, float direction, float range, float cycle_time, float damage);

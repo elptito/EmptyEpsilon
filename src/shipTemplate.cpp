@@ -84,8 +84,12 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, addDoor);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, addDrones);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setRadarTrace);
-    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setSystemDamageRatio);//multiplies the damage applied to systems when hit
-    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setSystemDamageHullThreshold);//if the hull has a higher percentage than this, no damage to systems occur
+    ///multiplies the damage applied to systems when hit
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setSystemDamageRatio);
+    ///if the hull has a higher percentage than this, no damage to systems occur
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setSystemDamageHullThreshold);
+    /// Apply a rate to energy decrease. Float, default is 1. Won't affect production of energy.
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setEnergyConsumptionRatio);
     /// Return a new template with the given name, which is an exact copy of this template.
     /// Used to make easy variations of templates.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, copy);
@@ -161,6 +165,7 @@ ShipTemplate::ShipTemplate()
     stock_dock_count = 0;
     system_damage_ratio =1.0f;
     system_damage_hull_threshold = 0.0f;
+    energy_consumption_ratio = 1.0f;
 }
 
 void ShipTemplate::setBeamTexture(int index, string texture)
