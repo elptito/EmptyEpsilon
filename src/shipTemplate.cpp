@@ -59,6 +59,8 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     /// Set the shield levels, amount of parameters defines the amount of shields. (Up to a maximum of 8 shields)
     /// Example: setShieldData(400) setShieldData(100, 80) setShieldData(100, 50, 50)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setShields);
+    /// Sets by how much the shields recharge over time for all shields. Default value is 0.3. Value is a float.
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setShieldRechargeRate);
     /// Set the impulse speed, rotation speed and impulse acceleration for this ship.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setSpeed);
     /// Sets the combat maneuver power of this ship.
@@ -132,6 +134,7 @@ ShipTemplate::ShipTemplate()
     shield_count = 0;
     for(int n=0; n<max_shield_count; n++)
         shield_level[n] = 0.0;
+    shield_recharge_rate = 0.3f;
     impulse_speed = 500.0;
     impulse_acceleration = 20.0;
     turn_speed = 0.0;

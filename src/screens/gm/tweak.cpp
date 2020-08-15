@@ -365,6 +365,12 @@ GuiShipTweakShields::GuiShipTweakShields(GuiContainer* owner)
         });
         shield_slider[n]->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
     }
+
+    (new GuiLabel(left_col, "", "Vitesse de recharge des boucliers :", 20))->setSize(GuiElement::GuiSizeMax, 30);
+    shield_recharge_slider = new GuiSlider(left_col, "", 0.0, 200, 30, [this](float value) {
+        target->shield_recharge_rate = value/100.0f;
+    });
+    shield_recharge_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 }
 
 void GuiShipTweakShields::onDraw(sf::RenderTarget& window)
@@ -373,6 +379,7 @@ void GuiShipTweakShields::onDraw(sf::RenderTarget& window)
     {
         shield_slider[n]->setValue(target->shield_level[n]);
     }
+    shield_recharge_slider->setValue(target->shield_recharge_rate * 100);
 }
 
 void GuiShipTweakShields::open(P<SpaceObject> target)
@@ -389,10 +396,12 @@ void GuiShipTweakShields::open(P<SpaceObject> target)
             shield_max_slider[n]->setValue(ship->shield_max[n]);
             shield_max_slider[n]->clearSnapValues()->addSnapValue(ship->ship_template->shield_level[n], 5.0f);
         }
+        shield_recharge_slider->setValue(ship->shield_recharge_rate * 100);
+        //shield_recharge_slider->clearSnapValues()->addSnapValue(2, 0.1f);
     }
 
     if (station)
-        {
+    {
         this->target = station;
 
         for(int n = 0; n < max_shield_count; n++)
@@ -400,8 +409,13 @@ void GuiShipTweakShields::open(P<SpaceObject> target)
             shield_max_slider[n]->setValue(station->shield_max[n]);
             shield_max_slider[n]->clearSnapValues()->addSnapValue(station->ship_template->shield_level[n], 5.0f);
         }
+        shield_recharge_slider->setValue(station->shield_recharge_rate * 100);
+        //shield_recharge_slider->clearSnapValues()->addSnapValue(2, 0.1f);
+
     }
 
+        
+    
 
 }
 

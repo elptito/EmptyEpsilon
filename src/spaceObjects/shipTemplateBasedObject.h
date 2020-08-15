@@ -40,6 +40,7 @@ public:
 
     float system_damage_ratio;
     float system_damage_hull_threshold;
+    float shield_recharge_rate;
 
     bool shares_energy_with_docked;       //[config]
     bool repair_docked;                   //[config]
@@ -99,6 +100,7 @@ public:
     int getShieldCount() { return shield_count; }
     void setShieldCount(int value) { if (value < 0 || value > max_shield_count) return; shield_count = value; }
     void setShields(std::vector<float> amounts);
+    void setShieldRechargeRate(float amount) {shield_recharge_rate = amount;}
     void setShieldsMax(std::vector<float> amounts);
 
     int getShieldPercentage(int index) { if (index < 0 || index >= shield_count || shield_max[index] <= 0.0) return 0; return int(100 * shield_level[index] / shield_max[index]); }

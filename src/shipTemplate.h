@@ -124,6 +124,7 @@ public:
     float hull;
     int shield_count;
     float shield_level[max_shield_count];
+    float shield_recharge_rate;
     float impulse_speed, turn_speed, warp_speed;
     float impulse_acceleration;
     float combat_maneuver_boost_speed;
@@ -185,6 +186,7 @@ public:
     void setTubeDirection(int index, float direction);
     void setHull(float amount) { hull = amount; }
     void setShields(std::vector<float> values);
+    void setShieldRechargeRate(float amount) { shield_recharge_rate = amount;}
     void setSpeed(float impulse, float turn, float acceleration);
     void setCombatManeuver(float boost, float strafe);
     void setWarpSpeed(float warp);

@@ -851,7 +851,7 @@ float SpaceShip::getOxygenRechargeRate(int index)
 
 float SpaceShip::getShieldRechargeRate(int shield_index)
 {
-    float rate = 0.3f;
+    float rate = ShipTemplateBasedObject::getShieldRechargeRate(shield_index);
     rate *= getSystemEffectiveness(getShieldSystemForShieldIndex(shield_index));
     if (docking_state == DS_Docked)
     {
