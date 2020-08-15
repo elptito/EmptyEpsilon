@@ -51,7 +51,7 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
         float a_0, a_1;
         float dist = sf::length(obj->getPosition() - view_position);
         float scale = 1.0;
-        // Nombre de fois la portée du radar
+        // Nombre de fois la portee du radar
         float dist_max = 50.0;
 
         // If the object is more than twice as far away as the maximum radar
