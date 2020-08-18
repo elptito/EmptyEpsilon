@@ -1,4 +1,5 @@
 #include "repairCrew.h"
+#include "gameGlobalInfo.h"
 
 const static int16_t CMD_SET_TARGET_POSITION = 0x0000;
 
@@ -175,6 +176,9 @@ void RepairCrew::update(float delta)
     {
     case RC_Idle:
         {
+            if (gameGlobalInfo->use_nano_repair_crew)
+                break;
+            
             action_delay = 1.0 / move_speed;
             if (pos != target_position)
             {

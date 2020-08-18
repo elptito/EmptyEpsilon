@@ -92,6 +92,7 @@ public:
     bool allow_main_screen_long_range_radar;
     bool allow_main_screen_global_range_radar;
     bool allow_main_screen_ship_state;
+    bool use_nano_repair_crew;
     string gm_control_code;
     float elapsed_time;
     string scenario;

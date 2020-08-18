@@ -54,6 +54,8 @@ public:
     float heat_level; //0.0-1.0, system will damage at 1.0
     float coolant_level; //0.0-3.0
     float coolant_request;
+    float repair_level; //0.0-10.0
+    float repair_request;
     float hacked_level; //0.0-1.0
 
     float getHeatingDelta()
@@ -399,6 +401,8 @@ public:
 
     float getSystemHack(ESystem system) { if (system >= SYS_COUNT) return 0.0; if (system <= SYS_None) return 0.0; return systems[system].hacked_level; }
     void setSystemHack(ESystem system, float hack) { if (system >= SYS_COUNT) return; if (system <= SYS_None) return; systems[system].hacked_level = std::min(3.0f, std::max(0.0f, hack)); }
+    float getSystemRepair(ESystem system) { if (system >= SYS_COUNT) return 0.0; if (system <= SYS_None) return 0.0; return systems[system].repair_level; }
+    void setSystemRepair(ESystem system, float repair) { if (system >= SYS_COUNT) return; if (system <= SYS_None) return; systems[system].repair_level = std::min(1.0f, std::max(0.0f, repair)); }
     float getImpulseMaxSpeed() { return impulse_max_speed; }
     void setImpulseMaxSpeed(float speed) { impulse_max_speed = speed; }
     float getRotationMaxSpeed() { return turn_speed; }

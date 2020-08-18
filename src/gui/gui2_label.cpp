@@ -48,6 +48,12 @@ GuiLabel* GuiLabel::setVertical()
     return this;
 }
 
+GuiLabel* GuiLabel::setHorizontal()
+{
+    vertical = false;
+    return this;
+}
+
 GuiLabel* GuiLabel::setBold(bool bold)
 {
     this->bold = bold;

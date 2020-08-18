@@ -23,6 +23,7 @@ public:
     GuiLabel* setAlignment(EGuiAlign alignment);
     GuiLabel* addBackground();
     GuiLabel* setVertical();
+    GuiLabel* setHorizontal();
     GuiLabel* setBold(bool bold=true);
 };
 

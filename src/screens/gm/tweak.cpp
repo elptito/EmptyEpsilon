@@ -1190,6 +1190,26 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
     max_coolant_slider->addSnapValue(250.0, 1.0);
     max_coolant_slider->addSnapValue(300.0, 1.0);
 
+    (new GuiLabel(left_col, "", "Coolant (per system / max):", 30))->setSize(GuiElement::GuiSizeMax, 50);
+
+    coolant_per_system_slider = new GuiSlider(left_col, "", 0.0, 50.0, 0.0, [this](float value) {
+        target->setMaxCoolantPerSystem(value);
+    });
+    coolant_per_system_slider->addSnapValue(10,1)->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
+    (new GuiLabel(left_col, "", "Repair (per system / max):", 30))->setSize(GuiElement::GuiSizeMax, 50);
+
+    repair_per_system_slider = new GuiSlider(left_col, "", 0, 10, 0, [this](int value) {
+        target->setMaxRepairPerSystem(value);
+    });
+    repair_per_system_slider->addSnapValue(2,1)->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
+
+    repair_slider = new GuiSlider(left_col, "", 0, 10, 2, [this](int value) {
+        target->setRepairCrewCount(value);
+    });
+    repair_slider->addSnapValue(2,1)->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
     auto_coolant_toogle = new GuiToggleButton(left_col, "", tr("button", "Auto coolant"), [this](bool value) {
         target->setAutoCoolant(value);
     });
@@ -1321,6 +1341,9 @@ void GuiShipTweakPlayer::onDraw(sf::RenderTarget& window)
     energy_level_slider->setValue(target->energy_level);
     max_energy_level_slider->setValue(target->max_energy_level);
     energy_conso_ratio_slider->setValue(target->energy_consumption_ratio * 100);
+    coolant_per_system_slider->setValue(target->max_coolant_per_system);
+    repair_slider->setValue(target->max_repair);
+    repair_per_system_slider->setValue(target->max_repair_per_system);
 
     // Update Max of coolant level
     max_coolant_slider->setValue(target->max_coolant * 100.0);

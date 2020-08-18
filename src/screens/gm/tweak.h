@@ -257,6 +257,9 @@ private:
     GuiSlider* energy_conso_ratio_slider;
     GuiSlider* max_energy_level_slider;
     GuiSlider* max_coolant_slider;
+    GuiSlider* coolant_per_system_slider;
+    GuiSlider* repair_slider;
+    GuiSlider* repair_per_system_slider;
     GuiToggleButton* auto_repair_toogle;
     GuiToggleButton* auto_coolant_toogle;
     GuiToggleButton* gravity_toggle;
