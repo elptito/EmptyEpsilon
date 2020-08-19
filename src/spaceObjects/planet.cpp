@@ -121,6 +121,7 @@ Planet::Planet()
     atmosphere_texture = "";
     atmosphere_size = 0;
     atmosphere_color = sf::Color(0, 0, 0);
+    atmosphere_size = 0;
     distance_from_movement_plane = 0;
     axial_rotation_time = random(100.0,400.0);
     rotation_axis = random(0.0,360.0);

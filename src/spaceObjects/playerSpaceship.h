@@ -214,8 +214,8 @@ public:
 
     EAlertLevel alert_level;
 
-    int32_t linked_science_probe_id;
-    int32_t linked_probe_3D_id;
+    int32_t linked_science_probe_id = -1;
+    int32_t linked_probe_3D_id = -1;
     PlayerSpaceship();
     virtual ~PlayerSpaceship();
 
