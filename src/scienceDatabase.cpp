@@ -164,6 +164,13 @@ void fillDefaultDatabaseData()
                 entry->addKeyValue("Stock " + getMissileWeaponName(EMissileWeapons(n)), string(ship_template->weapon_storage[n]));
             }
         }
+        for(auto& kv : ship_template->custom_weapon_storage)
+        {
+            if(kv.second > 0)
+            {
+                entry->addKeyValue("Stock " + getMissileWeaponName(kv.first), string(kv.second));
+            }
+        }
         if (ship_template->getDescription().length() > 0)
             entry->setLongDescription(ship_template->getDescription());
         if (ship_template->getDocksCount() > 0)

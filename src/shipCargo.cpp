@@ -37,6 +37,11 @@ ShipCargo::ShipCargo(P<ShipTemplate> ship_template) : ShipCargo()
         setWeaponStorage(EMissileWeapons(n), 0);
         setWeaponStorageMax(EMissileWeapons(n), ship_template->weapon_storage[n]);
     }
+    for (auto &kv : ship_template->custom_weapon_storage )
+    {
+        setCustomWeaponStorage(kv.first, kv.second);
+        setCustomWeaponStorageMax(kv.first, kv.second);
+    }
     auto_repair_enabled=true;
     auto_coolant_enabled=true;
 }
@@ -61,6 +66,14 @@ ShipCargo::ShipCargo(P<SpaceShip> ship) : ShipCargo()
     {
         setWeaponStorage(EMissileWeapons(n), ship->weapon_storage[n]);
         setWeaponStorageMax(EMissileWeapons(n), ship->weapon_storage_max[n]);
+    }
+    for (auto &kv : ship->custom_weapon_storage )
+    {
+        setCustomWeaponStorage(kv.first, kv.second);
+    }
+    for (auto &kv : ship->custom_weapon_storage_max )
+    {
+        setCustomWeaponStorageMax(kv.first, kv.second);
     }
     P<PlayerSpaceship> pship  = ship;
     if(pship)
@@ -130,6 +143,15 @@ bool ShipCargo::onLaunch(Dock &source)
                 ship->weapon_storage[n] = getWeaponStorage(EMissileWeapons(n));
                 ship->weapon_storage_max[n] = getWeaponStorageMax(EMissileWeapons(n));
             }
+            for (auto &kv : custom_weapon_storage )
+            {
+                ship->custom_weapon_storage[kv.first] = kv.second;
+            }
+            for (auto &kv : custom_weapon_storage_max )
+            {
+                ship->custom_weapon_storage_max[kv.first] = kv.second;
+            }
+
             ship->auto_coolant_enabled=auto_coolant_enabled;
             ship->auto_repair_enabled=auto_repair_enabled;
             return true;
