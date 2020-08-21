@@ -100,9 +100,9 @@ Cargo::Entries Cargo::getEntries()
                 icon = " ";
                 break;
             }
-
-        }
         result.push_back(std::make_tuple(icon, label, string(kv.second) + "/" + string(custom_weapon_storage_max[kv.first])));
+        }
+        
     }
 
 

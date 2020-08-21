@@ -134,7 +134,7 @@ bool ShipCargo::onLaunch(Dock &source)
                 if (ship->hasSystem(ESystem(n)))
                     systemsCount++;
                 ship->systems[n].health = systems_health[n];
-            }
+            }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
             for (unsigned int n = 0; n < SYS_COUNT; n++)
                 if (ship->hasSystem(ESystem(n)))
                     ship->addHeat(ESystem(n), getHeat() / systemsCount);
@@ -149,7 +149,7 @@ bool ShipCargo::onLaunch(Dock &source)
             }
             for (auto &kv : custom_weapon_storage_max )
             {
-                ship->custom_weapon_storage_max[kv.first] = kv.second;
+                ship->custom_weapon_storage_max[kv.first] = kv.second                           ;
             }
 
             ship->auto_coolant_enabled=auto_coolant_enabled;
