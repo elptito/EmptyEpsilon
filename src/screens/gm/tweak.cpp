@@ -230,11 +230,6 @@ void GuiObjectTweakBase::onDraw(sf::RenderTarget& window)
 
     scanning_complexity_selector->setValue(target->scanning_complexity_value);
 	scanning_channel_depth_selector->setValue(target->scanning_depth_value);
-}
-
-void GuiObjectTweakBase::open(P<SpaceObject> target)
-{
-    this->target = target;
 
     callsign->setText(target->callsign);
     description->setText(target->object_description.not_scanned);
@@ -251,6 +246,11 @@ void GuiObjectTweakBase::open(P<SpaceObject> target)
 	zaxis_slider->setValue(target->translate_z);
 	radius_slider->setValue(target->getRadius());
 	radius_slider->setRange(target->getRadius()/10,target->getRadius()*10);
+}
+
+void GuiObjectTweakBase::open(P<SpaceObject> target)
+{
+    this->target = target;
 }
 
 GuiTemplateTweak::GuiTemplateTweak(GuiContainer* owner)
@@ -401,6 +401,7 @@ void GuiShipTweakShields::onDraw(sf::RenderTarget& window)
         return;
     for(int n=0; n<max_shield_count; n++)
     {
+        shield_max_slider[n]->setValue(target->shield_max[n]);
         shield_slider[n]->setValue(target->shield_level[n]);
     }
     shield_recharge_slider->setValue(target->shield_recharge_rate * 100);
@@ -415,7 +416,6 @@ void GuiShipTweakShields::open(P<SpaceObject> target)
     {
         for(int n = 0; n < max_shield_count; n++)
         {
-            shield_max_slider[n]->setValue(ship->shield_max[n]);
             shield_max_slider[n]->clearSnapValues()->addSnapValue(ship->ship_template->shield_level[n], 5.0f);
         }
         shield_recharge_slider->setValue(ship->shield_recharge_rate * 100);
@@ -561,7 +561,19 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
     jump_drive_charge_time_slider->setVisible(target->hasJumpDrive());
     jump_drive_energy_slider->setVisible(target->hasJumpDrive());
     warp_speed_slider->setVisible(target->has_warp_drive);
-	
+
+    warp_toggle->setValue(ship->has_warp_drive);
+    jump_toggle->setValue(ship->hasJumpDrive());
+    reactor_toggle->setValue(ship->hasReactor());
+    cloaking_toggle->setValue(ship->hasCloaking());
+    impulse_speed_slider->setValue(ship->impulse_max_speed);
+    turn_speed_slider->setValue(ship->turn_speed);
+    combat_maneuver_boost_speed_slider->setValue(ship->combat_maneuver_boost_speed);
+    combat_maneuver_strafe_speed_slider->setValue(ship->combat_maneuver_strafe_speed);
+    jump_drive_charge_time_slider->setValue(ship->jump_drive_charge_time);
+    jump_drive_energy_slider->setValue(ship->jump_drive_energy_per_km_charge);
+    warp_speed_slider->setValue(ship->warp_speed_per_warp_level/16.667);
+
 	P<PlayerSpaceship> player = target;
     if (player)
 	{
@@ -575,27 +587,12 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
     P<SpaceShip> ship = target;
     this->target = ship;
 
-    warp_toggle->setValue(ship->has_warp_drive);
-    jump_toggle->setValue(ship->hasJumpDrive());
-    reactor_toggle->setValue(ship->hasReactor());
-    cloaking_toggle->setValue(ship->hasCloaking());
-    impulse_speed_slider->setValue(ship->impulse_max_speed);
     impulse_speed_slider->clearSnapValues()->addSnapValue(ship->ship_template->impulse_speed, 5.0f);
-    turn_speed_slider->setValue(ship->turn_speed);
     turn_speed_slider->clearSnapValues()->addSnapValue(ship->ship_template->turn_speed, 1.0f);
 
-    // Set and snap boost speed slider to current value
-    combat_maneuver_boost_speed_slider->setValue(ship->combat_maneuver_boost_speed);
     combat_maneuver_boost_speed_slider->clearSnapValues()->addSnapValue(ship->combat_maneuver_boost_speed, 20.0f);
 
-    // Set and snap strafe speed slider to current value
-    combat_maneuver_strafe_speed_slider->setValue(ship->combat_maneuver_strafe_speed);
     combat_maneuver_strafe_speed_slider->clearSnapValues()->addSnapValue(ship->combat_maneuver_strafe_speed, 20.0f);
-
-    jump_drive_charge_time_slider->setValue(ship->jump_drive_charge_time);
-    jump_drive_energy_slider->setValue(ship->jump_drive_energy_per_km_charge);
-
-    warp_speed_slider->setValue(ship->warp_speed_per_warp_level/16.667);
 }
 
 GuiShipTweakMissileWeapons::GuiShipTweakMissileWeapons(GuiContainer* owner)
@@ -679,8 +676,11 @@ void GuiJammerTweak::open(P<SpaceObject> target)
 {
     P<WarpJammer> jammer = target;
     this->target = jammer;
+}
 
-    jammer_range_slider->setValue(this->target->getRange());
+void GuiJammerTweak::onDraw(sf::RenderTarget& window)
+{
+    jammer_range_slider->setValue(target->getRange());
 }
 
 void GuiShipTweakMissileWeapons::onDraw(sf::RenderTarget& window)
