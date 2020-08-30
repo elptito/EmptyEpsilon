@@ -144,7 +144,8 @@ void Dock::update(float delta)
         auto cargo = getCargo();
         if (cargo)
         {
-            if (dock_type == Dock_Energy) {
+            if ((dock_type == Dock_Energy) || (dock_type == Dock_Maintenance)) 
+            {
                 energy_request = std::min(energy_request, cargo->getMaxEnergy());
                 energy_request = std::max(energy_request, 0.0f);
 
@@ -163,7 +164,9 @@ void Dock::update(float delta)
                     parent->energy_level += energyDelta;
                     cargo->setEnergy(cargo->getEnergy() - energyDelta);
                 }
-            } else if (dock_type == Dock_Repair){
+            }
+            if ((dock_type == Dock_Repair || dock_type == Dock_Maintenance))
+            {
                 if (cargo->getHealth() < cargo->getMaxHealth())
                 {
                     float repairAmount = std::min(delta * this->parent->getSystemEffectiveness(SYS_Docks) *
@@ -172,6 +175,7 @@ void Dock::update(float delta)
                     cargo->addHealth(repairAmount);
                 }
             }
+            
         }
     }
     if (game_server && (state == MovingOut || state == Docked)){
@@ -179,7 +183,7 @@ void Dock::update(float delta)
 
         if (cargo && cargo->getHeat() > 0)
         {
-            if (dock_type == Dock_Thermic){
+            if ((dock_type == Dock_Thermic) || (dock_type == Dock_Maintenance)){
                 float coolDown = std::min(
                     delta * this->parent->getSystemEffectiveness(SYS_Docks) * PlayerSpaceship::heat_transfer_per_second * 0.2f,
                     cargo->getHeat());
@@ -227,6 +231,8 @@ string getDockTypeName(EDockType dockType)
         return "Reparation";
     case Dock_Stock:
         return "Stock";
+    case Dock_Maintenance:
+        return "Maintenance";
     default:
         return "Unknown";
     }
@@ -246,6 +252,8 @@ EDockType getDockTypeEnum(std::string dockType)
         return Dock_Repair;
     if("Stock"==dockType)
         return Dock_Stock;
+    if("Maintenance" == dockType)
+        return Dock_Maintenance;
     return Dock_Disabled;
 
 }

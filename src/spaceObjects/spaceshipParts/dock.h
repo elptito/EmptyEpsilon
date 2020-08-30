@@ -17,6 +17,7 @@ enum EDockType
     Dock_Thermic,
     Dock_Repair,
     Dock_Stock,
+    Dock_Maintenance,
     Dock_Disabled,
     nbElems
 };

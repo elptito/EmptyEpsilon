@@ -46,7 +46,7 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setBeamWeaponHeatPerFire);
     /// Set the amount of missile tubes, limited to a maximum of 16.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setTubes);
-    /// set the amount of docks (launcher, energy)
+    /// set the amount of docks (launcher, energy, weapon, thermic, mainteance, stock)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setDocks);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setTubeLoadTime);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, weaponTubeAllowMissle);

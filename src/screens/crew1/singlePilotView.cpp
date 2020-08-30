@@ -38,7 +38,7 @@ SinglePilotView::SinglePilotView(GuiContainer* owner, P<PlayerSpaceship> targetS
 
     // 5U tactical radar with piloting features.
     radar = new GuiRadarView(this, "TACTICAL_RADAR", 5000.0, &targets, (P<SpaceShip>)target_spaceship);
-    radar->setPosition(0, 0, ACenter)->setSize(GuiElement::GuiSizeMatchHeight, 650);
+    radar->setPosition(0, 0, ACenter)->setSize(GuiElement::GuiSizeMatchHeight, 750);
     radar->setRangeIndicatorStepSize(1000.0)->shortRange()->enableGhostDots()->enableWaypoints()->enableCallsigns()->enableHeadingIndicators()->setStyle(GuiRadarView::Circular);
     radar->setCallbacks(
         [this](sf::Vector2f position) {
@@ -152,12 +152,12 @@ SinglePilotView::SinglePilotView(GuiContainer* owner, P<PlayerSpaceship> targetS
             target_spaceship->lock_fire = value;
     });
     lock_fire->setIcon("gui/icons/lock");
-    lock_fire->setPosition(-50, 70, ATopCenter)->setSize(200, 50);
+    lock_fire->setPosition(-70, -10, ABottomCenter)->setSize(200, 50);
     lock_fire->setValue(true);
 
     // Missile lock button near top right of left panel.
     lock_aim = new AimLockButton(this, "LOCK_AIM", tube_controls, missile_aim, target_spaceship);
-    lock_aim->setPosition(150, 70, ATopCenter)->setSize(200, 50);
+    lock_aim->setPosition(130, -10, ABottomCenter)->setSize(200, 50);
 
     custom_ship_functions = new GuiCustomShipFunctions(this, singlePilot, "", target_spaceship);
     custom_ship_functions->setPosition(-20, 120, ATopRight)->setSize(250, GuiElement::GuiSizeMax);

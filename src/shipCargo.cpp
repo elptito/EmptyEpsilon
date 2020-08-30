@@ -140,17 +140,22 @@ bool ShipCargo::onLaunch(Dock &source)
                     ship->addHeat(ESystem(n), getHeat() / systemsCount);
             for(int n = 0; n < MW_Count; n++)
             {
-                ship->weapon_storage[n] = getWeaponStorage(EMissileWeapons(n));
                 ship->weapon_storage_max[n] = getWeaponStorageMax(EMissileWeapons(n));
+                //ship->weapon_storage[n] = getWeaponStorage(EMissileWeapons(n));
+                ship->weapon_storage[n] = getWeaponStorageMax(EMissileWeapons(n)); //auto recharge
+                
             }
-            for (auto &kv : custom_weapon_storage )
-            {
-                ship->custom_weapon_storage[kv.first] = kv.second;
-            }
+            
             for (auto &kv : custom_weapon_storage_max )
             {
-                ship->custom_weapon_storage_max[kv.first] = kv.second                           ;
+                ship->custom_weapon_storage_max[kv.first] = kv.second;
+                // auto recharge
+                ship->custom_weapon_storage[kv.first] = kv.second;
             }
+            //for (auto &kv : custom_weapon_storage )
+            //{
+            //    ship->custom_weapon_storage[kv.first] = kv.second;
+            //}
 
             ship->auto_coolant_enabled=auto_coolant_enabled;
             ship->auto_repair_enabled=auto_repair_enabled;

@@ -373,7 +373,8 @@ void DroneMasterScreen::selectDock(int index)
     auto &dockData = my_spaceship->docks[index];
     action_move->setVisible(true);
     action_launch->setVisible(dockData.dock_type == Dock_Launcher);
-    action_energy->setVisible(dockData.dock_type == Dock_Energy);
+    action_energy->setVisible((dockData.dock_type == Dock_Energy) || (dockData.dock_type == Dock_Maintenance));
+    //action_energy->setVisible(dockData.dock_type == Dock_Energy);
     action_weapons->setVisible(dockData.dock_type == Dock_Weapons);
 }
 
