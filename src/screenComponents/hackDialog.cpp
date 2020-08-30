@@ -200,8 +200,8 @@ void GuiHackDialog::onDraw(sf::RenderTarget& window)
         P<PlayerSpaceship> player_target = hack_target;
         if (player_target)
         {
-            player_target -> addToShipLog("Tentative de Piratage de la signature de federation",colorConfig.log_receive_enemy,"extern");
-            player_target -> addToShipLog("Tentative de Piratage de la signature de federation",colorConfig.log_receive_enemy,"intern");
+            player_target -> addToShipLog("Tentative de Piratage de la signature de faction",colorConfig.log_receive_enemy,"extern");
+            player_target -> addToShipLog("Tentative de Piratage de la signature de faction",colorConfig.log_receive_enemy,"intern");
         }
 
         hack_message  += "\n> Hack reussi vers " + hack_target -> getCallSign();

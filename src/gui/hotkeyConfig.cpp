@@ -12,8 +12,8 @@ HotkeyConfig::HotkeyConfig()
     newKey("STATION_HELMS", std::make_tuple("Station pilote", "F2"));
     newKey("STATION_WEAPONS", std::make_tuple("Station artilleur", "F3"));
     newKey("STATION_ENGINEERING", std::make_tuple("Station ingenieur", "F4"));
-    newKey("STATION_SCIENCE", std::make_tuple("Station Analyste", "F5"));
-    newKey("STATION_RELAY", std::make_tuple("Station relais", "F6"));
+    newKey("STATION_SCIENCE", std::make_tuple("Station Auspex CP", "F5"));
+    newKey("STATION_RELAY", std::make_tuple("Station Auspex LP", "F6"));
 
     newCategory("HELMS", "Pilote");
     newKey("INC_IMPULSE", std::make_tuple("Augmenter Impulsion", "Up"));
@@ -135,11 +135,11 @@ HotkeyConfig::HotkeyConfig()
         newKey("MOVE_RIGHT_SCAN_" + string(n+1), std::make_tuple("Scan " + string(n+1) + " a droite", ""));
     }
 
-	newCategory("RELAY", "Relai");
+	newCategory("RELAY", "Auspex LP");
     newKey("OPEN_COMM", std::make_tuple("Ouvrir communication", ""));
     newKey("NEXT_ENEMY_RELAY", std::make_tuple("Selectionner ennemi suivant", ""));
     newKey("NEXT_RELAY", std::make_tuple("Selectionner cible suivant", ""));
-    newKey("LINK_SCIENCE", std::make_tuple("Lier la sonde a l'analyste", ""));
+    newKey("LINK_SCIENCE", std::make_tuple("Lier la sonde a l'auspex", ""));
     newKey("BEGIN_HACK", std::make_tuple("Lancer l'invite de commande", ""));
     newKey("ADD_WAYPOINT", std::make_tuple("Ajouter un marqueur de navigation", ""));
     newKey("DELETE_WAYPOINT", std::make_tuple("Supprimer un marquer de navigation", ""));

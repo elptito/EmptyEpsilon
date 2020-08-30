@@ -1567,10 +1567,10 @@ GuiShipTweakMessages::GuiShipTweakMessages(GuiContainer* owner)
     (new GuiButton(right_col, "", "Ingenieur", [this]() {
         target->addCustomMessage(engineering,"engineering_message", message);
     }))->setSize(GuiElement::GuiSizeMax, 30);
-    (new GuiButton(right_col, "", "Analyste", [this]() {
+    (new GuiButton(right_col, "", "Auspex CP", [this]() {
         target->addCustomMessage(scienceOfficer,"science_message", message);
     }))->setSize(GuiElement::GuiSizeMax, 30);
-    (new GuiButton(right_col, "", "Relai", [this]() {
+    (new GuiButton(right_col, "", "Auxpex LP", [this]() {
         target->addCustomMessage(relayOfficer,"relay_message", message);
     }))->setSize(GuiElement::GuiSizeMax, 30);
     (new GuiButton(right_col, "", "Docks", [this]() {

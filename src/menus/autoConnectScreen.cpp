@@ -158,7 +158,7 @@ bool AutoConnectScreen::isValidShip(int index)
         }
         else if (it.first == "faction")
         {
-            filter_label->setText(filter_label->getText() + " ; Federation : " + it.second.lower());
+            filter_label->setText(filter_label->getText() + " ; Faction : " + it.second.lower());
             if (ship->getFactionId() != FactionInfo::findFactionId(it.second))
                 return false;
         }

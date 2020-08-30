@@ -12,8 +12,7 @@ They come in 3 different subclasses:
 --[[----------------------Destroyers----------------------]]
 
 template = ShipTemplate():setName("Atlantis X23"):setClass("Corvette", "Destroyer"):setModel("battleship_destroyer_1_upgraded")
--- template:setDescription([[The Atlantis X23 is the smallest model of destroyer, and its combination of frigate-like size and corvette-like power makes it an excellent escort ship when defending larger ships against multiple smaller enemies. Because the Atlantis X23 is fitted with a jump drive, it can also serve as an intersystem patrol craft.]])
-template:setDescriptions("Toto 1", "super Toto 1", "hyper Tutu 1")
+template:setDescription([[The Atlantis X23 is the smallest model of destroyer, and its combination of frigate-like size and corvette-like power makes it an excellent escort ship when defending larger ships against multiple smaller enemies. Because the Atlantis X23 is fitted with a jump drive, it can also serve as an intersystem patrol craft.]])
 template:setRadarTrace("radar_dread.png")
 template:setHull(100)
 template:setShields(200, 200, 200, 200)

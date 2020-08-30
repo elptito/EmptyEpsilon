@@ -53,7 +53,7 @@ void ScienceDatabase::setLongDescription(string text)
 void fillDefaultDatabaseData()
 {
     P<ScienceDatabase> factionDatabase = new ScienceDatabase();
-    factionDatabase->setName("Federations");
+    factionDatabase->setName("Faction");
     for(unsigned int n=0; n<factionInfo.size(); n++)
     {
         P<ScienceDatabase> entry = factionDatabase->addEntry(factionInfo[n]->getName());

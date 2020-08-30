@@ -352,8 +352,8 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
                 break;
             case SYS_Drones:
                 addSystemEffect("Controle des drones", string(my_spaceship->getDronesControlRange() / 1000.0f,1) + "U");
-                addSystemEffect("Radar relai et sondes", string(5000.0 * my_spaceship->getSystemEffectiveness(SYS_Drones)  / 1000.0f,1) + "U");
-                addSystemEffect("Capteurs Analyste", string( my_spaceship->science_radar_range * 50.0 * std::pow(my_spaceship->getSystemEffectiveness(SYS_Drones),2) / (2.0 *  1000.0f),0) + "U");
+                addSystemEffect("Auspex LP et sondes", string(5000.0 * my_spaceship->getSystemEffectiveness(SYS_Drones)  / 1000.0f,1) + "U");
+                addSystemEffect("Capteurs Auspex CP", string( my_spaceship->science_radar_range * 50.0 * std::pow(my_spaceship->getSystemEffectiveness(SYS_Drones),2) / (2.0 *  1000.0f),0) + "U");
                 break;
             case SYS_Door:
                 addSystemEffect("Resistance du sas exterieur", string(int(my_spaceship->getSystemEffectiveness(SYS_Door) * 100))+ "%");

@@ -290,7 +290,7 @@ string CrewStationScreen::listHotkeysLimited(string station)
 //		return ret;
 //	----
 
-	else if (station == "Pilote seul")
+	else if (station == "Pilote a tout faire")
 	{
 		for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Pilote"))
             ret += shortcut.second + ":\t" + shortcut.first + "\n";
