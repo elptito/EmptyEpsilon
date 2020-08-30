@@ -45,6 +45,7 @@ private:
     GuiShieldsEnableButton* shields_enable_button;
     GuiCustomShipFunctions* custom_ship_functions;
     AimLockButton* lock_aim;
+    GuiToggleButton* lock_fire;
 
 public:
     SinglePilotView(GuiContainer* owner, P<PlayerSpaceship> targetSpaceship);

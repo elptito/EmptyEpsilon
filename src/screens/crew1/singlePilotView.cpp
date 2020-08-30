@@ -146,6 +146,15 @@ SinglePilotView::SinglePilotView(GuiContainer* owner, P<PlayerSpaceship> targetS
     shields_enable_button = new GuiShieldsEnableButton(this, "SHIELDS_ENABLE", target_spaceship);
     shields_enable_button->setPosition(520, 20, ATopLeft)->setSize(250, 50);
 
+
+    lock_fire = new GuiToggleButton(this, "TOOGLE_FIRE", "Feu", [this](bool value){
+        if (target_spaceship)
+            target_spaceship->lock_fire = value;
+    });
+    lock_fire->setIcon("gui/icons/lock");
+    lock_fire->setPosition(-50, 70, ATopCenter)->setSize(200, 50);
+    lock_fire->setValue(true);
+
     // Missile lock button near top right of left panel.
     lock_aim = new AimLockButton(this, "LOCK_AIM", tube_controls, missile_aim, target_spaceship);
     lock_aim->setPosition(150, 70, ATopCenter)->setSize(200, 50);

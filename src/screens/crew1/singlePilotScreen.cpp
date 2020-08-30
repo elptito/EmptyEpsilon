@@ -58,6 +58,8 @@ void SinglePilotScreen::init(GuiContainer* owner, P<PlayerSpaceship> targetSpace
           }
         });
     show_3d_button->setPosition(-20, 100, ATopRight)->setSize(250, 50);
+    left_panel->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+    show_3d_button->setValue(false);
 }
 
 void SinglePilotScreen::onDraw(sf::RenderTarget& window)
