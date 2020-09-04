@@ -65,6 +65,12 @@ DroneOperatorScreen::DroneOperatorScreen(GuiContainer *owner)
 
     custom_functions = new GuiCustomShipFunctions(this, dronePilot, "", my_spaceship);
     custom_functions->setPosition(-20, 120, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
+
+    for(auto &drone_template : my_spaceship->ship_template->drones)
+    {
+        drone_and_ship_template_names.insert(drone_template.template_name);
+    }
+
 }
 void DroneOperatorScreen::disconnected()
 {
@@ -90,8 +96,9 @@ bool DroneOperatorScreen::isShip(P<PlayerSpaceship> ship)
 {
     return ship
     && ship->ship_template
-    && ship->ship_template->getType() == ShipTemplate::TemplateType::Ship
-    && ship->getFactionId() == my_spaceship->getFactionId();
+    && ((ship->ship_template->getType() == ShipTemplate::TemplateType::Ship) || (ship->ship_template->getType() == ShipTemplate::TemplateType::PlayerShip)) 
+    && ship->getFactionId() == my_spaceship->getFactionId()
+    && drone_and_ship_template_names.find(ship->ship_template->getName()) != drone_and_ship_template_names.end();
 }
 
 float DroneOperatorScreen::getConnectionQuality(P<PlayerSpaceship> ship)

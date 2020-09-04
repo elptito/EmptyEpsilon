@@ -152,12 +152,14 @@ SinglePilotView::SinglePilotView(GuiContainer* owner, P<PlayerSpaceship> targetS
             target_spaceship->lock_fire = value;
     });
     lock_fire->setIcon("gui/icons/lock");
-    lock_fire->setPosition(-70, -10, ABottomCenter)->setSize(200, 50);
+    //lock_fire->setPosition(-70, -10, ABottomCenter)->setSize(200, 50);
+    lock_fire->setPosition(-20, 150, ATopRight)->setSize(250, 50);
     lock_fire->setValue(true);
 
     // Missile lock button near top right of left panel.
     lock_aim = new AimLockButton(this, "LOCK_AIM", tube_controls, missile_aim, target_spaceship);
-    lock_aim->setPosition(130, -10, ABottomCenter)->setSize(200, 50);
+    //lock_aim->setPosition(130, -10, ABottomCenter)->setSize(200, 50);
+    lock_aim->setPosition(-20, 200, ATopRight)->setSize(250, 50);
 
     custom_ship_functions = new GuiCustomShipFunctions(this, singlePilot, "", target_spaceship);
     custom_ship_functions->setPosition(-20, 120, ATopRight)->setSize(250, GuiElement::GuiSizeMax);

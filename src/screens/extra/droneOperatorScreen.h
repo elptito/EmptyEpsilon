@@ -41,6 +41,7 @@ private:
     GuiLabel* no_drones_label;
     GuiListbox* drone_list;
     GuiCustomShipFunctions* custom_functions;
+    std::set<string> drone_and_ship_template_names;
 public:
     DroneOperatorScreen(GuiContainer* owner);
 
