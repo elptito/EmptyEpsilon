@@ -528,6 +528,12 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
     case NebulaFogOfWar:
         foreach(SpaceObject, obj, space_object_list)
         {
+            if (obj->id_galaxy != target_spaceship->id_galaxy)
+                continue;
+            //Here : blockedByNebula can be extremely costly. This is a "Nebula fog of war and radar range" then.
+            if ((my_spaceship->getPosition() - obj->getPosition()) > getDistance() + obj->getRadius())
+                continue;
+
             if (obj->canHideInNebula() && target_spaceship && Nebula::blockedByNebula(my_spaceship->getPosition(), obj->getPosition()))
                 continue;
             visible_objects.insert(*obj);
