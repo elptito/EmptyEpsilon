@@ -207,6 +207,8 @@ GuiObjectTweakBase::GuiObjectTweakBase(GuiContainer* owner)
 
 void GuiObjectTweakBase::onDraw(sf::RenderTarget& window)
 {
+    if(!target)
+        return;
     hull_slider->setValue(target->hull);
 
     scanning_complexity_selector->setValue(target->scanning_complexity_value);
@@ -312,12 +314,15 @@ GuiTemplateTweak::GuiTemplateTweak(GuiContainer* owner)
 }
  void GuiTemplateTweak::onDraw(sf::RenderTarget& window)
 {
-    heading_slider->setValue(target->getHeading());
-    rotation_slider->setValue(target->getRotationSpeed()*10.0);
-    hull_slider->setValue(target->hull_strength);
-    transparency_slider->setValue(target->getTransparency() * 100.0);
-    system_damage_ratio_slider->setValue(target->system_damage_ratio * 100.0);
-    system_damage_hull_threshold_slider->setValue(target->system_damage_hull_threshold * 100.0);
+    if(target)
+    {
+        heading_slider->setValue(target->getHeading());
+        rotation_slider->setValue(target->getRotationSpeed()*10.0);
+        hull_slider->setValue(target->hull_strength);
+        transparency_slider->setValue(target->getTransparency() * 100.0);
+        system_damage_ratio_slider->setValue(target->system_damage_ratio * 100.0);
+        system_damage_hull_threshold_slider->setValue(target->system_damage_hull_threshold * 100.0);
+    }
 }
 
  void GuiTemplateTweak::open(P<SpaceObject> target)
@@ -375,6 +380,8 @@ GuiShipTweakShields::GuiShipTweakShields(GuiContainer* owner)
 
 void GuiShipTweakShields::onDraw(sf::RenderTarget& window)
 {
+    if(!target)
+        return;
     for(int n=0; n<max_shield_count; n++)
     {
         shield_slider[n]->setValue(target->shield_level[n]);
@@ -523,6 +530,8 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
 }
  void GuiShipTweak::onDraw(sf::RenderTarget& window)
 {
+    if(!target)
+        return;
     jump_drive_charge_slider->setValue(target->jump_drive_charge / target->jump_drive_max_distance * 100.0);
     jump_drive_min_distance_slider->setValue(round(target->jump_drive_min_distance / 1000000)*1000);
     jump_drive_max_distance_slider->setValue(round(target->jump_drive_max_distance / 1000000)*1000);
@@ -628,7 +637,8 @@ GuiShipTweakMissileWeapons::GuiShipTweakMissileWeapons(GuiContainer* owner)
 
 void GuiShipTweakMissileWeapons::onDraw(sf::RenderTarget& window)
 {
-
+    if(!target)
+        return;
     int n = 0;
     for(auto& kv : CustomMissileWeaponRegistry::getCustomMissileWeapons())
     {
@@ -738,6 +748,8 @@ GuiShipTweakMissileTubes::GuiShipTweakMissileTubes(GuiContainer* owner)
 
 void GuiShipTweakMissileTubes::onDraw(sf::RenderTarget& window)
 {
+    if(!target)
+        return;
     direction_slider->setValue(sf::angleDifference(0.0f, target->weapon_tube[tube_index].getDirection()));
     load_time_slider->setValue(target->weapon_tube[tube_index].getLoadTimeConfig());
     for(int n=0; n<MW_Count; n++)
@@ -850,6 +862,8 @@ GuiShipTweakBeamweapons::GuiShipTweakBeamweapons(GuiContainer* owner)
 
 void GuiShipTweakBeamweapons::onDraw(sf::RenderTarget& window)
 {
+    if(!target)
+        return;
     target->drawOnRadar(window, sf::Vector2f(rect.left - 150.0f + rect.width / 2.0f, rect.top + rect.height * 0.66), 300.0f / 5000.0f, false);
 
     arc_slider->setValue(target->beam_weapons[beam_index].getArc());
@@ -964,6 +978,8 @@ GuiShipTweakSystems::GuiShipTweakSystems(GuiContainer* owner)
 
 void GuiShipTweakSystems::onDraw(sf::RenderTarget& window)
 {
+    if(!target)
+        return;
     for(int n=0; n<SYS_COUNT; n++)
     {
         system_damage[n]->setValue(target->systems[n].health);
@@ -1184,6 +1200,8 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
 
 void GuiShipTweakPlayer::onDraw(sf::RenderTarget& window)
 {
+    if(!target)
+        return;
     // Update the ship's energy level.
     energy_level_slider->setValue(target->energy_level);
     max_energy_level_slider->setValue(target->max_energy_level);
@@ -1322,6 +1340,8 @@ void GuiShipTweakDock::open(P<SpaceObject> target)
 
 void GuiShipTweakDock::onDraw(sf::RenderTarget& window)
 {
+    if(!target)
+        return;
     P<PlayerSpaceship> player = target;
     if (player)
     {
@@ -1437,6 +1457,8 @@ GuiShipTweakOxygen::GuiShipTweakOxygen(GuiContainer* owner)
 
 void GuiShipTweakOxygen::onDraw(sf::RenderTarget& window)
 {
+    if(!target)
+        return;
     // Update oxygen points.
     for(int n = 0; n < max_oxygen_zones; n++)
     {
@@ -1688,6 +1710,8 @@ GuiShipTweakInfos::GuiShipTweakInfos(GuiContainer* owner)
 
 void GuiShipTweakInfos::onDraw(sf::RenderTarget& window)
 {
+    if(!target)
+        return;
     // Update infos.
     for(int n = 0; n < max_oxygen_zones; n++)
     {

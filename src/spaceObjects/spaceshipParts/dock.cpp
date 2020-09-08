@@ -170,7 +170,7 @@ void Dock::update(float delta)
                 if (cargo->getHealth() < cargo->getMaxHealth())
                 {
                     float repairAmount = std::min(delta * this->parent->getSystemEffectiveness(SYS_Docks) *
-                                                    PlayerSpaceship::cargo_repair_per_second,
+                                                    PlayerSpaceship::cargo_repair_per_second * (cargo->getMaxHealth()/100), //1%/10 sec
                                                     cargo->getMaxHealth() - cargo->getHealth());
                     cargo->addHealth(repairAmount);
                 }
