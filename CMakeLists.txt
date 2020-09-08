@@ -140,6 +140,7 @@ set(SOURCES
 	src/screens/extra/databaseScreen.cpp
 	src/screens/extra/commsScreen.cpp
 	src/screens/extra/shipLogScreen.cpp
+	src/screens/extra/ictScreen.cpp
 	src/screens/gm/gameMasterScreen.cpp
 	src/screens/gm/objectCreationView.cpp
 	src/screens/gm/globalMessageEntryView.cpp

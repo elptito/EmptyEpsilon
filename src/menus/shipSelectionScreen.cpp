@@ -514,6 +514,7 @@ void ShipSelectionScreen::updateCrewTypeOptions()
         crew_position_button[instabilityControl]->show();
         crew_position_button[systemsMonitor]->show();
         crew_position_button[databaseView]->show();
+        crew_position_button[ictScreen]->show();
         crew_position_button[altRelay]->show();
         crew_position_button[commsOnly]->show();
         crew_position_button[tractorView]->show();

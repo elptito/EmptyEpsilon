@@ -23,6 +23,7 @@ enum ECrewPosition
     instabilityControl,
     systemsMonitor,
     databaseView,
+    ictScreen,
     altRelay,
     commsOnly,
     shipLog,

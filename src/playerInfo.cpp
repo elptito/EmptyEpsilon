@@ -20,6 +20,7 @@
 #include "screens/extra/instabilityScreen.h"
 #include "screens/extra/systemsMonitor.h"
 #include "screens/extra/databaseScreen.h"
+#include "screens/extra/ictScreen.h"
 #include "screens/extra/commsScreen.h"
 #include "screens/extra/droneOperatorScreen.h"
 #include "screens/extra/dockMasterScreen.h"
@@ -193,6 +194,8 @@ void PlayerInfo::spawnUI()
             screen->addStationTab(new SystemsMonitorScreen(container), systemsMonitor, getCrewPositionName(systemsMonitor), getCrewPositionIcon(systemsMonitor));
         if (crew_position[databaseView])
             screen->addStationTab(new DatabaseScreen(container), databaseView, getCrewPositionName(databaseView), getCrewPositionIcon(databaseView));
+        if (crew_position[ictScreen])
+            screen->addStationTab(new IctScreen(container), ictScreen, getCrewPositionName(ictScreen), getCrewPositionIcon(ictScreen));
         if (crew_position[altRelay])
             screen->addStationTab(new RelayScreen(container, false), altRelay, getCrewPositionName(altRelay), getCrewPositionIcon(altRelay));
         if (crew_position[commsOnly])
@@ -250,6 +253,7 @@ string getCrewPositionName(ECrewPosition position)
     case instabilityControl: return tr("station","Instability Control");
     case systemsMonitor: return tr("station","Systems Monitor");
     case databaseView: return tr("station","Database");
+    case ictScreen: return tr("station","ICT");
     case altRelay: return tr("station","Strategic Map");
     case commsOnly: return tr("station","Comms");
     case shipLog: return tr("station","Ship's Log");
@@ -278,6 +282,7 @@ string getCrewPositionIcon(ECrewPosition position)
     case instabilityControl: return "";
     case systemsMonitor: return "";
     case databaseView: return "";
+    case ictScreen: return "";
     case altRelay: return "";
     case commsOnly: return "";
     case shipLog: return "";
@@ -328,6 +333,8 @@ template<> void convert<ECrewPosition>::param(lua_State* L, int& idx, ECrewPosit
         cp = systemsMonitor;
     else if (str == "database" || str == "databaseview")
         cp = databaseView;
+    else if (str == "ict" || str == "ictscreen")
+        cp = ictScreen;
     else if (str == "altrelay")
         cp = altRelay;
     else if (str == "commsonly")
