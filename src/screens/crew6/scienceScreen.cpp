@@ -468,7 +468,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
                 info_type_button->show();
                 info_type->setValue(st->getLocaleName());
                 info_shields->setValue(ship->getShieldDataString());
-                info_hull->setValue(int(ship->getHull()));
+                info_hull->setValue(int(ceil(ship->getHull())));
             }
 
             if (station)
@@ -570,7 +570,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
         //     {
         //         info_type->setValue(station->template_name);
         //         info_shields->setValue(station->getShieldDataString());
-        //         info_hull->setValue(int(station->getHull()));
+        //         info_hull->setValue(int(ceil(station->getHull())));
             }
 //            sidebar_pager->setVisible(sidebar_pager->entryCount() > 1);
         }
