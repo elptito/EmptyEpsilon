@@ -38,13 +38,13 @@ GameMasterScreen::GameMasterScreen()
     box_selection_overlay = new GuiOverlay(main_radar, "BOX_SELECTION", sf::Color(255, 255, 255, 32));
     box_selection_overlay->hide();
 
-//    pause_button = new GuiToggleButton(this, "PAUSE_BUTTON", "Pause", [this](bool value) {
-//        if (!value)
-//            gameMasterActions->commandSetGameSpeed(1.0f);
-//        else
-//            gameMasterActions->commandSetGameSpeed(0.0f);
-//    });
-//    pause_button->setValue(engine->getGameSpeed() == 0.0f)->setPosition(20, 20, ATopLeft)->setSize(250, 50);
+//    pause_button = new GuiToggleButton(this, "PAUSE_BUTTON", tr("button", "Pause"), [this](bool value) {
+//         if (!value)
+//             engine->setGameSpeed(1.0f);
+//         else
+//             engine->setGameSpeed(0.0f);
+//     });
+//     pause_button->setValue(engine->getGameSpeed() == 0.0f)->setPosition(20, 20, ATopLeft)->setSize(250, 50);
 
     pause_button = new GuiSlider(this, "PAUSE_BUTTON", 0.0, 10.0, 1.0, [this](float value) {
                                  gameMasterActions->commandSetGameSpeed(value);
@@ -59,7 +59,7 @@ GameMasterScreen::GameMasterScreen()
 
 
     if (gameGlobalInfo->intercept_all_comms_to_gm < CGI_Always){
-        intercept_comms_button = new GuiToggleButton(this, "INTERCEPT_COMMS_BUTTON", "Intercept all comms", [this](bool value) {
+        intercept_comms_button = new GuiToggleButton(this, "INTERCEPT_COMMS_BUTTON",  tr("button", "Intercept all comms"), [this](bool value) {
             gameMasterActions->commandInterceptAllCommsToGm(value);
         });
         intercept_comms_button->setValue((int)gameGlobalInfo->intercept_all_comms_to_gm)->setTextSize(20)->setPosition(300, 20, ATopLeft)->setSize(200, 25);
@@ -85,7 +85,7 @@ GameMasterScreen::GameMasterScreen()
     personality_selector->addEntry("Solo","Solo");
     personality_selector->setPosition(20, 120, ATopLeft)->setSize(250, 50);
 
-    global_message_button = new GuiButton(this, "GLOBAL_MESSAGE_BUTTON", "Message global", [this]() {
+    global_message_button = new GuiButton(this, "GLOBAL_MESSAGE_BUTTON", tr("button", "Global message"), [this]() {
         global_message_entry->show();
     });
     global_message_button->setPosition(20, -20, ABottomLeft)->setSize(250, 50);
@@ -141,27 +141,27 @@ GameMasterScreen::GameMasterScreen()
     //});
     //create_button->setPosition(20, -70, ABottomLeft)->setSize(250, 50);
 
-    copy_scenario_button = new GuiButton(this, "COPY_SCENARIO_BUTTON", "Copier scenario", [this]() {
+    copy_scenario_button = new GuiButton(this, "COPY_SCENARIO_BUTTON", tr("button", "Copy scenario"), [this]() {
         Clipboard::setClipboard(getScriptExport(false));
     });
     copy_scenario_button->setTextSize(20)->setPosition(-20, -20, ABottomRight)->setSize(125, 25);
 
-    copy_selected_button = new GuiButton(this, "COPY_SELECTED_BUTTON", "Copier selection", [this]() {
+    copy_selected_button = new GuiButton(this, "COPY_SELECTED_BUTTON", tr("button", "Copy selected"), [this]() {
         Clipboard::setClipboard(getScriptExport(true));
     });
     copy_selected_button->setTextSize(20)->setPosition(-20, -45, ABottomRight)->setSize(125, 25);
 
-    create_button = new GuiButton(this, "CREATE_OBJECT_BUTTON", "Create...", [this]() {
+    create_button = new GuiButton(this, "CREATE_OBJECT_BUTTON", tr("button", "Create..."), [this]() {
         object_creation_view->show();
     });
     create_button->setPosition(20, -70, ABottomLeft)->setSize(250, 50);
       
-    cancel_action_button = new GuiButton(this, "CANCEL_CREATE_BUTTON", "Cancel", [this]() {
+    cancel_action_button = new GuiButton(this, "CANCEL_CREATE_BUTTON", tr("button", "Cancel"), [this]() {
         gameGlobalInfo->on_gm_click = nullptr;
     });
     cancel_action_button->setPosition(20, -70, ABottomLeft)->setSize(250, 50)->hide();
 
-    tweak_button = new GuiButton(this, "TWEAK_OBJECT", "Tweak", [this]() {
+    tweak_button = new GuiButton(this, "TWEAK_OBJECT", tr("button", "Tweak"), [this]() {
         for(P<SpaceObject> obj : targets.getTargets())
         {
             if (P<PlayerSpaceship>(obj))
@@ -203,7 +203,7 @@ GameMasterScreen::GameMasterScreen()
     // tweaks only work on the server
     tweak_button->setPosition(20, -120, ABottomLeft)->setSize(250, 50)->setEnable(bool(game_server))->hide();
 
-    player_comms_hail = new GuiButton(this, "HAIL_PLAYER", "Contacter vaisseau", [this]() {
+    player_comms_hail = new GuiButton(this, "HAIL_PLAYER", tr("button", "Hail ship"), [this]() {
         for(P<SpaceObject> obj : targets.getTargets())
         {
             if (P<PlayerSpaceship>(obj))
@@ -231,27 +231,27 @@ GameMasterScreen::GameMasterScreen()
     order_layout = new GuiAutoLayout(this, "ORDER_LAYOUT", GuiAutoLayout::LayoutVerticalBottomToTop);
     order_layout->setPosition(-20, -90, ABottomRight)->setSize(300, GuiElement::GuiSizeMax);
 
-    (new GuiButton(order_layout, "ORDER_DEFEND_LOCATION", "Defendre localisation", [this]() {
+    (new GuiButton(order_layout, "ORDER_DEFEND_LOCATION", tr("Defend location"), [this]() {
         for(P<SpaceObject> obj : targets.getTargets())
             if (P<CpuShip>(obj))
                 P<CpuShip>(obj)->orderDefendLocation(obj->getPosition());
     }))->setTextSize(20)->setSize(GuiElement::GuiSizeMax, 30);
-    (new GuiButton(order_layout, "ORDER_STAND_GROUND", "En place", [this]() {
+    (new GuiButton(order_layout, "ORDER_STAND_GROUND", tr("Stand ground"), [this]() {
         for(P<SpaceObject> obj : targets.getTargets())
             if (P<CpuShip>(obj))
                 P<CpuShip>(obj)->orderStandGround();
     }))->setTextSize(20)->setSize(GuiElement::GuiSizeMax, 30);
-    (new GuiButton(order_layout, "ORDER_ROAMING", "Errant", [this]() {
+    (new GuiButton(order_layout, "ORDER_ROAMING", tr("Roaming"), [this]() {
         for(P<SpaceObject> obj : targets.getTargets())
             if (P<CpuShip>(obj))
                 P<CpuShip>(obj)->orderRoaming();
     }))->setTextSize(20)->setSize(GuiElement::GuiSizeMax, 30);
-    (new GuiButton(order_layout, "ORDER_IDLE", "Repos", [this]() {
+    (new GuiButton(order_layout, "ORDER_IDLE", tr("Idle"), [this]() {
         for(P<SpaceObject> obj : targets.getTargets())
             if (P<CpuShip>(obj))
                 P<CpuShip>(obj)->orderIdle();
     }))->setTextSize(20)->setSize(GuiElement::GuiSizeMax, 30);
-    (new GuiLabel(order_layout, "ORDERS_LABEL", "Ordres:", 20))->addBackground()->setSize(GuiElement::GuiSizeMax, 30);
+    (new GuiLabel(order_layout, "ORDERS_LABEL", tr("Orders:"), 20))->addBackground()->setSize(GuiElement::GuiSizeMax, 30);
 
     chat_layer = new GuiElement(this, "");
     chat_layer->setPosition(0, 0)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
@@ -286,7 +286,7 @@ GameMasterScreen::GameMasterScreen()
 
     message_text = new GuiScrollText(message_frame, "", "");
     message_text->setTextSize(20)->setPosition(20, 20, ATopLeft)->setSize(900 - 40, 200 - 40);
-    message_close_button = new GuiButton(message_frame, "", "Close", [this]() {
+    message_close_button = new GuiButton(message_frame, "", tr("button", "Close"), [this]() {
         if (!gameGlobalInfo->gm_messages.empty())
         {
             gameGlobalInfo->gm_messages.pop_front();
@@ -405,7 +405,7 @@ void GameMasterScreen::update(float delta)
             }
             else if (selection_info[i->first] != i->second)
             {
-                selection_info[i->first] = "*mixed*";
+                selection_info[i->first] = tr("*mixed*");
             }
         }
     }
