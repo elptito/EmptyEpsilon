@@ -136,6 +136,7 @@ public:
 
     void setGalaxyId(int value) { id_galaxy = value; }
     int getGalaxyId() { return id_galaxy; }
+    bool hasWeight() { return has_weight; }
 
     // Return the object's raw radar signature. The default signature is 0,0,0.
     RawRadarSignatureInfo radar_signature;
@@ -320,6 +321,7 @@ public:
 
 protected:
     ModelInfo model_info;
+    bool has_weight = true;
 };
 
 // Define a script conversion function for the DamageInfo structure.
