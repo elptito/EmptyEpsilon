@@ -152,4 +152,7 @@ bool isValidPositionString(string sectorName);
 REGISTER_MULTIPLAYER_ENUM(EScanningComplexity);
 REGISTER_MULTIPLAYER_ENUM(EHackingGames);
 
+template<> int convert<EScanningComplexity>::returnType(lua_State* L, EScanningComplexity complexity);
+template<> int convert<EHackingGames>::returnType(lua_State* L, EHackingGames games);
+
 #endif//GAME_GLOBAL_INFO_H
