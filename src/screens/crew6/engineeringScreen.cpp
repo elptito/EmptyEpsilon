@@ -29,16 +29,18 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner, ECrewPosition crew_pos
     // Render the alert level color overlay.
     (new AlertLevelOverlay(this));
 
-    energy_display = new GuiKeyValueDisplay(this, "ENERGY_DISPLAY", 0.45, tr("Energy"), "");
-    energy_display->setIcon("gui/icons/energy")->setTextSize(20)->setPosition(20, 100, ATopLeft)->setSize(240, 40);
-    hull_display = new GuiKeyValueDisplay(this, "HULL_DISPLAY", 0.45, tr("health","Hull"), "");
-    hull_display->setIcon("gui/icons/hull")->setTextSize(20)->setPosition(20, 140, ATopLeft)->setSize(240, 40);
-    shields_display = new GuiKeyValueDisplay(this, "SHIELDS_DISPLAY", 0.45, "Boucliers", "");
-    shields_display->setIcon("gui/icons/shields")->setTextSize(20)->setPosition(20, 180, ATopLeft)->setSize(240, 40);
-    oxygen_display = new GuiKeyValueDisplay(this, "OXYGEN_DISPLAY", 0.45, "Oxygene", "");
-    oxygen_display->setIcon("gui/icons/oxygen")->setTextSize(20)->setPosition(20, 220, ATopLeft)->setSize(240, 40);
-    coolant_display = new GuiKeyValueDisplay(this, "COOLANT_DISPLAY", 0.45, tr("total","Coolant"), "");
-    coolant_display->setIcon("gui/icons/coolant")->setTextSize(20)->setPosition(20, 260, ATopLeft)->setSize(240, 40);
+    GuiAutoLayout* stats = new GuiAutoLayout(this, "ENGINEER_STATS", GuiAutoLayout::LayoutVerticalTopToBottom);
+    stats->setPosition(20, 100, ATopLeft)->setSize(240, 200);
+    energy_display = new GuiKeyValueDisplay(stats, "ENERGY_DISPLAY", 0.45, tr("Energy"), "");
+    energy_display->setIcon("gui/icons/energy")->setTextSize(20)->setSize(240, 40);
+    hull_display = new GuiKeyValueDisplay(stats, "HULL_DISPLAY", 0.45, tr("health","Hull"), "");
+    hull_display->setIcon("gui/icons/hull")->setTextSize(20)->setSize(240, 40);
+    shields_display = new GuiKeyValueDisplay(stats, "SHIELDS_DISPLAY", 0.45, "Boucliers", "");
+    shields_display->setIcon("gui/icons/shields")->setTextSize(20)->setSize(240, 40);
+    oxygen_display = new GuiKeyValueDisplay(stats, "OXYGEN_DISPLAY", 0.45, "Oxygene", "");
+    oxygen_display->setIcon("gui/icons/oxygen")->setTextSize(20)->setSize(240, 40);
+    coolant_display = new GuiKeyValueDisplay(stats, "COOLANT_DISPLAY", 0.45, tr("total","Coolant"), "");
+    coolant_display->setIcon("gui/icons/coolant")->setTextSize(20)->setSize(240, 40);
 
     self_destruct_button = new GuiSelfDestructButton(this, "SELF_DESTRUCT");
     self_destruct_button->setPosition(20, 20, ATopLeft)->setSize(240, 100)->setVisible(my_spaceship && my_spaceship->getCanSelfDestruct());

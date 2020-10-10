@@ -64,18 +64,20 @@ SinglePilotView::SinglePilotView(GuiContainer* owner, P<PlayerSpaceship> targetS
     combat_maneuver = new GuiCombatManeuver(this, "COMBAT_MANEUVER", target_spaceship);
     combat_maneuver->setPosition(-20, -180, ABottomRight)->setSize(200, 150)->setVisible(target_spaceship && target_spaceship->getCanCombatManeuver());
 
-    heat_display = new GuiKeyValueDisplay(this, "HEAT_DISPLAY", 0.45, "Surchauffe", "");
-    heat_display->setIcon("gui/icons/status_overheat")->setTextSize(20)->setPosition(-20, -220, ABottomRight)->setSize(240, 40);
-    hull_display = new GuiKeyValueDisplay(this, "HULL_DISPLAY", 0.45, "Carlingue", "");
-    hull_display->setIcon("gui/icons/hull")->setTextSize(20)->setPosition(-20, -180, ABottomRight)->setSize(240, 40);
-    energy_display = new GuiKeyValueDisplay(this, "ENERGY_DISPLAY", 0.45, tr("Energy"), "");
-    energy_display->setIcon("gui/icons/energy")->setTextSize(20)->setPosition(-20, -140, ABottomRight)->setSize(240, 40);
-    heading_display = new GuiKeyValueDisplay(this, "HEADING_DISPLAY", 0.45, tr("Heading"), "");
-    heading_display->setIcon("gui/icons/heading")->setTextSize(20)->setPosition(-20, -100, ABottomRight)->setSize(240, 40);
-    velocity_display = new GuiKeyValueDisplay(this, "VELOCITY_DISPLAY", 0.45, tr("Speed"), "");
-    velocity_display->setIcon("gui/icons/speed")->setTextSize(20)->setPosition(-20, -60, ABottomRight)->setSize(240, 40);
-    shields_display = new GuiKeyValueDisplay(this, "SHIELDS_DISPLAY", 0.45, tr("Shields"), "");
-    shields_display->setIcon("gui/icons/shields")->setTextSize(20)->setPosition(-20, -20, ABottomRight)->setSize(240, 40);
+    GuiAutoLayout* stats = new GuiAutoLayout(this, "STATS", GuiAutoLayout::LayoutVerticalTopToBottom);
+    stats->setPosition(-20, -20, ABottomRight)->setSize(240, 160);
+    heat_display = new GuiKeyValueDisplay(stats, "HEAT_DISPLAY", 0.45, "Surchauffe", "");
+    heat_display->setIcon("gui/icons/status_overheat")->setTextSize(20)->setSize(240, 40);
+    hull_display = new GuiKeyValueDisplay(stats, "HULL_DISPLAY", 0.45, "Carlingue", "");
+    hull_display->setIcon("gui/icons/hull")->setTextSize(20)->setSize(240, 40);
+    energy_display = new GuiKeyValueDisplay(stats, "ENERGY_DISPLAY", 0.45, tr("Energy"), "");
+    energy_display->setIcon("gui/icons/energy")->setTextSize(20)->setSize(240, 40);
+    heading_display = new GuiKeyValueDisplay(stats, "HEADING_DISPLAY", 0.45, tr("Heading"), "");
+    heading_display->setIcon("gui/icons/heading")->setTextSize(20)->setSize(240, 40);
+    velocity_display = new GuiKeyValueDisplay(stats, "VELOCITY_DISPLAY", 0.45, tr("Speed"), "");
+    velocity_display->setIcon("gui/icons/speed")->setTextSize(20)->setSize(240, 40);
+    shields_display = new GuiKeyValueDisplay(stats, "SHIELDS_DISPLAY", 0.45, tr("Shields"), "");
+    shields_display->setIcon("gui/icons/shields")->setTextSize(20)->setSize(240, 40);
 
     // Unlocked missile aim dial and lock controls.
     missile_aim = new AimLock(this, "MISSILE_AIM", radar, -90, 360 - 90, 0, [this](float value){

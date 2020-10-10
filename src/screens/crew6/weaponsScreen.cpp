@@ -85,12 +85,14 @@ WeaponsScreen::WeaponsScreen(GuiContainer* owner)
         }
     }
 
-    energy_display = new GuiKeyValueDisplay(this, "ENERGY_DISPLAY", 0.45, tr("Energy"), "");
-    energy_display->setIcon("gui/icons/energy")->setTextSize(20)->setPosition(20, 100, ATopLeft)->setSize(240, 40);
-    target_display = new GuiKeyValueDisplay(this, "TARGET_DISPLAY", 0.45, "Cible", "");
-    target_display->setIcon("gui/icons/lock")->setTextSize(20)->setPosition(20, 180, ATopLeft)->setSize(240, 40);
-    shields_display = new GuiKeyValueDisplay(this, "SHIELDS_DISPLAY", 0.45, "Boucliers", "");
-    shields_display->setIcon("gui/icons/shields")->setTextSize(20)->setPosition(20, 140, ATopLeft)->setSize(240, 40);
+    GuiAutoLayout* stats = new GuiAutoLayout(this, "WEAPONS_STATS", GuiAutoLayout::LayoutVerticalTopToBottom);
+    stats->setPosition(20, 100, ATopLeft)->setSize(240, 120);
+    energy_display = new GuiKeyValueDisplay(stats, "ENERGY_DISPLAY", 0.45, tr("Energy"), "");
+    energy_display->setIcon("gui/icons/energy")->setTextSize(20)->setSize(240, 40);
+    target_display = new GuiKeyValueDisplay(stats, "TARGET_DISPLAY", 0.45, "Cible", "");
+    target_display->setIcon("gui/icons/lock")->setTextSize(20)->setSize(240, 40);
+    shields_display = new GuiKeyValueDisplay(stats, "SHIELDS_DISPLAY", 0.45, "Boucliers", "");
+    shields_display->setIcon("gui/icons/shields")->setTextSize(20)->setSize(240, 40);
 
     if (my_spaceship && my_spaceship->getShieldCount() > 0)
     {
