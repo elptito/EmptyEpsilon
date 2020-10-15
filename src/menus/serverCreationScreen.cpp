@@ -238,6 +238,7 @@ ServerCreationScreen::ServerCreationScreen()
     }
 
     scenario_list->setSelectionIndex(mission_selected);
+    scenario_list->scrollTo(mission_selected);
     selectScenario(scenario_list->getSelectionValue());
 
     gameGlobalInfo->reset();
