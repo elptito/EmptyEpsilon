@@ -23,6 +23,7 @@ private:
     GuiElement* right_container;
 
     GuiLabel* no_ships_label;
+    GuiLabel* stations_label;
     GuiListbox* player_ship_list;
     GuiButton* ready_button;
     GuiSelector* crew_type_selector;

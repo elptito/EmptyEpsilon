@@ -59,7 +59,7 @@ void GuiListbox::entriesChanged()
     while(buttons.size() < entries.size() && (int)buttons.size() < max_buttons)
     {
         int offset = buttons.size();
-        GuiButton* button = new GuiButton(this, id + "_BUTTON_" + string(offset), "", [this, offset]() {
+        GuiToggleButton* button = new GuiToggleButton(this, id + "_BUTTON_" + string(offset), "", [this, offset](bool value) {
             setSelectionIndex(offset + scroll->getValue());
             callback();
         });

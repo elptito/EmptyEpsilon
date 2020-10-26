@@ -40,7 +40,8 @@ ShipSelectionScreen::ShipSelectionScreen()
     // List the station types and stations in the right column.
     GuiAutoLayout* stations_layout = new GuiAutoLayout(right_container, "CREW_POSITION_BUTTON_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
     stations_layout->setPosition(0, 50, ATopCenter)->setSize(400, 600);
-    (new GuiLabel(stations_layout, "CREW_POSITION_SELECT_LABEL", "Choisissez votre poste", 30))->addBackground()->setSize(GuiElement::GuiSizeMax, 50);
+    stations_label = new GuiLabel(stations_layout, "CREW_POSITION_SELECT_LABEL", "Choisissez votre poste", 30);
+    stations_label->addBackground()->setSize(GuiElement::GuiSizeMax, 50);
 
     // Crew type selector
     crew_type_selector = new GuiSelector(stations_layout, "CREW_TYPE_SELECTION", [this](int index, string value) {
@@ -429,6 +430,12 @@ void ShipSelectionScreen::update(float delta)
     }else{
         no_ships_label->show();
     }
+    
+    // Count number of selected positions
+    int count_positions = 0;
+    for(int n = 0; n < max_crew_positions; n++)
+        count_positions += my_player_info->crew_position[n];
+    stations_label->setText("Select your station (" + std::to_string(count_positions) + ")");
 
     // Update the Ready button's state, which might have changed based on the
     // presence or absence of player ships.
@@ -500,7 +507,8 @@ void ShipSelectionScreen::updateCrewTypeOptions()
     // Hide and unselect each crew position button.
     for(int n = 0; n < max_crew_positions; n++)
     {
-        crew_position_button[n]->setValue(false)->hide();
+        //crew_position_button[n]->setValue(false)->hide();
+        crew_position_button[n]->hide();
     }
 
     // Choose which set of screens to list from the crew type selector index.
@@ -551,11 +559,12 @@ void ShipSelectionScreen::updateCrewTypeOptions()
     // For each crew position, unselect the position if the button is hidden
     // and select the button if the current player has already selected that
     // position.
+    // Edit LARP : no, don't change selection even the button is hidden
     for(int n = 0; n < max_crew_positions; n++)
     {
-        if (!crew_position_button[n]->isVisible())
-            my_player_info->commandSetCrewPosition(ECrewPosition(n), false);
-        else
+        //if (!crew_position_button[n]->isVisible())
+            //my_player_info->commandSetCrewPosition(ECrewPosition(n), false);
+        //else
             crew_position_button[n]->setValue(my_player_info->crew_position[n]);
     }
 

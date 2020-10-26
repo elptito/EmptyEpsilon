@@ -4,6 +4,7 @@
 #include "gui2_element.h"
 #include "gui2_entrylist.h"
 #include "gui2_button.h"
+#include "gui2_togglebutton.h"
 #include "gui2_scrollbar.h"
 
 class GuiListbox : public GuiEntryList
