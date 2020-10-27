@@ -16,6 +16,8 @@
 #include "screens/extra/damcon.h"
 #include "screenComponents/impulseSound.h"
 
+#include "screens/extra/targetAnalysisScreen.h"
+
 #include "gui/gui2_panel.h"
 #include "gui/gui2_overlay.h"
 #include "gui/gui2_panel.h"
@@ -49,7 +51,9 @@ ScreenMainScreen::ScreenMainScreen()
     ship_state = new DamageControlScreen(this);
     ship_state->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
     ship_state->hide();
-
+    target_analysis = new TargetAnalysisScreen(this);
+    target_analysis->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+    target_analysis->hide();
     onscreen_comms = new GuiCommsOverlay(this);
     onscreen_comms->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax)->setVisible(false);
 
@@ -116,6 +120,7 @@ void ScreenMainScreen::update(float delta)
             long_range_radar->hide();
             global_range_radar->hide();
             ship_state->hide();
+            target_analysis->hide();
             break;
         case MSS_Tactical:
             viewport->hide();
@@ -123,6 +128,7 @@ void ScreenMainScreen::update(float delta)
             long_range_radar->hide();
             global_range_radar->hide();
             ship_state->hide();
+            target_analysis->hide();
             break;
         case MSS_LongRange:
             viewport->hide();
@@ -130,6 +136,7 @@ void ScreenMainScreen::update(float delta)
             long_range_radar->show();
             global_range_radar->hide();
             ship_state->hide();
+            target_analysis->hide();
             break;
         case MSS_GlobalRange:
             viewport->hide();
@@ -144,6 +151,14 @@ void ScreenMainScreen::update(float delta)
             long_range_radar->hide();
             global_range_radar->hide();
             ship_state->show();
+            target_analysis->hide();
+            break;
+        case MSS_TargetAnalysis:
+            viewport->hide();
+            tactical_radar->hide();
+            long_range_radar->hide();
+            far_range_radar->hide();
+            target_analysis->show();
             break;
         }
 
@@ -245,6 +260,11 @@ void ScreenMainScreen::onClick(sf::Vector2f mouse_position)
             else if (gameGlobalInfo->allow_main_screen_global_range_radar)
                 my_spaceship->commandMainScreenSetting(MSS_GlobalRange);
             break;
+
+        case MSS_TargetAnalysis:
+            if (gameGlobalInfo->allow_main_screen_target_analysis)
+                my_spaceship->commandMainScreenSetting(MSS_TargetAnalysis);
+            break;
         default:
             if (gameGlobalInfo->allow_main_screen_tactical_radar)
                 my_spaceship->commandMainScreenSetting(MSS_Tactical);
@@ -277,6 +297,8 @@ void ScreenMainScreen::onHotkey(const HotkeyResult& key)
             my_spaceship->commandMainScreenSetting(MSS_Tactical);
         else if (key.hotkey == "LONG_RANGE_RADAR")
             my_spaceship->commandMainScreenSetting(MSS_LongRange);
+        else if (key.hotkey == "TARGET_ANALYSIS")
+            my_spaceship->commandMainScreenSetting(MSS_TargetAnalysis);
         else if (key.hotkey == "FIRST_PERSON")
             viewport->first_person = !viewport->first_person;
     }

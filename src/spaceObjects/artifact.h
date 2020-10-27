@@ -6,7 +6,6 @@
 class Artifact : public SpaceObject, public Updatable
 {
 private:
-    string current_model_data_name;
     string model_data_name;
     float artifact_spin=0.0;
     bool allow_pickup;
@@ -33,6 +32,8 @@ public:
     void setOrbit(P<SpaceObject> target, float orbit_time);
     void setOrbitDistance(float orbit_distance);
     void setHull(float hull) {this->hull = hull;}
+
+    string current_model_data_name;
 
     virtual string getExportLine() override;
     void onPickUp(ScriptSimpleCallback callback);

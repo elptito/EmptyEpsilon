@@ -21,19 +21,16 @@ class GuiFrequencyCurve;
 class GuiOverlay;
 class GuiElement;
 class GuiImage;
+class ScienceDatabase;
 
 class TargetAnalysisScreen : public GuiOverlay
 {
   public:
-    GuiAutoLayout* basic_info_layout;
-    GuiAutoLayout* advanced_info_layout;
-    GuiAutoLayout* texts_panel;
-    GuiAutoLayout* description_panel;
-    GuiAutoLayout* informations_panel;
-    GuiAutoLayout* frequency_panel;
-    GuiAutoLayout* others_panel;
-    GuiAutoLayout* signals_panel;
-    GuiAutoLayout* systems_panel;
+
+    GuiOverlay* indicator_overlay;
+    GuiOverlay* analysis_overlay;
+    
+    GuiLabel* indicator_label;
     
     GuiKeyValueDisplay* info_callsign;
     GuiKeyValueDisplay* info_distance;
@@ -55,11 +52,14 @@ class TargetAnalysisScreen : public GuiOverlay
     GuiFrequencyCurve* info_beam_frequency;
     GuiKeyValueDisplay* info_system[SYS_COUNT];
     GuiKeyValueDisplay* info_other[10];
+    GuiKeyValueDisplay* info_template[30];
 
     GuiRotatingModelView* model;
+    P<ScienceDatabase> selected_entry;
 
   public:
     TargetAnalysisScreen(GuiContainer *owner);
     void onDraw(sf::RenderTarget &window) override;
+    P<ScienceDatabase> findDatabaseEntry(string name);
 };
 #endif //TARGET_ANALYSIS_SCREEN_H

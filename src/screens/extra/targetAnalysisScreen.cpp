@@ -3,7 +3,11 @@
 #include "playerInfo.h"
 #include "shipTemplate.h"
 #include "gameGlobalInfo.h"
+#include "scienceDatabase.h"
 #include "spaceObjects/shipTemplateBasedObject.h"
+#include "spaceObjects/asteroid.h"
+#include "spaceObjects/artifact.h"
+#include "spaceObjects/planet.h"
 #include "spaceObjects/playerSpaceship.h"
 
 #include "screenComponents/customShipFunctions.h"
@@ -36,26 +40,32 @@ const int COLUMN_WIDTH = 500;
 TargetAnalysisScreen::TargetAnalysisScreen(GuiContainer *owner)
     : GuiOverlay(owner, "DOCK_MASTER_SCREEN", colorConfig.background)
 {
+
+    selected_entry = nullptr;
+
     GuiOverlay *background_crosses = new GuiOverlay(this, "BACKGROUND_CROSSES", sf::Color::White);
     background_crosses->setTextureTiled("gui/BackgroundCrosses");
     
-    model = new GuiRotatingModelView(this, "MODEL_VIEW", nullptr);
+    indicator_overlay = new GuiOverlay(this, "", sf::Color(0, 0, 0, 128));
+    (new GuiPanel(indicator_overlay, "PAUSE_BOX"))->setPosition(0, 0, ACenter)->setSize(600, 100);
+    indicator_label = new GuiLabel(indicator_overlay, "PAUSE_LABEL", "Power cut", 70);
+    indicator_label->setPosition(0, 0, ACenter)->setSize(500, 100);
+    
+    analysis_overlay = new GuiOverlay(this, "", sf::Color(0, 0, 0, 128));
+    
+    model = new GuiRotatingModelView(analysis_overlay, "MODEL_VIEW", nullptr);
     model->setSize(500, 500);
     model->setPosition(0, 0, ACenter);
-    
-    GuiAutoLayout* main_panel = new GuiAutoLayout(this, "LEFT_LAYOUT", GuiAutoLayout::    LayoutVerticalColumns);
-    main_panel->setPosition(25, 50, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
-    main_panel->setMargins(20, 20, 20, 20);
 
-    GuiAutoLayout* left_col = new GuiAutoLayout(main_panel, "LEFT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    GuiAutoLayout* left_col = new GuiAutoLayout(analysis_overlay, "LEFT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
     left_col->setPosition(25, 50, ATopLeft)->setSize(400, GuiElement::GuiSizeMax);
     left_col->setMargins(20, 20, 20, 20);
     
-    GuiAutoLayout* center_col = new GuiAutoLayout(main_panel, "CENTER_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    GuiAutoLayout* center_col = new GuiAutoLayout(analysis_overlay, "CENTER_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
     center_col->setPosition(0, 50, ATopCenter)->setSize(400, GuiElement::GuiSizeMax);
     center_col->setMargins(20, 20, 20, 20);
 
-    GuiAutoLayout* right_col = new GuiAutoLayout(main_panel, "RIGHT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    GuiAutoLayout* right_col = new GuiAutoLayout(analysis_overlay, "RIGHT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
     right_col->setPosition(-25, 50, ATopRight)->setSize(400, GuiElement::GuiSizeMax);
     right_col->setMargins(20, 20, 20, 20);
     
@@ -103,6 +113,19 @@ TargetAnalysisScreen::TargetAnalysisScreen(GuiContainer *owner)
         info_other[n]->setSize(GuiElement::GuiSizeMax, 30);
         info_other[n]->hide();
     }
+    
+    (new GuiLabel(center_col, "TITLE", "Template Informations", 30))
+        ->addBackground()
+        ->setAlignment(ACenter)
+        ->setPosition(0, 0, ABottomCenter)
+        ->setSize(GuiElement::GuiSizeMax, 50);
+
+    for(int n = 0; n < 30; n++)
+    {
+        info_template[n] = new GuiKeyValueDisplay(center_col, "TARGET_TEMPLATE_" + string(n), 0.37, "-", "-");
+        info_template[n]->setSize(GuiElement::GuiSizeMax, 30);
+        info_template[n]->hide();
+    }
 
     (new GuiLabel(center_col, "TITLE", "Systems", 30))
         ->addBackground()
@@ -131,7 +154,10 @@ TargetAnalysisScreen::TargetAnalysisScreen(GuiContainer *owner)
     info_beam_frequency->setSize(GuiElement::GuiSizeMax, 150);
 
     if (!gameGlobalInfo->use_beam_shield_frequencies)
-        frequency_panel->hide();
+    {
+        info_shield_frequency->hide();
+        info_beam_frequency->hide();
+    }
 
     (new GuiLabel(right_col, "TITLE", "Signatures", 30))
         ->addBackground()
@@ -165,18 +191,63 @@ void TargetAnalysisScreen::onDraw(sf::RenderTarget &window)
             obj = game_server->getObjectById(my_spaceship->linked_analysis_object_id);
         else
             obj = game_client->getObjectById(my_spaceship->linked_analysis_object_id);
-            
-        if (obj)
+        
+        if (!obj)
         {
+            indicator_label->setText("No object targeted");
+            indicator_overlay->show();
+            analysis_overlay->hide();
+        }
+        else if (obj->getScannedStateFor(my_spaceship) < SS_FullScan)
+        {
+            indicator_label->setText("Object not fully scanned");
+            indicator_overlay->show();
+            analysis_overlay->hide();
+        }
+        else
+        {
+            indicator_label->setText("Object not fully scanned");
+            indicator_overlay->hide();
+            analysis_overlay->show();
+            
             P<SpaceShip> ship = obj;
             P<ShipTemplateBasedObject> shipTemplate = obj;
             P<SpaceStation> station = obj;
+            P<Asteroid> asteroid = obj;
+            P<Artifact> artifact = obj;
+            P<Planet> planet = obj;
             
             string description = obj->getDescriptionFor(my_spaceship);
             info_description->setText(description);
             
-            if (shipTemplate)        
-                model->setModel(ShipTemplate::getTemplate(shipTemplate->getTypeName())->model_data);
+            if (asteroid)
+                model->setModel(ModelData::getModel("Astroid_" + string(asteroid->model_number)));
+            
+            if (artifact)
+                model->setModel(ModelData::getModel(artifact->current_model_data_name));
+            
+            if (planet)
+                model->setModel(ModelData::getModel(planet->getPlanetSurfaceTexture()));
+            
+            if (shipTemplate)
+            {
+                selected_entry = findDatabaseEntry(shipTemplate->getTypeName());
+                model->setModel(selected_entry->getModelData());
+
+                for(int n = 0; n < 30; n++)
+                    info_template[n]->hide();
+                for(unsigned int n = 0; n < selected_entry->keyValuePairs.size(); n++)
+                {
+                    if (n > 30)
+                        break;
+                    if (selected_entry->keyValuePairs[n].key != "")
+                    {
+                        info_template[n]->show();
+                        info_template[n]->setKey(selected_entry->keyValuePairs[n].key);
+                        info_template[n]->setValue(selected_entry->keyValuePairs[n].value);
+                    }
+                }
+            }
             
             sf::Vector2f position_diff = obj->getPosition() - my_spaceship->getPosition();
             float distance = sf::length(position_diff);
@@ -265,5 +336,18 @@ void TargetAnalysisScreen::onDraw(sf::RenderTarget &window)
             info_biological_signal_label->setText("Biological: " + string(signal) + " um");
         }
     }
+}
+
+P<ScienceDatabase> TargetAnalysisScreen::findDatabaseEntry(string name)
+{
+    for(auto sd : ScienceDatabase::science_databases)
+    {
+        if (!sd) continue;
+        if (sd->getName() == name)
+        {
+            return sd;
+        }
+    }
+    return nullptr;
 }
 

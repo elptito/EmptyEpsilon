@@ -33,6 +33,7 @@ public:
     void setPlanetSurfaceTexture(string texture_name);
     string getPlanetSurfaceTexture();
     void setPlanetIcon(string texture_name);
+    string getPlanetSurfaceTexture() { return planet_texture; }
     void setPlanetCloudTexture(string texture_name);
     void setPlanetRadius(float size);
     void setPlanetCloudRadius(float size);

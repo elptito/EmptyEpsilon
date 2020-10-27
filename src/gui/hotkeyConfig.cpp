@@ -25,6 +25,7 @@ HotkeyConfig::HotkeyConfig()
     newKey("TACTICAL_RADAR", std::make_tuple("Voir l'auspex courte portee", "Tab"));
     newKey("LONG_RANGE_RADAR", std::make_tuple("Voir l'auspex longue portee", "Q"));
     newKey("FIRST_PERSON", std::make_tuple("Permuter vue a la premiere personne", "F"));
+    newKey("TARGET_ANALYSIS", std::make_tuple("View target analysis", ""));
 
     newCategory("HELMS", "Pilote");
     newKey("INC_IMPULSE", std::make_tuple("Augmenter Impulsion", "Up"));

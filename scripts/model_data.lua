@@ -572,6 +572,15 @@ ModelData():setName("artifact6"):setScale(3):setRadius(50):setMesh("Artifact6.ob
 ModelData():setName("artifact7"):setScale(3):setRadius(50):setMesh("Artifact7.obj"):setTexture("electric_sphere_texture.png")
 ModelData():setName("artifact8"):setScale(3):setRadius(50):setMesh("Artifact8.obj"):setTexture("electric_sphere_texture.png")
 
+for type=1,10 do
+    ModelData():setName("Astroid_" .. type):setScale(50):setRadius(50):setMesh("Astroid_" .. type .. ".model"):setTexture("Astroid_" .. type .. "_d.png"):setSpecular("Astroid_" .. type .. "_s.png")   
+end
+
+ModelData():setName("planets/planet-1.png"):setScale(100):setRadius(50):setMesh("planets/planet.obj"):setTexture("planets/planet-1.png")
+ModelData():setName("planets/planet-2.png"):setScale(100):setRadius(50):setMesh("planets/planet.obj"):setTexture("planets/planet-2.png")
+ModelData():setName("planets/moon-1.png"):setScale(100):setRadius(50):setMesh("planets/planet.obj"):setTexture("planets/moon-1.png")
+ModelData():setName("planets/gas-1.png"):setScale(100):setRadius(50):setMesh("planets/planet.obj"):setTexture("planets/gas-1.png")
+
 for type=1,5 do
     for cnt=1,5 do
         model = ModelData():setName("transport_" .. type .. "_" .. cnt)
