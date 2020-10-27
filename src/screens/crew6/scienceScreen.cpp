@@ -234,6 +234,15 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
     });
     probe_view_button->setPosition(20, -160, ABottomLeft)->setSize(200, 50)->disable();
 
+    // Link target to analysis screen.
+    link_to_analysis_button = new GuiToggleButton(radar_view, "LINK_TO_ANALYSIS", tr("Link to Analysis"), [this](bool value){
+        if (value)
+            my_spaceship->commandSetAnalysisLink(targets.get()->getMultiplayerId());
+        else
+            my_spaceship->commandSetAnalysisLink(-1);
+    });
+    link_to_analysis_button->setPosition(-20, -70, ABottomRight)->setSize(250, 50);
+
     // Draw the zoom slider.
     zoom_slider = new GuiSlider(radar_view, "", my_spaceship ? my_spaceship->getLongRangeRadarRange() : 30000.0f, my_spaceship ? my_spaceship->getShortRangeRadarRange() : 5000.0f, my_spaceship ? my_spaceship->getLongRangeRadarRange() : 30000.0f, [this](float value)
     {
@@ -337,6 +346,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
         info_other[n]->setValue("-")->hide();
         info_other[n]->setKey("-")->hide();
     }
+    link_to_analysis_button->disable();
 
     if (probe)
     {
@@ -361,7 +371,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
         P<Asteroid> asteroid = obj;
         P<Mine> mine = obj;
 
-        // Info lat�rale
+        // Info laterale
 
         // Toujours :
             // ID
@@ -380,6 +390,17 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
             // Description ameliore
             // Frequences
             // Systemes
+        
+        if (my_spaceship)
+        {
+            link_to_analysis_button->setValue(my_spaceship->linked_analysis_object_id == obj->getMultiplayerId());
+            link_to_analysis_button->enable();
+        }
+        else
+        {
+            link_to_analysis_button->setValue(false);
+            link_to_analysis_button->disable();
+        }
 
         sf::Vector2f position_diff = obj->getPosition() - my_spaceship->getPosition();
         float distance = sf::length(position_diff);

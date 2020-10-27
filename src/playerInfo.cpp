@@ -28,6 +28,7 @@
 #include "screens/extra/commsScreen.h"
 #include "screens/extra/shipLogScreen.h"
 #include "screens/extra/radarScreen.h"
+#include "screens/extra/targetAnalysisScreen.h"
 
 #include "screenComponents/mainScreenControls.h"
 #include "screenComponents/selfDestructEntry.h"
@@ -214,7 +215,8 @@ void PlayerInfo::spawnUI()
             screen->addStationTab(new DockMasterScreen(container), dockMaster, getCrewPositionName(dockMaster), getCrewPositionIcon(dockMaster));
         if (crew_position[oxygenView])
             screen->addStationTab(new OxygenScreen(container), oxygenView, getCrewPositionName(oxygenView), getCrewPositionIcon(oxygenView));
-
+        if (crew_position[targetAnalysisScreen])
+            screen->addStationTab(new TargetAnalysisScreen(container), targetAnalysisScreen, getCrewPositionName(targetAnalysisScreen), getCrewPositionIcon(targetAnalysisScreen));
         //TODO tsht : verifier que c'est bien present avec le truc en bas
         //Ship log screen, if you have comms, you have ships log. (note this is mostly replaced by the [at the bottom of the screen openable log]
         //if (crew_position[singlePilot])
@@ -268,6 +270,7 @@ string getCrewPositionName(ECrewPosition position)
     case altRelay: return tr("station","Strategic Map");
     case commsOnly: return tr("station","Comms");
     case shipLog: return tr("station","Ship's Log");
+    //TODO reverifier tout ça
     case tacticalRadar: return "Radar Tactique";
     case scienceRadar: return "Radar Science";
     case relayRadar: return "Radar Auspex LP";
@@ -277,6 +280,7 @@ string getCrewPositionName(ECrewPosition position)
     case droneMaster: return "Maitre des docks";
     case dockMaster: return "Maitre d'ammarrage";
     case oxygenView: return "Log Oxygen";
+    case targetAnalysisScreen: return tr("station","Target Analysis Screen");
     default: return "ErrUnk: " + string(position);
     }
 }
@@ -310,6 +314,8 @@ string getCrewPositionIcon(ECrewPosition position)
     case scienceRadar: return "";
     case relayRadar: return "";
     case navigation: return "";
+    //ajouts Tdelc Larp
+    case targetAnalysisScreen: return "";
     default: return "ErrUnk: " + string(position);
     }
 }
@@ -377,6 +383,8 @@ template<> void convert<ECrewPosition>::param(lua_State* L, int& idx, ECrewPosit
         cp = navigation;
     else if (str == "log" || str == "shiplog")
         cp = shipLog;
+    else if (str == "targetanalysis" || str == "analysis" || str == "targetanalysisscreen")
+        cp = targetAnalysisScreen;
     else
         luaL_error(L, "Unknown value for crew position: %s", str.c_str());
 }
