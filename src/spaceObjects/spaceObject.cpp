@@ -75,7 +75,8 @@ REGISTER_SCRIPT_CLASS_NO_CREATE(SpaceObject)
     /// Sets the communications script used when this object is hailed.
     /// Accepts the filename of a Lua script as a string, or can be set to an
     /// empty string to disable comms with this object.
-    /// In the script, `player` (PlayerSpaceship) and `comms_target` are available.
+    /// In the script, `comms_source` (or `player`, deprecated) (PlayerSpaceship)
+    /// and `comms_target` (SpaceObject) are available.
     /// Compare `setCommsFunction`.
     /// Examples:
     ///   obj:setCommsScript("")
@@ -89,7 +90,8 @@ REGISTER_SCRIPT_CLASS_NO_CREATE(SpaceObject)
     /// current or default comms script.
     /// For a detailed example, see scenario_53_escape.lua.
     /// Requires a function to call back to when hailed.
-    /// The function has no parameters, but `comms_source` (PlayerSpaceship) and `comms_target` are available.
+    /// The function has no parameters, but `comms_source` (PlayerSpaceship)
+    /// and `comms_target` (SpaceObject) are available.
     /// Compare `setCommsScript`.
     /// Example: obj:setCommsFunction(commsStation)
     /// where commsStation is a function
