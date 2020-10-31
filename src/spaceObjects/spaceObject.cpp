@@ -90,13 +90,15 @@ REGISTER_SCRIPT_CLASS_NO_CREATE(SpaceObject)
     /// current or default comms script.
     /// For a detailed example, see scenario_53_escape.lua.
     /// Requires a function to call back to when hailed.
-    /// The function has no parameters, but `comms_source` (PlayerSpaceship)
+    /// The globals `comms_source` (PlayerSpaceship)
     /// and `comms_target` (SpaceObject) are made available in the scenario script.
     /// (Note: They remain as globals. As usual, such globals are not accessible in required files.)
     /// Compare `setCommsScript`.
     /// Example: obj:setCommsFunction(commsStation)
     /// where commsStation is a function
     /// calling `setCommsMessage` once and `addCommsReply` zero or more times.
+    /// Instead of using the globals, the callback can take two parameters.
+    /// Example: obj:setCommsFunction(function(comms_source, comms_target) ... end)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setCommsFunction);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, isEnemy);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, isFriendly);
