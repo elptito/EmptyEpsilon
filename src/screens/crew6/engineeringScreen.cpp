@@ -351,6 +351,7 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
             else
                 presets_buttons.at(buttonId)->setVisible(false);
         }
+        presets_button->setVisible(my_spaceship->active_engineer_presets_number > 0);
 
         // Update the energy usage.
         if (previous_energy_measurement == 0.0)
