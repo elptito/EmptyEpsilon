@@ -221,13 +221,22 @@ void TargetAnalysisScreen::onDraw(sf::RenderTarget &window)
             info_description->setText(description);
             
             if (asteroid)
+            {
+                info_type->setValue(tr("Asteroid"));
                 model->setModel(ModelData::getModel("Astroid_" + string(asteroid->model_number)));
+            }
             
             if (artifact)
+            {
+                info_type->setValue(tr("Unknown"));
                 model->setModel(ModelData::getModel(artifact->current_model_data_name));
+            }
             
             if (planet)
+            {
+                info_type->setValue(tr("Planet"));
                 model->setModel(ModelData::getModel(planet->getPlanetSurfaceTexture()));
+            }
             
             if (shipTemplate)
             {
