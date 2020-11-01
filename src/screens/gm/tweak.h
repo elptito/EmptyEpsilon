@@ -135,6 +135,7 @@ private:
     GuiSlider* warp_speed_slider;
     GuiSlider* short_range_radar_slider;
     GuiSlider* long_range_radar_slider;
+    GuiSlider* engineering_presets_slider;
 
 public:
     GuiShipTweak(GuiContainer* owner);

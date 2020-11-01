@@ -515,6 +515,12 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
     });
     long_range_radar_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
+    (new GuiLabel(left_col, "", tr("Engineering presets:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
+    engineering_presets_slider = new GuiSlider(left_col, "", 0, 9, 0, [this](int value) {
+        target->active_engineer_presets_number = value;
+    });
+    engineering_presets_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
     (new GuiLabel(right_col, "", "JUMP, distance Min :", 30))->setSize(GuiElement::GuiSizeMax, 50);
     jump_drive_min_distance_slider = new GuiSlider(right_col, "", 0.0, 50000, 0.0, [this](float value) {
         target->jump_drive_min_distance = round(value / 1000) * 1000000;
@@ -595,6 +601,7 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
     {
         short_range_radar_slider->setValue(player->getShortRangeRadarRange());
         long_range_radar_slider->setValue(player->getLongRangeRadarRange());
+        engineering_presets_slider->setValue(target->active_engineer_presets_number);
     }
 }
 

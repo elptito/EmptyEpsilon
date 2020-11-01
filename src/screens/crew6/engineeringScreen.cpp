@@ -1,6 +1,7 @@
 #include "playerInfo.h"
 #include "gameGlobalInfo.h"
 #include "engineeringScreen.h"
+#include "preferenceManager.h"
 
 #include "screenComponents/shipInternalView.h"
 #include "screenComponents/selfDestructButton.h"
@@ -227,16 +228,130 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner, ECrewPosition crew_pos
     (new GuiCustomShipFunctions(this, crew_position, "", my_spaceship))->setPosition(-20, 100, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
 
     new ShipsLog(this,"intern");
+    // Bottom layout.
+    GuiAutoLayout* layout = new GuiAutoLayout(this, "", GuiAutoLayout::LayoutVerticalBottomToTop);
+    layout->setPosition(-20, -20, ABottomRight)->setSize(300, GuiElement::GuiSizeMax);
+    std::vector<GuiAutoLayout*> presets_buttons_layouts;
+
+    // Presets buttons.
+    presets_button = new GuiToggleButton(layout, "PRESET", tr("preset", "presets"), [this](bool value)
+    {
+        for(int buttonId = 0 ; buttonId < my_spaceship->max_engineer_presets_number*2 ; buttonId++)
+        {
+            if (buttonId < my_spaceship->active_engineer_presets_number*2)
+                presets_buttons.at(buttonId)->setVisible(value);
+            else
+                presets_buttons.at(buttonId)->setVisible(false);
+        }
+    });
+    presets_button->setValue(false);
+    presets_button->setTextSize(20);
+    presets_button->setSize(125, 25);
+
+    for(int presetId=1; presetId < my_spaceship->max_engineer_presets_number + 1; presetId++)
+    {
+
+        GuiAutoLayout* preset_button_layout = new GuiAutoLayout(layout, "", GuiAutoLayout::LayoutHorizontalLeftToRight);
+        preset_button_layout->setSize(300, GuiElement::GuiSizeMax);
+        GuiButton* preset_button_apply = new GuiButton(preset_button_layout, "", tr("preset", "preset") + " " + std::to_string(presetId), [this, presetId]()
+        {
+            applyPreset(presetId);
+            for(GuiButton* button : presets_buttons)
+                button->setVisible(false);
+            presets_button->setValue(false);
+        });
+        preset_button_apply->setVisible(false);
+        preset_button_apply->setTextSize(20);
+        preset_button_apply->setSize(100, 25);   
+        presets_buttons.push_back(preset_button_apply);
+        GuiButton* preset_button_update = new GuiButton(preset_button_layout, "", "", [this, presetId]()
+        {
+            updatePreset(presetId);
+            //my_spaceship->saveToPreferencesEngineerPresets();
+            for(GuiButton* button : presets_buttons)
+                button->setVisible(false);
+            presets_button->setValue(false);
+        });
+        preset_button_update->setVisible(false);
+        preset_button_update->setTextSize(20);
+        preset_button_update->setIcon("gui/icons/self-destruct");
+        preset_button_update->setSize(25, 25);   
+        presets_buttons.push_back(preset_button_update);
+
+        //preset_button_layout->setVisible(false);
+        preset_button_layout->setSize(125, 25);   
+        presets_buttons_layouts.push_back(preset_button_layout);
+    }
+
+
+    new ShipsLog(this, crew_position);
+    
+    (new GuiCustomShipFunctions(this, crew_position, "", my_spaceship))->setPosition(-20, 120, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
 
     previous_energy_level = 0.0;
     average_energy_delta = 0.0;
     previous_energy_measurement = 0.0;
 }
 
+void EngineeringScreen::applyPreset(int preset)
+{
+    if (my_spaceship)
+    {
+        for(int n = 0; n < SYS_COUNT; n++)
+        {
+            ESystem system = ESystem(n);
+            my_spaceship->commandSetSystemPowerRequest(system, my_spaceship->power_presets[n][preset-1]);
+            my_spaceship->commandSetSystemCoolantRequest(system, my_spaceship->coolant_presets[n][preset-1]);
+        }
+        my_spaceship->addToShipLog(tr("preset","Preset {id_preset} loaded").format({{"id_preset", string(preset)}}), colorConfig.log_receive_neutral, engineering);
+    }
+}
+
+void EngineeringScreen::updatePreset(int preset)
+{
+    if (my_spaceship)
+    {
+        for(int n = 0; n < SYS_COUNT; n++)
+        {
+            ESystem system = ESystem(n);
+            my_spaceship->commandSetSystemPowerPreset(system, preset, my_spaceship->systems[n].power_request);
+            my_spaceship->commandSetSystemCoolantPreset(system, preset, my_spaceship->systems[n].coolant_request);
+        }
+    }
+    // Save preset to options.ini file
+    string power_saved_presets = "";
+    string coolant_saved_presets = "";
+    for(int n = 0; n < SYS_COUNT-1; n++)
+    {
+        power_saved_presets += string(my_spaceship->systems[n].power_request, 2) + "|";
+        coolant_saved_presets += string(my_spaceship->systems[n].coolant_request, 2) + "|";
+    }
+    power_saved_presets += string(my_spaceship->systems[SYS_COUNT-1].power_request, 2);
+    coolant_saved_presets += string(my_spaceship->systems[SYS_COUNT-1].coolant_request, 2);
+    
+    PreferencesManager::set("ENGINEERING.PRESET_POWER_"+string(preset), power_saved_presets);
+    PreferencesManager::set("ENGINEERING.PRESET_COOLANT_"+string(preset), coolant_saved_presets);
+
+    //Save preferences
+    if (getenv("HOME"))
+        PreferencesManager::save(string(getenv("HOME")) + "/.emptyepsilon/options.ini");
+    else
+        PreferencesManager::save("options.ini");
+}
+
 void EngineeringScreen::onDraw(sf::RenderTarget& window)
 {
     if (my_spaceship)
     {
+        // Update presets number
+        for(int buttonId = 0 ; buttonId < my_spaceship->max_engineer_presets_number*2; buttonId++)
+        {
+            if (buttonId < my_spaceship->active_engineer_presets_number*2)
+                presets_buttons.at(buttonId)->setVisible(presets_button->getValue());
+            else
+                presets_buttons.at(buttonId)->setVisible(false);
+        }
+
         // Update the energy usage.
         if (previous_energy_measurement == 0.0)
         {
@@ -621,6 +736,17 @@ void EngineeringScreen::onHotkey(const HotkeyResult& key)
                 coolant_slider->setValue(0.0f);
                 my_spaceship->commandSetSystemPowerRequest(selected_system, 1.0f);
                 my_spaceship->commandSetSystemCoolantRequest(selected_system, 0.0f);
+            }
+        }
+
+        for(int presetId=1; presetId < 10; presetId++) 
+        {
+            if (presetId <= my_spaceship->active_engineer_presets_number)
+            {
+                if (key.hotkey == "PRESET_APPLY" + string(presetId))
+                    applyPreset(presetId);
+                if (key.hotkey == "PRESET_UPDATE" + string(presetId))
+                    updatePreset(presetId);
             }
         }
     }

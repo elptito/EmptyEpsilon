@@ -101,7 +101,9 @@ REGISTER_SCRIPT_SUBCLASS(PlayerSpaceship, SpaceShip)
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandScan);
     /// Set power of the system to e.g. 1.5 ("150 percent")
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetSystemPowerRequest);
+    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetSystemPowerPreset);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetSystemCoolantRequest);
+    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetSystemCoolantPreset);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetSystemRepairRequest);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandDock);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandUndock);
@@ -140,6 +142,11 @@ REGISTER_SCRIPT_SUBCLASS(PlayerSpaceship, SpaceShip)
     /// Set the maximum nano repair crew available to engineering. Default is 3.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setMaxRepairPerSystem);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getMaxRepairPerSystem);
+    /// Set the maximum number of presets available for the engineering screen
+    /// Must be between 0 and 9
+    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setActivePresetNumber);
+    /// Get the actual maximum number of presets for the engineering screen
+    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getActivePresetNumber);    
     /// Sets whether automatic coolant distribution is enabled. This sets the
     /// amount of coolant proportionally to the amount of heat in that system.
     /// Use this command on ships to require less player interaction, especially
@@ -295,6 +302,8 @@ static const int16_t CMD_ABORT_LANDING = 0x0039;
 static const int16_t CMD_SET_LANDING_TARGET = 0x0040;
 static const int16_t CMD_TURN_SPEED = 0x002A;
 static const int16_t CMD_SET_SYSTEM_REPAIR_REQUEST = 0x002B;
+static const int16_t CMD_SET_SYSTEM_POWER_PRESET = 0x003B;
+static const int16_t CMD_SET_SYSTEM_COOLANT_PRESET = 0x003C;
 
 string alertLevelToString(EAlertLevel level)
 {
@@ -353,6 +362,7 @@ PlayerSpaceship::PlayerSpaceship()
     auto_coolant_enabled = false;
     max_coolant = max_coolant_per_system;
     max_repair = max_repair_per_system;
+    active_engineer_presets_number = max_engineer_presets_number;
     scan_probe_stock = max_scan_probes;
     scan_probe_recharge_dock = 0.0;
     scan_probe_recharge = 0.0;
@@ -398,6 +408,7 @@ PlayerSpaceship::PlayerSpaceship()
     registerMemberReplication(&max_coolant_per_system);
     registerMemberReplication(&max_repair);
     registerMemberReplication(&max_repair_per_system);
+    registerMemberReplication(&active_engineer_presets_number);
     registerMemberReplication(&auto_coolant_enabled);
     registerMemberReplication(&beam_system_target);
     registerMemberReplication(&comms_state);
@@ -453,9 +464,34 @@ PlayerSpaceship::PlayerSpaceship()
         registerMemberReplication(&self_destruct_code_entry_position[n]);
         registerMemberReplication(&self_destruct_code_show_position[n]);
     }
+    
+    // Prepare presets initialization based on preference manager
+    string power_default_presets = "";
+    string power_saved_presets = "";
+    string coolant_default_presets = "";
+    string coolant_saved_presets = "";
+    for(int n = 0; n < SYS_COUNT-1; n++)
+    {
+        power_default_presets += "1.00|";
+        coolant_default_presets += "0.00|";
+    }
+    power_default_presets += "1.00";
+    coolant_default_presets += "0.00";
 
     energy_consumption_ratio = 1.0f;
     registerMemberReplication(&energy_consumption_ratio);
+    for(int n = 0; n < SYS_COUNT; n++)
+    {
+        for(int o = 0; o < max_engineer_presets_number; o++)
+        {
+            power_saved_presets = PreferencesManager::get("ENGINEERING.PRESET_POWER_"+string(o+1), power_default_presets);
+            coolant_saved_presets = PreferencesManager::get("ENGINEERING.PRESET_COOLANT_"+string(o+1), coolant_default_presets);
+            power_presets[n][o] = power_saved_presets.split("|")[n].toFloat();
+            coolant_presets[n][o] = coolant_saved_presets.split("|")[n].toFloat();
+            registerMemberReplication(&power_presets[n][o]);
+            registerMemberReplication(&coolant_presets[n][o]);
+        }
+    }
 
     if (game_server)
     {
@@ -1664,6 +1700,20 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
                 setSystemCoolantRequest(system, request);
         }
         break;
+    case CMD_SET_SYSTEM_POWER_PRESET:
+        {
+            ESystem system;
+            int preset;
+            float request;
+            packet >> system >> preset >> request;
+            if (system < SYS_COUNT && request >= 0.0 && request <= 3.0 && preset > 0 && preset <= max_engineer_presets_number)
+            {
+                power_presets[system][preset] = request;
+                if (system == 0)
+                    addToShipLog(tr("preset","Preset {id_preset} updated").format({{"id_preset", string(preset)}}), colorConfig.log_receive_neutral, engineering);
+            }
+        }
+        break;
     case CMD_SET_SYSTEM_REPAIR_REQUEST:
         {
             ESystem system;
@@ -1671,6 +1721,16 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
             packet >> system >> request;
             if (system < SYS_COUNT && request >= 0.0 && request <= max_repair_per_system)
                 setSystemRepairRequest(system, request);
+        }
+        break;
+    case CMD_SET_SYSTEM_COOLANT_PRESET:
+        {
+            ESystem system;
+            int preset;
+            float request;
+            packet >> system >> preset >> request;
+            if (system < SYS_COUNT && request >= 0.0 && request <= max_coolant_per_system && preset > 0 && preset <= max_engineer_presets_number)
+                coolant_presets[system][preset-1] = request;
         }
         break;
     case CMD_DOCK:
@@ -2244,11 +2304,25 @@ void PlayerSpaceship::commandSetSystemPowerRequest(ESystem system, float power_r
     sendClientCommand(packet);
 }
 
+void PlayerSpaceship::commandSetSystemPowerPreset(ESystem system, int preset, float power_preset)
+{
+    sf::Packet packet;
+    packet << CMD_SET_SYSTEM_POWER_PRESET << system << preset << power_preset;
+    sendClientCommand(packet);
+}
+
 void PlayerSpaceship::commandSetSystemCoolantRequest(ESystem system, float coolant_request)
 {
     sf::Packet packet;
     systems[system].coolant_request = coolant_request;
     packet << CMD_SET_SYSTEM_COOLANT_REQUEST << system << coolant_request;
+    sendClientCommand(packet);
+}
+
+void PlayerSpaceship::commandSetSystemCoolantPreset(ESystem system, int preset, float coolant_preset)
+{
+    sf::Packet packet;
+    packet << CMD_SET_SYSTEM_COOLANT_PRESET << system << preset << coolant_preset;
     sendClientCommand(packet);
 }
 

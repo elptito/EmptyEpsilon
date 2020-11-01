@@ -121,6 +121,11 @@ HotkeyConfig::HotkeyConfig()
     newKey("SELF_DESTRUCT_CONFIRM", std::make_tuple("Confirmer l'auto destruction", ""));
     newKey("SELF_DESTRUCT_CANCEL", std::make_tuple("Annuler l'auto destruction", ""));
     newKey("OPEN_LOG", std::make_tuple("Ouvrir le log", ""));
+    for(int presetId=1; presetId < 10; presetId++) 
+    {
+        newKey("PRESET_APPLY" + string(presetId), std::make_tuple("Apply engineer preset " + string(presetId), "Numpad" + string(presetId)));
+        newKey("PRESET_UPDATE" + string(presetId), std::make_tuple("Update engineer preset " + string(presetId), "[shift]Numpad" + string(presetId)));
+    }
 
     newCategory("POWER_MANAGEMENT", "Gestion de l'energie");
     for(int n=0; n<SYS_COUNT; n++)

@@ -65,7 +65,8 @@ public:
     constexpr static int max_self_destruct_codes = 3;
     // Subsystem effectiveness base rates
     static float system_power_user_factor[];
-
+    constexpr static int max_engineer_presets_number = 9;
+    
     bool has_gravity_sensor;
 	bool has_electrical_sensor;
 	bool has_biological_sensor;
@@ -146,6 +147,11 @@ public:
     std::vector<CustomShipFunction> custom_functions;
 
     std::vector<sf::Vector2f> waypoints;
+
+    // Presets for engeneering screen
+    int active_engineer_presets_number;
+    float power_presets[SYS_COUNT][max_engineer_presets_number];
+    float coolant_presets[SYS_COUNT][max_engineer_presets_number];
 
     // Ship functionality
     // Capable of scanning a target
@@ -254,6 +260,9 @@ public:
     float getEnergyLevel() { return energy_level; }
     float getEnergyLevelMax() { return max_energy_level; }
 
+    void setActivePresetNumber(int amount) { if (amount >= 0 and amount <= max_engineer_presets_number) active_engineer_presets_number = amount; }
+    int getActivePresetNumber() { return active_engineer_presets_number; }
+
     void setCanScan(bool enabled) { can_scan = enabled; }
     bool getCanScan() { return can_scan; }
     void setCanHack(bool enabled) { can_hack = enabled; }
@@ -315,7 +324,9 @@ public:
     void commandMainScreenOverlay(EMainScreenOverlay mainScreen);
     void commandScan(P<SpaceObject> object);
     void commandSetSystemPowerRequest(ESystem system, float power_level);
+    void commandSetSystemPowerPreset(ESystem system, int preset, float power_level);
     void commandSetSystemCoolantRequest(ESystem system, float coolant_level);
+    void commandSetSystemCoolantPreset(ESystem system, int preset, float coolant_level);
     void commandSetSystemRepairRequest(ESystem system, float repair_level);
     void commandDock(P<SpaceObject> station);
     void commandUndock();
