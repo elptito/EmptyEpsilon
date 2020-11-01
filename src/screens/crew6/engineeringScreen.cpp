@@ -274,7 +274,7 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner, ECrewPosition crew_pos
         });
         preset_button_update->setVisible(false);
         preset_button_update->setTextSize(20);
-        preset_button_update->setIcon("gui/icons/self-destruct");
+        preset_button_update->setIcon("gui/icons/save-arrow");
         preset_button_update->setSize(25, 25);   
         presets_buttons.push_back(preset_button_update);
 
