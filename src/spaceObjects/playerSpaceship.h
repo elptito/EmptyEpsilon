@@ -234,9 +234,6 @@ public:
     float getEnergyLevel() { return energy_level; }
     float getEnergyLevelMax() { return max_energy_level; }
 
-    void setMaxCoolant(float value) { max_coolant = value; }
-    float getMaxCoolant() { return max_coolant; }
-
     void setScanProbeCount(int amount) { scan_probe_stock = std::max(0, std::min(amount, max_scan_probes)); }
     int getScanProbeCount() { return scan_probe_stock; }
     void setMaxScanProbeCount(int amount) { max_scan_probes = std::max(0, amount); scan_probe_stock = std::min(scan_probe_stock, max_scan_probes); }
