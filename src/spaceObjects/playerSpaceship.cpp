@@ -274,7 +274,6 @@ PlayerSpaceship::PlayerSpaceship()
     has_gravity_sensor = false;
 	has_electrical_sensor = false;
 	has_biological_sensor = false;
-	max_coolant = 1;
 	timer_log_intern = 0.0;
 	timer_log_extern = 0.0;
 	timer_log_docks = 0.0;
@@ -827,7 +826,6 @@ void PlayerSpaceship::setSystemCoolantRequest(ESystem system, float request)
     request = std::max(0.0f, std::min(request, std::min((float) max_coolant_per_system, max_coolant)));
     // Set coolant levels on a system.
     float total_coolant = 0;
-//    max_per_system = std::min(max_per_system,max_coolant);
     float min_per_system = 0.0;
     int cnt = 0;
     for(int n = 0; n < SYS_COUNT; n++)

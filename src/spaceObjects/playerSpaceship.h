@@ -46,7 +46,6 @@ public:
     constexpr static float system_coolant_level_change_per_second = 1.2 / 10.0; //TODO : pas du tout sur... verifier le commit cb605117c114342910b3471bb857bfef7ac3692f 
     // Total coolant
     constexpr static float max_coolant_per_system = 10.0f;
-    float max_coolant;
     // Overheat subsystem damage rate
     constexpr static float damage_per_second_on_overheat = 0.08f;
     // Base time it takes to perform an action
@@ -61,7 +60,7 @@ public:
 
     // Total coolant
     float max_coolant;
-//    float max_per_system = 10.0;
+    //float max_per_system = 10.0;
     float max_per_system;
 
     bool has_gravity_sensor;
