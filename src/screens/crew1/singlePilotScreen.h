@@ -10,7 +10,7 @@
 class GuiViewport3D;
 class GuiToggleButton;
 
-class SinglePilotScreen : public GuiOverlay, JoystickMappable
+class SinglePilotScreen : public GuiOverlay
 {
 private:
     GuiOverlay* background_crosses;
