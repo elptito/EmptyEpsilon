@@ -5,6 +5,7 @@
 #include "spaceObjects/playerSpaceship.h"
 #include "screenComponents/shipsLogControl.h"
 #include "screenComponents/customShipFunctions.h"
+#include "shipCargo.h"
 
 #include "gui/gui2_listbox.h"
 #include "gui/gui2_autolayout.h"
@@ -65,7 +66,7 @@ DroneMasterScreen::DroneMasterScreen(GuiContainer *owner)
     bottomPanel->setPosition(0, 500, ATopRight);
 
     // Dock actions
-    (new GuiLabel(topPanel, "TITLE", "Transfert des drones", 30))
+    (new GuiLabel(topPanel, "TITLE", "Transfert des astronefs", 30))
         ->addBackground()
         ->setAlignment(ACenter)
         ->setPosition(0, 0, ABottomCenter)
@@ -86,7 +87,7 @@ DroneMasterScreen::DroneMasterScreen(GuiContainer *owner)
                 Dock &dockData = my_spaceship->docks[index];
                 P<Cargo> cargo = dockData.getCargo();
 
-                my_spaceship->addToShipLog("Transfert du drone " + cargo->getCallSign(),colorConfig.log_generic,"docks");
+                my_spaceship->addToShipLog("Transfert de l'astronef " + cargo->getCallSign(),colorConfig.log_generic,"docks");
                 my_spaceship->commandMoveCargo(index);
             }
     });
@@ -105,15 +106,15 @@ DroneMasterScreen::DroneMasterScreen(GuiContainer *owner)
     action_launch->setSize(GuiElement::GuiSizeMax, 50)->setPosition(0, 50, ATopCenter);
 
     (new GuiLabel(action_launch, "SPACE", " ", 30));
-    (new GuiLabel(action_launch, "ACTION_LAUNCH_LABEL", "Lancement du drone :", 30))->setAlignment(ACenterRight)->setMargins(20,20,20,20);
-    action_launch_button = new GuiButton(action_launch, "LAUNCH_DRONE_BUTTON", "Lancer drone", [this]() {
+    (new GuiLabel(action_launch, "ACTION_LAUNCH_LABEL", "Lancer dans l'espace :", 30))->setAlignment(ACenterRight)->setMargins(20,20,20,20);
+    action_launch_button = new GuiButton(action_launch, "LAUNCH_DRONE_BUTTON", "Decollage", [this]() {
         if (my_spaceship)
             if (my_spaceship->getSystemEffectiveness(SYS_Docks) > 0)
             {
                 Dock &dockData = my_spaceship->docks[index];
                 P<Cargo> cargo = dockData.getCargo();
 
-                my_spaceship->addToShipLog("Lancement du drone " + cargo->getCallSign(),colorConfig.log_generic,"docks");
+                my_spaceship->addToShipLog("Faire decoller " + cargo->getCallSign(),colorConfig.log_generic,"docks");
                 my_spaceship->commandLaunchCargo(index);
             }
     });
@@ -154,24 +155,25 @@ DroneMasterScreen::DroneMasterScreen(GuiContainer *owner)
     weapons_layout_label -> setSize(GuiElement::GuiSizeMax, 40);
     (new GuiLabel(weapons_layout_label, "", "Missile", 20));
     (new GuiLabel(weapons_layout_label, "", "Station", 20));
-    (new GuiLabel(weapons_layout_label, "", "Drone", 20));
+    (new GuiLabel(weapons_layout_label, "", "Astronef", 20));
     (new GuiLabel(weapons_layout_label, "", " ", 20));
     (new GuiLabel(weapons_layout_label, "", " ", 20));
 
-    for(int n=0; n<MW_Count; n++)
+    int n=0;
+    for(; n<MW_Count; n++)
     {
 //        weapons_layout[n] = new GuiElement(table_weapons, "WEAPONS_LAYOUT");
-        weapons_layout[n] = new GuiAutoLayout(table_weapons, "WEAPONS_LAYOUT", GuiAutoLayout::LayoutVerticalColumns);
+        weapons_layout.push_back(new GuiAutoLayout(table_weapons, "WEAPONS_LAYOUT", GuiAutoLayout::LayoutVerticalColumns));
         weapons_layout[n]->setSize(GuiElement::GuiSizeMax, 40);
 
         (new GuiLabel(weapons_layout[n], "", getMissileWeaponName(EMissileWeapons(n)), 20))->setSize(75, 30);
 
-        weapons_stock_ship[n] = new GuiLabel(weapons_layout[n],"","0/20",20);
+        weapons_stock_ship.push_back(new GuiLabel(weapons_layout[n],"","0/20",20));
         weapons_stock_ship[n]->setPosition(75,0)->setSize(75, 30);
-        weapons_stock_cargo[n] = new GuiLabel(weapons_layout[n],"","0/20",20);
+        weapons_stock_cargo.push_back(new GuiLabel(weapons_layout[n],"","0/20",20));
         weapons_stock_cargo[n]->setPosition(150,0)->setSize(75, 30);
 
-        weapons_stock_p1[n] = new GuiButton(weapons_layout[n],"","+ 1", [this, n]() {
+        weapons_stock_p1.push_back(new GuiButton(weapons_layout[n],"","+ 1", [this, n]() {
             if (my_spaceship)
             {
                 Dock &dockData = my_spaceship->docks[index];
@@ -188,19 +190,19 @@ DroneMasterScreen::DroneMasterScreen(GuiContainer *owner)
 
                 if (cargo->getWeaponStorageMax(EMissileWeapons(n)) == cargo->getWeaponStorage(EMissileWeapons(n)))
                 {
-                    my_spaceship->addToShipLog("Transfert de missile impossible. Stock maximum dans le drone",colorConfig.log_generic,"docks");
+                    my_spaceship->addToShipLog("Transfert de missile impossible. Stock maximum dans l'astronef",colorConfig.log_generic,"docks");
                     return;
                 }
 
-                my_spaceship->addToShipLog("Transfert de 1 " + getMissileWeaponName(EMissileWeapons(n)) + " Vers le drone",colorConfig.log_generic,"docks");
+                my_spaceship->addToShipLog("Transfert de 1 " + getMissileWeaponName(EMissileWeapons(n)) + " Vers l'astronef",colorConfig.log_generic,"docks");
 
                 my_spaceship->weapon_storage[n] -= 1;
                 cargo->setWeaponStorage(EMissileWeapons(n), cargo->getWeaponStorage(EMissileWeapons(n)) + 1);
             }
-        });
+        }));
         weapons_stock_p1[n]->setSize(75, 40);
 
-        weapons_stock_m1[n] = new GuiButton(weapons_layout[n],"","- 1", [this,n]() {
+        weapons_stock_m1.push_back(new GuiButton(weapons_layout[n],"","- 1", [this,n]() {
             if (my_spaceship)
             {
                 Dock &dockData = my_spaceship->docks[index];
@@ -211,7 +213,7 @@ DroneMasterScreen::DroneMasterScreen(GuiContainer *owner)
 
                 if (cargo->getWeaponStorage(EMissileWeapons(n)) <= 0)
                 {
-                    my_spaceship->addToShipLog("Transfert de missile impossible. Aucun stock dans le drone",colorConfig.log_generic,"docks");
+                    my_spaceship->addToShipLog("Transfert de missile impossible. Aucun stock dans l'astronef",colorConfig.log_generic,"docks");
                     return;
                 }
 
@@ -226,16 +228,92 @@ DroneMasterScreen::DroneMasterScreen(GuiContainer *owner)
                 my_spaceship->weapon_storage[n] += 1;
                 cargo->setWeaponStorage(EMissileWeapons(n), cargo->getWeaponStorage(EMissileWeapons(n)) - 1);
             }
-        });
+        }));
         weapons_stock_m1[n]->setSize(75, 40);
 
         (new GuiPowerDamageIndicator(weapons_stock_p1[n], "DOCKS_DPI", SYS_Docks, ACenter, my_spaceship))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
         (new GuiPowerDamageIndicator(weapons_stock_m1[n], "DOCKS_DPI", SYS_Docks, ACenter, my_spaceship))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
     }
 
+    for (auto &kv : my_spaceship->custom_weapon_storage )
+    {
+        
+        weapons_layout.push_back(new GuiAutoLayout(table_weapons, "WEAPONS_LAYOUT", GuiAutoLayout::LayoutVerticalColumns));
+        weapons_layout[n]->setSize(GuiElement::GuiSizeMax, 40);
+
+        (new GuiLabel(weapons_layout[n], "", getMissileWeaponName(kv.first), 20))->setSize(75, 30);
+
+        weapons_stock_ship.push_back(new GuiLabel(weapons_layout[n],"","0/20",20));
+        weapons_stock_ship[n]->setPosition(75,0)->setSize(75, 30);
+        weapons_stock_cargo.push_back(new GuiLabel(weapons_layout[n],"","0/20",20));
+        weapons_stock_cargo[n]->setPosition(150,0)->setSize(75, 30);
+
+        weapons_stock_p1.push_back(new GuiButton(weapons_layout[n],"","+ 1", [this, kv]() {
+            if (my_spaceship)
+            {
+                Dock &dockData = my_spaceship->docks[index];
+                P<Cargo> cargo = dockData.getCargo();
+
+                if (my_spaceship->getSystemEffectiveness(SYS_Docks) <= 0)
+                    return;
+
+                if (my_spaceship->custom_weapon_storage[kv.first] <= 0)
+                {
+                    my_spaceship->addToShipLog("Transfert de missile impossible. Aucun stock dans la station",colorConfig.log_generic,"docks");
+                    return;
+                }
+
+                if (cargo->getCustomWeaponStorageMax(kv.first) == cargo->getCustomWeaponStorage(kv.first))
+                {
+                    my_spaceship->addToShipLog("Transfert de missile impossible. Stock maximum dans l'astronef",colorConfig.log_generic,"docks");
+                    return;
+                }
+
+                my_spaceship->addToShipLog("Transfert de 1 " + getMissileWeaponName(kv.first) + " Vers l'astronef",colorConfig.log_generic,"docks");
+
+                my_spaceship->custom_weapon_storage[kv.first] -= 1;
+                cargo->setCustomWeaponStorage(kv.first, cargo->getCustomWeaponStorage(kv.first) + 1);
+            }
+        }));
+        weapons_stock_p1[n]->setSize(75, 40);
+
+        weapons_stock_m1.push_back(new GuiButton(weapons_layout[n],"","- 1", [this,kv]() {
+            if (my_spaceship)
+            {
+                Dock &dockData = my_spaceship->docks[index];
+                P<Cargo> cargo = dockData.getCargo();
+
+                if (my_spaceship->getSystemEffectiveness(SYS_Docks) <= 0)
+                    return;
+
+                if (cargo->getCustomWeaponStorage(kv.first) <= 0)
+                {
+                    my_spaceship->addToShipLog("Transfert de missile impossible. Aucun stock dans l'astronef",colorConfig.log_generic,"docks");
+                    return;
+                }
+
+                if (my_spaceship->custom_weapon_storage[kv.first] == my_spaceship->custom_weapon_storage_max[kv.first])
+                {
+                    my_spaceship->addToShipLog("Transfert de missile impossible. Stock maximum dans la station",colorConfig.log_generic,"docks");
+                    return;
+                }
+
+                my_spaceship->addToShipLog("Transfert de 1 " + getMissileWeaponName(kv.first) + " vers la station",colorConfig.log_generic,"docks");
+
+                my_spaceship->custom_weapon_storage[kv.first] += 1;
+                cargo->setCustomWeaponStorage(kv.first, cargo->getCustomWeaponStorage(kv.first) - 1);
+            }
+        }));
+        weapons_stock_m1[n]->setSize(75, 40);
+
+        (new GuiPowerDamageIndicator(weapons_stock_p1[n], "DOCKS_DPI", SYS_Docks, ACenter, my_spaceship))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+        (new GuiPowerDamageIndicator(weapons_stock_m1[n], "DOCKS_DPI", SYS_Docks, ACenter, my_spaceship))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+        n++;
+    }
+
     (new GuiLabel(bottomPanel, "SPACE", " ", 30))->setSize(GuiElement::GuiSizeMax, 50);
 
-    droneTitle = new GuiLabel(bottomPanel, "DRONE_TITLE", "Drone x", 30);
+    droneTitle = new GuiLabel(bottomPanel, "DRONE_TITLE", "Astronef x", 30);
     droneTitle->addBackground()
         ->setAlignment(ACenter)
         ->setPosition(0, 0, ATopCenter)
@@ -295,7 +373,8 @@ void DroneMasterScreen::selectDock(int index)
     auto &dockData = my_spaceship->docks[index];
     action_move->setVisible(true);
     action_launch->setVisible(dockData.dock_type == Dock_Launcher);
-    action_energy->setVisible(dockData.dock_type == Dock_Energy);
+    action_energy->setVisible((dockData.dock_type == Dock_Energy) || (dockData.dock_type == Dock_Maintenance));
+    //action_energy->setVisible(dockData.dock_type == Dock_Energy);
     action_weapons->setVisible(dockData.dock_type == Dock_Weapons);
 }
 
@@ -366,7 +445,13 @@ void DroneMasterScreen::displayDroneDetails(Dock &dockData)
     P<Cargo> cargo = dockData.getCargo();
 
     droneTitle->setVisible(true);
-    droneTitle->setText("Drone " + cargo->getCallSign());
+
+    P<ShipCargo> shipCargo = cargo;
+    if(shipCargo)
+    {
+        std::string type = (ShipTemplate::TemplateType::Drone==shipCargo->getTemplate()->getType()) ? "Drone " : "Vaisseau ";
+        droneTitle->setText(type + cargo->getCallSign());
+    }
 
     unsigned int cnt = 0;
     for(std::tuple<string, string, string> e : cargo->Cargo::getEntries())
@@ -412,12 +497,39 @@ void DroneMasterScreen::displayDroneDetails(Dock &dockData)
     energy_bar->setRange(cargo->getMinEnergy(), cargo->getMaxEnergy());
     energy_slider->setRange(cargo->getMinEnergy(), cargo->getMaxEnergy());
     energy_slider->setValue(dockData.energy_request);
-    for(int n = 0; n < MW_Count; n++)
+    int n = 0;
+    for(; n < MW_Count; n++)
     {
+        if(cargo->getWeaponStorageMax(EMissileWeapons(n)) <= 0)
+        {
+            weapons_layout[n]->hide();
+        }
+        else
+        {
+            weapons_layout[n]->show();
+        }
         weapons_stock_cargo[n]->setText(string(cargo->getWeaponStorage(EMissileWeapons(n))) + " / " + string(cargo->getWeaponStorageMax(EMissileWeapons(n))));
         weapons_stock_ship[n]->setText(string(my_spaceship->getWeaponStorage(EMissileWeapons(n))) + " / " + string(my_spaceship->getWeaponStorageMax(EMissileWeapons(n))));
         weapons_stock_m1[n]->setEnable(cargo->getWeaponStorageMax(EMissileWeapons(n)) > 0 && my_spaceship->getWeaponStorageMax(EMissileWeapons(n)) > 0);
         weapons_stock_p1[n]->setEnable(cargo->getWeaponStorageMax(EMissileWeapons(n)) > 0 && my_spaceship->getWeaponStorageMax(EMissileWeapons(n)) > 0);
     }
+
+    for (auto &kv : my_spaceship->custom_weapon_storage )
+    {
+        if(cargo->getCustomWeaponStorageMax(kv.first) <= 0)
+        {
+            weapons_layout[n]->hide();
+        }
+        else
+        {
+            weapons_layout[n]->show();
+        }
+        weapons_stock_cargo[n]->setText(string(cargo->getCustomWeaponStorage(kv.first)) + " / " + string(cargo->getCustomWeaponStorageMax(kv.first)));
+        weapons_stock_ship[n]->setText(string(my_spaceship->getCustomWeaponStorage(kv.first)) + " / " + string(my_spaceship->getCustomWeaponStorageMax(kv.first)));
+        weapons_stock_m1[n]->setEnable(cargo->getCustomWeaponStorageMax(kv.first) > 0 && my_spaceship->getCustomWeaponStorageMax(kv.first) > 0);
+        weapons_stock_p1[n]->setEnable(cargo->getCustomWeaponStorageMax(kv.first) > 0 && my_spaceship->getCustomWeaponStorageMax(kv.first) > 0);
+        n++;
+    }
+
     model->setModel(cargo->getModel());
 }

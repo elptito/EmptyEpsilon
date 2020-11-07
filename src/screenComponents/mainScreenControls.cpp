@@ -92,7 +92,7 @@ GuiMainScreenControls::GuiMainScreenControls(GuiContainer* owner)
     tactical_button = buttons.back();
 
     // Long-range radar button.
-    buttons.push_back(new GuiButton(this, "MAIN_SCREEN_LONG_RANGE_BUTTON", "Analyste", [this]()
+    buttons.push_back(new GuiButton(this, "MAIN_SCREEN_LONG_RANGE_BUTTON", "Auspex CP", [this]()
     {
         if (my_spaceship)
         {
@@ -103,7 +103,7 @@ GuiMainScreenControls::GuiMainScreenControls(GuiContainer* owner)
     long_range_button = buttons.back();
 
     // Global-range radar button.
-    buttons.push_back(new GuiButton(this, "MAIN_SCREEN_GLOBAL_RANGE_BUTTON", "Relais", [this]()
+    buttons.push_back(new GuiButton(this, "MAIN_SCREEN_GLOBAL_RANGE_BUTTON", "Auspex LP", [this]()
     {
         if (my_spaceship)
         {

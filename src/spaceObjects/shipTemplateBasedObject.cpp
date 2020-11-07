@@ -36,6 +36,8 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(ShipTemplateBasedObject, SpaceObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, getShieldMax);
     /// Set the current amount of shields.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, setShields);
+    /// Sets by how much the shields recharge over time for all shields. Default value is 0.3. Value is a float.
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, setShieldRechargeRate);
     /// Set the maximum shield level. Note that this does low the current shield level when the max becomes lower, but it does not increase the shield level.
     /// A seperate call to setShield is needed for that.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, setShieldsMax);
@@ -69,6 +71,9 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(ShipTemplateBasedObject, SpaceObject)
 
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, setRotationSpeed);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, getRotationSpeed);
+
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, setSystemDamageRatio);//multiplies the damage applied to systems when hit
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, setSystemDamageHullThreshold);//if the hull has a higher percentage than this, no damage to systems occur.
 }
 
 ShipTemplateBasedObject::ShipTemplateBasedObject(float collision_range, string multiplayer_name, float multiplayer_significant_range)
@@ -115,6 +120,15 @@ ShipTemplateBasedObject::ShipTemplateBasedObject(float collision_range, string m
 
     rotation_speed = 0.0;
     registerMemberReplication(&rotation_speed);
+
+    system_damage_ratio = 1.0f;
+    registerMemberReplication(&system_damage_ratio);
+
+    system_damage_hull_threshold = 0.0f;
+    registerMemberReplication(&system_damage_hull_threshold);
+
+    shield_recharge_rate = 0.3f;
+    registerMemberReplication(&shield_recharge_rate);
 }
 
 void ShipTemplateBasedObject::drawShieldsOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, float sprite_scale, bool show_levels)
@@ -310,7 +324,7 @@ float ShipTemplateBasedObject::getShieldDamageFactor(DamageInfo& info, int shiel
 
 float ShipTemplateBasedObject::getShieldRechargeRate(int shield_index)
 {
-    return 0.3;
+    return shield_recharge_rate;
 }
 
 void ShipTemplateBasedObject::setTemplate(string template_name)
@@ -325,6 +339,7 @@ void ShipTemplateBasedObject::setTemplate(string template_name)
 
     hull_strength = hull_max = ship_template->hull;
     shield_count = ship_template->shield_count;
+    shield_recharge_rate = ship_template->shield_recharge_rate;
     for(int n=0; n<shield_count; n++)
         shield_level[n] = shield_max[n] = ship_template->shield_level[n];
 
@@ -337,6 +352,9 @@ void ShipTemplateBasedObject::setTemplate(string template_name)
 
     ship_template->setCollisionData(this);
     model_info.setData(ship_template->model_data);
+
+    system_damage_ratio = ship_template->system_damage_ratio;
+    system_damage_hull_threshold = ship_template->system_damage_hull_threshold;
 
     //Call the virtual applyTemplateValues function so subclasses can get extra values from the ship templates.
     applyTemplateValues();

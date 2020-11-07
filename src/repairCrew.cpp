@@ -150,9 +150,12 @@ void RepairCrew::update(float delta)
     if (position.x < -0.5)
     {
         ship->ship_template->interiorSize();
-        int n=irandom(0, ship->ship_template->rooms.size() - 1);
-        position = sf::Vector2f(ship->ship_template->rooms[n].position + sf::Vector2i(irandom(0, ship->ship_template->rooms[n].size.x - 1), irandom(0, ship->ship_template->rooms[n].size.y - 1)));
-        target_position = sf::Vector2i(position);
+        if(ship->ship_template->rooms.size() != 0)
+        {
+            int n=irandom(0, ship->ship_template->rooms.size() - 1);
+            position = sf::Vector2f(ship->ship_template->rooms[n].position + sf::Vector2i(irandom(0, ship->ship_template->rooms[n].size.x - 1), irandom(0, ship->ship_template->rooms[n].size.y - 1)));
+            target_position = sf::Vector2i(position);
+        }
     }
 
     action_delay -= delta;

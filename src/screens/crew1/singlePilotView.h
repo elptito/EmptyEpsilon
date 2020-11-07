@@ -17,6 +17,7 @@ class GuiDockingButton;
 class GuiShieldsEnableButton;
 class GuiCustomShipFunctions;
 class AimLockButton;
+class GuiLandingButton;
 
 class SinglePilotView : public GuiElement
 {
@@ -40,9 +41,11 @@ private:
     GuiMissileTubeControls* tube_controls;
     GuiImpulseControls* impulse_controls;
     GuiDockingButton* docking_button;
+    GuiLandingButton* landing_button;
     GuiShieldsEnableButton* shields_enable_button;
     GuiCustomShipFunctions* custom_ship_functions;
     AimLockButton* lock_aim;
+    GuiToggleButton* lock_fire;
 
 public:
     SinglePilotView(GuiContainer* owner, P<PlayerSpaceship> targetSpaceship);

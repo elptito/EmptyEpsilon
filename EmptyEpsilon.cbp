@@ -711,6 +711,8 @@
 		<Unit filename="src/screenComponents/warpControls.h" />
 		<Unit filename="src/screens/cinematicViewScreen.cpp" />
 		<Unit filename="src/screens/cinematicViewScreen.h" />
+		<Unit filename="src/screens/crew1/fighterPilotView.cpp" />
+		<Unit filename="src/screens/crew1/fighterPilotView.h" />
 		<Unit filename="src/screens/crew1/singlePilotScreen.cpp" />
 		<Unit filename="src/screens/crew1/singlePilotScreen.h" />
 		<Unit filename="src/screens/crew1/singlePilotView.cpp" />
@@ -843,9 +845,6 @@
 		<Unit filename="src/tutorialGame.cpp" />
 		<Unit filename="src/tutorialGame.h" />
 		<Extensions>
-			<code_completion />
-			<envvars />
-			<debugger />
 			<lib_finder disable_auto="1" />
 		</Extensions>
 	</Project>

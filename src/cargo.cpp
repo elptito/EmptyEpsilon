@@ -10,6 +10,14 @@ Cargo::Cargo(string multiplayerClassIdentifier) : MultiplayerObject(multiplayerC
         registerMemberReplication(&weapon_storage[n]);
         registerMemberReplication(&weapon_storage_max[n]);
     }
+
+    for(auto &kv : CustomMissileWeaponRegistry::getCustomMissileWeapons())
+    {
+        custom_weapon_storage[kv.first] = 0;
+        custom_weapon_storage_max[kv.first] = 0;
+        registerMemberReplication(&custom_weapon_storage[kv.first]);
+        registerMemberReplication(&custom_weapon_storage_max[kv.first]);
+    }
 }
 
 Cargo::Entries Cargo::getEntries()
@@ -20,6 +28,7 @@ Cargo::Entries Cargo::getEntries()
     //result.push_back(std::make_tuple("gui/icons/hull", "carlingue", string(int(100 * getHealth() / getMaxHealth())) + "%"));
 
     for(int n = 0; n < MW_Count; n++)
+    {
         if (weapon_storage_max[n] > 0)
         {
             string label = " ";
@@ -56,6 +65,46 @@ Cargo::Entries Cargo::getEntries()
             }
             result.push_back(std::make_tuple(icon, label, string(weapon_storage[n]) + "/" + string(weapon_storage_max[n])));
         }
+    }
+
+    for(auto& kv : custom_weapon_storage)
+    {
+        //BAD : Copy pasta, to rewrite
+        string label = " ";
+        string icon = " ";
+        if(custom_weapon_storage_max[kv.first] >0)
+        {
+            label = kv.first;
+            switch(CustomMissileWeaponRegistry::getMissileWeapon(kv.first).basetype)
+            {
+            case MW_None:
+                label = "-";
+                break;
+            case MW_Homing:
+                icon = "gui/icons/weapon-homing.png";
+                break;
+            case MW_Nuke:
+                icon = "gui/icons/weapon-nuke.png";
+                break;
+            case MW_Mine:
+                icon = "gui/icons/weapon-mine.png";
+                break;
+            case MW_EMP:
+                icon = "gui/icons/weapon-emp.png";
+                break;
+            case MW_HVLI:
+                icon = "gui/icons/weapon-hvli.png";
+                break;
+            default:
+                label = "UNK Custo : " + string(kv.first);
+                icon = " ";
+                break;
+            }
+        result.push_back(std::make_tuple(icon, label, string(kv.second) + "/" + string(custom_weapon_storage_max[kv.first])));
+        }
+        
+    }
+
 
     return result;
 }

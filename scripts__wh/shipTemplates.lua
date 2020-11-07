@@ -13,11 +13,21 @@ These are:
 Player ships are in general large frigates to small corvette class
 --]]
 require("shipTemplates_Stations.lua")
+---[[Ajouts 40k
+require("shipTemplates_VaisseauxLegers.lua")
+require("shipTemplates_Fregates.lua")
+require("shipTemplates_Escorteurs.lua")
+require("shipTemplates_CroiseursLegers.lua")
+require("shipTemplates_Croiseurs.lua")
+require("shipTemplates_Cuirasses.lua")
+require("shipTemplates_Capitaux.lua")
+require("shipTemplates_Autres.lua")
+require("shipTemplates_Jouables.lua")
 ---[[Until these are ready, they are disabled
-require("shipTemplates_Drones.lua")
-require("shipTemplates_StarFighters.lua")
+---require("shipTemplates_Drones.lua")
+---require("shipTemplates_StarFighters.lua")
 require("shipTemplates_Frigates.lua")
-require("shipTemplates_Corvette.lua")
+require("shipTemplates_Corvettes.lua")
 require("shipTemplates_Dreadnaught.lua")
 --]]
 --For now, we add our old ship templates as well. These should be removed at some point.

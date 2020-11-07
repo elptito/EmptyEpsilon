@@ -48,7 +48,8 @@ void Asteroid::draw3D()
     shader->setParameter("specularMap", *textureManager.getTexture("Astroid_" + string(model_number) + "_s.png"));
     sf::Shader::bind(shader);
     Mesh* m = Mesh::getMesh("Astroid_" + string(model_number) + ".model");
-    m->render();
+    if(m)
+        m->render();
 #endif//FEATURE_3D_RENDERING
 }
 
@@ -138,7 +139,8 @@ void VisualAsteroid::draw3D()
     shader->setParameter("specularMap", *textureManager.getTexture("Astroid_" + string(model_number) + "_s.png"));
     sf::Shader::bind(shader);
     Mesh* m = Mesh::getMesh("Astroid_" + string(model_number) + ".model");
-    m->render();
+    if(m)
+        m->render();
 #endif//FEATURE_3D_RENDERING
 }
 

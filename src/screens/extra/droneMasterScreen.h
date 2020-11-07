@@ -51,11 +51,11 @@ class DroneMasterScreen : public GuiOverlay
     GuiAutoLayout *weapons_layout_label;
 
     GuiAutoLayout *weapons_layout_p1;
-    GuiAutoLayout* weapons_layout[MW_Count];
-    GuiLabel* weapons_stock_ship[MW_Count];
-    GuiLabel* weapons_stock_cargo[MW_Count];
-    GuiButton* weapons_stock_p1[MW_Count];
-    GuiButton* weapons_stock_m1[MW_Count];
+    std::vector<GuiAutoLayout*> weapons_layout;
+    std::vector<GuiLabel*> weapons_stock_ship;
+    std::vector<GuiLabel*> weapons_stock_cargo;
+    std::vector<GuiButton*> weapons_stock_p1;
+    std::vector<GuiButton*> weapons_stock_m1;
 
     GuiAutoLayout* dronePanel_col1;
     GuiAutoLayout* dronePanel_col2;

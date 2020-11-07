@@ -105,7 +105,7 @@ DockMasterScreen::DockMasterScreen(GuiContainer *owner)
     action_empty_button->setSize(COLUMN_WIDTH, 40);
     (new GuiPowerDamageIndicator(action_move_button, "DOCKS_DPI", SYS_Docks, ATopCenter, my_spaceship))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
-    droneTitle = new GuiLabel(topPanel, "DRONE_TITLE", "Drone x", 30);
+    droneTitle = new GuiLabel(topPanel, "DRONE_TITLE", "Astronef x", 30);
     droneTitle->addBackground()
         ->setAlignment(ACenter)
         ->setPosition(0, 0, ATopCenter)

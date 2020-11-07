@@ -93,7 +93,8 @@ void ModelInfo::renderShield(float alpha)
     glRotatef(engine->getElapsedTime() * 5, 0, 0, 1);
     glScalef(data->radius * 1.2, data->radius * 1.2, data->radius * 1.2);
     Mesh* m = Mesh::getMesh("sphere.obj");
-    m->render();
+    if(m)
+        m->render();
     glPopMatrix();
 #endif//FEATURE_3D_RENDERING
 }
@@ -112,7 +113,8 @@ void ModelInfo::renderShield(float alpha, float angle)
     glRotatef(engine->getElapsedTime() * 5, 1, 0, 0);
     glScalef(data->radius * 1.2, data->radius * 1.2, data->radius * 1.2);
     Mesh* m = Mesh::getMesh("half_sphere.obj");
-    m->render();
+    if(m)
+        m->render();
     glPopMatrix();
 #endif//FEATURE_3D_RENDERING
 }

@@ -116,6 +116,4 @@ sf::Vector2f TargetsContainer::getWaypointPosition()
 {
     if (my_spaceship && waypoint_selection_index >= 0)
         return waypoint_selection_position;
-    else 
-        return sf::Vector2f();
 }

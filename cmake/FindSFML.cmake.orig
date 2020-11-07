@@ -150,7 +150,7 @@ foreach(FIND_SFML_COMPONENT ${SFML_FIND_COMPONENTS})
 
         # dynamic release library
         find_library(SFML_${FIND_SFML_COMPONENT_UPPER}_LIBRARY_DYNAMIC_RELEASE
-                     NAMES ${FIND_SFML_COMPONENT_NAME}
+                     NAMES ${FIND_SFML_COMPONENT_NAME} ${FIND_SFML_COMPONENT_NAME}-2
                      PATH_SUFFIXES lib64 lib lib/${CMAKE_LIBRARY_ARCHITECTURE}
                      PATHS ${FIND_SFML_PATHS})
 

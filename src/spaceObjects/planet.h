@@ -19,6 +19,7 @@ public:
     virtual void update(float delta) override;
     virtual void collide(Collisionable* target, float force) override;
     virtual bool canBeDockedBy(P<SpaceObject> obj) { return true; }
+    virtual bool canBeLandedOn(P<SpaceObject> obj) { return false; }
 
     void setPlanetAtmosphereColor(float r, float g, float b);
     void setPlanetAtmosphereTexture(string texture_name);

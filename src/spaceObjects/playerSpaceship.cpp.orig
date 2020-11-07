@@ -11,28 +11,28 @@
 // PlayerSpaceship are ships controlled by a player crew.
 REGISTER_SCRIPT_SUBCLASS(PlayerSpaceship, SpaceShip)
 {
-    /// Returns the sf::Vector2f of a specific waypoint set by this ship.
-    /// Takes the index of the waypoint as its parameter.
+    // Returns the sf::Vector2f of a specific waypoint set by this ship.
+    // Takes the index of the waypoint as its parameter.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getWaypoint);
-    /// Returns the total number of this ship's active waypoints.
+    // Returns the total number of this ship's active waypoints.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getWaypointCount);
-    /// Returns the ship's EAlertLevel.
+    // Returns the ship's EAlertLevel.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getAlertLevel);
-    /// Sets whether this ship's shields are raised or lowered.
-    /// Takes a Boolean value.
+    // Sets whether this ship's shields are raised or lowered.
+    // Takes a Boolean value.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setShieldsActive);
-    /// Adds a message to the ship's log. Takes a string as the message and a
-    /// sf::Color.
+    // Adds a message to the ship's log. Takes a string as the message and a
+    // sf::Color.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, addToShipLog);
-    /// Move all players connected to this ship to the same stations on a
-    /// different PlayerSpaceship. If the target isn't a PlayerSpaceship, this
-    /// function does nothing.
-    /// This can be used in scenarios to change the crew's ship.
+    // Move all players connected to this ship to the same stations on a
+    // different PlayerSpaceship. If the target isn't a PlayerSpaceship, this
+    // function does nothing.
+    // This can be used in scenarios to change the crew's ship.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, transferPlayersToShip);
-    /// Transfers only the crew members who fill a specific station to another
-    /// PlayerSpaceship.
+    // Transfers only the crew members who fill a specific station to another
+    // PlayerSpaceship.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, transferPlayersAtPositionToShip);
-    /// Returns true if a station is occupied by a player, and false if not.
+    // Returns true if a station is occupied by a player, and false if not.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, hasPlayerAtPosition);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setTexture);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setTextureColor);
@@ -89,7 +89,6 @@ REGISTER_SCRIPT_SUBCLASS(PlayerSpaceship, SpaceShip)
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandLoadTube);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandUnloadTube);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandFireTube);
-    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandFireTubeAtTarget);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetShields);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandMainScreenSetting);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandMainScreenOverlay);
@@ -99,16 +98,14 @@ REGISTER_SCRIPT_SUBCLASS(PlayerSpaceship, SpaceShip)
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandDock);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandUndock);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandAbortDock);
-    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandLand);
-    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandAbortLanding);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandOpenTextComm);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandCloseTextComm);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandAnswerCommHail);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSendComm);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSendCommPlayer);
-    /// Command repair crews to automatically move to damaged subsystems.
-    /// Use this command on ships to require less player interaction, especially
-    /// when combined with setAutoCoolant/auto_coolant_enabled.
+    // Command repair crews to automatically move to damaged subsystems.
+    // Use this command on ships to require less player interaction, especially
+    // when combined with setAutoCoolant/auto_coolant_enabled.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetAutoRepair);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetBeamFrequency);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetBeamSystemTarget);
@@ -124,21 +121,19 @@ REGISTER_SCRIPT_SUBCLASS(PlayerSpaceship, SpaceShip)
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetProbe3DLink);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetAlertLevel);
 
-    /// Return the number of Engineering repair crews on the ship.
+    // Return the number of Engineering repair crews on the ship.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, getRepairCrewCount);
-    /// Set the total number of Engineering repair crews. If this value is less
-    /// than the number of repair crews, this function removes repair crews.
-    /// If the value is greater, it adds new repair crews at random locations.
+    // Set the total number of Engineering repair crews. If this value is less
+    // than the number of repair crews, this function removes repair crews.
+    // If the value is greater, it adds new repair crews at random locations.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setRepairCrewCount);
-    /// Sets whether automatic coolant distribution is enabled. This sets the
-    /// amount of coolant proportionally to the amount of heat in that system.
-    /// Use this command on ships to require less player interaction, especially
-    /// when combined with commandSetAutoRepair/auto_repair_enabled.
+    // Sets whether automatic coolant distribution is enabled. This sets the
+    // amount of coolant proportionally to the amount of heat in that system.
+    // Use this command on ships to require less player interaction, especially
+    // when combined with commandSetAutoRepair/auto_repair_enabled.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setAutoCoolant);
-    /// Set a password to join the ship.
+    // Set a password to join the ship.
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setControlCode);
-    /// Apply a rate to energy decrease. Float, default is 1. Won't affect production of energy.
-    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, setEnergyConsumptionRatio);
 }
 
 float PlayerSpaceship::system_power_user_factor[] = {
@@ -206,9 +201,6 @@ static const int16_t CMD_SET_DOCK_MOVE_TARGET = 0x0034;
 static const int16_t CMD_SET_DOCK_ENERGY_REQUEST = 0x0035;
 static const int16_t CMD_SET_AUTO_REPAIR_SYSTEM_TARGET = 0x0036;
 static const int16_t CMD_SET_DOCK_TARGET = 0x0037;
-static const int16_t CMD_LAND = 0x0038;
-static const int16_t CMD_ABORT_LANDING = 0x0039;
-static const int16_t CMD_SET_LANDING_TARGET = 0x0040;
 
 string alertLevelToString(EAlertLevel level)
 {
@@ -351,9 +343,6 @@ PlayerSpaceship::PlayerSpaceship()
         registerMemberReplication(&self_destruct_code_entry_position[n]);
         registerMemberReplication(&self_destruct_code_show_position[n]);
     }
-
-    energy_consumption_ratio = 1.0f;
-    registerMemberReplication(&energy_consumption_ratio);
 
     if (game_server)
     {
@@ -543,14 +532,7 @@ void PlayerSpaceship::update(float delta)
             useEnergy(delta * energy_shield_use_per_second);
 
         // Consume power based on subsystem requests and state.
-        {
-            float request = delta * getNetSystemEnergyUsage();
-            if(request < 0)
-            {
-                request*=energy_consumption_ratio;
-            }
-            energy_level += request;
-        }
+        energy_level += delta * getNetSystemEnergyUsage();
 
         for(int n = 0; n < SYS_COUNT; n++)
         {
@@ -749,8 +731,6 @@ void PlayerSpaceship::applyTemplateValues()
         // Set the ship's number of repair crews in Engineering from the ship's template.
         setRepairCrewCount(ship_template->repair_crew_count);
     }
-
-    energy_consumption_ratio = ship_template->energy_consumption_ratio;
 }
 
 void PlayerSpaceship::executeJump(float distance)
@@ -835,9 +815,6 @@ bool PlayerSpaceship::useEnergy(float amount)
 {
     // Try to consume an amount of energy. If it works, return true.
     // If it doesn't, return false.
-
-    amount *= energy_consumption_ratio;
-
     if (energy_level >= amount)
     {
         energy_level -= amount;
@@ -1006,12 +983,7 @@ const std::vector<PlayerSpaceship::ShipLogEntry>& PlayerSpaceship::getShipsLog(s
         return ships_log_docks;
     if (station == "science")
         return ships_log_science;
-     else
-     {
-       //FIXME OKE
-       static std::vector<PlayerSpaceship::ShipLogEntry> fixme;
-       return fixme;
-     }
+     else 
 }
 
 void PlayerSpaceship::transferPlayersToShip(P<PlayerSpaceship> other_ship)
@@ -1273,13 +1245,6 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
                 addToShipLog("Cible du docking : " + string(SpaceShip::getDockTarget()->SpaceObject::getCallSign()),sf::Color::Yellow,"intern");
         }
         break;
-    case CMD_SET_LANDING_TARGET:
-        {
-            packet >> landing_target_id;
-            if (landing_target_id != int32_t(-1))
-                addToShipLog("Cible de l'atterrissage : " + string(SpaceShip::getLandingTarget()->SpaceObject::getCallSign()),sf::Color::Yellow,"intern");
-        }
-        break;
     case CMD_LOAD_TUBE:
         {
             int8_t tube_nr;
@@ -1395,14 +1360,6 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
             addToShipLog("Procedure de dock demandee",sf::Color::Cyan,"intern");
         }
         break;
-    case CMD_LAND:
-        {
-            int32_t id;
-            packet >> id;
-            requestLanding(game_server->getObjectById(id));
-            addToShipLog("Procedure d'atterrissage",sf::Color::Cyan,"intern");
-        }
-        break;
     case CMD_UNDOCK:
         {
             requestUndock();
@@ -1413,12 +1370,6 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
         {
             abortDock();
             addToShipLog("Procedure de dedock abandonnee",sf::Color::Cyan,"intern");
-        }
-        break;
-    case CMD_ABORT_LANDING:
-        {
-            abortLanding();
-            addToShipLog("Procedure d'atterrissage abandonnee",sf::Color::Cyan,"intern");
         }
         break;
     case CMD_OPEN_TEXT_COMM:
@@ -1741,8 +1692,7 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
         break;
     case CMD_SET_DOCK_ENERGY_REQUEST:
         packet >> dockIndex;
-        if (docks[dockIndex].state == EDockState::Docked && 
-        ((docks[dockIndex].dock_type == Dock_Energy) || (docks[dockIndex].dock_type == Dock_Maintenance)) )
+        if (docks[dockIndex].state == EDockState::Docked && docks[dockIndex].dock_type == Dock_Energy)
         {
             float value;
             packet >> value;
@@ -1865,16 +1815,6 @@ void PlayerSpaceship::commandSetDockTarget(P<SpaceObject> target)
     sendClientCommand(packet);
 }
 
-void PlayerSpaceship::commandSetLandingTarget(P<SpaceObject> target)
-{
-    sf::Packet packet;
-    if (target)
-        packet << CMD_SET_LANDING_TARGET << target->getMultiplayerId();
-    else
-        packet << CMD_SET_LANDING_TARGET << int32_t(-1);
-    sendClientCommand(packet);
-}
-
 void PlayerSpaceship::commandLoadTube(int8_t tubeNumber, string missileType)
 {
     sf::Packet packet;
@@ -1894,21 +1834,6 @@ void PlayerSpaceship::commandFireTube(int8_t tubeNumber, float missile_target_an
     sf::Packet packet;
     packet << CMD_FIRE_TUBE << tubeNumber << missile_target_angle;
     sendClientCommand(packet);
-}
-
-void PlayerSpaceship::commandFireTubeAtTarget(int8_t tubeNumber, P<SpaceObject> target)
-{
-  float targetAngle = 0.0;
-  
-  if (!target || tubeNumber < 0 || tubeNumber >= getWeaponTubeCount())
-    return;
-  
-  targetAngle = weapon_tube[tubeNumber].calculateFiringSolution(target);
-  
-  if (targetAngle == std::numeric_limits<float>::infinity())
-      targetAngle = getRotation() + weapon_tube[tubeNumber].getDirection();
-    
-  commandFireTube(tubeNumber, targetAngle);
 }
 
 void PlayerSpaceship::commandSetShields(bool enabled)
@@ -1974,21 +1899,6 @@ void PlayerSpaceship::commandAbortDock()
 {
     sf::Packet packet;
     packet << CMD_ABORT_DOCK;
-    sendClientCommand(packet);
-}
-
-void PlayerSpaceship::commandLand(P<SpaceObject> object)
-{
-    if (!object) return;
-    sf::Packet packet;
-    packet << CMD_LAND << object->getMultiplayerId();
-    sendClientCommand(packet);
-}
-
-void PlayerSpaceship::commandAbortLanding()
-{
-    sf::Packet packet;
-    packet << CMD_ABORT_LANDING;
     sendClientCommand(packet);
 }
 
@@ -2265,24 +2175,6 @@ void PlayerSpaceship::drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f posit
         short_radar_radius.setOutlineThickness(3.0);
         window.draw(short_radar_radius);
     }
-}
-
-bool PlayerSpaceship::canBeLandedOn(P<SpaceObject> obj)
-{
-    if (isEnemy(obj) || !ship_template)
-        return false;
-    P<SpaceShip> ship = obj;
-    if (!ship || !ship->ship_template)
-        return false;
-    if(getMultiplayerId() == ship->getMultiplayerId())
-        return false;
-    if (ship->getFactionId() != getFactionId())
-        return false;
-    Dock* dock = Dock::findOpenForDocking(docks, max_docks_count);
-    if (!dock)
-        return false; //TODO message dans le log
-    // return ship_template->can_be_docked_by_class.count(ship->ship_template->getClass()) > 0;
-    return true;
 }
 
 string PlayerSpaceship::getExportLine()

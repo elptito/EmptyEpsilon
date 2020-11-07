@@ -1,6 +1,7 @@
 project(EmptyEpsilon)
 cmake_minimum_required(VERSION 2.8.12)
 
+
 option(ENABLE_CRASH_LOGGER "Enable the drmingw crash logging facilities" OFF)
 message(STATUS "ENABLE_CRASH_LOGGER is " ${ENABLE_CRASH_LOGGER})
 
@@ -13,7 +14,7 @@ if(NOT IS_ABSOLUTE "${SERIOUS_PROTON_DIR}")
 endif()
 
 if(CMAKE_BUILD_TYPE MATCHES Debug)
-	add_definitions(-DDEBUG)
+	add_compile_definitions(DEBUG)
 endif(CMAKE_BUILD_TYPE MATCHES Debug)
 
 if(ENABLE_CRASH_LOGGER)
@@ -55,11 +56,6 @@ if(APPLE)
 elseif(UNIX)
     # Set RESOURCE_BASE_DIR on Unix so the built binary is able to find resources
     add_definitions(-DRESOURCE_BASE_DIR="${CMAKE_INSTALL_PREFIX}/share/emptyepsilon/")
-endif()
-
-# Set minimum target macOS version
-if(APPLE)
-	set(MACOSX_DEPLOYMENT_TARGET "10.10")
 endif()
 
 # Set minimum target macOS version
@@ -159,7 +155,6 @@ set(SOURCES
 	src/screenComponents/viewport3d.cpp
 	src/screenComponents/selfDestructEntry.cpp
 	src/screenComponents/dockingButton.cpp
-    src/screenComponents/landingButton.cpp
 	src/screenComponents/shieldsEnableButton.cpp
 	src/screenComponents/selfDestructButton.cpp
 	src/screenComponents/shieldFreqencySelect.cpp
@@ -439,9 +434,6 @@ if(WIN32)
     include_directories(${DRMINGW_ROOT}/include/)
     target_link_libraries(${EXECUTABLE_NAME} exchndl)
   endif()
-elseif(ANDROID)
-  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--whole-archive ${SFML_INSTALL_PATH}/lib/${ANDROID_ABI}/libsfml-main.a -Wl,--no-whole-archive")
-  target_link_libraries(${EXECUTABLE_NAME} log android EGL)
 elseif(APPLE)
   set_target_properties(${EXECUTABLE_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/osx/MacOSXBundleInfo.plist.in)
   set_target_properties(${EXECUTABLE_NAME} PROPERTIES MACOSX_BUNDLE_ICON_FILE "${EXECUTABLE_NAME}.icns")
@@ -454,17 +446,15 @@ if(WIN32)
   execute_process(COMMAND ${CMAKE_CXX_COMPILER} -print-file-name=libstdc++-6.dll OUTPUT_VARIABLE MINGW_STDCPP_DLL OUTPUT_STRIP_TRAILING_WHITESPACE)
   execute_process(COMMAND ${CMAKE_CXX_COMPILER} -print-file-name=libgcc_s_sjlj-1.dll OUTPUT_VARIABLE MINGW_LIBGCC_DLL OUTPUT_STRIP_TRAILING_WHITESPACE)
   execute_process(COMMAND ${CMAKE_CXX_COMPILER} -print-file-name=libwinpthread-1.dll OUTPUT_VARIABLE MINGW_PTHREAD_DLL OUTPUT_STRIP_TRAILING_WHITESPACE)
-  #install(FILES ${MINGW_STDCPP_DLL} ${MINGW_LIBGCC_DLL} ${MINGW_PTHREAD_DLL} DESTINATION .)
-  install(FILES /usr/i686-w64-mingw32/bin/libgcc_s_dw2-1.dll DESTINATION .)
-  install(FILES /usr/i686-w64-mingw32/bin/libstdc++-6.dll DESTINATION .)
-  install(FILES /usr/i686-w64-mingw32/bin/libwinpthread-1.dll DESTINATION .)
-  install(FILES /usr/i686-w64-mingw32/bin/OpenAL32.dll DESTINATION .)
-  #install(FILES ${SFML_ROOT}/bin/libFLAC-8.dll DESTINATION .)
-  #install(FILES ${SFML_ROOT}/bin/libjpeg-62.dll DESTINATION .)
-  #install(FILES ${SFML_ROOT}/bin/libogg-0.dll DESTINATION .)
-  #install(FILES ${SFML_ROOT}/bin/libvorbis-0.dll DESTINATION .)
-  #install(FILES ${SFML_ROOT}/bin/libvorbisenc-2.dll DESTINATION .)
-  #install(FILES ${SFML_ROOT}/bin/libvorbisfile-3.dll DESTINATION .)
+  install(FILES ${MINGW_STDCPP_DLL} ${MINGW_LIBGCC_DLL} ${MINGW_PTHREAD_DLL} DESTINATION .)
+  install(FILES /usr/i686-w64-mingw32/lib/libwinpthread-1.dll DESTINATION .)
+  install(FILES ${SFML_ROOT}/bin/OpenAL32.dll DESTINATION .)
+  install(FILES ${SFML_ROOT}/bin/libFLAC-8.dll DESTINATION .)
+  install(FILES ${SFML_ROOT}/bin/libjpeg-62.dll DESTINATION .)
+  install(FILES ${SFML_ROOT}/bin/libogg-0.dll DESTINATION .)
+  install(FILES ${SFML_ROOT}/bin/libvorbis-0.dll DESTINATION .)
+  install(FILES ${SFML_ROOT}/bin/libvorbisenc-2.dll DESTINATION .)
+  install(FILES ${SFML_ROOT}/bin/libvorbisfile-3.dll DESTINATION .)
   install(FILES ${SFML_ROOT}/bin/sfml-audio-2.dll DESTINATION .)
   install(FILES ${SFML_ROOT}/bin/sfml-graphics-2.dll DESTINATION .)
   install(FILES ${SFML_ROOT}/bin/sfml-network-2.dll DESTINATION .)

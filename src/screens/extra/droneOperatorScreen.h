@@ -2,7 +2,7 @@
 #define DRONE_OPERATOR_SCREEN_H
 
 #include "playerInfo.h"
-#include "screens/crew1/singlePilotView.h"
+#include "screens/crew1/singlePilotScreen.h"
 
 #include "gui/gui2_overlay.h"
 
@@ -33,7 +33,7 @@ private:
     EMode mode;
     P<PlayerSpaceship> selected_drone;
 
-    SinglePilotView* single_pilot_view;
+    SinglePilotScreen* single_pilot_screen;
     GuiOverlay* background_crosses;
     GuiAutoLayout* droneSelection;
     GuiLabel* connection_label;
@@ -41,13 +41,16 @@ private:
     GuiLabel* no_drones_label;
     GuiListbox* drone_list;
     GuiCustomShipFunctions* custom_functions;
+    std::set<string> drone_and_ship_template_names;
 public:
     DroneOperatorScreen(GuiContainer* owner);
 
     virtual void onDraw(sf::RenderTarget& window);
 private:
     void disconnected();
-    bool isConnectable(P<PlayerSpaceship> ship);
+    bool isOperated(P<PlayerSpaceship> ship);
+    bool isConnectableDrone(P<PlayerSpaceship> ship);
+    bool isShip(P<PlayerSpaceship> ship);
     float getConnectionQuality(P<PlayerSpaceship> ship);
 };
 

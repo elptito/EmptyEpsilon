@@ -53,7 +53,7 @@ void ScienceDatabase::setLongDescription(string text)
 void fillDefaultDatabaseData()
 {
     P<ScienceDatabase> factionDatabase = new ScienceDatabase();
-    factionDatabase->setName("Federations");
+    factionDatabase->setName("Faction");
     for(unsigned int n=0; n<factionInfo.size(); n++)
     {
         P<ScienceDatabase> entry = factionDatabase->addEntry(factionInfo[n]->getName());
@@ -162,6 +162,13 @@ void fillDefaultDatabaseData()
             if (ship_template->weapon_storage[n] > 0)
             {
                 entry->addKeyValue("Stock " + getMissileWeaponName(EMissileWeapons(n)), string(ship_template->weapon_storage[n]));
+            }
+        }
+        for(auto& kv : ship_template->custom_weapon_storage)
+        {
+            if(kv.second > 0)
+            {
+                entry->addKeyValue("Stock " + getMissileWeaponName(kv.first), string(kv.second));
             }
         }
         if (ship_template->getDescription().length() > 0)

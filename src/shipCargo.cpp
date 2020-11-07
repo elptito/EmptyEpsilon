@@ -22,7 +22,8 @@ ShipCargo::ShipCargo() : Cargo("ShipCargo")
 ShipCargo::ShipCargo(P<ShipTemplate> ship_template) : ShipCargo()
 {
     template_name = ship_template->getName();
-    callsign = "DRN-" + gameGlobalInfo->getNextShipCallsign();
+    std::string prefix = (ship_template->getType() == ShipTemplate::TemplateType::Drone) ? "DRN-" : "SHP-";
+    callsign = prefix + gameGlobalInfo->getNextShipCallsign();
     setEnergy(ship_template->energy_storage_amount);
     hull_strength = ship_template->hull;
     has_reactor = ship_template->has_reactor;
@@ -36,6 +37,13 @@ ShipCargo::ShipCargo(P<ShipTemplate> ship_template) : ShipCargo()
         setWeaponStorage(EMissileWeapons(n), 0);
         setWeaponStorageMax(EMissileWeapons(n), ship_template->weapon_storage[n]);
     }
+    for (auto &kv : ship_template->custom_weapon_storage )
+    {
+        setCustomWeaponStorage(kv.first, kv.second);
+        setCustomWeaponStorageMax(kv.first, kv.second);
+    }
+    auto_repair_enabled=true;
+    auto_coolant_enabled=true;
 }
 
 ShipCargo::ShipCargo(P<SpaceShip> ship) : ShipCargo()
@@ -58,6 +66,20 @@ ShipCargo::ShipCargo(P<SpaceShip> ship) : ShipCargo()
     {
         setWeaponStorage(EMissileWeapons(n), ship->weapon_storage[n]);
         setWeaponStorageMax(EMissileWeapons(n), ship->weapon_storage_max[n]);
+    }
+    for (auto &kv : ship->custom_weapon_storage )
+    {
+        setCustomWeaponStorage(kv.first, kv.second);
+    }
+    for (auto &kv : ship->custom_weapon_storage_max )
+    {
+        setCustomWeaponStorageMax(kv.first, kv.second);
+    }
+    P<PlayerSpaceship> pship  = ship;
+    if(pship)
+    {
+        auto_repair_enabled=pship->auto_repair_enabled;
+        auto_coolant_enabled=pship->auto_coolant_enabled;
     }
 }
 
@@ -112,15 +134,31 @@ bool ShipCargo::onLaunch(Dock &source)
                 if (ship->hasSystem(ESystem(n)))
                     systemsCount++;
                 ship->systems[n].health = systems_health[n];
-            }
+            }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
             for (unsigned int n = 0; n < SYS_COUNT; n++)
                 if (ship->hasSystem(ESystem(n)))
                     ship->addHeat(ESystem(n), getHeat() / systemsCount);
             for(int n = 0; n < MW_Count; n++)
             {
-                ship->weapon_storage[n] = getWeaponStorage(EMissileWeapons(n));
                 ship->weapon_storage_max[n] = getWeaponStorageMax(EMissileWeapons(n));
+                //ship->weapon_storage[n] = getWeaponStorage(EMissileWeapons(n));
+                ship->weapon_storage[n] = getWeaponStorageMax(EMissileWeapons(n)); //auto recharge
+                
             }
+            
+            for (auto &kv : custom_weapon_storage_max )
+            {
+                ship->custom_weapon_storage_max[kv.first] = kv.second;
+                // auto recharge
+                ship->custom_weapon_storage[kv.first] = kv.second;
+            }
+            //for (auto &kv : custom_weapon_storage )
+            //{
+            //    ship->custom_weapon_storage[kv.first] = kv.second;
+            //}
+
+            ship->auto_coolant_enabled=auto_coolant_enabled;
+            ship->auto_repair_enabled=auto_repair_enabled;
             return true;
         }
     }

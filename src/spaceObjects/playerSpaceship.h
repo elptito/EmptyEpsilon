@@ -124,6 +124,8 @@ public:
     // Password to join a ship. Default is empty.
     string control_code;
 
+    float energy_consumption_ratio;
+
 private:
     // soundManager index of the shield object
     int shield_sound;
@@ -260,6 +262,7 @@ public:
     void commandJump(float distance);
     void commandSetTarget(P<SpaceObject> target);
     void commandSetDockTarget(P<SpaceObject> target);
+    void commandSetLandingTarget(P<SpaceObject> target);
     void commandSetScienceLink(int32_t id);
     void commandSetProbe3DLink(int32_t id);
     void commandLoadTube(int8_t tubeNumber, string missileType);
@@ -272,9 +275,11 @@ public:
     void commandScan(P<SpaceObject> object);
     void commandSetSystemPowerRequest(ESystem system, float power_level);
     void commandSetSystemCoolantRequest(ESystem system, float coolant_level);
-    void commandDock(P<SpaceObject> station);
+    void commandDock(P<SpaceObject> obj);
     void commandUndock();
     void commandAbortDock();
+    void commandLand(P<SpaceObject> obj);
+    void commandAbortLanding();
     void commandOpenTextComm(P<SpaceObject> obj);
     void commandCloseTextComm();
     void commandAnswerCommHail(bool awnser);
@@ -341,6 +346,8 @@ public:
     void setRepairCrewCount(int amount);
     EAlertLevel getAlertLevel() { return alert_level; }
 
+    void setEnergyConsumptionRatio(float ratio) { energy_consumption_ratio = ratio;}
+
     // Ship update functions
     virtual void update(float delta) override;
     virtual bool useEnergy(float amount) override;
@@ -374,6 +381,13 @@ public:
 
     // Radar function
     virtual void drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range) override;
+
+    //specific to player ship
+    /*!
+    * Check if object can accept landing from this ship
+    * \param object Object that wants to land
+    */
+    virtual bool canBeLandedOn(P<SpaceObject> obj);
 
     // Script export function
     virtual string getExportLine();

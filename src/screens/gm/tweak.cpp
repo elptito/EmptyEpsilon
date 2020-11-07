@@ -58,6 +58,8 @@ GuiObjectTweak::GuiObjectTweak(GuiContainer* owner, ETweakType tweak_type)
         list->addEntry("Systemes", "");
         pages.push_back(new GuiShipTweakOxygen(this));
         list->addEntry("Oxygene", "");
+        pages.push_back(new GuiShipTweakDock(this));
+        list->addEntry("Dock", "");
     }
 
     if (tweak_type == TW_Player)
@@ -205,6 +207,8 @@ GuiObjectTweakBase::GuiObjectTweakBase(GuiContainer* owner)
 
 void GuiObjectTweakBase::onDraw(sf::RenderTarget& window)
 {
+    if(!target)
+        return;
     hull_slider->setValue(target->hull);
 
     scanning_complexity_selector->setValue(target->scanning_complexity_value);
@@ -251,6 +255,8 @@ GuiTemplateTweak::GuiTemplateTweak(GuiContainer* owner)
     });
     heading_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
+
+
     (new GuiLabel(left_col, "", "Rotation:", 30))->setSize(GuiElement::GuiSizeMax, 50);
     rotation_slider = new GuiSlider(left_col, "", -100.0, 100.0, 0.0, [this](float value) {
         target->setRotationSpeed(value/10.0);
@@ -293,13 +299,30 @@ GuiTemplateTweak::GuiTemplateTweak(GuiContainer* owner)
        target->setCanBeDestroyed(value);
    });
    can_be_destroyed_toggle->setSize(GuiElement::GuiSizeMax, 40);
+
+    (new GuiLabel(right_col, "", "Ratio de degats aux systemes :", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    system_damage_ratio_slider = new GuiSlider(right_col, "", 0.0, 100.0, 0.0, [this](float value) {
+        target->system_damage_ratio = value / 100.0f;
+    });
+    system_damage_ratio_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
+    (new GuiLabel(right_col, "", "Min% hull avant degats systeme :", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    system_damage_hull_threshold_slider = new GuiSlider(right_col, "", 0.0, 100.0, 0.0, [this](float value) {
+        target->system_damage_hull_threshold = value / 100.0f;
+    });
+    system_damage_hull_threshold_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 }
  void GuiTemplateTweak::onDraw(sf::RenderTarget& window)
 {
-    heading_slider->setValue(target->getHeading());
-    rotation_slider->setValue(target->getRotationSpeed()*10.0);
-    hull_slider->setValue(target->hull_strength);
-    transparency_slider->setValue(target->getTransparency() * 100.0);
+    if(target)
+    {
+        heading_slider->setValue(target->getHeading());
+        rotation_slider->setValue(target->getRotationSpeed()*10.0);
+        hull_slider->setValue(target->hull_strength);
+        transparency_slider->setValue(target->getTransparency() * 100.0);
+        system_damage_ratio_slider->setValue(target->system_damage_ratio * 100.0);
+        system_damage_hull_threshold_slider->setValue(target->system_damage_hull_threshold * 100.0);
+    }
 }
 
  void GuiTemplateTweak::open(P<SpaceObject> target)
@@ -347,14 +370,23 @@ GuiShipTweakShields::GuiShipTweakShields(GuiContainer* owner)
         });
         shield_slider[n]->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
     }
+
+    (new GuiLabel(left_col, "", "Vitesse de recharge des boucliers :", 20))->setSize(GuiElement::GuiSizeMax, 30);
+    shield_recharge_slider = new GuiSlider(left_col, "", 0.0, 200, 30, [this](float value) {
+        target->shield_recharge_rate = value/100.0f;
+    });
+    shield_recharge_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 }
 
 void GuiShipTweakShields::onDraw(sf::RenderTarget& window)
 {
+    if(!target)
+        return;
     for(int n=0; n<max_shield_count; n++)
     {
         shield_slider[n]->setValue(target->shield_level[n]);
     }
+    shield_recharge_slider->setValue(target->shield_recharge_rate * 100);
 }
 
 void GuiShipTweakShields::open(P<SpaceObject> target)
@@ -371,10 +403,12 @@ void GuiShipTweakShields::open(P<SpaceObject> target)
             shield_max_slider[n]->setValue(ship->shield_max[n]);
             shield_max_slider[n]->clearSnapValues()->addSnapValue(ship->ship_template->shield_level[n], 5.0f);
         }
+        shield_recharge_slider->setValue(ship->shield_recharge_rate * 100);
+        //shield_recharge_slider->clearSnapValues()->addSnapValue(2, 0.1f);
     }
 
     if (station)
-        {
+    {
         this->target = station;
 
         for(int n = 0; n < max_shield_count; n++)
@@ -382,8 +416,13 @@ void GuiShipTweakShields::open(P<SpaceObject> target)
             shield_max_slider[n]->setValue(station->shield_max[n]);
             shield_max_slider[n]->clearSnapValues()->addSnapValue(station->ship_template->shield_level[n], 5.0f);
         }
+        shield_recharge_slider->setValue(station->shield_recharge_rate * 100);
+        //shield_recharge_slider->clearSnapValues()->addSnapValue(2, 0.1f);
+
     }
 
+        
+    
 
 }
 
@@ -491,6 +530,8 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
 }
  void GuiShipTweak::onDraw(sf::RenderTarget& window)
 {
+    if(!target)
+        return;
     jump_drive_charge_slider->setValue(target->jump_drive_charge / target->jump_drive_max_distance * 100.0);
     jump_drive_min_distance_slider->setValue(round(target->jump_drive_min_distance / 1000000)*1000);
     jump_drive_max_distance_slider->setValue(round(target->jump_drive_max_distance / 1000000)*1000);
@@ -596,7 +637,8 @@ GuiShipTweakMissileWeapons::GuiShipTweakMissileWeapons(GuiContainer* owner)
 
 void GuiShipTweakMissileWeapons::onDraw(sf::RenderTarget& window)
 {
-
+    if(!target)
+        return;
     int n = 0;
     for(auto& kv : CustomMissileWeaponRegistry::getCustomMissileWeapons())
     {
@@ -706,6 +748,8 @@ GuiShipTweakMissileTubes::GuiShipTweakMissileTubes(GuiContainer* owner)
 
 void GuiShipTweakMissileTubes::onDraw(sf::RenderTarget& window)
 {
+    if(!target)
+        return;
     direction_slider->setValue(sf::angleDifference(0.0f, target->weapon_tube[tube_index].getDirection()));
     load_time_slider->setValue(target->weapon_tube[tube_index].getLoadTimeConfig());
     for(int n=0; n<MW_Count; n++)
@@ -818,6 +862,8 @@ GuiShipTweakBeamweapons::GuiShipTweakBeamweapons(GuiContainer* owner)
 
 void GuiShipTweakBeamweapons::onDraw(sf::RenderTarget& window)
 {
+    if(!target)
+        return;
     target->drawOnRadar(window, sf::Vector2f(rect.left - 150.0f + rect.width / 2.0f, rect.top + rect.height * 0.66), 300.0f / 5000.0f, false);
 
     arc_slider->setValue(target->beam_weapons[beam_index].getArc());
@@ -932,6 +978,8 @@ GuiShipTweakSystems::GuiShipTweakSystems(GuiContainer* owner)
 
 void GuiShipTweakSystems::onDraw(sf::RenderTarget& window)
 {
+    if(!target)
+        return;
     for(int n=0; n<SYS_COUNT; n++)
     {
         system_damage[n]->setValue(target->systems[n].health);
@@ -1043,6 +1091,12 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
     });
     energy_level_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
+    (new GuiLabel(left_col, "", "Ratio de consommation d'energie:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    energy_conso_ratio_slider = new GuiSlider(left_col, "", 0.0, 200, 0.0, [this](float value) {
+        target->energy_consumption_ratio = value/100.0f;
+    });
+    energy_conso_ratio_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
     (new GuiLabel(left_col, "", "Total de Coolant:", 30))->setSize(GuiElement::GuiSizeMax, 50);
 
     max_coolant_slider = new GuiSlider(left_col, "", 0.0, 300.0, 0.0, [this](float value) {
@@ -1100,33 +1154,58 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
 //        position[n]->setSize(GuiElement::GuiSizeMax, 30);
 //    }
 
-    (new GuiLabel(right_col, "", "Ajouter un drone:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    {
+        (new GuiLabel(right_col, "", "Ajouter un drone:", 30))->setSize(GuiElement::GuiSizeMax, 50);
 
-    std::vector<string> drones_names = ShipTemplate::getTemplateNameList(ShipTemplate::Drone);
-    std::sort(drones_names.begin(), drones_names.end());
-    GuiListbox* listDronesBox = new GuiListbox(right_col, "CREATE_SHIPS", [this](int index, string value)
-    {
-        P<ShipTemplate> drone_ship_template = ShipTemplate::getTemplate(value);
-        P<SpaceShip> ship = target;
-        Dock* dock = Dock::findOpenForDocking(ship->docks, max_docks_count);
-        if (dock)
+        std::vector<string> drones_names = ShipTemplate::getTemplateNameList(ShipTemplate::Drone);
+        std::sort(drones_names.begin(), drones_names.end());
+        GuiListbox* listDronesBox = new GuiListbox(right_col, "CREATE_SHIPS", [this](int index, string value)
         {
-            P<ShipCargo> cargo = new ShipCargo(drone_ship_template);
-            dock->dock(cargo);
+            P<ShipTemplate> drone_ship_template = ShipTemplate::getTemplate(value);
+            P<SpaceShip> ship = target;
+            Dock* dock = Dock::findOpenForDocking(ship->docks, max_docks_count);
+            if (dock)
+            {
+                P<ShipCargo> cargo = new ShipCargo(drone_ship_template);
+                dock->dock(cargo);
+            }
+        });
+        listDronesBox->setTextSize(20)->setButtonHeight(30)->setPosition(-20, 20, ATopRight)->setSize(300, 200);
+        for(string drones_name : drones_names)
+        {
+            listDronesBox->addEntry(drones_name, drones_name);
         }
-    });
-    listDronesBox->setTextSize(20)->setButtonHeight(30)->setPosition(-20, 20, ATopRight)->setSize(300, 200);
-    for(string drones_name : drones_names)
-    {
-        listDronesBox->addEntry(drones_name, drones_name);
     }
+    {
+
+        (new GuiLabel(right_col, "", "Rajouter au hangar :", 30))->setSize(GuiElement::GuiSizeMax, 50);
+
+        list_ships_box = new GuiListbox(right_col, "CREATE_SHIPS2", [this](int index, string value)
+        {
+            P<ShipTemplate> drone_ship_template = ShipTemplate::getTemplate(value);
+            P<SpaceShip> ship = target;
+            Dock* dock = Dock::findOpenForDocking(ship->docks, max_docks_count);
+            if (dock)
+            {
+                P<ShipCargo> cargo = new ShipCargo(drone_ship_template);
+                dock->dock(cargo);
+            }
+        });
+        list_ships_box->setTextSize(20)->setButtonHeight(30)->setPosition(-20, 20, ATopRight)->setSize(300, 200);
+
+
+    }
+
 }
 
 void GuiShipTweakPlayer::onDraw(sf::RenderTarget& window)
 {
+    if(!target)
+        return;
     // Update the ship's energy level.
     energy_level_slider->setValue(target->energy_level);
     max_energy_level_slider->setValue(target->max_energy_level);
+    energy_conso_ratio_slider->setValue(target->energy_consumption_ratio * 100);
 
     // Update Max of coolant level
     max_coolant_slider->setValue(target->max_coolant * 100.0);
@@ -1156,7 +1235,159 @@ void GuiShipTweakPlayer::open(P<SpaceObject> target)
 
         auto_repair_toogle->setValue(player->auto_repair_enabled);
         auto_coolant_toogle->setValue(player->auto_coolant_enabled);
+        if(!list_ships_box->entryCount())
+        {
+            for (auto &droneTemplate : player->ship_template->drones) // access by reference to avoid copying
+            {
+                list_ships_box->addEntry(droneTemplate.template_name,droneTemplate.template_name);
+            }
+        }
+        energy_conso_ratio_slider->setValue(player->energy_consumption_ratio * 100);
     }
+}
+
+GuiShipTweakDock::GuiShipTweakDock(GuiContainer* owner)
+: GuiTweakPage(owner)
+{
+    // Add two columns, hangar and flying.
+    GuiAutoLayout* dock_col = new GuiAutoLayout(this, "DOCK_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    dock_col->setPosition(50, 30, ATopLeft)->setSize(80, GuiElement::GuiSizeMax);
+    GuiAutoLayout* type_col = new GuiAutoLayout(this, "DOCK_TYPE_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    type_col->setPosition(130, 30, ATopLeft)->setSize(170, GuiElement::GuiSizeMax);
+    GuiAutoLayout* content_col = new GuiAutoLayout(this, "DOCK_TYPE_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    content_col->setPosition(300, 30, ATopLeft)->setSize(150, GuiElement::GuiSizeMax);
+
+
+    GuiAutoLayout* envol_col = new GuiAutoLayout(this, "RIGHT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    envol_col->setPosition(-25, 25, ATopRight)->setSize(300, GuiElement::GuiSizeMax);
+
+    (new GuiLabel(dock_col, "", "Dock :", 30))->setSize(GuiElement::GuiSizeMax, 40);
+    (new GuiLabel(envol_col, "", "Recall :", 30))->setSize(GuiElement::GuiSizeMax, 40);
+    (new GuiLabel(type_col, "", "", 30))->setSize(GuiElement::GuiSizeMax, 40);
+    (new GuiLabel(content_col, "", "", 30))->setSize(GuiElement::GuiSizeMax, 40);
+
+    for (int n = 0; n < max_docks_count; n++)
+    {
+        {
+            GuiLabel *label = new GuiLabel(dock_col, "", "Dock" + std::to_string(n+1), 20);
+            label->setSize(GuiElement::GuiSizeMax, 40);
+        }
+        {
+            type_selector.push_back(new GuiSelector(type_col, "", [this, n](int index, string value)
+            {
+                target->docks[n].dock_type = getDockTypeEnum(value);
+            }));
+
+            type_selector[n]->setSize(GuiElement::GuiSizeMax, 40);
+            int nbDockTypes = 0;
+            for(; nbDockTypes < EDockType::nbElems; nbDockTypes++)
+            {
+                type_selector[n]->addEntry(getDockTypeName((EDockType)nbDockTypes), getDockTypeName((EDockType)nbDockTypes));
+            }
+            type_selector[n]->setSelectionIndex(nbDockTypes-1);
+
+        }
+
+        {
+
+            content_button.push_back(new GuiButton(content_col, "", "", [this, n]() {
+                if(target->docks[n].getCargo())
+                {
+                    target->docks[n].getCargo()->onLaunch(target->docks[n]);
+                    target->docks[n].getCargo()->destroy();
+                    target->docks[n].empty();
+                }
+            }));
+            content_button[n]->setSize(150, 40);
+        }
+
+    }
+    list_envol_box = new GuiListbox(envol_col, "ENVOL", [this](int index, string value)
+    {
+        P<SpaceShip> ship = gameGlobalInfo->getPlayerShip(value.toInt());
+        if(ship)
+        {
+            Dock* dock = Dock::findOpenForDocking(target->docks, max_docks_count);
+            if (dock)
+            {
+                P<ShipCargo> cargo = new ShipCargo(ship); //should keep current parameters
+                dock->dock(cargo);
+                ship->destroy();
+            }
+        }
+    });
+    //TODO : selectionner ça puis un dock pour choisir le dock
+    //list_envol_box->setTextSize(20)->setButtonHeight(30)->setPosition(-20, 20, ATopRight)->setSize(300, 200);
+    list_envol_box->setSize(150, GuiElement::GuiSizeMax);
+}
+
+void GuiShipTweakDock::open(P<SpaceObject> target)
+{
+
+    P<PlayerSpaceship> player = target;
+    this->target = player;
+
+    if (player)
+    {
+        for(int i=0; i < max_docks_count; i++)
+        {
+            type_selector[i]->setSelectionIndex((int)player->docks[i].dock_type);
+            std::string text = (player->docks[i].getCargo()) ? player->docks[i].getCargo()->getCallSign():"Vide";
+            content_button[i]->setText(text);
+        }
+    }
+}
+
+void GuiShipTweakDock::onDraw(sf::RenderTarget& window)
+{
+    if(!target)
+        return;
+    P<PlayerSpaceship> player = target;
+    if (player)
+    {
+        for(int i=0; i < max_docks_count; i++)
+        {
+            std::string text = (player->docks[i].getCargo()) ? player->docks[i].getCargo()->getCallSign():"Vide";
+            content_button[i]->setText(text);
+        }
+
+
+        for(int n = 0; n < GameGlobalInfo::max_player_ships; n++)
+        {
+
+            P<PlayerSpaceship> ship = gameGlobalInfo->getPlayerShip(n);
+
+            int index_in_list = list_envol_box->indexByValue(string(n)); //at the end, we should have scanned the whole list, [0,max_player_ship[ only possible values
+            if(ship)
+            {
+                if(target->canBeLandedOn(ship)) //no check on position here.
+                {
+                    if (index_in_list != -1)
+                    {
+
+                        if(ship && ship->getCallSign() == list_envol_box->getEntryName(index_in_list)) //ugly, suppose callsign is unique... should do with some kind of uuid (multiplayerid for entry name ?)
+                            continue;
+                        else
+                        {
+                            list_envol_box->removeEntry(index_in_list); //we are not synchronized, correct one will be added just after
+                        }
+                    }
+
+                    list_envol_box->addEntry(ship->getCallSign(), std::to_string(n));
+                }
+                else if (index_in_list != -1) //should never happen, suppose canbelandedonby property changed over time
+                {
+                    list_envol_box->removeEntry(index_in_list);
+                }
+            }
+            else if (index_in_list != -1) //no ship in game but still ship in list
+            {
+                list_envol_box->removeEntry(index_in_list);
+            }
+        }
+    }
+
+
 }
 
 GuiShipTweakOxygen::GuiShipTweakOxygen(GuiContainer* owner)
@@ -1226,6 +1457,8 @@ GuiShipTweakOxygen::GuiShipTweakOxygen(GuiContainer* owner)
 
 void GuiShipTweakOxygen::onDraw(sf::RenderTarget& window)
 {
+    if(!target)
+        return;
     // Update oxygen points.
     for(int n = 0; n < max_oxygen_zones; n++)
     {
@@ -1356,10 +1589,10 @@ GuiShipTweakMessages::GuiShipTweakMessages(GuiContainer* owner)
     (new GuiButton(right_col, "", "Ingenieur", [this]() {
         target->addCustomMessage(engineering,"engineering_message", message);
     }))->setSize(GuiElement::GuiSizeMax, 30);
-    (new GuiButton(right_col, "", "Analyste", [this]() {
+    (new GuiButton(right_col, "", "Auspex CP", [this]() {
         target->addCustomMessage(scienceOfficer,"science_message", message);
     }))->setSize(GuiElement::GuiSizeMax, 30);
-    (new GuiButton(right_col, "", "Relai", [this]() {
+    (new GuiButton(right_col, "", "Auxpex LP", [this]() {
         target->addCustomMessage(relayOfficer,"relay_message", message);
     }))->setSize(GuiElement::GuiSizeMax, 30);
     (new GuiButton(right_col, "", "Docks", [this]() {
@@ -1477,6 +1710,8 @@ GuiShipTweakInfos::GuiShipTweakInfos(GuiContainer* owner)
 
 void GuiShipTweakInfos::onDraw(sf::RenderTarget& window)
 {
+    if(!target)
+        return;
     // Update infos.
     for(int n = 0; n < max_oxygen_zones; n++)
     {

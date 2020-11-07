@@ -39,7 +39,7 @@ template:setTubeDirection(2,  90)
 template:setTubeDirection(3,  90)
 
 template:setDocks(2, 1, 1, 1, 1, 1, 1)
-template:addDrones("L3 Mouse", 6)
+template:addDrones("MT52 Hornet", 6)
 template:addDrones("L3 Cat", 1)
 
 

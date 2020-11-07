@@ -19,6 +19,8 @@ private:
   bool has_reactor;
   bool has_cloaking;
   float systems_health[SYS_COUNT];
+  bool auto_repair_enabled;
+  bool auto_coolant_enabled;
 public:
   ShipCargo();
   ShipCargo(P<ShipTemplate> ship_template);

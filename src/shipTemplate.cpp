@@ -46,7 +46,7 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setBeamWeaponHeatPerFire);
     /// Set the amount of missile tubes, limited to a maximum of 16.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setTubes);
-    /// set the amount of docks (launcher, energy)
+    /// set the amount of docks (launcher, energy, weapon, thermic, mainteance, stock)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setDocks);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setTubeLoadTime);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, weaponTubeAllowMissle);
@@ -59,6 +59,8 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     /// Set the shield levels, amount of parameters defines the amount of shields. (Up to a maximum of 8 shields)
     /// Example: setShieldData(400) setShieldData(100, 80) setShieldData(100, 50, 50)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setShields);
+    /// Sets by how much the shields recharge over time for all shields. Default value is 0.3. Value is a float.
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setShieldRechargeRate);
     /// Set the impulse speed, rotation speed and impulse acceleration for this ship.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setSpeed);
     /// Sets the combat maneuver power of this ship.
@@ -82,6 +84,12 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, addDoor);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, addDrones);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setRadarTrace);
+    ///multiplies the damage applied to systems when hit
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setSystemDamageRatio);
+    ///if the hull has a higher percentage than this, no damage to systems occur
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setSystemDamageHullThreshold);
+    /// Apply a rate to energy decrease. Float, default is 1. Won't affect production of energy.
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setEnergyConsumptionRatio);
     /// Return a new template with the given name, which is an exact copy of this template.
     /// Used to make easy variations of templates.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, copy);
@@ -130,6 +138,7 @@ ShipTemplate::ShipTemplate()
     shield_count = 0;
     for(int n=0; n<max_shield_count; n++)
         shield_level[n] = 0.0;
+    shield_recharge_rate = 0.3f;
     impulse_speed = 500.0;
     impulse_acceleration = 20.0;
     turn_speed = 0.0;
@@ -154,6 +163,9 @@ ShipTemplate::ShipTemplate()
     thermic_dock_count = 0;
     repair_dock_count = 0;
     stock_dock_count = 0;
+    system_damage_ratio =1.0f;
+    system_damage_hull_threshold = 0.0f;
+    energy_consumption_ratio = 1.0f;
 }
 
 void ShipTemplate::setBeamTexture(int index, string texture)
@@ -548,7 +560,8 @@ P<ShipTemplate> ShipTemplate::copy(string new_name)
     for(int n=0; n<MW_Count; n++)
         result->weapon_storage[n] = weapon_storage[n];
     result->custom_weapon_storage = custom_weapon_storage;
-
+    result->system_damage_ratio = system_damage_ratio;
+    result->system_damage_hull_threshold = system_damage_hull_threshold;
     result->radar_trace = radar_trace;
 
     result->rooms = rooms;

@@ -124,6 +124,7 @@ public:
     float hull;
     int shield_count;
     float shield_level[max_shield_count];
+    float shield_recharge_rate;
     float impulse_speed, turn_speed, warp_speed;
     float impulse_acceleration;
     float combat_maneuver_boost_speed;
@@ -136,6 +137,8 @@ public:
     float jump_drive_energy_per_km_charge;
     int weapon_storage[MW_Count];
     std::map<string, int> custom_weapon_storage;
+    float system_damage_ratio;
+    float system_damage_hull_threshold;
     int launcher_dock_count;
     int energy_dock_count;
     int weapons_dock_count;
@@ -143,6 +146,7 @@ public:
     int repair_dock_count;
     int stock_dock_count;
     string radar_trace;
+    float energy_consumption_ratio;
 
     std::vector<ShipRoomTemplate> rooms;
     std::vector<ShipDoorTemplate> doors;
@@ -163,6 +167,7 @@ public:
     void setMesh(string model, string color_texture, string specular_texture, string illumination_texture);
     void setEnergyStorage(float energy_amount);
     void setRepairCrewCount(int amount);
+    void setEnergyConsumptionRatio(float ratio) { energy_consumption_ratio = ratio;}
 
     void setBeam(int index, float arc, float direction, float range, float cycle_time, float damage);
     void setBeamWeapon(int index, float arc, float direction, float range, float cycle_time, float damage);
@@ -183,6 +188,7 @@ public:
     void setTubeDirection(int index, float direction);
     void setHull(float amount) { hull = amount; }
     void setShields(std::vector<float> values);
+    void setShieldRechargeRate(float amount) { shield_recharge_rate = amount;}
     void setSpeed(float impulse, float turn, float acceleration);
     void setCombatManeuver(float boost, float strafe);
     void setWarpSpeed(float warp);
@@ -202,6 +208,9 @@ public:
     void setDocks(int launchers, int energy, int weapons, int thermic, int repair, int stock);
     int getDocksCount() {return launcher_dock_count + energy_dock_count + weapons_dock_count + thermic_dock_count + repair_dock_count + stock_dock_count;}
     void setRadarTrace(string trace);
+    void setSystemDamageRatio(float ratio) { system_damage_ratio = ratio ;}
+    void setSystemDamageHullThreshold(float ratio) {system_damage_hull_threshold = ratio;}
+
 
     P<ShipTemplate> copy(string new_name);
 

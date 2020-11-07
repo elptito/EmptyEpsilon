@@ -16,6 +16,7 @@ class GuiSlider;
 class GuiSelector;
 class GuiToggleButton;
 class GuiButton;
+class GuiListbox;
 
 enum ETweakType
 {
@@ -82,6 +83,8 @@ private:
     GuiSlider* rotation_slider;
     GuiSlider* hull_max_slider;
     GuiSlider* hull_slider;
+    GuiSlider* system_damage_ratio_slider;
+    GuiSlider* system_damage_hull_threshold_slider;
     GuiToggleButton* can_be_destroyed_toggle;
     GuiSlider* transparency_slider;
 public:
@@ -97,6 +100,7 @@ private:
 
     GuiSlider* shield_max_slider[max_shield_count];
     GuiSlider* shield_slider[max_shield_count];
+    GuiSlider* shield_recharge_slider;
 public:
     GuiShipTweakShields(GuiContainer* owner);
 
@@ -229,7 +233,9 @@ private:
     GuiSlider* probe_max_slider;
 //    GuiSlider* oxygen_point_slider;
 //    GuiSlider* max_oxygen_point_slider;
+    GuiListbox* list_ships_box;
     GuiSlider* energy_level_slider;
+    GuiSlider* energy_conso_ratio_slider;
     GuiSlider* max_energy_level_slider;
     GuiSlider* max_coolant_slider;
     GuiToggleButton* auto_repair_toogle;
@@ -245,6 +251,22 @@ public:
     virtual void open(P<SpaceObject> target);
 
     virtual void onDraw(sf::RenderTarget& window) override;
+};
+
+class GuiShipTweakDock : public GuiTweakPage
+{
+private:
+    P<PlayerSpaceship> target;
+    //std::vector<GuiListbox*> list_state_boxes;
+    std::vector<GuiSelector*> type_selector;
+    std::vector<GuiButton*> content_button;
+    GuiListbox* list_envol_box;
+public:
+    GuiShipTweakDock(GuiContainer* owner);
+    virtual void open(P<SpaceObject> target);
+
+    virtual void onDraw(sf::RenderTarget& window) override;
+
 };
 
 class GuiShipTweakOxygen : public GuiTweakPage

@@ -5,8 +5,10 @@
 #include "gui/gui2_element.h"
 #include "singlePilotView.h"
 #include "screenComponents/targetsContainer.h"
+#include "spaceObjects/playerSpaceship.h"
 
 class GuiViewport3D;
+class GuiToggleButton;
 
 class SinglePilotScreen : public GuiOverlay
 {
@@ -16,9 +18,17 @@ private:
 
     GuiViewport3D* viewport;
     GuiElement* left_panel;
+    GuiToggleButton* show_3d_button;
+
+    P<PlayerSpaceship> current_spaceship;
+
+    void init(GuiContainer* owner, P<PlayerSpaceship> targetSpaceship);
+
 public:
     SinglePilotScreen(GuiContainer* owner);
-    
+    SinglePilotScreen(GuiContainer* owner, P<PlayerSpaceship> targetSpaceship);
+
+    void setTargetSpaceship(P<PlayerSpaceship> targetSpaceship);
     virtual void onDraw(sf::RenderTarget& window);
 };
 
