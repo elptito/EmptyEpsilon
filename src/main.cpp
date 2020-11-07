@@ -195,7 +195,6 @@ int main(int argc, char** argv)
                 fsaa = 2;
         }
         P<WindowManager> window_manager = new WindowManager(width, height, fullscreen, warpPostProcessor, fsaa);
-        P<WindowManager> window_manager = new WindowManager(width, height, fullscreen, glitchPostProcessor, fsaa);
         window_manager->setAllowVirtualResize(true);
         engine->registerObject("windowManager", window_manager);
     }
