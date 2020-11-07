@@ -63,8 +63,7 @@ SinglePilotView::SinglePilotView(GuiContainer* owner, P<PlayerSpaceship> targetS
         [this](float x_position) {
             if (target_spaceship)
             {
-                float angle = target_spaceship->getRotation() + x_position;
-                target_spaceship->commandTargetRotation(angle);
+                target_spaceship->commandTurnSpeed(x_position / 100);
             }
         },
         [this](float y_position) {
