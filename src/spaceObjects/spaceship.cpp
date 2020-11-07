@@ -941,7 +941,7 @@ void SpaceShip::collide(Collisionable* other, float force)
         }
     }
 
-    if (landing_state == LS_Landing)
+    if (landing_state == LS_Landing && fabs(sf::angleDifference(target_rotation, getRotation())) < 10.0)
     {
         P<SpaceShip> land_object = P<Collisionable>(other);
         if (land_object && (land_object == landing_target))
@@ -966,8 +966,6 @@ void SpaceShip::collide(Collisionable* other, float force)
             {
                 //TODO put a message
             }
-
-            //TODO landing
         }
     }
 }
