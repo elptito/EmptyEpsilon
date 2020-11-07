@@ -270,7 +270,7 @@ void SinglePilotView::onHotkey(const HotkeyResult& key)
     }
 }
 
-void SinglePilotView::onJoystickAxis(const AxisAction& axisAction){
+bool SinglePilotView::onJoystickAxis(const AxisAction& axisAction){
     if(target_spaceship){
         if (axisAction.category == "HELMS"){
             if (axisAction.action == "IMPULSE"){

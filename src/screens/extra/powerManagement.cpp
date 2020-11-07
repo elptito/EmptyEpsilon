@@ -129,7 +129,7 @@ void PowerManagementScreen::onHotkey(const HotkeyResult& key)
 			}
 		}
 	}
-void PowerManagementScreen::onJoystickAxis(const AxisAction& axisAction){
+bool PowerManagementScreen::onJoystickAxis(const AxisAction& axisAction){
     if(my_spaceship){
         if (axisAction.category == "ENGINEERING"){
             for(int n=0; n<SYS_COUNT; n++)
