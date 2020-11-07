@@ -112,7 +112,7 @@ void TacticalScreen::onDraw(sf::RenderTarget& window)
     if (my_spaceship)
     {
         energy_display->setValue(string(int(my_spaceship->energy_level)));
-        heading_display->setValue(string(my_spaceship->getHeading(), 1) + "°");
+        heading_display->setValue(string(my_spaceship->getHeading(), 1) + "ï¿½");
         float velocity = sf::length(my_spaceship->getVelocity()) / 1000 * 60;
         velocity_display->setValue(string(velocity, 1) + DISTANCE_UNIT_1K + "/min");
 
@@ -143,6 +143,7 @@ bool TacticalScreen::onJoystickAxis(const AxisAction& axisAction){
             }
         }
     }
+    return false;
 }
 
 void TacticalScreen::onHotkey(const HotkeyResult& key)

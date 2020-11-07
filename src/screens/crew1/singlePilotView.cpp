@@ -290,4 +290,7 @@ bool SinglePilotView::onJoystickAxis(const AxisAction& axisAction){
                 return true;
             }
         }
+    }
+    return false;
+}
    

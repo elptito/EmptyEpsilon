@@ -406,6 +406,7 @@ bool EngineeringScreen::onJoystickAxis(const AxisAction& axisAction){
             }
         }
     }
+    return false;
 }
 
 void EngineeringScreen::onHotkey(const HotkeyResult& key)

@@ -148,4 +148,5 @@ bool PowerManagementScreen::onJoystickAxis(const AxisAction& axisAction){
             }
         }
     }
+    return false;
 }
