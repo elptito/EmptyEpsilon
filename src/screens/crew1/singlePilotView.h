@@ -20,7 +20,7 @@ class GuiCustomShipFunctions;
 class AimLockButton;
 class GuiLandingButton;
 
-class SinglePilotView : public GuiElement, JoystickMappable
+class SinglePilotView : public GuiElement
 {
 private:
     P<PlayerSpaceship> target_spaceship;
