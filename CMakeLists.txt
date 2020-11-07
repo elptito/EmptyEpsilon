@@ -405,6 +405,10 @@ find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIR})
 target_link_libraries(${EXECUTABLE_NAME} ${OPENGL_LIBRARIES})
 
+# Opus for voice chat
+add_subdirectory("${SERIOUS_PROTON_DIR}/src/libopus/" "${CMAKE_CURRENT_BINARY_DIR}/libopus")
+target_link_libraries(${EXECUTABLE_NAME} opus)
+
 # Some magical Win 32 stuff
 if(WIN32)
   target_link_libraries(${EXECUTABLE_NAME} wsock32 iphlpapi)
