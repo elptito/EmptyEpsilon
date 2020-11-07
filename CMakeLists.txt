@@ -31,6 +31,9 @@ if(NOT DEFINED CPACK_PACKAGE_VERSION_MAJOR)
  string(TIMESTAMP CPACK_PACKAGE_VERSION_PATCH "%d")
 endif(NOT DEFINED CPACK_PACKAGE_VERSION_MAJOR)
 
+set(VERSION_NUMBER ${CPACK_PACKAGE_VERSION_MAJOR}${CPACK_PACKAGE_VERSION_MINOR}${CPACK_PACKAGE_VERSION_PATCH})
+message(STATUS "EmptyEpsilon Version = ${VERSION_NUMBER}")
+
 # Set our optimization flags.
 set(OPTIMIZER_FLAGS "")
 if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
@@ -58,6 +61,11 @@ set(CMAKE_INSTALL_PREFIX "./")
 elseif(UNIX)
 # Set RESOURCE_BASE_DIR on Unix so the built binary is able to find resources
 add_definitions(-DRESOURCE_BASE_DIR="${CMAKE_INSTALL_PREFIX}/share/emptyepsilon/")
+endif()
+
+# Set minimum target macOS version
+if(APPLE)
+	set(MACOSX_DEPLOYMENT_TARGET "10.10")
 endif()
 
 if(CONFIG_DIR)
@@ -376,7 +384,7 @@ foreach(SP_SOURCE
 endforeach()
 
 add_definitions(-DWINDOW_TITLE="EmptyEpsilon")
-add_definitions(-DVERSION_NUMBER=${CPACK_PACKAGE_VERSION_MAJOR}${CPACK_PACKAGE_VERSION_MINOR}${CPACK_PACKAGE_VERSION_PATCH})
+add_definitions(-DVERSION_NUMBER=${VERSION_NUMBER})
 if(ENABLE_CRASH_LOGGER)
   add_definitions(-DENABLE_CRASH_LOGGER)
   if(WIN32)
@@ -388,10 +396,16 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -framework OpenGL -framework Foundation")
 endif()
 
-add_executable(${EXECUTABLE_NAME} MACOSX_BUNDLE ${SOURCES})
+if(ANDROID)
+    add_library(${EXECUTABLE_NAME} SHARED ${SOURCES})
+else()
+    add_executable(${EXECUTABLE_NAME} MACOSX_BUNDLE ${SOURCES})
+endif()
 
-include_directories(${CMAKE_SOURCE_DIR}/src)
-include_directories(${SERIOUS_PROTON_DIR}/src)
+target_include_directories(${EXECUTABLE_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/src)
+target_include_directories(${EXECUTABLE_NAME} PUBLIC ${SERIOUS_PROTON_DIR}/src)
+target_compile_options(${EXECUTABLE_NAME} PUBLIC $<$<CONFIG:Release>:${OPTIMIZER_FLAGS}>)
+target_compile_options(${EXECUTABLE_NAME} PUBLIC $<$<CONFIG:RelWithDebInfo>:-g1 ${OPTIMIZER_FLAGS}>)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
@@ -399,11 +413,16 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 find_package(SFML 2.3 REQUIRED system window graphics network audio)
 include_directories(${SFML_INCLUDE_DIR})
 target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES})
+add_definitions(-DSFML_NO_DEPRECATED_WARNINGS) # SFML 2.5 gives deprication warnings on a few functions we use. But we maintain 2.3 compatibility, so ignore those warnings.
 
 # Setup OpenGl
-find_package(OpenGL REQUIRED)
-include_directories(${OPENGL_INCLUDE_DIR})
-target_link_libraries(${EXECUTABLE_NAME} ${OPENGL_LIBRARIES})
+if(ANDROID)
+  target_link_libraries(${EXECUTABLE_NAME} GLESv1_CM)
+else()
+  find_package(OpenGL REQUIRED)
+  include_directories(${OPENGL_INCLUDE_DIR})
+  target_link_libraries(${EXECUTABLE_NAME} ${OPENGL_LIBRARIES})
+endif()
 
 # Opus for voice chat
 add_subdirectory("${SERIOUS_PROTON_DIR}/src/libopus/" "${CMAKE_CURRENT_BINARY_DIR}/libopus")
@@ -416,6 +435,9 @@ if(WIN32)
     include_directories(${DRMINGW_ROOT}/include/)
     target_link_libraries(${EXECUTABLE_NAME} exchndl)
   endif()
+elseif(ANDROID)
+  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--whole-archive ${SFML_INSTALL_PATH}/lib/${ANDROID_ABI}/libsfml-main.a -Wl,--no-whole-archive")
+  target_link_libraries(${EXECUTABLE_NAME} log android EGL)
 elseif(APPLE)
   set_target_properties(${EXECUTABLE_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/osx/MacOSXBundleInfo.plist.in)
   set_target_properties(${EXECUTABLE_NAME} PROPERTIES MACOSX_BUNDLE_ICON_FILE "${EXECUTABLE_NAME}.icns")
@@ -460,6 +482,8 @@ elseif(APPLE)
   install(DIRECTORY resources DESTINATION "EmptyEpsilon.app/Contents/Resources")
   install(DIRECTORY scripts DESTINATION "EmptyEpsilon.app/Contents/Resources")
   install(DIRECTORY packs DESTINATION "EmptyEpsilon.app/Contents/Resources")
+elseif(ANDROID)
+  android_apk(EmptyEpsilon)
 else()
   include(GNUInstallDirs)
   install(DIRECTORY resources DESTINATION "${CMAKE_INSTALL_FULL_DATAROOTDIR}/emptyepsilon/")
@@ -470,8 +494,12 @@ endif()
 
 find_package(PythonInterp)
 if(PYTHONINTERP_FOUND)
-  add_custom_target(scriptdoc ALL ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/compile_script_docs.py ${CMAKE_BINARY_DIR}/script_reference.html WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} COMMENT "Building script reference documentation.")
-  install(FILES ${CMAKE_BINARY_DIR}/script_reference.html DESTINATION .)
+  add_custom_command(
+        OUTPUT ${CMAKE_BINARY_DIR}/script_reference.html
+        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/compile_script_docs.py ${CMAKE_BINARY_DIR}/script_reference.html
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Building script reference documentation.")
+  add_custom_target(script_reference ALL DEPENDS ${CMAKE_BINARY_DIR}/script_reference.html)
 endif()
 
 set(CPACK_PACKAGE_EXECUTABLES ${EXECUTABLE_NAME})
