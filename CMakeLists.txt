@@ -500,6 +500,7 @@ if(PYTHONINTERP_FOUND)
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         COMMENT "Building script reference documentation.")
   add_custom_target(script_reference ALL DEPENDS ${CMAKE_BINARY_DIR}/script_reference.html)
+  install(FILES ${CMAKE_BINARY_DIR}/script_reference.html DESTINATION .)
 endif()
 
 set(CPACK_PACKAGE_EXECUTABLES ${EXECUTABLE_NAME})
