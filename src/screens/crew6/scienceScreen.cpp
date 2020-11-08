@@ -84,7 +84,7 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
     info_sidebar = new GuiAutoLayout(radar_view, "SIDEBAR", GuiAutoLayout::LayoutVerticalTopToBottom);
     info_sidebar->setPosition(-20, 100, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
 
-    custom_function_sidebar = new GuiCustomShipFunctions(radar_view, crew_position, "");
+    custom_function_sidebar = new GuiCustomShipFunctions(radar_view, crew_position, "", my_spaceship);
     custom_function_sidebar->setPosition(-270, 20, ATopRight)->setSize(200, GuiElement::GuiSizeMax);
 
     // Scan button.
@@ -341,7 +341,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
         P<Asteroid> asteroid = obj;
         P<Mine> mine = obj;
 
-        // Info lat½rale
+        // Info latï¿½rale
 
         // Toujours :
             // ID
