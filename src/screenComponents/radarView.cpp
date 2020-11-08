@@ -498,13 +498,13 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
 //                    continue;
 //                }
 //            }
-            if (obj->faction_id != target_spaceship->faction_id && obj->personality_id != 1)
+            if (target_spaceship && (obj->faction_id != target_spaceship->faction_id) && (obj->personality_id != 1))
                 continue;
 
             if (!P<PlayerSpaceship>(obj) && !P<SpaceShip>(obj) && !P<SpaceStation>(obj) && !P<ScanProbe>(obj) && !P<WormHole>(obj) && !P<Planet>(obj))
                 continue;
 
-            if (obj->id_galaxy != target_spaceship->id_galaxy)
+            if (target_spaceship && (obj->id_galaxy != target_spaceship->id_galaxy))
                 continue;
 
             sf::Vector2f position = obj->getPosition();
@@ -528,7 +528,7 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
     case NebulaFogOfWar:
         foreach(SpaceObject, obj, space_object_list)
         {
-            if (obj->id_galaxy != target_spaceship->id_galaxy)
+            if (target_spaceship && (obj->id_galaxy != target_spaceship->id_galaxy))
                 continue;
             //Here : blockedByNebula can be extremely costly. This is a "Nebula fog of war and radar range" then.
             if ((my_spaceship->getPosition() - obj->getPosition()) > getDistance() + obj->getRadius())
@@ -550,7 +550,7 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
 
     for(SpaceObject* obj : visible_objects)
     {
-        if (target_spaceship && obj->id_galaxy != target_spaceship->id_galaxy)
+        if (target_spaceship && (obj->id_galaxy != target_spaceship->id_galaxy))
             continue;
 
         sf::Vector2f object_position_on_screen = radar_screen_center + (obj->getPosition() - getViewPosition()) * getScale();
