@@ -2,7 +2,7 @@
 #define MISSILE_WEAPON_H
 
 #include "spaceObjects/spaceObject.h"
-#include "spaceship.h"
+#include "spaceObjects/spaceship.h"
 
 /* Base class for all the missile weapons. Handles missile generic stuff like targeting, lifetime, etc... */
 class MissileWeapon : public SpaceObject, public Updatable
