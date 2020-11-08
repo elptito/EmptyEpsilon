@@ -19,7 +19,7 @@ class ShipTemplateBasedObject : public SpaceObject, public Updatable
 public:
     string template_name;
     string type_name;
-    string public_name;
+    string locale_name;
     string class_name;
     string sub_class_name;
     int hack_diff;
@@ -78,9 +78,9 @@ public:
     void setTemplate(string template_name);
     void setShipTemplate(string template_name) { LOG(WARNING) << "Deprecated \"setShipTemplate\" function called."; setTemplate(template_name); }
     void setTypeName(string type_name) { this->type_name = type_name; }
-    void setPublicName(string public_name) { this->public_name = public_name; }
+    void setPublicName(string locale_name) { this->locale_name = locale_name; }
     string getTypeName() { return type_name; }
-    string GetLocaleName() { return public_name; }
+    string GetLocaleName() { return locale_name; }
 
     string getClass() { return class_name; }
     string getSubClass() { return sub_class_name; }

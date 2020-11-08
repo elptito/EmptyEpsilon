@@ -545,7 +545,7 @@ P<ShipTemplate> ShipTemplate::copy(string new_name)
     P<ShipTemplate> result = new ShipTemplate();
     result->setName(new_name);
 
-    result->public_name = public_name;
+    result->locale_name = locale_name;
     result->description = description;
     result->class_name = class_name;
     result->sub_class_name = sub_class_name;
@@ -620,7 +620,7 @@ string ShipTemplate::getName()
 
 string ShipTemplate::getLocaleName()
 {
-    return this->public_name;
+    return this->locale_name;
 }
 
 string ShipTemplate::getDescription()
