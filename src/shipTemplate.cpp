@@ -618,7 +618,7 @@ string ShipTemplate::getName()
     return this->name;
 }
 
-string ShipTemplate::getPublicName()
+string ShipTemplate::getLocaleName()
 {
     return this->public_name;
 }

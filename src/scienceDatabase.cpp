@@ -118,11 +118,11 @@ void fillDefaultDatabaseData()
             continue;
 
         //P<ScienceDatabase> entry = class_database_entries[ship_template->getClass()]->addEntry(template_name);
-        P<ScienceDatabase> entry = class_database_entries[ship_template->getClass()]->addEntry(ship_template->getPublicName());
+        P<ScienceDatabase> entry = class_database_entries[ship_template->getClass()]->addEntry(ship_template->getLocaleName());
 
         entry->model_data = ship_template->model_data;
 
-        entry->addKeyValue("Type", ship_template->getPublicName());
+        entry->addKeyValue("Type", ship_template->getLocaleName());
         entry->addKeyValue("Classe", ship_template->getClass());
         entry->addKeyValue("Sous-classe", ship_template->getSubClass());
         entry->addKeyValue("Taille", string(int(ship_template->model_data->getRadius())));
