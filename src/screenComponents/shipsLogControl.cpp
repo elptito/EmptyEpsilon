@@ -5,7 +5,7 @@
 #include "gui/gui2_panel.h"
 #include "gui/gui2_advancedscrolltext.h"
 
-ShipsLog::ShipsLog(GuiContainer* owner, string station)
+ShipsLog::ShipsLog(GuiContainer* owner, const string& station)
 : GuiElement(owner, ""), station(station)
 {
     setPosition(0, 0, ABottomCenter);
