@@ -2,6 +2,7 @@
 #define SHIELD_FREQUENCY_SELECT_H
 
 #include "gui/gui2_element.h"
+#include "spaceObjects/playerSpaceship.h"
 
 class GuiKeyValueDisplay;
 class GuiSelector;
