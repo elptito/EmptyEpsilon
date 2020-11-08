@@ -109,7 +109,6 @@ set(SOURCES
 	src/mesh.cpp
 	src/scenarioInfo.cpp
 	src/repairCrew.cpp
-	src/GMScriptCallback.cpp
 	src/GMMessage.cpp
 	src/tutorialGame.cpp
 	src/EDamageType.cpp

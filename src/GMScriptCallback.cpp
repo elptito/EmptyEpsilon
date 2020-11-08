@@ -17,7 +17,7 @@ static int addGMFunction(lua_State* L)
     convert<ScriptSimpleCallback>::param(L, idx, callback);
 
     gameGlobalInfo->gm_callback_functions.emplace_back(name);
-    ScriptSimpleCallback* callback_object = &gameGlobalInfo->gm_callback_functions.back();
+    GMScriptCallback* callback_object = &gameGlobalInfo->gm_callback_functions.back();
     callback_object->callback = callback;
 
     return 0;
