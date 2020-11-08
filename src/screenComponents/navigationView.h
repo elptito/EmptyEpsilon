@@ -19,11 +19,11 @@ class NavigationView : public SectorsView
         SectorsView::setDistance(distance);
         return this;
     }
-    virtual NavigationView *setViewPosition(sf::Vector2f view_position)
-    {
-        SectorsView::setViewPosition(view_position);
-        return this;
-    }
+    // virtual NavigationView *setViewPosition(sf::Vector2f view_position)
+    // {
+    //     SectorsView::setViewPosition(view_position);
+    //     return this;
+    // }
 private:
     void drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget& window_alpha);
     void drawWaypoints(sf::RenderTarget &window);

@@ -29,15 +29,21 @@ class SectorsView : public GuiElement
             return this;
         }
         float getDistance() { return distance; }
-        virtual SectorsView *setViewPosition(sf::Vector2f view_position)
+        virtual void setViewPosition(sf::Vector2f view_position)
         {
             this->view_position = view_position;
-            return this;
+            //return this;
         }
-        sf::Vector2f getViewPosition() { return view_position; }
-        sf::Vector2f worldToScreen(sf::Vector2f world_position);
-        sf::Vector2f screenToWorld(sf::Vector2f screen_position);
-        float getScale() { return std::min(rect.width, rect.height) / 2.0f / distance; };
+        virtual sf::Vector2f getViewPosition() { return view_position; }
+        virtual void setViewRotation(float view_rotation) 
+        { 
+            this->view_rotation = view_rotation; 
+            //return this; 
+        }
+        virtual float getViewRotation() { return view_rotation; }
+        virtual sf::Vector2f worldToScreen(sf::Vector2f world_position);
+        virtual sf::Vector2f screenToWorld(sf::Vector2f screen_position);
+        virtual float getScale() { return std::min(rect.width, rect.height) / 2.0f / distance; };
         void drawSectorGrid(sf::RenderTarget &window);
         virtual bool onMouseDown(sf::Vector2f position);
         virtual void onMouseDrag(sf::Vector2f position);
