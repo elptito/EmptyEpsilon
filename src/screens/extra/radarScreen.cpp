@@ -15,13 +15,13 @@ RadarScreen::RadarScreen(GuiContainer* owner,string type)
 : GuiOverlay(owner, "RADAR_SCREEN", colorConfig.background)
 {
      if (type == "tactical" && my_spaceship){
-      tactical_radar = new GuiRadarView(this, "TACTICAL", 5000.0f, nullptr, my_spaceship);
+      tactical_radar = new GuiRadarView(this, "TACTICAL", my_spaceship->getShortRangeRadarRange(), nullptr, my_spaceship);
       tactical_radar->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
       tactical_radar->setRangeIndicatorStepSize(1000.0f)->shortRange()->enableCallsigns()->show();
     }
 
     if (type == "science" && my_spaceship){
-      science_radar = new GuiRadarView(this, "SCIENCE", my_spaceship->science_radar_range, nullptr, my_spaceship);
+      science_radar = new GuiRadarView(this, "SCIENCE", my_spaceship->getLongRangeRadarRange(), nullptr, my_spaceship);
       science_radar->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
       science_radar->setRangeIndicatorStepSize(5000.0f)->longRange()->enableCallsigns()->show();
       science_radar->setFogOfWarStyle(GuiRadarView::NebulaFogOfWar);
