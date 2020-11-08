@@ -86,8 +86,8 @@ void SinglePilotScreen::onDraw(sf::RenderTarget& window)
         float target_camera_yaw = current_spaceship->getRotation();
         camera_pitch = 30.0f;
 
-        const float camera_ship_distance = 420.0f;
-        const float camera_ship_height = 420.0f;
+        float camera_ship_distance = 420.0f;
+        float camera_ship_height = 420.0f;
         if (first_person)
         {
             camera_ship_distance = -(current_spaceship->getRadius() * 1.5);
