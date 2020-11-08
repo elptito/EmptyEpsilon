@@ -11,10 +11,11 @@ class GuiProgressbar;
 class GuiShieldFrequencySelect : public GuiElement
 {
 private:
+    P<PlayerSpaceship> target_spaceship;
     GuiSelector* new_frequency;
     GuiButton* calibrate_button;
 public:
-    GuiShieldFrequencySelect(GuiContainer* owner, string id);
+    GuiShieldFrequencySelect(GuiContainer* owner, string id, P<PlayerSpaceship> target_spaceship;);
     
     virtual void onDraw(sf::RenderTarget& window) override;
     virtual void onHotkey(const HotkeyResult& key) override;
