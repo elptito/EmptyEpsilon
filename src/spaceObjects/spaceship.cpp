@@ -1786,7 +1786,7 @@ string getLocaleMissileWeaponName(const string& missile)
     else return missile; //Non localise pour le moment
 }
 
-string getLocaleMissileWeaponName(cosnt EMissileWeapons& missile)
+string getLocaleMissileWeaponName(const EMissileWeapons& missile)
 {
     switch(missile)
     {
