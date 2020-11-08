@@ -259,8 +259,6 @@ PlayerSpaceship::PlayerSpaceship()
     texture_g = 1.0;
     texture_b = 1.0;
     texture_a = 1.0;
-    tactical_radar_range = 5000.0;
-    science_radar_range = 30000.0;
 
     hull_damage_indicator = 0.0;
     jump_indicator = 0.0;
@@ -350,8 +348,6 @@ PlayerSpaceship::PlayerSpaceship()
     registerMemberReplication(&texture_g);
     registerMemberReplication(&texture_b);
     registerMemberReplication(&texture_a);
-    registerMemberReplication(&tactical_radar_range);
-    registerMemberReplication(&science_radar_range);
     registerMemberReplication(&timer_log_intern);
     registerMemberReplication(&timer_log_generic);
     registerMemberReplication(&timer_log_docks);
@@ -2352,8 +2348,8 @@ void PlayerSpaceship::drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f posit
         radar_radius.setOutlineThickness(3.0);
         window.draw(radar_radius);
 
-        sf::CircleShape short_radar_radius(tactical_radar_range * scale);
-        short_radar_radius.setOrigin(tactical_radar_range * scale, tactical_radar_range * scale);
+        sf::CircleShape short_radar_radius(getShortRangeRadarRange() * scale);
+        short_radar_radius.setOrigin(getShortRangeRadarRange() * scale, getShortRangeRadarRange() * scale);
         short_radar_radius.setPosition(position);
         short_radar_radius.setFillColor(sf::Color::Transparent);
         short_radar_radius.setOutlineColor(sf::Color(255, 255, 255, 64));

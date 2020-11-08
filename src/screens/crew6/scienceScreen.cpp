@@ -775,26 +775,26 @@ void ScienceScreen::onHotkey(const HotkeyResult& key)
 		if (key.hotkey == "DECREASE_ZOOM")
 		{
 			float view_distance = science_radar->getDistance() + 1500.0f;
-			if (view_distance > my_spaceship->science_radar_range)
-				view_distance = my_spaceship->science_radar_range;
-			if (view_distance < 5000.0f)
-				view_distance = 5000.0f;
+			if (view_distance > my_spaceship->getLongRangeRadarRange())
+				view_distance = my_spaceship->getLongRangeRadarRange();
+			if (view_distance < my_spaceship->getShortRangeRadarRange() )
+				view_distance = my_spaceship->getShortRangeRadarRange();
 			science_radar->setDistance(view_distance);
 			// Keep the zoom slider in sync.
 			zoom_slider->setValue(view_distance);
-			zoom_label->setText("Zoom: " + string(my_spaceship->science_radar_range / view_distance, 1) + "x");
+			zoom_label->setText("Zoom: " + string(my_spaceship->getLongRangeRadarRange() / view_distance, 1) + "x");
 		}
 		if (key.hotkey == "INCREASE_ZOOM")
 		{
 			float view_distance = science_radar->getDistance() - 1500.0f;
-			if (view_distance > my_spaceship->science_radar_range)
-				view_distance = my_spaceship->science_radar_range;
-			if (view_distance < 5000.0f)
-				view_distance = 5000.0f;
+			if (view_distance > my_spaceship->getLongRangeRadarRange())
+				view_distance = my_spaceship->getLongRangeRadarRange();
+			if (view_distance < my_spaceship->getShortRangeRadarRange() )
+				view_distance = my_spaceship->getShortRangeRadarRange();
 			science_radar->setDistance(view_distance);
 			// Keep the zoom slider in sync.
 			zoom_slider->setValue(view_distance);
-			zoom_label->setText("Zoom: " + string(my_spaceship->science_radar_range / view_distance, 1) + "x");
+			zoom_label->setText("Zoom: " + string(my_spaceship->getLongRangeRadarRange() / view_distance, 1) + "x");
 		}
         
     }

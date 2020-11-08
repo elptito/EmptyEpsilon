@@ -343,8 +343,7 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
                 {
                     DamageInfo di;
                     di.type = DT_Kinetic;
-                    float damage_negate = 1.0f - 
-my_spaceship->getShieldDamageFactor(di, my_spaceship->shield_count - 1);
+                    float damage_negate = 1.0f - my_spaceship->getShieldDamageFactor(di, my_spaceship->shield_count - 1);
                     if (damage_negate < 0.0)
                         addSystemEffect(tr("Extra damage"), string(int(-damage_negate * 100)) + "%");
                     else
@@ -358,7 +357,7 @@ my_spaceship->getShieldDamageFactor(di, my_spaceship->shield_count - 1);
             case SYS_Drones:
                 addSystemEffect("Controle des drones", string(my_spaceship->getDronesControlRange() / 1000.0f,1) + "U");
                 addSystemEffect("Auspex LP et sondes", string(5000.0 * my_spaceship->getSystemEffectiveness(SYS_Drones)  / 1000.0f,1) + "U");
-                addSystemEffect("Capteurs Auspex CP", string( my_spaceship->science_radar_range * 50.0 * std::pow(my_spaceship->getSystemEffectiveness(SYS_Drones),2) / (2.0 *  1000.0f),0) + "U");
+                addSystemEffect("Capteurs Auspex CP", string( my_spaceship->getLongRangeRadarRange() * 50.0 * std::pow(my_spaceship->getSystemEffectiveness(SYS_Drones),2) / (2.0 *  1000.0f),0) + "U");
                 break;
             case SYS_Door:
                 addSystemEffect("Resistance du sas exterieur", string(int(my_spaceship->getSystemEffectiveness(SYS_Door) * 100))+ "%");

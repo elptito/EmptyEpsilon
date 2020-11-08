@@ -186,9 +186,6 @@ public:
     float texture_b;
     float texture_a;
 
-    float tactical_radar_range;
-    float science_radar_range;
-
     float timer_log_intern;
 	float timer_log_generic;
 	float timer_log_docks;
@@ -333,12 +330,6 @@ public:
         texture_b = b;
         texture_a = a;
     };
-
-    void setTacticalRadarRange(float range){tactical_radar_range = range;}
-    float getTacticalRadarRange(){return tactical_radar_range;}
-
-    void setScienceRadarRange(float range){science_radar_range = range;}
-    float getScienceRadarRange(){return science_radar_range;}
 
     virtual void onReceiveServerCommand(sf::Packet& packet) override;
 
