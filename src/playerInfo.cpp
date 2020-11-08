@@ -344,6 +344,7 @@ template<> void convert<ECrewPosition>::param(lua_State* L, int& idx, ECrewPosit
     else if (str == "navigation" || str == "navigationview")
         cp = navigation;
     else if (str == "log" || str == "shiplog")
+        cp = shipLog;
     else
         luaL_error(L, "Unknown value for crew position: %s", str.c_str());
 }
