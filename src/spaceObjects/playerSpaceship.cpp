@@ -2410,6 +2410,12 @@ void PlayerSpaceship::onProbeLaunch(ScriptSimpleCallback callback)
     this->on_probe_launch = callback;
 }
 
+float PlayerSpaceship::getDronesControlRange() 
+{
+    return Tween<float>::easeInQuad(getSystemEffectiveness(SYS_Drones), 0.0, 1.5, 0.001, getLongRangeRadarRange());
+}
+
+
 #ifndef _MSC_VER
 #include "playerSpaceship.hpp"
 #endif /* _MSC_VER */

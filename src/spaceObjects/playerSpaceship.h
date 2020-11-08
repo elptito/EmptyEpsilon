@@ -395,6 +395,8 @@ public:
     void setLongRangeRadarRange(float range);
     void setShortRangeRadarRange(float range);
 
+    //Ajout Tdelc, deplace depuis
+    float getDronesControlRange();
     // Script export function
     virtual string getExportLine() override;
 };

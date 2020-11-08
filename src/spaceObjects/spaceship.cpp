@@ -1732,10 +1732,6 @@ bool SpaceShip::tryDockDrone(SpaceShip* other){
     return false;
 }
 
-float SpaceShip::getDronesControlRange() {
-    return Tween<float>::easeInQuad(getSystemEffectiveness(SYS_Drones), 0.0, 1.5, 0.001, gameGlobalInfo->long_range_radar_range);
-}
-
 namespace
 {
     bool isNumber(const std::string& s)
