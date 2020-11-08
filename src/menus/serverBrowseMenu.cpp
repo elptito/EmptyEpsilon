@@ -33,7 +33,7 @@ ServerBrowserMenu::ServerBrowserMenu(SearchSource source)
     });
     lan_internet_selector->setOptions({"LAN", "Internet"})->setSelectionIndex(source == Local ? 0 : 1)->setPosition(0, -50, ABottomCenter)->setSize(300, 50);
 
-    connect_button = new GuiButton(this, "CONNECT", "Connect", [this]() {
+    connect_button = new GuiButton(this, "CONNECT", "Connexion", [this]() {
         new JoinServerScreen(lan_internet_selector->getSelectionIndex() == 0 ? Local : Internet, sf::IpAddress(manual_ip->getText()));
         destroy();
     });
@@ -49,7 +49,7 @@ ServerBrowserMenu::ServerBrowserMenu(SearchSource source)
         manual_ip->setText(value);
     });
     if (PreferencesManager::get("last_server", "") != "") {
-        server_list->addEntry("Last Session (" + PreferencesManager::get("last_server", "")  + ")",
+        server_list->addEntry("Derniere session (" + PreferencesManager::get("last_server", "")  + ")",
             PreferencesManager::get("last_server", ""));
     }
     scanner->addCallbacks([this](sf::IpAddress address, string name) {
