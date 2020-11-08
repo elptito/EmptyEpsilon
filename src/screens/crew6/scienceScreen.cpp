@@ -71,8 +71,21 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
     );
     new RawScannerDataRadarOverlay(probe_radar, "", 5000);
 
+    sidebar_selector = new GuiSelector(radar_view, "", [this](int index, string value)
+    {
+        info_sidebar->setVisible(index == 0);    
+        custom_function_sidebar->setVisible(index == 1);
+    });
+    sidebar_selector->setOptions({"Scanning", "Other"});
+    sidebar_selector->setSelectionIndex(0);
+    sidebar_selector->setPosition(-20, 120, ATopRight)->setSize(250, 50);
+
+    // Target scan data sidebar.
     info_sidebar = new GuiAutoLayout(radar_view, "SIDEBAR", GuiAutoLayout::LayoutVerticalTopToBottom);
     info_sidebar->setPosition(-20, 100, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
+
+    custom_function_sidebar = new GuiCustomShipFunctions(radar_view, crew_position, "");
+    custom_function_sidebar->setPosition(-270, 20, ATopRight)->setSize(200, GuiElement::GuiSizeMax);
 
     // Scan button.
     scan_button = new GuiScanTargetButton(info_sidebar, "SCAN_BUTTON", &targets);
@@ -280,6 +293,8 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
             targets.clear();
     }
 
+    sidebar_selector->setVisible(sidebar_selector->getSelectionIndex() > 0 );
+
     info_callsign->setValue("-");
     info_distance->setValue("-");
     info_heading->setValue("-");
@@ -326,7 +341,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
         P<Asteroid> asteroid = obj;
         P<Mine> mine = obj;
 
-        // Info latï¿½rale
+        // Info lat½rale
 
         // Toujours :
             // ID
