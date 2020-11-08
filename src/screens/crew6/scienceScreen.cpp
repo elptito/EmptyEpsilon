@@ -121,7 +121,7 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
         if (station)
         {
             P<ShipTemplate> st = station->ship_template;
-            if (database_view->findAndDisplayEntry(st->GetLocaleName()))
+            if (database_view->findAndDisplayEntry(st->getLocaleName()))
             {
                 view_mode_selection->setSelectionIndex(1);
                 radar_view->hide();
@@ -466,7 +466,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
 //                else
 //                    info_faction->setIcon("");
                 info_type_button->show();
-                info_type->setValue(st->GetLocaleName());
+                info_type->setValue(st->getLocaleName());
                 info_shields->setValue(ship->getShieldDataString());
                 info_hull->setValue(int(ship->getHull()));
             }
@@ -476,7 +476,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
 				P<ShipTemplate> st = station->ship_template;
                 info_faction->setValue(factionInfo[station->getFactionId()]->getLocaleName());
                 info_type_button->show();
-                info_type->setValue(st->GetLocaleName());
+                info_type->setValue(st->getLocaleName());
                 info_shields->setValue(station->getShieldDataString());
                 info_hull->setValue(int(station->getHull()));
             }
@@ -757,7 +757,7 @@ void ScienceScreen::onHotkey(const HotkeyResult& key)
 		{
 		    P<SpaceShip> ship = targets.get();
 		    if (ship && ship->getScannedStateFor(my_spaceship) >= SS_SimpleScan)
-                database_view->findAndDisplayEntry(ship->GetLocaleName());
+                database_view->findAndDisplayEntry(ship->getLocaleName());
 
 		    view_mode_selection->setSelectionIndex(1);
 		    radar_view->hide();

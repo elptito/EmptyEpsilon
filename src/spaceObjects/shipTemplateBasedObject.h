@@ -80,7 +80,7 @@ public:
     void setTypeName(string type_name) { this->type_name = type_name; }
     void setPublicName(string locale_name) { this->locale_name = locale_name; }
     string getTypeName() { return type_name; }
-    string GetLocaleName() { return locale_name; }
+    string getLocaleName() { return locale_name; }
 
     string getClass() { return class_name; }
     string getSubClass() { return sub_class_name; }
