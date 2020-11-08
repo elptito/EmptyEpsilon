@@ -1,6 +1,6 @@
 #include "spaceObjects/nebula.h"
 #include "spaceObjects/asteroid.h"
-#include "spaceObjects/missileWeapon.h"
+#include "spaceObjects/missiles/missileWeapon.h"
 #include "spaceObjects/cpuShip.h"
 #include "spaceObjects/scanProbe.h"
 #include "ai/ai.h"
