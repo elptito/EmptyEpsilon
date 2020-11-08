@@ -530,13 +530,21 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
 	
 	(new GuiLabel(right_col, "", "Radar courte portee:", 30))->setSize(GuiElement::GuiSizeMax, 50);
     short_range_radar_slider = new GuiSlider(right_col, "", 100.0, 20000.0, 0.0, [this](float value) {
-        target->setShortRangeRadarRange(value);
+        P<PlayerSpaceship> player = target;
+        if (player)
+		{
+			player->setShortRangeRadarRange(value);
+		}
     });
     short_range_radar_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
     (new GuiLabel(right_col, "", "Radar longue porteee:", 30))->setSize(GuiElement::GuiSizeMax, 50);
     long_range_radar_slider = new GuiSlider(right_col, "", 100.0, 100000.0, 0.0, [this](float value) {
-        target->setLongRangeRadarRange(value);
+        P<PlayerSpaceship> player = target;
+        if (player)
+		{
+			player->setLongRangeRadarRange(value);
+		}
     });
     long_range_radar_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
@@ -558,8 +566,12 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
     jump_drive_energy_slider->setVisible(target->hasJumpDrive());
     warp_speed_slider->setVisible(target->has_warp_drive);
 	
-	short_range_radar_slider->setValue(target->getShortRangeRadarRange());
-    long_range_radar_slider->setValue(target->getLongRangeRadarRange());
+	P<PlayerSpaceship> player = target;
+    if (player)
+	{
+		short_range_radar_slider->setValue(player->getShortRangeRadarRange());
+		long_range_radar_slider->setValue(player->getLongRangeRadarRange());
+	}
 }
 
  void GuiShipTweak::open(P<SpaceObject> target)
@@ -1464,32 +1476,15 @@ GuiShipTweakOxygen::GuiShipTweakOxygen(GuiContainer* owner)
     });
     passagers_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
-<<<<<<< HEAD
     (new GuiLabel(right_col, "", "Passagers Max:", 30))->setSize(GuiElement::GuiSizeMax, 50);
     max_passagers_slider = new GuiSlider(right_col, "", 0.0, 40.0, 0.0, [this](float value) {
        target->setMaxPassagersCount(value);
     });
     max_passagers_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
-=======
-    (new GuiLabel(left_col, "", "Short range radar:", 30))->setSize(GuiElement::GuiSizeMax, 50);
-    short_range_radar_slider = new GuiSlider(left_col, "", 100.0, 20000.0, 0.0, [this](float value) {
-        target->setShortRangeRadarRange(value);
-    });
-    short_range_radar_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
-
-    (new GuiLabel(left_col, "", "Long range radar:", 30))->setSize(GuiElement::GuiSizeMax, 50);
-    long_range_radar_slider = new GuiSlider(left_col, "", 100.0, 100000.0, 0.0, [this](float value) {
-        target->setLongRangeRadarRange(value);
-    });
-    long_range_radar_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
-
-    // Right column
->>>>>>> 64b71995... Allow tweaking of the short/long range radars of a player.
 }
 
 void GuiShipTweakOxygen::onDraw(sf::RenderTarget& window)
 {
-<<<<<<< HEAD
     if(!target)
         return;
     // Update oxygen points.
@@ -1499,11 +1494,6 @@ void GuiShipTweakOxygen::onDraw(sf::RenderTarget& window)
         oxygen_max_slider[n]->setValue(target->getOxygenMax(n));
         oxygen_rate_slider[n] ->setValue(target->getOxygenRate(n));
     }
-=======
-    coolant_slider->setValue(target->max_coolant);
-    short_range_radar_slider->setValue(target->getShortRangeRadarRange());
-    long_range_radar_slider->setValue(target->getLongRangeRadarRange());
->>>>>>> 64b71995... Allow tweaking of the short/long range radars of a player.
 }
 
 void GuiShipTweakOxygen::open(P<SpaceObject> target)
