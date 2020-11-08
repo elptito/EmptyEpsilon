@@ -104,7 +104,7 @@ SinglePilotView::SinglePilotView(GuiContainer* owner, P<PlayerSpaceship> targetS
     landing_button->setPosition(20, 60, ATopLeft)->setSize(250, 50);
     if (target_spaceship == my_spaceship)
     {
-        (new GuiOpenCommsButton(this, "OPEN_COMMS_BUTTON", &targets))->setPosition(270, 20, ATopLeft)->setSize(250, 50);
+        (new GuiOpenCommsButton(this, "OPEN_COMMS_BUTTON", "Comm Vox" ,&targets))->setPosition(270, 20, ATopLeft)->setSize(250, 50);
         (new GuiCommsOverlay(this))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
     }
     shields_enable_button = new GuiShieldsEnableButton(this, "SHIELDS_ENABLE", target_spaceship);
