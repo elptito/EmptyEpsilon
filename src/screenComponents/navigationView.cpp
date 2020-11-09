@@ -86,12 +86,12 @@ void NavigationView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarg
             sf::RenderTarget* window = &window_normal;
             if (!obj->canHideInNebula())
                 window = &window_alpha;
-            obj->drawOnRadar(*window, object_position_on_screen, getScale(), true);
+            obj->drawOnRadar(*window, object_position_on_screen, getScale(), getViewRotation(), true);
         }
     }
     if (my_spaceship)
     {
         sf::Vector2f object_position_on_screen = worldToScreen(my_spaceship->getPosition());
-        my_spaceship->drawOnRadar(window_normal, object_position_on_screen, getScale(), true);
+        my_spaceship->drawOnRadar(window_normal, object_position_on_screen, getScale(), getViewRotation(), true);
     }
 }
