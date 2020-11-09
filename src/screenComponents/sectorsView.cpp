@@ -97,18 +97,18 @@ void SectorsView::drawSectorGrid(sf::RenderTarget &window)
     {
         sf::Color color = grid_colors[calcGridScaleMagnitude(scale_magnitude, sector_x)];
 		float x = sector_x * sector_size_scaled;
-        lines_x[(sector_x - sector_x_min) * 2].position = worldToScreen(sf::Vector2f(x, (sector_y_min-1)*sector_size));
+        lines_x[(sector_x - sector_x_min) * 2].position = worldToScreen(sf::Vector2f(x, (sector_y_min-1)*sector_size_scaled));
         lines_x[(sector_x - sector_x_min) * 2].color = color;
-        lines_x[(sector_x - sector_x_min) * 2 + 1].position = worldToScreen(sf::Vector2f(x, (sector_y_max+1)*sector_size));
+        lines_x[(sector_x - sector_x_min) * 2 + 1].position = worldToScreen(sf::Vector2f(x, (sector_y_max+1)*sector_size_scaled));
         lines_x[(sector_x - sector_x_min) * 2 + 1].color = color;
     }
     for (int sector_y = sector_y_min; sector_y <= sector_y_max; sector_y++)
     {
         float y = sector_y * sector_size_scaled;
         sf::Color color = grid_colors[calcGridScaleMagnitude(scale_magnitude, sector_y)];
-        lines_y[(sector_y - sector_y_min) * 2].position = worldToScreen(sf::Vector2f((sector_x_min-1)*sector_size, y));
+        lines_y[(sector_y - sector_y_min) * 2].position = worldToScreen(sf::Vector2f((sector_x_min-1)*sector_size_scaled, y));
         lines_y[(sector_y - sector_y_min) * 2].color = color;
-        lines_y[(sector_y - sector_y_min) * 2 + 1].position = worldToScreen(sf::Vector2f((sector_x_max+1)*sector_size, y));
+        lines_y[(sector_y - sector_y_min) * 2 + 1].position = worldToScreen(sf::Vector2f((sector_x_max+1)*sector_size_scaled, y));
         lines_y[(sector_y - sector_y_min) * 2 + 1].color = color;
     }
     window.draw(lines_x);
