@@ -31,7 +31,7 @@ sf::Vector2f SectorsView::worldToScreen(sf::Vector2f world_position)
 {
     sf::Vector2f radar_screen_center(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f);
     sf::Vector2f radar_position = sf::rotateVector((world_position - view_position) * getScale(), -view_rotation);
-    return radar_position + radar_screen_center
+    return radar_position + radar_screen_center;
 }
 
 sf::Vector2f SectorsView::screenToWorld(sf::Vector2f screen_position)
