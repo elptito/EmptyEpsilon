@@ -16,6 +16,7 @@ class SectorsView : public GuiElement
         const float sub_sectors_count = 8;
         float distance;
         sf::Vector2f view_position;
+        float view_rotation;
 
         TargetsContainer *targets;
         func_t mouse_down_func;
