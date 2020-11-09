@@ -30,7 +30,7 @@ class SectorsView : public GuiElement
             return this;
         }
         float getDistance() { return distance; }
-        virtual SectorView* setViewPosition(sf::Vector2f view_position)
+        virtual SectorsView* setViewPosition(sf::Vector2f view_position)
         {
             this->view_position = view_position;
             return this;
