@@ -55,7 +55,7 @@ void GuiRadarView::onDraw(sf::RenderTarget& window)
     if (target_spaceship && auto_center_on_my_ship)
     {
         setViewPosition(target_spaceship->getPosition());
-        SetViewRotation(my_spaceship->getRotation());
+        setViewRotation(my_spaceship->getRotation());
     }
     
     if (auto_distance)
@@ -524,13 +524,13 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
                 continue;
 
             sf::Vector2f position = obj->getPosition();
-            radar_range = 5000.0 * my_spaceship->getSystemEffectiveness(SYS_Drones);
+            float radar_range = my_spaceship->getShortRangeRadarRange() * my_spaceship->getSystemEffectiveness(SYS_Drones);
             PVector<Collisionable> obj_list = CollisionManager::queryArea(position - sf::Vector2f(radar_range*100, radar_range*100), position + sf::Vector2f(radar_range*100, radar_range*100));
             foreach(Collisionable, c_obj, obj_list)
             {
                 P<SpaceObject> obj2 = c_obj;
 
-                radar_range = 5000.0 * my_spaceship->getSystemEffectiveness(SYS_Drones);
+                radar_range = my_spaceship->getShortRangeRadarRange() * my_spaceship->getSystemEffectiveness(SYS_Drones);
                 if (!obj2->canHideInNebula())
                     radar_range *= 100;
 
@@ -597,7 +597,7 @@ void GuiRadarView::drawObjectsGM(sf::RenderTarget& window)
     foreach(SpaceObject, obj, space_object_list)
     {
         sf::Vector2f object_position_on_screen = worldToScreen(obj->getPosition());
-        float r = obj->getRadius() * scale;
+        float r = obj->getRadius() * getScale();
         sf::FloatRect object_rect(object_position_on_screen.x - r, object_position_on_screen.y - r, r * 2, r * 2);
         if (rect.intersects(object_rect))
         {
