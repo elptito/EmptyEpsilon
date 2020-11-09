@@ -12,7 +12,7 @@
 
 SectorsView::SectorsView(GuiContainer *owner, string id, float distance, TargetsContainer* targets) :
 
-GuiElement(owner, id), distance(distance), targets(targets),  mouse_down_func(nullptr), mouse_drag_func(nullptr), mouse_up_func(nullptr), view_rotation(0)
+GuiElement(owner, id), distance(distance), targets(targets),  mouse_down_func(nullptr), mouse_drag_func(nullptr), mouse_up_func(nullptr)
 {
     // initialize grid colors for different zoom magnitudes
     for (int scale_magnitude = 0; scale_magnitude < SectorsView::grid_scale_size - 1; scale_magnitude++)
@@ -30,13 +30,15 @@ GuiElement(owner, id), distance(distance), targets(targets),  mouse_down_func(nu
 sf::Vector2f SectorsView::worldToScreen(sf::Vector2f world_position)
 {
     sf::Vector2f radar_screen_center(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f);
-    return radar_screen_center + (world_position - view_position) * getScale();
+    sf::Vector2f radar_position = sf::rotateVector((world_position - view_position) * getScale(), -view_rotation);
+    return radar_position + radar_screen_center
 }
 
 sf::Vector2f SectorsView::screenToWorld(sf::Vector2f screen_position)
 {
     sf::Vector2f radar_screen_center(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f);
-    return view_position + (screen_position - radar_screen_center) / getScale();
+    sf::Vector2f radar_position = sf::rotateVector((screen_position - radar_screen_center) / getScale(), view_rotation);
+    return view_position + radar_position;
 }
 
 int SectorsView::calcGridScaleMagnitude(int scale_magnitude, int position)
