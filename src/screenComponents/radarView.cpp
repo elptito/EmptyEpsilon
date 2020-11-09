@@ -55,7 +55,7 @@ void GuiRadarView::onDraw(sf::RenderTarget& window)
     if (target_spaceship && auto_center_on_my_ship)
     {
         setViewPosition(target_spaceship->getPosition());
-        view_rotation = my_spaceship->getRotation();
+        SetViewRotation(my_spaceship->getRotation());
     }
     
     if (auto_distance)
