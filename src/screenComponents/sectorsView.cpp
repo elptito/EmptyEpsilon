@@ -79,17 +79,8 @@ void SectorsView::drawSectorGrid(sf::RenderTarget &window)
                 name = getSectorName(sf::Vector2f(sector_x * sector_size_scaled + 1, sector_y * sector_size_scaled + 1));
 
 			sf::Color color = grid_colors[std::min(calcGridScaleMagnitude(scale_magnitude, sector_x), calcGridScaleMagnitude(scale_magnitude, sector_y))];
-			if (view_rotation==0)
-            {
-                sf::Vector2f pos = worldToScreen(sf::Vector2f(x,y));
-                drawText(window, sf::FloatRect(pos.x, pos.y, 30, 30), name, ATopLeft, 30, bold_font, color);
-            }
-            else
-            {
-                sf::Vector2f pos = worldToScreen(sf::Vector2f(x+(30/scale),y+(30/scale)));
-                drawText(window, sf::FloatRect(pos.x-10, pos.y-10, 20, 20), name, ACenter, 30, bold_font, color);
-            }
-            
+            sf::Vector2f pos = worldToScreen(sf::Vector2f(x+(30/scale),y+(30/scale)));
+            drawText(window, sf::FloatRect(pos.x-10, pos.y-10, 20, 20), name, ACenter, 30, bold_font, color);
             //drawText(window, sf::FloatRect(x, y, 30, 30), name, ATopLeft, 30, bold_font, color);
         }
     }
