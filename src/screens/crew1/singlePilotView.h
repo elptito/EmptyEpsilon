@@ -19,7 +19,6 @@ class GuiShieldsEnableButton;
 class GuiCustomShipFunctions;
 class AimLockButton;
 class GuiLandingButton;
-class GuiCombatManeuver;
 
 class SinglePilotView : public GuiElement
 {
@@ -48,7 +47,6 @@ private:
     GuiCustomShipFunctions* custom_ship_functions;
     AimLockButton* lock_aim;
     GuiToggleButton* lock_fire;
-    GuiCombatManeuver* combat_maneuver;
 
 public:
     SinglePilotView(GuiContainer* owner, P<PlayerSpaceship> targetSpaceship);
