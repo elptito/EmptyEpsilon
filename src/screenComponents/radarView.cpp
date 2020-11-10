@@ -57,7 +57,7 @@ void GuiRadarView::onDraw(sf::RenderTarget& window)
         view_position = my_spaceship->getPosition();
     }
     if (my_spaceship && auto_rotate_on_my_ship) {
-        view_rotation = my_spaceship->getRotation() + 90;
+        setViewRotation(my_spaceship->getRotation() + 90);
     }
     
     if (auto_distance)
@@ -457,7 +457,7 @@ void GuiRadarView::drawTargetProjections(sf::RenderTarget& window)
             a[0].color = sf::Color(255, 255, 255, 128);
             a[1].position = worldToScreen(obj->getPosition() + obj->getVelocity() * 60.0f);
             a[1].color = sf::Color(255, 255, 255, 0);
-            sf::Vector2f n = sf::normalize(sf::rotateVector(sf::Vector2f(-obj->getVelocity().y, obj->getVelocity().x), -view_rotation));
+            sf::Vector2f n = sf::normalize(sf::rotateVector(sf::Vector2f(-obj->getVelocity().y, obj->getVelocity().x), -getViewRotation()));
             for(int cnt=0; cnt<5; cnt++)
             {
                 sf::Vector2f p = sf::rotateVector(obj->getVelocity() * (seconds_per_distance_tick * (cnt + 1.0f) * getScale()), -getViewRotation());
