@@ -83,7 +83,7 @@ void GuiRadarView::onDraw(sf::RenderTarget& window)
 
     //Hacky, when not relay and we have a ship, center on it.
     if (my_spaceship && auto_center_on_my_ship) {
-        view_position = my_spaceship->getPosition();
+        setViewPosition(my_spaceship->getPosition());
     }
     if (my_spaceship && auto_rotate_on_my_ship) {
         setViewRotation(my_spaceship->getRotation() + 90);
