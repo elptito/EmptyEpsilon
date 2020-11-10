@@ -453,7 +453,7 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
     }
     if (my_spaceship)
     {
-        info_reputation->setValue(string(my_spaceship->getReputationPoints(), 0)); //tsht : TODO reajout par rapport a suppression de  tdelc
+       // info_reputation->setValue(string(my_spaceship->getReputationPoints(), 0)); //tsht : TODO reajout par rapport a suppression de  tdelc
         launch_probe_button->setText(tr("Launch Probe") + " (" + string(my_spaceship->scan_probe_stock) + "/" + string(my_spaceship->max_scan_probes) + ")");
     }
 
