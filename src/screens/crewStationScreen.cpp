@@ -130,7 +130,8 @@ void CrewStationScreen::finishCreation()
 
 void CrewStationScreen::update(float delta)
 {
-    if (game_client && game_client->getStatus() == GameClient::Disconnected)
+    if ((game_client && game_client->getStatus() == GameClient::Disconnected)
+    || (my_spaceship && my_spaceship->id_dock != PreferencesManager::get("id_dock")))
     {
         destroy();
         soundManager->stopMusic();
@@ -142,15 +143,6 @@ void CrewStationScreen::update(float delta)
 
     if (my_spaceship)
     {
-        if (my_spaceship->id_dock != PreferencesManager::get("id_dock"))
-        {
-            destroy();
-            soundManager->stopMusic();
-            impulse_sound->stop();
-            disconnectFromServer();
-            returnToMainMenu();
-            return;
-        }
         // Show custom ship function messages.
         message_frame->hide();
 
