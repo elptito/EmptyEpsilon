@@ -66,13 +66,13 @@ SinglePilotView::SinglePilotView(GuiContainer* owner, P<PlayerSpaceship> targetS
     heat_display->setIcon("gui/icons/status_overheat")->setTextSize(20)->setPosition(-20, -220, ABottomRight)->setSize(240, 40);
     hull_display = new GuiKeyValueDisplay(this, "HULL_DISPLAY", 0.45, "Carlingue", "");
     hull_display->setIcon("gui/icons/hull")->setTextSize(20)->setPosition(-20, -180, ABottomRight)->setSize(240, 40);
-    energy_display = new GuiKeyValueDisplay(left_panel, "ENERGY_DISPLAY", 0.45, tr("Energy"), "");
+    energy_display = new GuiKeyValueDisplay(this, "ENERGY_DISPLAY", 0.45, tr("Energy"), "");
     energy_display->setIcon("gui/icons/energy")->setTextSize(20)->setPosition(-20, -140, ABottomRight)->setSize(240, 40);
-    heading_display = new GuiKeyValueDisplay(left_panel, "HEADING_DISPLAY", 0.45, tr("Heading"), "");
+    heading_display = new GuiKeyValueDisplay(this, "HEADING_DISPLAY", 0.45, tr("Heading"), "");
     heading_display->setIcon("gui/icons/heading")->setTextSize(20)->setPosition(-20, -100, ABottomRight)->setSize(240, 40);
-    velocity_display = new GuiKeyValueDisplay(left_panel, "VELOCITY_DISPLAY", 0.45, tr("Speed"), "");
+    velocity_display = new GuiKeyValueDisplay(this, "VELOCITY_DISPLAY", 0.45, tr("Speed"), "");
     velocity_display->setIcon("gui/icons/speed")->setTextSize(20)->setPosition(-20, -60, ABottomRight)->setSize(240, 40);
-    shields_display = new GuiKeyValueDisplay(left_panel, "SHIELDS_DISPLAY", 0.45, tr("Shields"), "");
+    shields_display = new GuiKeyValueDisplay(this, "SHIELDS_DISPLAY", 0.45, tr("Shields"), "");
     shields_display->setIcon("gui/icons/shields")->setTextSize(20)->setPosition(-20, -20, ABottomRight)->setSize(240, 40);
 
     // Unlocked missile aim dial and lock controls.
@@ -104,7 +104,7 @@ SinglePilotView::SinglePilotView(GuiContainer* owner, P<PlayerSpaceship> targetS
     landing_button->setPosition(20, 60, ATopLeft)->setSize(250, 50);
     if (target_spaceship == my_spaceship)
     {
-        (new GuiOpenCommsButton(left_panel, "OPEN_COMMS_BUTTON", tr("Open Comms"), &targets))->setPosition(270, 20, ATopLeft)->setSize(250, 50);
+        (new GuiOpenCommsButton(this, "OPEN_COMMS_BUTTON", tr("Open Comms"), &targets))->setPosition(270, 20, ATopLeft)->setSize(250, 50);
         (new GuiCommsOverlay(this))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
     }
     shields_enable_button = new GuiShieldsEnableButton(this, "SHIELDS_ENABLE", target_spaceship);
