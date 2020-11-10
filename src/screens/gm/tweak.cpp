@@ -1182,28 +1182,29 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
 //        position[n]->setSize(GuiElement::GuiSizeMax, 30);
 //    }
 
-    {
-        (new GuiLabel(right_col, "", "Ajouter un drone:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    //tsht : probleme de place sur l'ecran... MAYBEFIX
+    // {
+    //     (new GuiLabel(right_col, "", "Ajouter un drone:", 30))->setSize(GuiElement::GuiSizeMax, 50);
 
-        std::vector<string> drones_names = ShipTemplate::getTemplateNameList(ShipTemplate::Drone);
-        std::sort(drones_names.begin(), drones_names.end());
-        GuiListbox* listDronesBox = new GuiListbox(right_col, "CREATE_SHIPS", [this](int index, string value)
-        {
-            P<ShipTemplate> drone_ship_template = ShipTemplate::getTemplate(value);
-            P<SpaceShip> ship = target;
-            Dock* dock = Dock::findOpenForDocking(ship->docks, max_docks_count);
-            if (dock)
-            {
-                P<ShipCargo> cargo = new ShipCargo(drone_ship_template);
-                dock->dock(cargo);
-            }
-        });
-        listDronesBox->setTextSize(20)->setButtonHeight(30)->setPosition(-20, 20, ATopRight)->setSize(300, 200);
-        for(string drones_name : drones_names)
-        {
-            listDronesBox->addEntry(drones_name, drones_name);
-        }
-    }
+    //     std::vector<string> drones_names = ShipTemplate::getTemplateNameList(ShipTemplate::Drone);
+    //     std::sort(drones_names.begin(), drones_names.end());
+    //     GuiListbox* listDronesBox = new GuiListbox(right_col, "CREATE_SHIPS", [this](int index, string value)
+    //     {
+    //         P<ShipTemplate> drone_ship_template = ShipTemplate::getTemplate(value);
+    //         P<SpaceShip> ship = target;
+    //         Dock* dock = Dock::findOpenForDocking(ship->docks, max_docks_count);
+    //         if (dock)
+    //         {
+    //             P<ShipCargo> cargo = new ShipCargo(drone_ship_template);
+    //             dock->dock(cargo);
+    //         }
+    //     });
+    //     listDronesBox->setTextSize(20)->setButtonHeight(30)->setPosition(-20, 20, ATopRight)->setSize(300, 200);
+    //     for(string drones_name : drones_names)
+    //     {
+    //         listDronesBox->addEntry(drones_name, drones_name);
+    //     }
+    // }
     {
 
         (new GuiLabel(right_col, "", "Rajouter au hangar :", 30))->setSize(GuiElement::GuiSizeMax, 50);
