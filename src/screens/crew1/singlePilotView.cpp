@@ -148,9 +148,6 @@ void SinglePilotView::onDraw(sf::RenderTarget& window)
 {
     if (target_spaceship)
     {
-        // Toggle ship capabilities.
-        combat_maneuver->setVisible(my_spaceship->getCanCombatManeuver());
-
         float totalHeat = 0;
         for(unsigned int n=0; n<SYS_COUNT; n++)
             totalHeat += target_spaceship->getSystemHeat(ESystem(n));
