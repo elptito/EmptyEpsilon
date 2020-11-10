@@ -1230,37 +1230,37 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
         can_scan = new GuiToggleButton(right_col, "", "Can scan", [this](bool value) {
             target->setCanScan(value);
         });
-        can_scan->setSize(GuiElement::GuiSizeMax, 20);
+        can_scan->setSize(GuiElement::GuiSizeMax, 30);
 
         // Can hack bool
         can_hack = new GuiToggleButton(right_col, "", "Can hack", [this](bool value) {
             target->setCanHack(value);
         });
-        can_hack->setSize(GuiElement::GuiSizeMax, 20);
+        can_hack->setSize(GuiElement::GuiSizeMax, 30);
 
         // Can dock bool
         can_dock = new GuiToggleButton(right_col, "", "Can dock", [this](bool value) {
             target->setCanDock(value);
         });
-        can_dock->setSize(GuiElement::GuiSizeMax, 20);
+        can_dock->setSize(GuiElement::GuiSizeMax, 30);
 
         // Can combat maneuver bool
         can_combat_maneuver = new GuiToggleButton(right_col, "", "Can combat maneuver", [this](bool value) {
             target->setCanCombatManeuver(value);
         });
-        can_combat_maneuver->setSize(GuiElement::GuiSizeMax, 20);
+        can_combat_maneuver->setSize(GuiElement::GuiSizeMax, 30);
 
         // Can self destruct bool
         can_self_destruct = new GuiToggleButton(right_col, "", "Can self destruct", [this](bool value) {
             target->setCanSelfDestruct(value);
         });
-        can_self_destruct->setSize(GuiElement::GuiSizeMax, 20);
+        can_self_destruct->setSize(GuiElement::GuiSizeMax, 30);
 
         // Can launch probe bool
         can_launch_probe = new GuiToggleButton(right_col, "", "Can launch probes", [this](bool value) {
             target->setCanLaunchProbe(value);
         });
-        can_launch_probe->setSize(GuiElement::GuiSizeMax, 20);
+        can_launch_probe->setSize(GuiElement::GuiSizeMax, 30);
     }
 
 }
