@@ -37,7 +37,6 @@ public:
     void onDraw(sf::RenderTarget& window) override;
     virtual void onHotkey(const HotkeyResult& key) override;
     virtual bool onJoystickAxis(const AxisAction& axisAction) override;
-    virtual void onHotkey(const HotkeyResult& key) override;
 };
 
 #endif//POWER_MANAGEMENT_H
