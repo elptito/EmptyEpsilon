@@ -1024,7 +1024,7 @@ void GuiShipTweakSystems::onDraw(sf::RenderTarget& window)
     for(int n=0; n<SYS_COUNT; n++)
     {
         system_damage[n]->setValue(target->systems[n].health);
-        system_health[n]->setValue(target->systems[n].health_max);
+        system_health_max[n]->setValue(target->systems[n].health_max);
         system_heat[n]->setValue(target->systems[n].heat_level);
         system_hack[n]->setValue(target->systems[n].hacked_level);
         system_coolant[n]->setValue(target->systems[n].coolant_max);
@@ -1037,7 +1037,7 @@ void GuiShipTweakSystems::onDraw(sf::RenderTarget& window)
             temp_3[n]->hide();
             temp_4[n]->hide();
             system_damage[n]->hide();
-            system_health[n]->hide();
+            system_health_max[n]->hide();
             system_heat[n]->hide();
             system_hack[n]->hide();
             system_coolant[n]->hide();
@@ -1050,7 +1050,7 @@ void GuiShipTweakSystems::onDraw(sf::RenderTarget& window)
             temp_3[n]->show();
             temp_4[n]->show();
             system_damage[n]->show();
-            system_health[n]->show();
+            system_health_max[n]->show();
             system_heat[n]->show();
             system_hack[n]->show();
             system_coolant[n]->show();
