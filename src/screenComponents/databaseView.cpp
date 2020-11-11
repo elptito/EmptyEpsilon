@@ -49,6 +49,7 @@ bool DatabaseViewComponent::findAndDisplayEntry(string name)
     for(auto sd : ScienceDatabase::science_databases)
     {
         if (!sd) continue;
+        LOG(INFO) << sd->getName() << " / " << name;
         if (sd->getName() == name)
         {
             selected_entry = sd;

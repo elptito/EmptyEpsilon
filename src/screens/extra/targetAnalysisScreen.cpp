@@ -240,19 +240,21 @@ void TargetAnalysisScreen::onDraw(sf::RenderTarget &window)
             if (shipTemplate)
             {
                 selected_entry = findDatabaseEntry(shipTemplate->getTypeName());
-                model->setModel(selected_entry->getModelData());
+                if (selected_entry){
+                    model->setModel(selected_entry->getModelData());
 
-                for(int n = 0; n < 30; n++)
-                    info_template[n]->hide();
-                for(unsigned int n = 0; n < selected_entry->keyValuePairs.size(); n++)
-                {
-                    if (n >= 30)
-                        break;
-                    if (selected_entry->keyValuePairs[n].key != "")
+                    for(int n = 0; n < 30; n++)
+                        info_template[n]->hide();
+                    for(unsigned int n = 0; n < selected_entry->keyValuePairs.size(); n++)
                     {
-                        info_template[n]->show();
-                        info_template[n]->setKey(selected_entry->keyValuePairs[n].key);
-                        info_template[n]->setValue(selected_entry->keyValuePairs[n].value);
+                        if (n >= 30)
+                            break;
+                        if (selected_entry->keyValuePairs[n].key != "")
+                        {
+                            info_template[n]->show();
+                            info_template[n]->setKey(selected_entry->keyValuePairs[n].key);
+                            info_template[n]->setValue(selected_entry->keyValuePairs[n].value);
+                        }
                     }
                 }
             }
