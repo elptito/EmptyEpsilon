@@ -206,7 +206,6 @@ void TargetAnalysisScreen::onDraw(sf::RenderTarget &window)
         }
         else
         {
-            indicator_label->setText("Object not fully scanned");
             indicator_overlay->hide();
             analysis_overlay->show();
             
@@ -247,7 +246,7 @@ void TargetAnalysisScreen::onDraw(sf::RenderTarget &window)
                     info_template[n]->hide();
                 for(unsigned int n = 0; n < selected_entry->keyValuePairs.size(); n++)
                 {
-                    if (n > 30)
+                    if (n >= 30)
                         break;
                     if (selected_entry->keyValuePairs[n].key != "")
                     {
