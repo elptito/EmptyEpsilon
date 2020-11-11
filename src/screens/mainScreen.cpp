@@ -14,7 +14,6 @@
 #include "screenComponents/radarView.h"
 #include "screenComponents/shipDestroyedPopup.h"
 #include "screens/extra/damcon.h"
-#include "screens/extra/probeScreen.h"
 #include "screenComponents/impulseSound.h"
 
 #include "gui/gui2_panel.h"
@@ -86,8 +85,6 @@ ScreenMainScreen::ScreenMainScreen()
         });
     }
 
-    rotatetime = 0.0007;
-    angle = 0.0f;
     // Initialize and play the impulse engine sound.
     impulse_sound = std::unique_ptr<ImpulseSound>( new ImpulseSound(PreferencesManager::get("impulse_sound_enabled", "2") != "0") );
 }

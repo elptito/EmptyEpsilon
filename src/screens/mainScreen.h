@@ -5,7 +5,6 @@
 #include "screenComponents/helpOverlay.h"
 #include "gui/gui2_canvas.h"
 #include "threatLevelEstimate.h"
-#include "spaceObjects/scanProbe.h"
 
 class GuiViewportMainScreen;
 class GuiRadarView;
@@ -13,7 +12,6 @@ class GuiCommsOverlay;
 class GuiPanel;
 class GuiLabel;
 class DamageControlScreen;
-class ProbeScreen;
 class RelayScreen;
 class GuiHelpOverlay;
 class ImpulseSound;
@@ -31,10 +29,6 @@ private:
     GuiPanel* dock_comms;
     GuiLabel* label_dock;
     DamageControlScreen*ship_state;
-    ProbeScreen*probe_view;
-    float angle;
-    float rotatetime;
-    P<ScanProbe> probe;
     GuiCommsOverlay* onscreen_comms;
     std::unique_ptr<ImpulseSound> impulse_sound;
 public:
