@@ -58,6 +58,7 @@ GuiObjectCreationView::GuiObjectCreationView(GuiContainer* owner, func_t enterCr
     listbox_other->addEntry("Planet", "Planet");
     listbox_other->addEntry("AnimatedObject", "AnimatedObject");
     listbox_other->addEntry("Visual Asteroid", "VisualAsteroid");
+    listbox_other->addEntry("Artefact", "Artifact");
 
     std::vector<string> class_names = ShipTemplate::getTemplateClassList(ShipTemplate::Ship);
     std::sort(class_names.begin(), class_names.end());
