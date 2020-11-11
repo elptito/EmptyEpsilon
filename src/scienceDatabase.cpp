@@ -196,7 +196,6 @@ void fillDefaultDatabaseData()
             }
             entry->addKeyValue("Shield", shield_info);
         }
-        entry->addKeyValue(tr("database", "Shield"), shield_info);
         entry->addKeyValue(tr("Hull"), string(int(ship_template->hull)));
         if (ship_template->impulse_speed > 0.0)
         {
@@ -234,9 +233,12 @@ void fillDefaultDatabaseData()
                 );
             }
         }
+
+         if (ship_template->weapon_tube_count > 0)
+            entry->addKeyValue("Tubes",string(ship_template->weapon_tube_count));
         for(int n=0; n<ship_template->weapon_tube_count; n++)
         {
-            entry->addKeyValue(tr("database", "Missile tubes"), string(ship_template->weapon_tube_count));
+            //entry->addKeyValue(tr("database", "Missile tubes"), string(ship_template->weapon_tube_count));
             string key = tr("database", "{direction} tube");
             if (ship_template->weapon_tube[n].size == MS_Small)
             {
