@@ -986,7 +986,7 @@ GuiShipTweakSystems::GuiShipTweakSystems(GuiContainer* owner)
         system_health_max[n]->addSnapValue( 1.0, 0.01);
 
         (new GuiLabel(col_3, "", tr("{system} heat").format({{"system", getLocaleSystemName(system)}}), 20))->setSize(GuiElement::GuiSizeMax, 30);
-        system_heat[n] = new GuiSlider(right_col, "", 0.0, 1.0, 0.0, [this, n](float value) {
+        system_heat[n] = new GuiSlider(col_3, "", 0.0, 1.0, 0.0, [this, n](float value) {
             target->systems[n].heat_level = value;
         });
         system_heat[n]->setSize(GuiElement::GuiSizeMax, 30);
