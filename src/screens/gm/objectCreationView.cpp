@@ -21,23 +21,24 @@ GuiObjectCreationView::GuiObjectCreationView(GuiContainer* owner, func_t enterCr
     faction_selector->setSelectionIndex(0);
     faction_selector->setPosition(20, 20, ATopLeft)->setSize(300, 50);
 
-    player_cpu_selector = new GuiSelector(box, "NPC_PC_SELECTOR", [this](int index, string)
-    {
-        if (index==1)
-        {
-            cpu_ship_listbox->hide();
-            player_ship_listbox->show();
-        }
-        else
-        {
-            cpu_ship_listbox->show();
-            player_ship_listbox->hide();
-        }
-    });
-    player_cpu_selector->addEntry("cpu ship","cpu ship");
-    player_cpu_selector->addEntry("player ship","player ship");
-    player_cpu_selector->setSelectionIndex(0);
-    player_cpu_selector->setPosition(20, 70, ATopLeft)->setSize(300, 50);
+       //TODO tester si on prend cela a la place 
+    // player_cpu_selector = new GuiSelector(box, "NPC_PC_SELECTOR", [this](int index, string)
+    // {
+    //     if (index==1)
+    //     {
+    //         cpu_ship_listbox->hide();
+    //         player_ship_listbox->show();
+    //     }
+    //     else
+    //     {
+    //         cpu_ship_listbox->show();
+    //         player_ship_listbox->hide();
+    //     }
+    // });
+    // player_cpu_selector->addEntry("cpu ship","cpu ship");
+    // player_cpu_selector->addEntry("player ship","player ship");
+    // player_cpu_selector->setSelectionIndex(0);
+    // player_cpu_selector->setPosition(20, 70, ATopLeft)->setSize(300, 50);
 
     (new GuiButton(box, "CREATE OBJECT", "Creer", [this]() {
         setCreateScript(script + ":setFactionId(" + string(faction_selector->getSelectionIndex()) + ")");
@@ -78,6 +79,7 @@ GuiObjectCreationView::GuiObjectCreationView(GuiContainer* owner, func_t enterCr
     listbox_other->addEntry("Visual Asteroid", "VisualAsteroid");
     listbox_other->addEntry("Artefact", "Artifact");
 
+ 
     std::vector<string> class_names = ShipTemplate::getTemplateClassList(ShipTemplate::Ship);
     std::sort(class_names.begin(), class_names.end());
     ship_class_selector = new GuiSelector(box, "CLASS_SELECTOR", [this](int index, string value){
@@ -98,28 +100,28 @@ GuiObjectCreationView::GuiObjectCreationView(GuiContainer* owner, func_t enterCr
         listShipTemplate(ship_class_selector->getSelectionValue(), text);
     });
 
-    cpu_ship_listbox = new GuiListbox(box, "CREATE_SHIPS", [this](int index, string value)
-    {
-        setCreateScript("CpuShip():setRotation(random(0, 360)):setFactionId(" + string(faction_selector->getSelectionIndex()) + "):setTemplate(\"" + value + "\"):orderRoaming()");
-    });
-    cpu_ship_listbox->setTextSize(20)->setButtonHeight(30)->setPosition(-20, 20, ATopRight)->setSize(300, 460);
-    for(string template_name : template_names)
-    {
-        cpu_ship_listbox->addEntry(template_name, template_name);
-    }
+    // cpu_ship_listbox = new GuiListbox(box, "CREATE_SHIPS", [this](int index, string value)
+    // {
+    //     setCreateScript("CpuShip():setRotation(random(0, 360)):setFactionId(" + string(faction_selector->getSelectionIndex()) + "):setTemplate(\"" + value + "\"):orderRoaming()");
+    // });
+    // cpu_ship_listbox->setTextSize(20)->setButtonHeight(30)->setPosition(-20, 20, ATopRight)->setSize(300, 460);
+    // for(string template_name : template_names)
+    // {
+    //     cpu_ship_listbox->addEntry(template_name, template_name);
+    // }
 
-    auto player_template_names = ShipTemplate::getTemplateNameList(ShipTemplate::PlayerShip);
-    std::sort(template_names.begin(), template_names.end());
-    player_ship_listbox = new GuiListbox(box, "CREATE_PLAYER_SHIPS", [this](int index, string value)
-    {
-        setCreateScript("PlayerSpaceship():setFactionId(" + string(faction_selector->getSelectionIndex()) + "):setTemplate(\"" + value + "\")");
-    });
-    player_ship_listbox->setTextSize(20)->setButtonHeight(30)->setPosition(-20, 20, ATopRight)->setSize(300, 460);
-    for (const auto template_name : player_template_names)
-    {
-        player_ship_listbox->addEntry(template_name, template_name);
-    }
-    player_ship_listbox->hide();
+    // auto player_template_names = ShipTemplate::getTemplateNameList(ShipTemplate::PlayerShip);
+    // std::sort(template_names.begin(), template_names.end());
+    // player_ship_listbox = new GuiListbox(box, "CREATE_PLAYER_SHIPS", [this](int index, string value)
+    // {
+    //     setCreateScript("PlayerSpaceship():setFactionId(" + string(faction_selector->getSelectionIndex()) + "):setTemplate(\"" + value + "\")");
+    // });
+    // player_ship_listbox->setTextSize(20)->setButtonHeight(30)->setPosition(-20, 20, ATopRight)->setSize(300, 460);
+    // for (const auto template_name : player_template_names)
+    // {
+    //     player_ship_listbox->addEntry(template_name, template_name);
+    // }
+    // player_ship_listbox->hide();
 
     (new GuiButton(box, "CLOSE_BUTTON", "Cancel", [this]() {
         create_script = "";
