@@ -9,6 +9,10 @@ GuiViewportMainScreen::GuiViewportMainScreen(GuiContainer* owner, string id)
     showCallsigns()->showHeadings()->showSpacedust();
 
     first_person = PreferencesManager::get("first_person") == "1";
+
+    //Tdelc
+    rotatetime = 0.0007;
+    angle = 0.0f;
 }
 
 void GuiViewportMainScreen::onDraw(sf::RenderTarget& window)
