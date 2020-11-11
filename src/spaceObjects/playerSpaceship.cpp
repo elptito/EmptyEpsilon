@@ -452,17 +452,15 @@ PlayerSpaceship::PlayerSpaceship()
         }
 
         // Initialize the ship's log.
-        addToShipLog("Start of log", colorConfig.log_generic);
+        addToShipLog("Initialisation du log general", colorConfig.log_generic,"generic");
+        addToShipLog("Initialisation du log interne", colorConfig.log_generic,"intern");
+        addToShipLog("Initialisation du log scientifique", colorConfig.log_generic,"science");
+        addToShipLog("Initialisation du log hangar", colorConfig.log_generic,"docks");
     }
 
     // Initialize player ship callsigns with a "PL" designation.
     setCallSign("PL" + string(getMultiplayerId()));
-
-    // Initialize the ship's log.
-    addToShipLog("Initialisation du log general", colorConfig.log_generic,"generic");
-    addToShipLog("Initialisation du log interne", colorConfig.log_generic,"intern");
-    addToShipLog("Initialisation du log scientifique", colorConfig.log_generic,"science");
-    addToShipLog("Initialisation du log hangar", colorConfig.log_generic,"docks");
+    
 }
 
 PlayerSpaceship::~PlayerSpaceship()
