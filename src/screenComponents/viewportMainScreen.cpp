@@ -15,6 +15,13 @@ GuiViewportMainScreen::GuiViewportMainScreen(GuiContainer* owner, string id)
     angle = 0.0f;
 }
 
+void GuiViewportMainScreen::update(float delta)
+{
+    //Tsht : tdelc Probe view. FIXME le mettre dans un AUTRE viewport
+    rotatetime -= delta;
+}
+
+
 void GuiViewportMainScreen::onDraw(sf::RenderTarget& window)
 {
     if (my_spaceship)
@@ -46,7 +53,6 @@ void GuiViewportMainScreen::onDraw(sf::RenderTarget& window)
         if (my_spaceship->main_screen_setting == MSS_ProbeView && probe)
         {
             //Tsht : tdelc Probe view. FIXME le mettre dans un AUTRE viewport
-            rotatetime -= delta;
             if (rotatetime <= 0.0)
             {
                 rotatetime = 0.1;
