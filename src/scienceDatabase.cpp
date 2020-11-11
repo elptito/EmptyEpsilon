@@ -195,14 +195,14 @@ void fillDefaultDatabaseData()
         for(int n=0; n<ship_template->weapon_tube_count; n++)
         {
             entry->addKeyValue(tr("database", "Missile tubes"), string(ship_template->weapon_tube_count));
-            string tube_info = string(int(ship_template->weapon_tube[n].load_time)) + " sec";
+            string key = tr("database", "{direction} tube");
             if (ship_template->weapon_tube[n].size == MS_Small)
             {
-                tube_info += ", small";
+                key = tr("database", "{direction} small tube");
             }
             if (ship_template->weapon_tube[n].size == MS_Large)
             {
-                tube_info += ", large";
+                key = tr("database", "{direction} large tube");
             }
 
             entry->addKeyValue(
