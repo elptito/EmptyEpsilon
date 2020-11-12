@@ -31,12 +31,8 @@ GuiObjectTweak::GuiObjectTweak(GuiContainer* owner, ETweakType tweak_type)
     list->setSize(300, GuiElement::GuiSizeMax);
     list->setPosition(25, 25, ATopLeft);
 
-    if (tweak_type == TW_Object || tweak_type == TW_Station || tweak_type==TW_Jammer
-        || tweak_type == TW_Ship || tweak_type == TW_Player)
-    {
-        pages.push_back(new GuiObjectTweakBase(this));
-        list->addEntry("Base", "");
-    }
+    pages.push_back(new GuiObjectTweakBase(this));
+    list->addEntry("Base", "");
     
     pages.push_back(new GuiShipTweakInfos(this));
     list->addEntry("Infos", "");
