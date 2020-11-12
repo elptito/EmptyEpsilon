@@ -60,6 +60,7 @@ private:
     GuiSlider* hull_slider;
     GuiSlider* zaxis_slider;
     GuiTextEntry* description;
+    GuiTextEntry* description_fof;
     GuiTextEntry* description_scan;
     GuiTextEntry* description_full_scan;
     GuiSlider* gravity_s_slider;

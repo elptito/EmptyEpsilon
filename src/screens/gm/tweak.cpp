@@ -139,24 +139,30 @@ GuiObjectTweakBase::GuiObjectTweakBase(GuiContainer* owner)
     // Edit object's description.
     // TODO: Fix long strings in GuiTextEntry, or make a new GUI element for
     // editing long strings.
-    (new GuiLabel(left_col, "", "Description base:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(left_col, "", "Description sans scan:", 30))->setSize(GuiElement::GuiSizeMax, 50);
     description = new GuiTextEntry(left_col, "", "");
     description->setSize(GuiElement::GuiSizeMax, 50);
     description->callback([this](string text) {
-        target->object_description.not_scanned = text;
+        target->setDescriptionForScanState(SS_NotScanned, text);
         //target->setDescription(text);
+    });
+    (new GuiLabel(left_col, "", "Decription FoF:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    description_fof = new GuiTextEntry(left_col, "", "");
+    description_fof->setSize(GuiElement::GuiSizeMax, 50);
+    description_fof->callback([this](string text) {
+        target->setDescriptionForScanState(SS_FriendOrFoeIdentified,text);
     });
     (new GuiLabel(left_col, "", "Description simple:", 30))->setSize(GuiElement::GuiSizeMax, 50);
     description_scan = new GuiTextEntry(left_col, "", "");
     description_scan->setSize(GuiElement::GuiSizeMax, 50);
     description_scan->callback([this](string text) {
-        target->object_description.simple_scan = text;
+        target->setDescriptionForScanState(SS_SimpleScan, text);
     });
     (new GuiLabel(left_col, "", "Description complete:", 30))->setSize(GuiElement::GuiSizeMax, 50);
     description_full_scan = new GuiTextEntry(left_col, "", "");
     description_full_scan->setSize(GuiElement::GuiSizeMax, 50);
     description_full_scan->callback([this](string text) {
-        target->object_description.full_scan = text;
+        target->setDescriptionForScanState(SS_FullScan, text);
     });
 
     (new GuiLabel(left_col, "", "Carlingue:", 30))->setSize(GuiElement::GuiSizeMax, 50);
