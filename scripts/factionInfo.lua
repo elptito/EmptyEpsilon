@@ -12,7 +12,7 @@ L'Empereur a ete choisi par un vote ou tout un chacun pouvait faire entendre sa 
 
 Ainsi naquit le premier Empereur luxien : Stelio Oazio]])
 
-arroya = FactionInfo():setName("arroya"):setIcon("LOGO_Arroya")
+arroya = FactionInfo():setName("arroya")
 arroya:setGMColor(200, 0, 200)
 arroya:setDescription([[La Republique Feodale d'Arroya a conserve nombre d'elements du mode de vie et des lois imperiales, principalement en terme de transmission hereditaire des pouvoirs territoriaux.  La grande difference fut certainement l'abolition du Pouvoir Imperial unique au profit du R.A.A.D. (Rassemblement de l'Aristocratie Arroyenne Dirigeante) reunissant les familles les plus influentes. D'une culture relativement uniforme sur l'ensemble de son territoire, l'on trouvera toujours des petites subtilites locales, surtout en matiere de complots et d'intrigues politiques.]])
 
