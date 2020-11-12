@@ -1,6 +1,7 @@
 #include "singlePilotView.h"
 
 #include "engine.h"
+#include "preferenceManager.h"
 #include "playerInfo.h"
 #include "spaceObjects/playerSpaceship.h"
 
