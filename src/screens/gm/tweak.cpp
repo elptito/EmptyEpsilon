@@ -562,17 +562,17 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
     jump_drive_energy_slider->setVisible(target->hasJumpDrive());
     warp_speed_slider->setVisible(target->has_warp_drive);
 
-    warp_toggle->setValue(ship->has_warp_drive);
-    jump_toggle->setValue(ship->hasJumpDrive());
-    reactor_toggle->setValue(ship->hasReactor());
-    cloaking_toggle->setValue(ship->hasCloaking());
-    impulse_speed_slider->setValue(ship->impulse_max_speed);
-    turn_speed_slider->setValue(ship->turn_speed);
-    combat_maneuver_boost_speed_slider->setValue(ship->combat_maneuver_boost_speed);
-    combat_maneuver_strafe_speed_slider->setValue(ship->combat_maneuver_strafe_speed);
-    jump_drive_charge_time_slider->setValue(ship->jump_drive_charge_time);
-    jump_drive_energy_slider->setValue(ship->jump_drive_energy_per_km_charge);
-    warp_speed_slider->setValue(ship->warp_speed_per_warp_level/16.667);
+    warp_toggle->setValue(target->has_warp_drive);
+    jump_toggle->setValue(target->hasJumpDrive());
+    reactor_toggle->setValue(target->hasReactor());
+    cloaking_toggle->setValue(target->hasCloaking());
+    impulse_speed_slider->setValue(target->impulse_max_speed);
+    turn_speed_slider->setValue(target->turn_speed);
+    combat_maneuver_boost_speed_slider->setValue(target->combat_maneuver_boost_speed);
+    combat_maneuver_strafe_speed_slider->setValue(target->combat_maneuver_strafe_speed);
+    jump_drive_charge_time_slider->setValue(target->jump_drive_charge_time);
+    jump_drive_energy_slider->setValue(target->jump_drive_energy_per_km_charge);
+    warp_speed_slider->setValue(target->warp_speed_per_warp_level/16.667);
 
 	P<PlayerSpaceship> player = target;
     if (player)
