@@ -136,7 +136,6 @@ void WormHole::collide(Collisionable* target, float collision_force)
     float distance = sf::length(diff);
     float force = (getRadius() * getRadius() * FORCE_MULTIPLIER) / (distance * distance);
     
-    P<SpaceObject> obj = P<Collisionable>(target);
     P<SpaceShip> spaceship = P<Collisionable>(target);
 
     // Warp postprocessor-alpha is calculated using alpha = (1 - (delay/10))
