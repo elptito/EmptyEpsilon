@@ -93,6 +93,15 @@ protected:
             return 35;
         }
     }
+
+    static float getMissileWeaponStrength(const string& type)
+    {
+        const MissileWeaponData& data = MissileWeaponData::getDataFor(type);
+
+        float strength = getMissileWeaponStrength((EMissileWeapons)data.basetype);
+        strength *= data.damage_multiplier;
+        return strength;
+    }
 };
 
 #endif//AI_H
