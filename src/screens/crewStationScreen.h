@@ -15,7 +15,7 @@ class GuiButton;
 class GuiHelpOverlay;
 class GuiPanel;
 class GuiToggleButton;
-class GuiViewport3D;
+class GuiViewportMainScreen;
 class ImpulseSound;
 
 class CrewStationScreen : public GuiCanvas, public Updatable
@@ -35,7 +35,7 @@ public:
 
 private:
     GuiElement* main_panel;
-    GuiViewport3D* viewport;
+    GuiViewportMainScreen* viewport;
     GuiButton* select_station_button;
     GuiPanel* button_strip;
     GuiHelpOverlay* keyboard_help;

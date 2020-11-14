@@ -5,13 +5,14 @@
 #include "spaceObjects/scanProbe.h" //Tdelc
 #include "engine.h"
 
-class GuiViewportMainScreen : public GuiViewport3D, public Updatable
+class GuiViewportMainScreen : public GuiViewport3D//, public Updatable
 {
 public:
     GuiViewportMainScreen(GuiContainer* owner, string id);
 
+    ~GuiViewportMainScreen() {}
     virtual void onDraw(sf::RenderTarget& window) override;
-    virtual void update(float delta) override;
+    virtual void update(float delta);
 
     bool first_person = false;
 

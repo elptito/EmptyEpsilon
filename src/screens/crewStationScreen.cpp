@@ -188,6 +188,11 @@ void CrewStationScreen::update(float delta)
         // impulse engine sound.
         impulse_sound->stop();
     }
+
+    if(viewport)
+    {
+        viewport->update(delta);
+    }
 }
 
 void CrewStationScreen::onHotkey(const HotkeyResult& key)
