@@ -103,8 +103,9 @@ ShipSelectionScreen::ShipSelectionScreen()
     probe_button = new GuiToggleButton(stations_layout, "PROBE_BUTTON", "Probe view", [this](bool value) {
         game_master_button->setValue(false);
         window_button->setValue(false);
-		topdown_button->setValue(false);
+        topdown_button->setValue(false);
         cinematic_view_button->setValue(false);
+        spectator_button->setValue(false);
     });
     probe_button->setSize(GuiElement::GuiSizeMax, 50);
 

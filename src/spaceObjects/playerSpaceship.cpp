@@ -1509,11 +1509,13 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
                 shields_active = active;
                 if (active)
                 {
+                    //Tdelc : son joue volontairement sur le client
                     soundManager->playSound("shield_up.wav");
                     addToShipLog("Boucliers actives",sf::Color::Green,"intern");
                 }
                 else
                 {
+                    //Tdelc : son joue volontairement sur le client
                     soundManager->playSound("shield_down.wav");
                     addToShipLog("Boucliers desactives",sf::Color::Green,"intern");
                 }

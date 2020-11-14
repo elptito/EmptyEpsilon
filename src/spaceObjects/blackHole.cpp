@@ -79,7 +79,7 @@ void BlackHole::collide(Collisionable* target, float collision_force)
     P<SpaceObject> obj = P<Collisionable>(target);
     if (!obj) return;
     if (!obj->hasWeight()) { return; } // the object is not affected by gravitation
-
+    if (!target)
     sf::Vector2f diff = getPosition() - target->getPosition();
     float distance = sf::length(diff);
     float force = (getRadius() * getRadius() * 50.0f) / (distance * distance);
@@ -94,9 +94,10 @@ void BlackHole::collide(Collisionable* target, float collision_force)
                 target->destroy();
         }
     }
-    if (force > 100.0 && isServer())
+    if (obj && force > 100.0 && isServer()) //object may be destroyed here
     {
         obj->takeDamage(force * update_delta / 10.0f, info);
     }
-    target->setPosition(target->getPosition() + diff / distance * update_delta * force);
+    if(target)
+        target->setPosition(target->getPosition() + diff / distance * update_delta * force);
 }
