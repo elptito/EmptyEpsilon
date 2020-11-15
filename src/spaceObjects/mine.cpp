@@ -93,13 +93,15 @@ void Mine::update(float delta)
 
 void Mine::collide(Collisionable* target, float force)
 {
+    if (!game_server || triggered || ejectTimeout > 0.0)
+        return;
+    
     P<SpaceObject> hitObject = P<Collisionable>(target);
-    if (!game_server || triggered)
-        return;
-    P<SpaceShip> hitShip = hitObject;
-    if (ejectTimeout > 0.0 && (hitShip->isDockedWith(owner) || hitShip == owner))
-        return;
     if (!hitObject || !hitObject->canBeTargetedBy(nullptr))
+        return;
+
+    P<SpaceShip> hitShip = hitObject;
+    if (hitShip && (hitShip->isDockedWith(owner) || hitShip == owner))
         return;
 
     triggered = true;
