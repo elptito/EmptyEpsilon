@@ -31,7 +31,8 @@ void GuiBeamTargetSelector::onDraw(sf::RenderTarget& window)
 {
 //    if (target_spaceship)
 //        selector->setSelectionIndex(selector->indexByValue(target_spaceship->beam_system_target));
-
+    if(!target_spaceship)
+        return;
     target = target_spaceship->getTarget();
     P<SpaceShip> ship = target;
     if(ship)
