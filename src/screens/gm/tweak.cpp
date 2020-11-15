@@ -67,16 +67,19 @@ GuiObjectTweak::GuiObjectTweak(GuiContainer* owner, ETweakType tweak_type)
         list->addEntry(tr("tab", "Beams"), "");
         pages.push_back(new GuiShipTweakSystems(this));
         list->addEntry(tr("tab", "Systems"), "");
-        pages.push_back(new GuiShipTweakOxygen(this));
-        list->addEntry("Oxygene", "");
-        pages.push_back(new GuiShipTweakDock(this));
-        list->addEntry("Dock", "");
     }
 
     if (tweak_type == TW_Player)
     {
         pages.push_back(new GuiShipTweakPlayer(this));
         list->addEntry(tr("tab", "Player"), "");
+
+        pages.push_back(new GuiShipTweakOxygen(this));
+        list->addEntry("Oxygene", "");
+        //Maybe later, this would be available for NPC ships too
+        pages.push_back(new GuiShipTweakDock(this));
+        list->addEntry("Dock", "");
+
         pages.push_back(new GuiShipTweakMessages(this));
         list->addEntry("Messages", "");
     }
