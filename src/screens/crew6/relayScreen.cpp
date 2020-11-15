@@ -218,7 +218,7 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool allow_comms)
         mode = LaunchProbe;
         option_buttons->hide();
     });
-    launch_probe_button->setSize(GuiElement::GuiSizeMax, 50);
+    launch_probe_button->setSize(GuiElement::GuiSizeMax, 50)->setVisible(my_spaceship && my_spaceship->getCanLaunchProbe());;
     launch_probe_button->setIcon("gui/icons/probe");
 
     // Rechargement probe
@@ -234,27 +234,13 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool allow_comms)
             my_spaceship->commandSetScienceLink(-1);
     });
     link_to_science_button->setSize(GuiElement::GuiSizeMax, 50)->setVisible(my_spaceship && my_spaceship->getCanLaunchProbe());
+    link_to_science_button->setIcon("gui/icons/station-science");
 
     // Manage waypoints.
     (new GuiButton(option_buttons, "WAYPOINT_PLACE_BUTTON", tr("Place Waypoint"), [this]() {
         mode = WaypointPlacement;
         option_buttons->hide();
     }))->setSize(GuiElement::GuiSizeMax, 50);
-
-    delete_waypoint_button = new GuiButton(option_buttons, "WAYPOINT_DELETE_BUTTON", tr("Delete Waypoint"), [this]() {
-        if (my_spaceship && targets.getWaypointIndex() >= 0)
-        {
-            my_spaceship->commandRemoveWaypoint(targets.getWaypointIndex());
-        }
-    });
-    delete_waypoint_button->setSize(GuiElement::GuiSizeMax, 50);
-
-    // Launch probe button.
-    launch_probe_button = new GuiButton(option_buttons, "LAUNCH_PROBE_BUTTON", tr("Launch Probe"), [this]() {
-        mode = LaunchProbe;
-        option_buttons->hide();
-    });
-    launch_probe_button->setSize(GuiElement::GuiSizeMax, 50)->setVisible(my_spaceship && my_spaceship->getCanLaunchProbe());
 
     // Reputation display.
     //info_reputation = new GuiKeyValueDisplay(option_buttons, "INFO_REPUTATION", 0.7, tr("Reputation") + ":", "");
@@ -294,8 +280,8 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool allow_comms)
 
     (new GuiCustomShipFunctions(this, relayOfficer, "", my_spaceship))->setPosition(-20, 350, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
 
-    //hacking_dialog = new GuiHackingDialog(this, "");
-    hacking_dialog = new GuiHackDialog(this, "");
+    //hacking_dialog = new GuiHackingDialog(this, ""); //ici hack Daid
+    hacking_dialog = new GuiHackDialog(this, ""); //ici hack Tdelc
 
     new ShipsLog(this,"generic");
     if (allow_comms)
