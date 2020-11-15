@@ -576,6 +576,9 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
         }
         break;
     case NebulaFogOfWar:
+        if (!my_spaceship)
+            return;
+            
         foreach(SpaceObject, obj, space_object_list)
         {
             if (target_spaceship && (obj->id_galaxy != target_spaceship->id_galaxy))
