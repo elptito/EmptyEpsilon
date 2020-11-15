@@ -565,7 +565,7 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
                 P<SpaceObject> obj2 = c_obj;
 
                 radar_range = my_spaceship->getShortRangeRadarRange() * my_spaceship->getSystemEffectiveness(SYS_Drones);
-                if (!obj2->canHideInNebula())
+                if (obj2 && !obj2->canHideInNebula())
                     radar_range *= 100;
 
                 if (obj2 && (obj->getPosition() - obj2->getPosition()) < radar_range + obj2->getRadius())
