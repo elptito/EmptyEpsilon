@@ -169,13 +169,14 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool allow_comms)
     waypoints_layout = new GuiAutoLayout(view_controls, "WAYPOINTS_LAYOUT", GuiAutoLayout::LayoutHorizontalLeftToRight);
     waypoints_layout -> setSize(GuiElement::GuiSizeMax, 50);
 
-    add_waypoint_button = new GuiButton(waypoints_layout, "WAYPOINT_PLACE_BUTTON", tr("Place Waypoint"), [this]() {
+    (new GuiLabel(waypoints_layout, "", tr("Place Waypoint"), 30))->setAlignment(ACenter)->setSize(150, 50);
+    add_waypoint_button = new GuiButton(waypoints_layout, "WAYPOINT_PLACE_BUTTON", "+", [this]() {
         mode = WaypointPlacement;
         option_buttons->hide();
     });
     add_waypoint_button->setSize(50, 50);
 
-    delete_waypoint_button = new GuiButton(waypoints_layout, "WAYPOINT_DELETE_BUTTON", tr("Delete Waypoint"), [this]() {
+    delete_waypoint_button = new GuiButton(waypoints_layout, "WAYPOINT_DELETE_BUTTON", "-", [this]() {
         if (my_spaceship && targets.getWaypointIndex() >= 0)
         {
             my_spaceship->commandRemoveWaypoint(targets.getWaypointIndex());
