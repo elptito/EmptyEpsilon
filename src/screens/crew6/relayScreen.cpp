@@ -169,8 +169,6 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool allow_comms)
     waypoints_layout = new GuiAutoLayout(view_controls, "WAYPOINTS_LAYOUT", GuiAutoLayout::LayoutHorizontalLeftToRight);
     waypoints_layout -> setSize(GuiElement::GuiSizeMax, 50);
 
-    (new GuiLabel(waypoints_layout, "", "Marqueur", 30))->setAlignment(ACenter)->setSize(150, 50);
-
     add_waypoint_button = new GuiButton(waypoints_layout, "WAYPOINT_PLACE_BUTTON", tr("Place Waypoint"), [this]() {
         mode = WaypointPlacement;
         option_buttons->hide();
@@ -235,12 +233,6 @@ RelayScreen::RelayScreen(GuiContainer* owner, bool allow_comms)
     });
     link_to_science_button->setSize(GuiElement::GuiSizeMax, 50)->setVisible(my_spaceship && my_spaceship->getCanLaunchProbe());
     link_to_science_button->setIcon("gui/icons/station-science");
-
-    // Manage waypoints.
-    (new GuiButton(option_buttons, "WAYPOINT_PLACE_BUTTON", tr("Place Waypoint"), [this]() {
-        mode = WaypointPlacement;
-        option_buttons->hide();
-    }))->setSize(GuiElement::GuiSizeMax, 50);
 
     // Reputation display.
     //info_reputation = new GuiKeyValueDisplay(option_buttons, "INFO_REPUTATION", 0.7, tr("Reputation") + ":", "");
