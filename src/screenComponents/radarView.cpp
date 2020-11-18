@@ -82,22 +82,22 @@ void GuiRadarView::onDraw(sf::RenderTarget& window)
     // Render texture to screen
 
     //Hacky, when not relay and we have a ship, center on it.
-    if (my_spaceship && auto_center_on_my_ship) {
-        setViewPosition(my_spaceship->getPosition());
+    if (target_spaceship && auto_center_on_my_ship) {
+        setViewPosition(target_spaceship->getPosition());
     }
-    if (my_spaceship && auto_rotate_on_my_ship) {
-        setViewRotation(my_spaceship->getRotation() + 90);
+    if (target_spaceship && auto_rotate_on_my_ship) {
+        setViewRotation(target_spaceship->getRotation() + 90);
     }
     
     if (auto_distance)
     {
         distance = long_range ? 30000.0f : 5000.0f;
-        if (my_spaceship)
+        if (target_spaceship)
         {
             if (long_range)
-                distance = my_spaceship->getLongRangeRadarRange();
+                distance = target_spaceship->getLongRangeRadarRange();
             else
-                distance = my_spaceship->getShortRangeRadarRange();
+                distance = target_spaceship->getShortRangeRadarRange();
         }
     }
 
@@ -152,9 +152,9 @@ void GuiRadarView::onDraw(sf::RenderTarget& window)
         drawHeadingIndicators(forground_texture);
     drawTargets(forground_texture);
 
-    if (style == Rectangular && my_spaceship)
+    if (style == Rectangular && target_spaceship)
     {
-        sf::Vector2f ship_offset = (my_spaceship->getPosition() - getViewPosition()) / getDistance() * std::min(rect.width, rect.height) / 2.0f;
+        sf::Vector2f ship_offset = (target_spaceship->getPosition() - getViewPosition()) / getDistance() * std::min(rect.width, rect.height) / 2.0f;
         if (ship_offset.x < -rect.width / 2.0f || ship_offset.x > rect.width / 2.0f || ship_offset.y < -rect.height / 2.0f || ship_offset.y > rect.height / 2.0f)
         {
             sf::Vector2f position(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0);
@@ -404,10 +404,10 @@ void GuiRadarView::drawTargetProjections(sf::RenderTarget& window)
         {
             if (!target_spaceship->weapon_tube[n].isLoaded())
                 continue;
-            sf::Vector2f fire_position = my_spaceship->getPosition() + sf::rotateVector(my_spaceship->ship_template->model_data->getTubePosition2D(n), my_spaceship->getRotation());
+            sf::Vector2f fire_position = target_spaceship->getPosition() + sf::rotateVector(target_spaceship->ship_template->model_data->getTubePosition2D(n), target_spaceship->getRotation());
 
-            const MissileWeaponData& data = MissileWeaponData::getDataFor(my_spaceship->weapon_tube[n].getLoadType());
-            float fire_angle = my_spaceship->weapon_tube[n].getDirection() + (my_spaceship->getRotation());
+            const MissileWeaponData& data = MissileWeaponData::getDataFor(target_spaceship->weapon_tube[n].getLoadType());
+            float fire_angle = target_spaceship->weapon_tube[n].getDirection() + (target_spaceship->getRotation());
             float missile_target_angle = fire_angle;
             float speed = data.speed * target_spaceship->getSystemEffectiveness(SYS_MissileSystem);
             if (data.turnrate > 0.0f)
@@ -507,10 +507,10 @@ void GuiRadarView::drawMissileTubes(sf::RenderTarget& window)
         sf::VertexArray a(sf::Lines, target_spaceship->weapon_tube_count * 2);
         for(int n=0; n<target_spaceship->weapon_tube_count; n++)
         {
-            sf::Vector2f fire_position = my_spaceship->getPosition() + sf::rotateVector(my_spaceship->ship_template->model_data->getTubePosition2D(n), my_spaceship->getRotation());
+            sf::Vector2f fire_position = target_spaceship->getPosition() + sf::rotateVector(target_spaceship->ship_template->model_data->getTubePosition2D(n), target_spaceship->getRotation());
             sf::Vector2f fire_draw_position = worldToScreen(fire_position);
 
-            float fire_angle = my_spaceship->getRotation() + my_spaceship->weapon_tube[n].getDirection() - getViewRotation();
+            float fire_angle = target_spaceship->getRotation() + target_spaceship->weapon_tube[n].getDirection() - getViewRotation();
             
             a[n * 2].position = fire_draw_position;
             a[n * 2 + 1].position = fire_draw_position + (sf::vector2FromAngle(fire_angle) * 1000.0f) * getScale();
@@ -576,7 +576,7 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
         }
         break;
     case NebulaFogOfWar:
-        if (!my_spaceship)
+        if (!target_spaceship)
             return;
             
         foreach(SpaceObject, obj, space_object_list)
@@ -584,10 +584,10 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
             if (target_spaceship && (obj->id_galaxy != target_spaceship->id_galaxy))
                 continue;
             //Here : blockedByNebula can be extremely costly. This is a "Nebula fog of war and radar range" then.
-            if ((my_spaceship->getPosition() - obj->getPosition()) > getDistance() + obj->getRadius())
+            if ((target_spaceship->getPosition() - obj->getPosition()) > getDistance() + obj->getRadius())
                 continue;
 
-            if (obj->canHideInNebula() && target_spaceship && Nebula::blockedByNebula(my_spaceship->getPosition(), obj->getPosition()))
+            if (obj->canHideInNebula() && target_spaceship && Nebula::blockedByNebula(target_spaceship->getPosition(), obj->getPosition()))
                 continue;
             visible_objects.insert(*obj);
         }
@@ -609,7 +609,7 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
         sf::Vector2f object_position_on_screen = worldToScreen(obj->getPosition());
         float r = obj->getRadius() * getScale();
         sf::FloatRect object_rect(object_position_on_screen.x - r, object_position_on_screen.y - r, r * 2, r * 2);
-        if (obj != *my_spaceship && rect.intersects(object_rect))
+        if (obj != *target_spaceship && rect.intersects(object_rect))
         {
             sf::RenderTarget* window = &window_normal;
             if (!obj->canHideInNebula())
@@ -620,12 +620,12 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
                 drawText(*window, sf::FloatRect(object_position_on_screen.x, object_position_on_screen.y - 15, 0, 0), obj->getCallSign(), ACenter, 15, bold_font);
         }
     }
-    if (my_spaceship)
+    if (target_spaceship)
     {
-        sf::Vector2f object_position_on_screen = worldToScreen(my_spaceship->getPosition());
-        my_spaceship->drawOnRadar(window_normal, object_position_on_screen, getScale(), getViewRotation(), long_range);
-        if (long_range && show_callsigns && my_spaceship->getCallSign() != "")
-            drawText(window_normal, sf::FloatRect(object_position_on_screen.x, object_position_on_screen.y - 15, 0, 0), my_spaceship->getCallSign(), ACenter, 15, bold_font);
+        sf::Vector2f object_position_on_screen = worldToScreen(target_spaceship->getPosition());
+        target_spaceship->drawOnRadar(window_normal, object_position_on_screen, getScale(), getViewRotation(), long_range);
+        if (long_range && show_callsigns && target_spaceship->getCallSign() != "")
+            drawText(window_normal, sf::FloatRect(object_position_on_screen.x, object_position_on_screen.y - 15, 0, 0), target_spaceship->getCallSign(), ACenter, 15, bold_font);
     }
 }
 
