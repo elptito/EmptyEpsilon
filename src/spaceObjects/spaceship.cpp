@@ -254,7 +254,6 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
         systems[n].coolant_request = 0.0;
         systems[n].heat_level = 0.0;
         systems[n].hacked_level = 0.0;
-        systems[n].coolant_max = 1.0;
 
         if (n == SYS_Cloaking)
         {
@@ -270,7 +269,6 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
         registerMemberReplication(&systems[n].coolant_request, 0.1);
         registerMemberReplication(&systems[n].heat_level, 0.1);
         registerMemberReplication(&systems[n].hacked_level, 0.1);
-        registerMemberReplication(&systems[n].coolant_max, 0.1);
     }
 
     for(int n = 0; n < max_beam_weapons; n++)

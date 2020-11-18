@@ -104,7 +104,6 @@ void PowerManagementScreen::onDraw(sf::RenderTarget& window)
             systems[n].box->setVisible(my_spaceship->hasSystem(ESystem(n)));
             systems[n].power_slider->setValue(my_spaceship->systems[n].power_request);
             systems[n].coolant_slider->setValue(std::min(my_spaceship->systems[n].coolant_request, my_spaceship->max_coolant));
-            systems[n].coolant_slider->setRange(0.0,my_spaceship->systems[n].coolant_max);
             systems[n].coolant_slider->setEnable(!my_spaceship->auto_coolant_enabled);
 
             float heat = my_spaceship->systems[n].heat_level;
@@ -113,58 +112,14 @@ void PowerManagementScreen::onDraw(sf::RenderTarget& window)
             systems[n].heat_bar->setValue(heat)->setColor(sf::Color(128, 128 * (1.0 - heat), 0));
             systems[n].power_bar->setValue(power)->setColor(sf::Color(255, 255, 0));
             systems[n].coolant_bar->setValue(coolant)->setColor(sf::Color(0,128,255));
-            systems[n].coolant_bar->setRange(0.0,my_spaceship->systems[n].coolant_max);
         }
     }
 }
 
 void PowerManagementScreen::onHotkey(const HotkeyResult& key)
 {
-	if (key.category == "POWER_MANAGEMENT" && my_spaceship)
-    {
-		if (my_spaceship)
-		{
-			for(int n=0; n<SYS_COUNT; n++)
-			{
-				if (key.hotkey == getSystemName(ESystem(n))+ string("_POWER_UP"))
-				{
-					if(my_spaceship->systems[n].power_request < 3.0f)
-
-						my_spaceship->commandSetSystemPowerRequest(ESystem(n), my_spaceship->systems[n].power_request + 0.1f);
-					else
-						my_spaceship->commandSetSystemPowerRequest(ESystem(n), 3.0f);
-				}
-				if (key.hotkey == getSystemName(ESystem(n))+ string("_POWER_DOWN"))
-				{
-					if(my_spaceship->systems[n].power_request > 0.0f)
-						my_spaceship->commandSetSystemPowerRequest(ESystem(n), my_spaceship->systems[n].power_request - 0.1f);
-					else
-						my_spaceship->commandSetSystemPowerRequest(ESystem(n), 0.0f);
-				}
-				if (key.hotkey == getSystemName(ESystem(n))+ string("_COOLANT_UP"))
-				{
-					if(my_spaceship->systems[n].coolant_request < my_spaceship->systems[n].coolant_max)
-						my_spaceship->commandSetSystemCoolantRequest(ESystem(n), my_spaceship->systems[n].coolant_request + 0.05f);
-					else
-						my_spaceship->commandSetSystemCoolantRequest(ESystem(n), my_spaceship->systems[n].coolant_max);
-				}
-				if (key.hotkey == getSystemName(ESystem(n))+ string("_COOLANT_DOWN"))
-				{
-					if(my_spaceship->systems[n].coolant_request > 0.0f)
-						my_spaceship->commandSetSystemCoolantRequest(ESystem(n), my_spaceship->systems[n].coolant_request - 0.05f);
-					else
-						my_spaceship->commandSetSystemCoolantRequest(ESystem(n), 0.0f);
-				}
-				if (key.hotkey == getSystemName(ESystem(n))+ string("_RESET"))
-				{
-					my_spaceship->commandSetSystemPowerRequest(ESystem(n), 1.0f);
-					my_spaceship->commandSetSystemCoolantRequest(ESystem(n), 0.0f);
-				}
-			}
-		}
-	}
-    //tsht : doublon avec tdelc, a voir TODO
-    else if (key.category == "ENGINEERING" && my_spaceship)
+	
+    if (key.category == "ENGINEERING" && my_spaceship)
     {
         if (key.hotkey == "SELECT_REACTOR") selected_system = SYS_Reactor;
         if (key.hotkey == "SELECT_BEAM_WEAPONS") selected_system = SYS_BeamWeapons;

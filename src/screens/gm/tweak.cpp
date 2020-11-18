@@ -1026,7 +1026,6 @@ GuiShipTweakSystems::GuiShipTweakSystems(GuiContainer* owner)
         system_hack[n]->addSnapValue( 1.0, 0.01);
 
         system_coolant[n] = new GuiSlider(col_5, "", 0.0, 2.0, 0.0, [this, n](float value) {
-            target->systems[n].coolant_max = value;
             P<PlayerSpaceship> player = target;
             if (player)
                 player->setSystemCoolantRequest(ESystem(n), player->systems[n].coolant_request);
@@ -1050,7 +1049,6 @@ void GuiShipTweakSystems::onDraw(sf::RenderTarget& window)
         system_health_max[n]->setValue(target->systems[n].health_max);
         system_heat[n]->setValue(target->systems[n].heat_level);
         system_hack[n]->setValue(target->systems[n].hacked_level);
-        system_coolant[n]->setValue(target->systems[n].coolant_max);
 
         if (!target->hasSystem(ESystem(n)))
         {

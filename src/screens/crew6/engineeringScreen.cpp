@@ -257,7 +257,6 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
 
             info.power_bar->setValue(my_spaceship->systems[n].power_level);
             info.coolant_bar->setValue(my_spaceship->systems[n].coolant_level);
-            info.coolant_bar->setRange(0.0,my_spaceship->systems[n].coolant_max);
         }
 
         if (selected_system != SYS_None)
@@ -501,11 +500,6 @@ void EngineeringScreen::onHotkey(const HotkeyResult& key)
                 coolant_slider->setValue(my_spaceship->systems[selected_system].coolant_request - 0.05f);
                 my_spaceship->commandSetSystemCoolantRequest(selected_system, coolant_slider->getValue());
             }
-            if (key.hotkey == "COOLANT_MAX")
-            {
-                coolant_slider->setValue(my_spaceship->systems[selected_system].coolant_max);
-                my_spaceship->commandSetSystemCoolantRequest(selected_system, coolant_slider->getValue());
-            }
             if (key.hotkey == "COOLANT_MIN")
             {
                 coolant_slider->setValue(0.0f);
@@ -537,7 +531,6 @@ void EngineeringScreen::selectSystem(ESystem system)
     {
         power_slider->setValue(my_spaceship->systems[system].power_request);
         coolant_slider->setValue(my_spaceship->systems[system].coolant_request);
-        coolant_slider->setRange(my_spaceship->systems[system].coolant_max,0.0);
     }
 }
 
