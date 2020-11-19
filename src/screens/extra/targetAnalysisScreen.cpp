@@ -183,6 +183,30 @@ TargetAnalysisScreen::TargetAnalysisScreen(GuiContainer *owner)
 
 void TargetAnalysisScreen::onDraw(sf::RenderTarget &window)
 {
+    info_callsign->setValue("-");
+    info_distance->setValue("-");
+    info_heading->setValue("-");
+    info_relspeed->setValue("-");
+    info_faction->setValue("-");
+    info_hull->setValue("-");
+    info_type->setValue("-");
+    info_shields->setValue("-");
+    info_shield_frequency->setFrequency(-1);
+    info_beam_frequency->setFrequency(-1);
+    info_electrical_signal_band->setMaxAmp(0.0f);
+    info_electrical_signal_band->setNoiseError(0.0);
+    info_gravity_signal_band->setMaxAmp(0.0f);
+    info_gravity_signal_band->setPeriodError(0.0f);
+    info_biological_signal_band->setMaxAmp(0.0f);
+    info_biological_signal_band->setPhaseError(0.0f);
+    info_description->setText("");
+    for(int n = 0; n < SYS_COUNT; n++)
+        info_system[n]->hide();
+    for(int n = 0; n < 30; n++)
+        info_template[n]->hide();
+    for(int n = 0; n < 10; n++)
+        info_other[n]->hide();
+
     GuiOverlay::onDraw(window);
     if (my_spaceship)
     {
