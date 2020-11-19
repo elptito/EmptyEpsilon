@@ -149,13 +149,13 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner, ECrewPosition crew_pos
     for(float snap_point = 0.0; snap_point <= 3.0; snap_point += 0.5)
         power_slider->addSnapValue(snap_point, snap_point == 1.0 ? 0.1 : 0.01);
     power_slider->disable();
-    coolant_slider = new GuiSlider(box, "COOLANT_SLIDER", 1.0, 0.0, 0.0, [this](float value) {
+    coolant_slider = new GuiSlider(box, "COOLANT_SLIDER", 10.0, 0.0, 0.0, [this](float value) {
         if (my_spaceship && selected_system != SYS_None)
             my_spaceship->commandSetSystemCoolantRequest(selected_system, value);
     });
     coolant_slider->setPosition(140, 20, ATopLeft)->setSize(60, 360);
-    for(float snap_point = 0.0; snap_point <= 3.0; snap_point += 0.25)
-        coolant_slider->addSnapValue(snap_point, 0.01);
+    for(float snap_point = 0.0; snap_point <= 10.0; snap_point += 2.5)
+        coolant_slider->addSnapValue(snap_point, 0.1);
     coolant_slider->disable();
 
     (new GuiShipInternalView(system_row_layouts, "SHIP_INTERNAL_VIEW", 48.0f))->setShip(my_spaceship)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
