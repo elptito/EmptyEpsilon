@@ -1547,7 +1547,7 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
                 warp_frequency = 0;
             if (warp_frequency > 10)
                 warp_frequency = 10;
-            addToShipLog(tr("New warp frequency: {frequency}").format({{"frequency", frequencyToString(new_frequency)}}),sf::Color::Yellow,helmsOfficer);
+            addToShipLog(tr("New warp frequency: {frequency}").format({{"frequency", gameGlobalInfo->layer[warp_frequency].title}}),sf::Color::Yellow,helmsOfficer);
 
 
         }
