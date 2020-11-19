@@ -28,6 +28,7 @@ Mine::Mine()
     setRadarSignatureInfo(0.0, 0.05, 0.0);
     hull = 5;
     speed = 0;
+    damage_multiplier = 1;
 
     PathPlannerManager::getInstance()->addAvoidObject(this, trigger_range * 1.2f);
 }
