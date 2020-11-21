@@ -303,7 +303,7 @@ void RelayScreen::onDraw(sf::RenderTarget& window)
     float radar_range = 5000.0;
     if (my_spaceship)
     {
-        radar_range = 5000.0 * my_spaceship->getSystemEffectiveness(SYS_Drones);
+        radar_range = my_spaceship->getShortRangeRadarRange();
         info_radar_range -> setValue(string(radar_range / 1000.0f, 1.0f) + " U");
     }
 
@@ -446,7 +446,7 @@ void RelayScreen::onHotkey(const HotkeyResult& key)
 {
     if (key.category == "RELAY" && my_spaceship)
     {
-        float radar_range = 5000.0 * my_spaceship->getSystemEffectiveness(SYS_Drones);
+        float radar_range = my_spaceship->getShortRangeRadarRange();
 
         if (key.hotkey == "NEXT_ENEMY_RELAY")
         {

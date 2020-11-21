@@ -232,7 +232,7 @@ void GuiRadarView::drawNoneFriendlyBlockedAreas(sf::RenderTarget& window)
     if (my_spaceship)
     {
 
-        float r = 5000.0 * getScale() * my_spaceship->getSystemEffectiveness(SYS_Drones);
+        float r = my_spaceship->getShortRangeRadarRange() * getScale();
         sf::CircleShape circle(r, 50);
         circle.setOrigin(r, r);
         circle.setFillColor(sf::Color(255, 255, 255, 255));
@@ -320,7 +320,7 @@ void GuiRadarView::drawNebulaBlockedAreas(sf::RenderTarget& window)
 
     if (my_spaceship)
     {
-        float r = 5000.0f * getScale() * my_spaceship->getSystemEffectiveness(SYS_Drones);
+        float r = my_spaceship->getShortRangeRadarRange() * getScale();
         sf::CircleShape circle(r, 32);
         circle.setOrigin(r, r);
         circle.setPosition(radar_screen_center + (scan_center - getViewPosition()) * getScale());
@@ -558,13 +558,13 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
                 continue;
 
             sf::Vector2f position = obj->getPosition();
-            float radar_range = my_spaceship->getShortRangeRadarRange() * my_spaceship->getSystemEffectiveness(SYS_Drones);
+            float radar_range = my_spaceship->getShortRangeRadarRange();
             PVector<Collisionable> obj_list = CollisionManager::queryArea(position - sf::Vector2f(radar_range*100, radar_range*100), position + sf::Vector2f(radar_range*100, radar_range*100));
             foreach(Collisionable, c_obj, obj_list)
             {
                 P<SpaceObject> obj2 = c_obj;
 
-                radar_range = my_spaceship->getShortRangeRadarRange() * my_spaceship->getSystemEffectiveness(SYS_Drones);
+                radar_range = my_spaceship->getShortRangeRadarRange();
                 if (obj2 && !obj2->canHideInNebula())
                     radar_range *= 100;
 

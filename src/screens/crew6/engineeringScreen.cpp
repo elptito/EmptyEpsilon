@@ -363,8 +363,9 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
                 break;
             case SYS_Drones:
                 addSystemEffect("Controle des drones", string(my_spaceship->getDronesControlRange() / 1000.0f,1) + "U");
-                addSystemEffect("Auspex Courte Portee", string(my_spaceship->getShortRangeRadarRange() * my_spaceship->getSystemEffectiveness(SYS_Drones)  / 1000.0f,1) + "U");
+                addSystemEffect("Auspex Courte Portee", string(my_spaceship->getShortRangeRadarRange() / 1000.0f,1) + "U");
                 addSystemEffect("Auspex Longue Portee", string( my_spaceship->getLongRangeRadarRange() / 1000.0f,1) + "U");
+                addSystemEffect("Facteur de puissance", string(" x" + my_spaceship->getSystemEffectiveness(SYS_Drones) ,1));
                 break;
             case SYS_Door:
                 addSystemEffect("Resistance du sas exterieur", string(int(my_spaceship->getSystemEffectiveness(SYS_Door) * 100))+ "%");

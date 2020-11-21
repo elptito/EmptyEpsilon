@@ -283,7 +283,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
     else
         probe = game_client->getObjectById(my_spaceship->linked_science_probe_id);
 
-    float radar_range = 5000.0;
+    float radar_range = my_spaceship->getShortRangeRadarRange();
     if (my_spaceship->hasSystem(SYS_Drones))
         radar_range = radar_range * my_spaceship->getSystemEffectiveness(SYS_Drones);
 
