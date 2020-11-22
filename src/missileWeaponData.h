@@ -51,7 +51,7 @@ public:
 
     float damage_multiplier;
     int fire_count;
-    int lined_count;
+    int line_count;
     EDamageType damage_type;
 
     static const MissileWeaponData& getDataFor(const EMissileWeapons& type);
@@ -71,7 +71,7 @@ public:
         return custom_missile_data;
     }
     static auto getMissileWeapon (const std::string &iName) -> MissileWeaponData& ;
-    static void createMissileWeapon(const EMissileWeapons &iBaseType, const std::string &iNewName, const float &iDamageMultiplier, const float &iSpeed, const int &iFireCount, const int &iLineCount, const EDamageType &iDT);
+    static void createMissileWeapon(const EMissileWeapons &iBaseType, const std::string &iNewName, const float &iDamageMultiplier, const float &iSpeed, const EDamageType &iDT);
 
 };
 
