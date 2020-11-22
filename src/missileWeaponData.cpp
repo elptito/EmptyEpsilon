@@ -15,7 +15,7 @@ namespace {
 
 MissileWeaponData::MissileWeaponData(float speed, float turnrate, float lifetime, sf::Color color, float homing_range, string fire_sound, EMissileWeapons base_type, EDamageType dt)
 : speed(speed), turnrate(turnrate), lifetime(lifetime), color(color), homing_range(homing_range),
-fire_sound(fire_sound), damage_multiplier(1), basetype(base_type), fire_count(1) ,damage_type(dt)
+fire_sound(fire_sound), damage_multiplier(1), basetype(base_type), fire_count(1) , line_count(1),damage_type(dt)
 {
 }
 
@@ -45,7 +45,7 @@ const MissileWeaponData& MissileWeaponData::getDataFor(const string& type)
 }
 
 
-void CustomMissileWeaponRegistry::createMissileWeapon(const EMissileWeapons &iBaseType, const std::string &iNewName, const float &iDamageMultiplier, const float &iSpeed, const int& iFireCount, const EDamageType &iDT)
+void CustomMissileWeaponRegistry::createMissileWeapon(const EMissileWeapons &iBaseType, const std::string &iNewName, const float &iDamageMultiplier, const float &iSpeed, const EDamageType &iDT)
 {
     MissileWeaponData base = MissileWeaponData::getDataFor(iBaseType);
     MissileWeaponData copyMWD = base;
@@ -53,7 +53,8 @@ void CustomMissileWeaponRegistry::createMissileWeapon(const EMissileWeapons &iBa
     copyMWD.speed = iSpeed;
     copyMWD.basetype = iBaseType;
     copyMWD.damage_type = iDT;
-    copyMWD.fire_count = iFireCount;
+    //copyMWD.fire_count = iFireCount;
+    //copyMWD.line_count = iLineCount;
 
     getCustomMissileWeapons().insert(MissileWeaponMap::value_type(iNewName,copyMWD));
 }
