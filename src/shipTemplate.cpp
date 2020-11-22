@@ -93,10 +93,14 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setWeaponStorage);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCustomWeaponStorage);
     ///Set a custom weapon based on a regular one.
-    ///6 mandatory Arguments : base name (Homing, HVLI etc.), new weapon name, damage multiplier, speed, number of shots successively fired, type of damage
-    // Damage multiplier and speed are ratio from base missile (1 is the same as the base missile). It will not increase blast radius.
-    // Damage type is Kinetic, EMP, Energy
+    ///5 mandatory Arguments : base name (Homing, HVLI etc.), new weapon name, damage multiplier, speed, type of damage
+    /// Damage multiplier and speed are ratio from base missile (1 is the same as the base missile). It will not increase blast radius.
+    /// Damage type is Kinetic, EMP, Energy
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCustomWeapon);
+    ///Sets for first parameter name
+    ///2nd param the fire count (salvo) (number of shots fired successively) 
+    ///3rd param and for second parameter lined fire (number of shots fired simultaneously)
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCustomWeaponMultiple);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCustomWeaponColor);
     /// Add an empty room to a ship template.
     /// Rooms are shown on the engineering and damcon screens.
@@ -561,10 +565,16 @@ void ShipTemplate::setCustomWeaponStorage(string weapon, int amount)
 }
 
 
-void ShipTemplate::setCustomWeapon(EMissileWeapons base, string weapon_name, float damage_multiplier, float speed, int fire_count, int line_count, EDamageType dt)
+void ShipTemplate::setCustomWeapon(EMissileWeapons base, string weapon_name, float damage_multiplier, float speed, EDamageType dt)
 {
-    CustomMissileWeaponRegistry::createMissileWeapon(base, weapon_name, damage_multiplier, speed, fire_count, line_count, dt);
+    CustomMissileWeaponRegistry::createMissileWeapon(base, weapon_name, damage_multiplier, speed, dt);
 
+}
+
+void ShipTemplate::setCustomWeaponMultiple(string weapon_name, int fire_count, int line_count)
+{
+    CustomMissileWeaponRegistry::getMissileWeapon(weapon_name).fire_count = fire_count;
+    CustomMissileWeaponRegistry::getMissileWeapon(weapon_name).line_count = line_count;
 }
 
 void ShipTemplate::setCustomWeaponColor(string weapon_name, char color_r, char color_g, char color_b)
