@@ -91,13 +91,13 @@ void GuiRadarView::onDraw(sf::RenderTarget& window)
     
     if (auto_distance)
     {
-        distance = long_range ? 30000.0f : 5000.0f;
+        setDistance(long_range ? 30000.0f : 5000.0f);
         if (target_spaceship)
         {
             if (long_range)
-                distance = target_spaceship->getLongRangeRadarRange();
+                setDistance(target_spaceship->getLongRangeRadarRange());
             else
-                distance = target_spaceship->getShortRangeRadarRange();
+                setDistance(target_spaceship->getShortRangeRadarRange());
         }
     }
 

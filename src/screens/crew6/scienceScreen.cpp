@@ -16,6 +16,7 @@
 #include "screenComponents/alertOverlay.h"
 #include "screenComponents/customShipFunctions.h"
 #include "screenComponents/shipsLogControl.h"
+#include "screenComponents/noRadarPopup.h"
 
 #include "gui/gui2_autolayout.h"
 #include "gui/gui2_keyvaluedisplay.h"
@@ -250,6 +251,8 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
     new GuiScanningDialog(this, "SCANNING_DIALOG");
 
     new ShipsLog(this,"science");
+
+    new GuiNoRadarPopup(this);
 }
 
 void ScienceScreen::onDraw(sf::RenderTarget& window)
@@ -259,6 +262,13 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
 
     if (!my_spaceship)
         return;
+
+    if(my_spaceship->getLongRangeRadarRange() <= 0)
+    {
+        zoom_label->setText("PAS D'AUSPEX");
+        return;
+        //and popup shown
+    }
 
     float view_distance = science_radar->getDistance();
     float mouse_wheel_delta=InputHandler::getMouseWheelDelta();

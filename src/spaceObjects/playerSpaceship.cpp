@@ -2476,11 +2476,15 @@ bool PlayerSpaceship::canBeLandedOn(P<SpaceObject> obj)
 
 float PlayerSpaceship::getLongRangeRadarRange()
 {
+    if(hasSystem(SYS_Drones) && getSystemEffectiveness(SYS_Drones) < 0.1)
+        return long_range_radar_range * std::sqrt(0.1); //backup generator
     return hasSystem(SYS_Drones) ? long_range_radar_range * std::sqrt(getSystemEffectiveness(SYS_Drones)) : long_range_radar_range;
 }
 
 float PlayerSpaceship::getShortRangeRadarRange()
 {
+    if(hasSystem(SYS_Drones) && getSystemEffectiveness(SYS_Drones) < 0.1)
+        return short_range_radar_range * std::sqrt(0.1); //backup generator
     return hasSystem(SYS_Drones) ? short_range_radar_range * std::sqrt(getSystemEffectiveness(SYS_Drones)) : short_range_radar_range;
 }
 
