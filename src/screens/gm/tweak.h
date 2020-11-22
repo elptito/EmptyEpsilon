@@ -7,6 +7,7 @@
 #include "playerInfo.h"
 #include "spaceObjects/planet.h"
 #include "spaceObjects/playerSpaceship.h"
+#include "spaceObjects/warpJammer.h"
 
 class SpaceShip;
 class GuiKeyValueDisplay;
@@ -21,6 +22,7 @@ class GuiListbox;
 enum ETweakType
 {
     TW_Object,  // TODO: Space object
+    TW_Jammer,  // WarpJammer
     TW_Ship,    // Ships
     TW_Template,// Template : Ships & station
     TW_Station, // TODO: Space stations
@@ -58,6 +60,7 @@ private:
     GuiSlider* hull_slider;
     GuiSlider* zaxis_slider;
     GuiTextEntry* description;
+    GuiTextEntry* description_fof;
     GuiTextEntry* description_scan;
     GuiTextEntry* description_full_scan;
     GuiSlider* gravity_s_slider;
@@ -130,10 +133,26 @@ private:
     GuiSlider* jump_drive_energy_slider;
     GuiSlider* jump_delay_slider;
     GuiSlider* warp_speed_slider;
+    GuiSlider* short_range_radar_slider;
+    GuiSlider* long_range_radar_slider;
 
 public:
     GuiShipTweak(GuiContainer* owner);
     virtual void onDraw(sf::RenderTarget& window) override;
+    virtual void open(P<SpaceObject> target) override;
+};
+
+class GuiJammerTweak : public GuiTweakPage
+{
+private:
+    P<WarpJammer> target;
+
+    GuiSlider* jammer_range_slider;
+public:
+    GuiJammerTweak(GuiContainer* owner);
+
+    virtual void onDraw(sf::RenderTarget& window) override;
+
     virtual void open(P<SpaceObject> target) override;
 };
 
@@ -164,12 +183,12 @@ private:
     GuiSelector* missile_tube_amount_selector;
     GuiSlider* direction_slider;
     GuiSlider* load_time_slider;
+    GuiSelector* size_selector;
     GuiToggleButton* allowed_use[MW_Count];
 public:
     GuiShipTweakMissileTubes(GuiContainer* owner);
 
     virtual void onDraw(sf::RenderTarget& window) override;
-
     virtual void open(P<SpaceObject> target) override;
 };
 
@@ -210,7 +229,7 @@ private:
     GuiLabel* temp_3[SYS_COUNT];
     GuiLabel* temp_4[SYS_COUNT];
     GuiSlider* system_damage[SYS_COUNT];
-    GuiSlider* system_health[SYS_COUNT];
+    GuiSlider* system_health_max[SYS_COUNT];
     GuiSlider* system_heat[SYS_COUNT];
     GuiSlider* system_hack[SYS_COUNT];
     GuiSlider* system_coolant[SYS_COUNT];
@@ -245,10 +264,16 @@ private:
     GuiToggleButton* biological_toggle;
     GuiLabel* position_count;
     GuiKeyValueDisplay* position[max_crew_positions];
+    GuiToggleButton* can_scan;
+    GuiToggleButton* can_hack;
+    GuiToggleButton* can_dock;
+    GuiToggleButton* can_combat_maneuver;
+    GuiToggleButton* can_self_destruct;
+    GuiToggleButton* can_launch_probe;
 public:
     GuiShipTweakPlayer(GuiContainer* owner);
 
-    virtual void open(P<SpaceObject> target);
+    virtual void open(P<SpaceObject> target) override;
 
     virtual void onDraw(sf::RenderTarget& window) override;
 };
@@ -337,7 +362,7 @@ private:
 public:
     GuiShipTweakInfos(GuiContainer* owner);
 
-    virtual void open(P<SpaceObject> target);
+    virtual void open(P<SpaceObject> target) override;
 
     virtual void onDraw(sf::RenderTarget& window) override;
 };

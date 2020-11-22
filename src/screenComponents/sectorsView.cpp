@@ -12,7 +12,8 @@
 
 SectorsView::SectorsView(GuiContainer *owner, string id, float distance, TargetsContainer* targets) :
 
-GuiElement(owner, id), distance(distance), targets(targets),  mouse_down_func(nullptr), mouse_drag_func(nullptr), mouse_up_func(nullptr)
+GuiElement(owner, id), distance(distance), targets(targets),  mouse_down_func(nullptr), mouse_drag_func(nullptr), mouse_up_func(nullptr),
+view_position(sf::Vector2f(0.0f,0.0f)), view_rotation(0)
 {
     // initialize grid colors for different zoom magnitudes
     for (int scale_magnitude = 0; scale_magnitude < SectorsView::grid_scale_size - 1; scale_magnitude++)
@@ -30,13 +31,15 @@ GuiElement(owner, id), distance(distance), targets(targets),  mouse_down_func(nu
 sf::Vector2f SectorsView::worldToScreen(sf::Vector2f world_position)
 {
     sf::Vector2f radar_screen_center(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f);
-    return radar_screen_center + (world_position - view_position) * getScale();
+    sf::Vector2f radar_position = sf::rotateVector((world_position - view_position) * getScale(), -view_rotation);
+    return radar_position + radar_screen_center;
 }
 
 sf::Vector2f SectorsView::screenToWorld(sf::Vector2f screen_position)
 {
     sf::Vector2f radar_screen_center(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f);
-    return view_position + (screen_position - radar_screen_center) / getScale();
+    sf::Vector2f radar_position = sf::rotateVector((screen_position - radar_screen_center) / getScale(), view_rotation);
+    return view_position + radar_position;
 }
 
 int SectorsView::calcGridScaleMagnitude(int scale_magnitude, int position)
@@ -66,38 +69,40 @@ void SectorsView::drawSectorGrid(sf::RenderTarget &window)
     int sector_y_max = floor((view_position.y + (rect.top + rect.height - radar_screen_center.y) / scale) / sector_size_scaled);
     for (int sector_x = sector_x_min - 1; sector_x <= sector_x_max; sector_x++)
     {
-        float x = radar_screen_center.x + ((sector_x * sector_size_scaled) - view_position.x) * scale;
+        float x = sector_x * sector_size_scaled;
         for (int sector_y = sector_y_min - 1; sector_y <= sector_y_max; sector_y++)
         {
-            float y = radar_screen_center.y + ((sector_y * sector_size_scaled) - view_position.y) * scale;
+            float y = sector_y * sector_size_scaled;
             string name;
             if (my_spaceship)
                 name = getSectorName(sf::Vector2f(sector_x * sector_size_scaled + 1, sector_y * sector_size_scaled + 1),my_spaceship->correction_x,my_spaceship->correction_y);
             else
                 name = getSectorName(sf::Vector2f(sector_x * sector_size_scaled + 1, sector_y * sector_size_scaled + 1));
 
-            sf::Color color = grid_colors[std::min(calcGridScaleMagnitude(scale_magnitude, sector_x), calcGridScaleMagnitude(scale_magnitude, sector_y))];
-            drawText(window, sf::FloatRect(x, y, 30, 30), name, ATopLeft, 30, bold_font, color);
+			sf::Color color = grid_colors[std::min(calcGridScaleMagnitude(scale_magnitude, sector_x), calcGridScaleMagnitude(scale_magnitude, sector_y))];
+            sf::Vector2f pos = worldToScreen(sf::Vector2f(x+(30/scale),y+(30/scale)));
+            drawText(window, sf::FloatRect(pos.x-10, pos.y-10, 20, 20), name, ACenter, 30, bold_font, color);
+            //drawText(window, sf::FloatRect(x, y, 30, 30), name, ATopLeft, 30, bold_font, color);
         }
     }
     sf::VertexArray lines_x(sf::Lines, 2 * (sector_x_max - sector_x_min + 1));
     sf::VertexArray lines_y(sf::Lines, 2 * (sector_y_max - sector_y_min + 1));
     for (int sector_x = sector_x_min; sector_x <= sector_x_max; sector_x++)
     {
-        float x = radar_screen_center.x + ((sector_x * sector_size_scaled) - view_position.x) * scale;
         sf::Color color = grid_colors[calcGridScaleMagnitude(scale_magnitude, sector_x)];
-        lines_x[(sector_x - sector_x_min) * 2].position = sf::Vector2f(x, rect.top);
+		float x = sector_x * sector_size_scaled;
+        lines_x[(sector_x - sector_x_min) * 2].position = worldToScreen(sf::Vector2f(x, (sector_y_min-1)*sector_size_scaled));
         lines_x[(sector_x - sector_x_min) * 2].color = color;
-        lines_x[(sector_x - sector_x_min) * 2 + 1].position = sf::Vector2f(x, rect.top + rect.height);
+        lines_x[(sector_x - sector_x_min) * 2 + 1].position = worldToScreen(sf::Vector2f(x, (sector_y_max+1)*sector_size_scaled));
         lines_x[(sector_x - sector_x_min) * 2 + 1].color = color;
     }
     for (int sector_y = sector_y_min; sector_y <= sector_y_max; sector_y++)
     {
-        float y = radar_screen_center.y + ((sector_y * sector_size_scaled) - view_position.y) * scale;
+        float y = sector_y * sector_size_scaled;
         sf::Color color = grid_colors[calcGridScaleMagnitude(scale_magnitude, sector_y)];
-        lines_y[(sector_y - sector_y_min) * 2].position = sf::Vector2f(rect.left, y);
+        lines_y[(sector_y - sector_y_min) * 2].position = worldToScreen(sf::Vector2f((sector_x_min-1)*sector_size_scaled, y));
         lines_y[(sector_y - sector_y_min) * 2].color = color;
-        lines_y[(sector_y - sector_y_min) * 2 + 1].position = sf::Vector2f(rect.left + rect.width, y);
+        lines_y[(sector_y - sector_y_min) * 2 + 1].position = worldToScreen(sf::Vector2f((sector_x_max+1)*sector_size_scaled, y));
         lines_y[(sector_y - sector_y_min) * 2 + 1].color = color;
     }
     window.draw(lines_x);
@@ -111,11 +116,11 @@ void SectorsView::drawSectorGrid(sf::RenderTarget &window)
     sf::VertexArray points(sf::Points, (sub_sector_x_max - sub_sector_x_min + 1) * (sub_sector_y_max - sub_sector_y_min + 1));
     for (int sector_x = sub_sector_x_min; sector_x <= sub_sector_x_max; sector_x++)
     {
-        float x = radar_screen_center.x + ((sector_x * sub_sector_size) - view_position.x) * scale;
+        float x = sector_x * sub_sector_size;
         for (int sector_y = sub_sector_y_min; sector_y <= sub_sector_y_max; sector_y++)
         {
-            float y = radar_screen_center.y + ((sector_y * sub_sector_size) - view_position.y) * scale;
-            points[(sector_x - sub_sector_x_min) + (sector_y - sub_sector_y_min) * (sub_sector_x_max - sub_sector_x_min + 1)].position = sf::Vector2f(x, y);
+            float y = sector_y * sub_sector_size;
+            points[(sector_x - sub_sector_x_min) + (sector_y - sub_sector_y_min) * (sub_sector_x_max - sub_sector_x_min + 1)].position = worldToScreen(sf::Vector2f(x,y));
             points[(sector_x - sub_sector_x_min) + (sector_y - sub_sector_y_min) * (sub_sector_x_max - sub_sector_x_min + 1)].color = color;
         }
     }
@@ -124,17 +129,15 @@ void SectorsView::drawSectorGrid(sf::RenderTarget &window)
 
 void SectorsView::drawTargets(sf::RenderTarget& window)
 {
-    if (!targets)
+   	if (!targets)
         return;
-
-    sf::Vector2f radar_screen_center(rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f);
 
     sf::Sprite target_sprite;
     textureManager.setTexture(target_sprite, "redicule.png");
 
     for(P<SpaceObject> obj : targets->getTargets())
     {
-        sf::Vector2f object_position_on_screen = radar_screen_center + (obj->getPosition() - getViewPosition()) * getScale();
+        sf::Vector2f object_position_on_screen = worldToScreen(obj->getPosition());
         float r = obj->getRadius() * getScale();
         sf::FloatRect object_rect(object_position_on_screen.x - r, object_position_on_screen.y - r, r * 2, r * 2);
         if (obj != my_spaceship && rect.intersects(object_rect))
@@ -146,7 +149,7 @@ void SectorsView::drawTargets(sf::RenderTarget& window)
 
     if (my_spaceship && targets->getWaypointIndex() > -1 && targets->getWaypointIndex() < my_spaceship->getWaypointCount())
     {
-        sf::Vector2f object_position_on_screen = radar_screen_center + (my_spaceship->waypoints[targets->getWaypointIndex()] - getViewPosition()) * getScale();
+        sf::Vector2f object_position_on_screen = worldToScreen(my_spaceship->waypoints[targets->getWaypointIndex()]);
 
         target_sprite.setPosition(object_position_on_screen - sf::Vector2f(0, 10));
         window.draw(target_sprite);
@@ -172,27 +175,4 @@ void SectorsView::onMouseUp(sf::Vector2f position)
 {
     if (mouse_up_func)
         mouse_up_func(screenToWorld(position));
-}
-
-bool SectorsView::onJoystickXYMove(sf::Vector2f position)
-{
-    if (joystick_x_func)
-        joystick_x_func(position.x);
-    if (joystick_y_func)
-        joystick_y_func(position.y);
-    return true;
-}
-
-bool SectorsView::onJoystickZMove(float position)
-{
-    if (joystick_z_func)
-        joystick_z_func(position);
-    return true;
-}
-
-bool SectorsView::onJoystickRMove(float position)
-{
-    if (joystick_r_func)
-        joystick_r_func(position);
-    return true;
 }

@@ -1,3 +1,4 @@
+#include <i18n.h>
 #ifndef SPACESHIP_H
 #define SPACESHIP_H
 
@@ -54,7 +55,6 @@ public:
     float coolant_level; //0.0-3.0
     float coolant_request;
     float hacked_level; //0.0-1.0
-    float coolant_max; //0.0-3.0
 
     float getHeatingDelta()
     {
@@ -99,6 +99,11 @@ public:
      *[input] Ship will try to aim to this rotation. (degrees)
      */
     float target_rotation;
+
+    /*!
+     *[input] Ship will rotate in this velocity. ([-1,1], overrides target_rotation)
+     */
+    float turnSpeed;
 
     /*!
      * [input] Amount of impulse requested from the user (-1.0 to 1.0)
@@ -208,15 +213,25 @@ public:
     sf::Vector2f docking_offset; //Server only
 
     SpaceShip(string multiplayerClassName, float multiplayer_significant_range=-1);
+    virtual ~SpaceShip();
 
 #if FEATURE_3D_RENDERING
     virtual void draw3DTransparent() override;
 #endif
     /*!
+     * Get this ship's radar signature dynamically modified by the state of its
+     * systems and current activity.
+     */
+    virtual RawRadarSignatureInfo getDynamicRadarSignatureInfo();
+    float getDynamicRadarSignatureGravity() { return getDynamicRadarSignatureInfo().gravity; }
+    float getDynamicRadarSignatureElectrical() { return getDynamicRadarSignatureInfo().electrical; }
+    float getDynamicRadarSignatureBiological() { return getDynamicRadarSignatureInfo().biological; }
+
+    /*!
      * Draw this ship on the radar.
      */
-    virtual void drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range) override;
-    virtual void drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range) override;
+    virtual void drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, float rotation, bool long_range) override;
+    virtual void drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, float rotation, bool long_range) override;
 
     virtual void update(float delta) override;
     virtual float getCloakingDegree();
@@ -248,7 +263,7 @@ public:
      * Spaceship is destroyed by damage.
      * \param info Information about damage type
      */
-    virtual void destroyedByDamage(DamageInfo& info);
+    virtual void destroyedByDamage(DamageInfo& info) override;
 
     /*!
      * Jump in current direction
@@ -260,7 +275,7 @@ public:
      * Check if object can dock with this ship.
      * \param object Object that wants to dock.
      */
-    virtual bool canBeDockedBy(P<SpaceObject> obj);
+    virtual bool canBeDockedBy(P<SpaceObject> obj) override;
 
 
 
@@ -306,6 +321,8 @@ public:
     virtual int scanningComplexity(P<SpaceObject> other) override;
     virtual int scanningChannelDepth(P<SpaceObject> other) override;
     virtual void scannedBy(P<SpaceObject> other) override;
+    void setScanState(EScannedState scanned);
+    void setScanStateByFaction(string faction_name, EScannedState scanned);
 
     bool isFriendOrFoeIdentified();//[DEPRICATED]
     bool isFullyScanned();//[DEPRICATED]
@@ -331,13 +348,13 @@ public:
      */
     float getSystemEffectiveness(ESystem system);
 
-    virtual void applyTemplateValues();
+    virtual void applyTemplateValues() override;
 
     P<SpaceObject> getTarget();
     P<SpaceObject> getDockTarget();
     P<SpaceObject> getLandingTarget();
 
-    virtual std::unordered_map<string, string> getGMInfo();
+    virtual std::unordered_map<string, string> getGMInfo() override;
 
     int getPassagersCount(){return passagers_count;}
     void setPassagersCount(int value){passagers_count = value;}
@@ -346,6 +363,7 @@ public:
 
     bool isDocked() { return docking_state == DS_Docked; }
     bool isDockedWith(P<SpaceObject> target) { return docking_state == DS_Docked && docking_target == target; }
+    P<SpaceObject> getDockedWith() { if (docking_state == DS_Docked) return docking_target; return NULL; }
     bool canStartDocking() { return current_warp <= 0.0 && (!has_jump_drive || jump_delay <= 0.0); }
     bool canStartLanding() { return current_warp <= 0.0 && (!has_jump_drive || jump_delay <= 0.0); }
     int getCustomWeaponStorage(string weapon) { return custom_weapon_storage[weapon]; }
@@ -362,27 +380,31 @@ public:
     void setMaxEnergy(float amount) { if (amount > 0.0) { max_energy_level = amount;} }
     float getEnergy() { return energy_level; }
     void setEnergy(float amount) { if ( (amount > 0.0) && (amount <= max_energy_level)) { energy_level = amount; } }
+    float getSystemHackedLevel(ESystem system) { if (system >= SYS_COUNT) return 0.0; if (system <= SYS_None) return 0.0; return systems[system].hacked_level; }
+    void setSystemHackedLevel(ESystem system, float hacked_level) { if (system >= SYS_COUNT) return; if (system <= SYS_None) return; systems[system].hacked_level = std::min(1.0f, std::max(0.0f, hacked_level)); }
     float getSystemHealth(ESystem system) { if (system >= SYS_COUNT) return 0.0; if (system <= SYS_None) return 0.0; return systems[system].health; }
     void setSystemHealth(ESystem system, float health) { if (system >= SYS_COUNT) return; if (system <= SYS_None) return; systems[system].health = std::min(1.0f, std::max(-1.0f, health)); }
     float getSystemHealthMax(ESystem system) { if (system >= SYS_COUNT) return 0.0; if (system <= SYS_None) return 0.0; return systems[system].health_max; }
     void setSystemHealthMax(ESystem system, float health_max) {
         if (system >= SYS_COUNT) return;
         if (system <= SYS_None) return;
-        systems[system].health_max = std::min(1.0f, std::max(0.0f, health_max));
-        systems[system].health = std::min(systems[system].health, systems[system].health_max); }
+        systems[system].health_max = std::min(1.0f, std::max(-1.0f, health_max));
+        }
     float getSystemHeat(ESystem system) { if (system >= SYS_COUNT) return 0.0; if (system <= SYS_None) return 0.0; return systems[system].heat_level; }
     void setSystemHeat(ESystem system, float heat) { if (system >= SYS_COUNT) return; if (system <= SYS_None) return; systems[system].heat_level = std::min(1.0f, std::max(0.0f, heat)); }
     float getSystemPower(ESystem system) { if (system >= SYS_COUNT) return 0.0; if (system <= SYS_None) return 0.0; return systems[system].power_level; }
     void setSystemPower(ESystem system, float power) { if (system >= SYS_COUNT) return; if (system <= SYS_None) return; systems[system].power_level = std::min(3.0f, std::max(0.0f, power)); }
     float getSystemCoolant(ESystem system) { if (system >= SYS_COUNT) return 0.0; if (system <= SYS_None) return 0.0; return systems[system].coolant_level; }
-//    void setSystemCoolant(ESystem system, float coolant) { if (system >= SYS_COUNT) return; if (system <= SYS_None) return; systems[system].coolant_level = std::min(1.0f, std::max(0.0f, coolant)); }
-    void setSystemCoolant(ESystem system, float coolant) { if (system >= SYS_COUNT) return; if (system <= SYS_None) return; systems[system].coolant_level = std::min(systems[system].coolant_max, std::max(0.0f, coolant)); }
+    void setSystemCoolant(ESystem system, float coolant) { if (system >= SYS_COUNT) return; if (system <= SYS_None) return; systems[system].coolant_level = std::min(1.0f, std::max(0.0f, coolant)); }
+
     float getSystemHack(ESystem system) { if (system >= SYS_COUNT) return 0.0; if (system <= SYS_None) return 0.0; return systems[system].hacked_level; }
     void setSystemHack(ESystem system, float hack) { if (system >= SYS_COUNT) return; if (system <= SYS_None) return; systems[system].hacked_level = std::min(3.0f, std::max(0.0f, hack)); }
     float getImpulseMaxSpeed() { return impulse_max_speed; }
     void setImpulseMaxSpeed(float speed) { impulse_max_speed = speed; }
     float getRotationMaxSpeed() { return turn_speed; }
     void setRotationMaxSpeed(float speed) { turn_speed = speed; }
+    float getAcceleration() { return impulse_acceleration; }
+    void setAcceleration(float acceleration) { impulse_acceleration = acceleration; }
     void setCombatManeuver(float boost, float strafe) { combat_maneuver_boost_speed = boost; combat_maneuver_strafe_speed = strafe; }
 
     bool hasJumpDrive() { return has_jump_drive; }
@@ -394,7 +416,6 @@ public:
 	float getJumpDelay() { return jump_delay; }
 	float getJumpDriveMaxDistance() { return jump_drive_max_distance; }
 	float getJumpDriveMinDistance() { return jump_drive_min_distance; }
-	float getJumpDriveCharge() { return jump_drive_charge; }
 	float getJumpDriveChargeTime() { return jump_drive_charge_time; }
 	float getJumpDriveEnergy() { return jump_drive_energy_per_km_charge; }
 
@@ -414,6 +435,16 @@ public:
             warp_speed_per_warp_level = 0;
         }
     }
+    void setWarpSpeed(float speed) { warp_speed_per_warp_level = std::max(0.0f, speed); }
+    float getWarpSpeed() {
+        if (has_warp_drive) {
+            return warp_speed_per_warp_level;
+        } else {
+            return 0.0f;
+        }
+     }
+    float getJumpDriveCharge() { return jump_drive_charge; }
+    void setJumpDriveCharge(float charge) { jump_drive_charge = charge; }
 
 	void setCloaking(bool enabled) { has_cloaking = enabled; }
 	bool hasCloaking() { return has_cloaking; }
@@ -451,7 +482,7 @@ public:
     int getShieldsFrequency(void){ return shield_frequency; }
     void setShieldsFrequency(float freq) { if ((freq > SpaceShip::max_frequency) || (freq < 0)) return; shield_frequency = freq;}
 
-    int getBeamsFrequency(void){ return beam_frequency; }
+    int getBeamFrequency(){ return beam_frequency; }
 
     void setBeamWeapon(int index, float arc, float direction, float range, float cycle_time, float damage)
     {
@@ -486,26 +517,34 @@ public:
     void setWeaponTubeCount(int amount);
     int getWeaponTubeCount();
     string getWeaponTubeLoadType(int index);
+    EMissileSizes getWeaponTubeSize(int index);
+
     void weaponTubeAllowMissle(int index, EMissileWeapons type);
     void weaponTubeDisallowMissle(int index, EMissileWeapons type);
     void setWeaponTubeExclusiveFor(int index, EMissileWeapons type);
     void setWeaponTubeDirection(int index, float direction);
+    void setWeaponTubeSize(int index, EMissileSizes size);
+    void setTubeSize(int index, EMissileSizes size);
+    EMissileSizes getTubeSize(int index);
+    void setTubeLoadTime(int index, float time);
+    float getTubeLoadTime(int index);
 
     void setRadarTrace(string trace) { radar_trace = trace; }
 
     void addBroadcast(int threshold, string message);
 
-    //Return a string that can be appended to an object create function in the lua scripting.
+    // Return a string that can be appended to an object create function in the lua scripting.
     // This function is used in getScriptExport calls to adjust for tweaks done in the GM screen.
     string getScriptExportModificationsOnTemplate();
     bool tryDockDrone(SpaceShip* other);
-    float getDronesControlRange();
 };
 
 float frequencyVsFrequencyDamageFactor(int beam_frequency, int shield_frequency);
 
 string getMissileWeaponName(const EMissileWeapons& missile);
 string getMissileWeaponName(const string& missile);
+string getLocaleMissileWeaponName(const EMissileWeapons& missile);
+string getLocaleMissileWeaponName(const string& missile);
 REGISTER_MULTIPLAYER_ENUM(EMissileWeapons);
 REGISTER_MULTIPLAYER_ENUM(EDamageType);
 REGISTER_MULTIPLAYER_ENUM(EWeaponTubeState);

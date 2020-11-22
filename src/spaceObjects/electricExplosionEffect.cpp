@@ -13,6 +13,7 @@ REGISTER_MULTIPLAYER_CLASS(ElectricExplosionEffect, "ElectricExplosionEffect");
 ElectricExplosionEffect::ElectricExplosionEffect()
 : SpaceObject(1000.0, "ElectricExplosionEffect")
 {
+    has_weight = false;
     on_radar = false;
     size = 1.0;
 
@@ -23,6 +24,11 @@ ElectricExplosionEffect::ElectricExplosionEffect()
 
     registerMemberReplication(&size);
     registerMemberReplication(&on_radar);
+}
+
+//due to a suspected compiler bug this deconstructor needs to be explicitly defined
+ElectricExplosionEffect::~ElectricExplosionEffect()
+{
 }
 
 #if FEATURE_3D_RENDERING
@@ -43,7 +49,7 @@ void ElectricExplosionEffect::draw3DTransparent()
     glScalef(scale * size, scale * size, scale * size);
     glColor3f(alpha, alpha, alpha);
 
-    ShaderManager::getShader("basicShader")->setParameter("textureMap", *textureManager.getTexture("electric_sphere_texture.png"));
+    ShaderManager::getShader("basicShader")->setUniform("textureMap", *textureManager.getTexture("electric_sphere_texture.png"));
     sf::Shader::bind(ShaderManager::getShader("basicShader"));
     Mesh* m = Mesh::getMesh("sphere.obj");
     if(m)
@@ -53,7 +59,7 @@ void ElectricExplosionEffect::draw3DTransparent()
         m->render();
     glPopMatrix();
 
-    ShaderManager::getShader("billboardShader")->setParameter("textureMap", *textureManager.getTexture("particle.png"));
+    ShaderManager::getShader("billboardShader")->setUniform("textureMap", *textureManager.getTexture("particle.png"));
     sf::Shader::bind(ShaderManager::getShader("billboardShader"));
     scale = Tween<float>::easeInCubic(f, 0.0, 1.0, 0.3f, 3.0f);
     float r = Tween<float>::easeOutQuad(f, 0.0, 1.0, 1.0f, 0.0f);
@@ -77,7 +83,7 @@ void ElectricExplosionEffect::draw3DTransparent()
 }
 #endif//FEATURE_3D_RENDERING
 
-void ElectricExplosionEffect::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range)
+void ElectricExplosionEffect::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, float rotation, bool long_range)
 {
     if (!on_radar)
         return;
@@ -94,7 +100,7 @@ void ElectricExplosionEffect::drawOnRadar(sf::RenderTarget& window, sf::Vector2f
 void ElectricExplosionEffect::update(float delta)
 {
     if (delta > 0 && lifetime == maxLifetime)
-         soundManager->playSound("sfx/emp_explosion.wav", getPosition(), size, 1.0);
+        soundManager->playSound("sfx/emp_explosion.wav", getPosition(), size, 1.0);
     lifetime -= delta;
     if (lifetime < 0)
         destroy();

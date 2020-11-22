@@ -98,7 +98,9 @@ REGISTER_SCRIPT_SUBCLASS(Planet, SpaceObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(Planet, setPlanetSurfaceTexture);
     REGISTER_SCRIPT_CLASS_FUNCTION(Planet, setPlanetIcon);
     REGISTER_SCRIPT_CLASS_FUNCTION(Planet, setPlanetCloudTexture);
+    REGISTER_SCRIPT_CLASS_FUNCTION(Planet, getPlanetRadius);
     REGISTER_SCRIPT_CLASS_FUNCTION(Planet, setPlanetRadius);
+    REGISTER_SCRIPT_CLASS_FUNCTION(Planet, getCollisionSize);
     REGISTER_SCRIPT_CLASS_FUNCTION(Planet, setPlanetCloudRadius);
     REGISTER_SCRIPT_CLASS_FUNCTION(Planet, setPlanetAtmosphereRadius);
     REGISTER_SCRIPT_CLASS_FUNCTION(Planet, setDistanceFromMovementPlane);
@@ -119,6 +121,7 @@ Planet::Planet()
     atmosphere_texture = "";
     atmosphere_size = 0;
     atmosphere_color = sf::Color(0, 0, 0);
+    atmosphere_size = 0;
     distance_from_movement_plane = 0;
     axial_rotation_time = random(100.0,400.0);
     rotation_axis = random(0.0,360.0);
@@ -131,11 +134,11 @@ Planet::Planet()
 
     collision_size = -2.0f;
 
-    setRadarSignatureInfo(0.5, 0, 0);
+    setRadarSignatureInfo(0.5, 0, 0.3);
 
     addInfos(0,"Rotation",string(irandom(5,45))+ " H.LO");
 	addInfos(1,"Revolution",string(irandom(50,5000))+ " J.LO");
-	addInfos(2,"Axe de rotation",string(irandom(1,360))+"°" + string(irandom(1,60))+"'" + string(irandom(1,60))+"''");
+	addInfos(2,"Axe de rotation",string(irandom(1,360))+"deg" + string(irandom(1,60))+"'" + string(irandom(1,60))+"''");
 	addInfos(3,"Taille",string(irandom(50,500) * 100) + " km");
 	if (random(0.0,1.0) < 0.1)
         addInfos(4,"Type","Gazeuse");
@@ -153,6 +156,7 @@ Planet::Planet()
 
     registerMemberReplication(&planet_size);
     registerMemberReplication(&cloud_size);
+    registerMemberReplication(&atmosphere_size);
     registerMemberReplication(&planet_texture);
     registerMemberReplication(&planet_icon);
     registerMemberReplication(&cloud_texture);
@@ -197,6 +201,16 @@ void Planet::setPlanetIcon(string texture_name)
 void Planet::setPlanetCloudTexture(string texture_name)
 {
     cloud_texture = texture_name;
+}
+
+float Planet::getPlanetRadius()
+{
+    return planet_size;
+}
+
+float Planet::getCollisionSize()
+{
+    return collision_size;
 }
 
 void Planet::setPlanetRadius(float size)
@@ -299,8 +313,8 @@ void Planet::draw3D()
             planet_mesh[level_of_detail] = new Mesh(planet_mesh_generator.vertices);
         }
         sf::Shader* shader = ShaderManager::getShader("planetShader");
-        shader->setParameter("baseMap", *textureManager.getTexture(planet_texture));
-        shader->setParameter("atmosphereColor", atmosphere_color);
+        shader->setUniform("baseMap", *textureManager.getTexture(planet_texture));
+        shader->setUniform("atmosphereColor", (sf::Glsl::Vec4)atmosphere_color);
         sf::Shader::bind(shader);
         planet_mesh[level_of_detail]->render();
     }
@@ -334,15 +348,15 @@ void Planet::draw3DTransparent()
             planet_mesh[level_of_detail] = new Mesh(planet_mesh_generator.vertices);
         }
         sf::Shader* shader = ShaderManager::getShader("planetShader");
-        shader->setParameter("baseMap", *textureManager.getTexture(cloud_texture));
-        shader->setParameter("atmosphereColor", sf::Color(0,0,0));
+        shader->setUniform("baseMap", *textureManager.getTexture(cloud_texture));
+        shader->setUniform("atmosphereColor", (sf::Glsl::Vec4)sf::Color(0,0,0));
         sf::Shader::bind(shader);
         planet_mesh[level_of_detail]->render();
         glPopMatrix();
     }
     if (atmosphere_texture != "" && atmosphere_size > 0)
     {
-        ShaderManager::getShader("billboardShader")->setParameter("textureMap", *textureManager.getTexture(atmosphere_texture));
+        ShaderManager::getShader("billboardShader")->setUniform("textureMap", *textureManager.getTexture(atmosphere_texture));
         sf::Shader::bind(ShaderManager::getShader("billboardShader"));
         glColor4f(atmosphere_color.r / 255.0f, atmosphere_color.g / 255.0f, atmosphere_color.b / 255.0f, atmosphere_size * 2.0f);
         glBegin(GL_QUADS);
@@ -359,7 +373,7 @@ void Planet::draw3DTransparent()
 }
 #endif
 
-void Planet::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range)
+void Planet::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, float rotation, bool long_range)
 {
     if (long_range){
         sf::Sprite object_sprite;
@@ -392,7 +406,7 @@ void Planet::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float 
     }
 }
 
-void Planet::drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range)
+void Planet::drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, float rotation, bool long_range)
 {
     sf::CircleShape radar_radius(planet_size * scale);
     radar_radius.setOrigin(planet_size * scale, planet_size * scale);
@@ -422,4 +436,24 @@ void Planet::updateCollisionSize()
         setCollisionRadius(collision_size);
         setCollisionPhysics(true, true);
     }
+}
+
+string Planet::getExportLine()
+{
+    string ret="Planet():setPosition(" + string(getPosition().x, 0) + ", " + string(getPosition().y, 0) + "):setPlanetRadius(" + string(getPlanetRadius(), 0) + ")";
+    if (atmosphere_color.r != 0 || atmosphere_color.g != 0 || atmosphere_color.b != 0)
+    {
+        ret += ":setPlanetAtmosphereColor(" + string(atmosphere_color.r/255.0f) + "," + string(atmosphere_color.g/255.0f) + "," + string(atmosphere_color.b/255.0f) + ")";
+    }
+    if (distance_from_movement_plane!=0)
+    {
+        ret += ":setDistanceFromMovementPlane("  + string(distance_from_movement_plane) + ")";
+    }
+    //TODO setPlanetAtmosphereTexture
+    //TODO setPlanetSurfaceTexture
+    //TODO setPlanetCloudTexture
+    //TODO setPlanetCloudRadius
+    //TODO setAxialRotationTime
+    //TODO setOrbit
+    return ret;
 }

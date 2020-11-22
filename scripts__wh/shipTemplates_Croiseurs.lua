@@ -86,7 +86,7 @@ template:setDefaultAI('missilevolley')
 
 --[[Croiseur Gothic]]
 variation = template:copy("Croiseur Gothic"):setType("playership")
-variation:setPublicName("Croiseur Gothic")
+variation:setLocaleName("Croiseur Gothic")
 variation:setSpeed(85, 10, 12)
 -- PJ
 variation:setCombatManeuver(200, 150)
@@ -324,7 +324,7 @@ template:setDockClasses("Drone","Vaisseau leger")
 
 --[[Croiseur Marchand Rogue]]
 variation = template:copy("Croiseur Marchand Rogue")
-variation:setPublicName("Croiseur Marchand Rogue")
+variation:setLocaleName("Croiseur Marchand Rogue")
 variation:setClass("Croiseur", "Marchand","Rogue")
 variation:setModel("Rogue_Trader_Cruiser")
 variation:setDescription([[Ces transporteurs sont generalement des vaisseaux civils modifie issus de la Flotte Marchande. Malgre leur courage et leur volonte, ces vaisseaux ne sont pas equipes pour lutter contre des vaisseaux de guerre, ne disposant que d'un armement leger contre les attaques de pirates, manquant d'officiers experimentes et n'ayant pas la motorisation permettant de semer leurs adversaires.]])

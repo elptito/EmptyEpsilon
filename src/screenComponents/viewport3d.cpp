@@ -39,7 +39,7 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
         soundManager->setListenerPosition(sf::Vector2f(camera_position.x, camera_position.y), camera_yaw);
     window.popGLStates();
 
-    ShaderManager::getShader("billboardShader")->setParameter("camera_position", camera_position);
+    ShaderManager::getShader("billboardShader")->setUniform("camera_position", camera_position);
 
     float camera_fov = 60.0f;
     float sx = window.getSize().x * window.getView().getViewport().width / window.getView().getSize().x;
@@ -278,7 +278,7 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
         glTranslatef(-camera_position.x,-camera_position.y, -camera_position.z);
         glTranslatef(target->getPosition().x, target->getPosition().y, target->getTranslateZ());
 
-        ShaderManager::getShader("billboardShader")->setParameter("textureMap", *textureManager.getTexture("redicule2.png"));
+        ShaderManager::getShader("billboardShader")->setUniform("textureMap", *textureManager.getTexture("redicule2.png"));
         sf::Shader::bind(ShaderManager::getShader("billboardShader"));
         glColor4f(0.5, 0.5, 0.5, target->getRadius() * 2.5);
         glBegin(GL_QUADS);
@@ -374,7 +374,7 @@ sf::Vector3f GuiViewport3D::worldToScreen(sf::RenderTarget& window, sf::Vector3f
     fTempo[6] = projection_matrix[2]*fTempo[0]+projection_matrix[6]*fTempo[1]+projection_matrix[10]*fTempo[2]+projection_matrix[14]*fTempo[3];
     fTempo[7] = -fTempo[2];
     //The result normalizes between -1 and 1
-    if(fTempo[7]==0.0)	//The w value
+    if(fTempo[7]==0.0)  //The w value
         return sf::Vector3f(0, 0, -1);
     fTempo[7] = 1.0/fTempo[7];
     //Perspective division
@@ -387,7 +387,7 @@ sf::Vector3f GuiViewport3D::worldToScreen(sf::RenderTarget& window, sf::Vector3f
     ret.x = (fTempo[4]*0.5+0.5)*viewport[2]+viewport[0];
     ret.y = (fTempo[5]*0.5+0.5)*viewport[3]+viewport[1];
     //This is only correct when glDepthRange(0.0, 1.0)
-    //ret.z = (1.0+fTempo[6])*0.5;	//Between 0 and 1
+    //ret.z = (1.0+fTempo[6])*0.5;  //Between 0 and 1
     //Set Z to distance into the screen (negative is behind the screen)
     ret.z = -fTempo[2];
 

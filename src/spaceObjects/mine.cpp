@@ -11,6 +11,9 @@
 /// A mine object. Simple, effective, deadly.
 REGISTER_SCRIPT_SUBCLASS(Mine, SpaceObject)
 {
+  // Set a function that will be called if the mine explodes.
+  // First argument is the mine, second argument is the mine's owner/instigator (or nil).
+  REGISTER_SCRIPT_CLASS_FUNCTION(Mine, onDestruction);
 }
 
 REGISTER_MULTIPLAYER_CLASS(Mine, "Mine");
@@ -25,6 +28,7 @@ Mine::Mine()
     setRadarSignatureInfo(0.0, 0.05, 0.0);
     hull = 5;
     speed = 0;
+    damage_multiplier = 1;
 
     PathPlannerManager::getInstance()->addAvoidObject(this, trigger_range * 1.2f);
 }
@@ -37,7 +41,7 @@ void Mine::draw3DTransparent()
 {
 }
 
-void Mine::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range)
+void Mine::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, float rotation, bool long_range)
 {
     sf::Sprite objectSprite;
     textureManager.setTexture(objectSprite, "RadarBlip.png");
@@ -47,7 +51,7 @@ void Mine::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float sc
     window.draw(objectSprite);
 }
 
-void Mine::drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range)
+void Mine::drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, float rotation, bool long_range)
 {
     sf::CircleShape hitRadius(trigger_range * scale);
     hitRadius.setOrigin(trigger_range * scale, trigger_range * scale);
@@ -90,13 +94,15 @@ void Mine::update(float delta)
 
 void Mine::collide(Collisionable* target, float force)
 {
+    if (!game_server || triggered || ejectTimeout > 0.0)
+        return;
+    
     P<SpaceObject> hitObject = P<Collisionable>(target);
-    if (!game_server || triggered)
-        return;
-    P<SpaceShip> hitShip = hitObject;
-    if (ejectTimeout > 0.0 && (hitShip->isDockedWith(owner) || hitShip == owner))
-        return;
     if (!hitObject || !hitObject->canBeTargetedBy(nullptr))
+        return;
+
+    P<SpaceShip> hitShip = hitObject;
+    if (hitShip && (hitShip->isDockedWith(owner) || hitShip == owner))
         return;
 
     triggered = true;
@@ -116,5 +122,21 @@ void Mine::explode()
     e->setSize(blastRange);
     e->setPosition(getPosition());
     e->setOnRadar(true);
+    e->setRadarSignatureInfo(0.0, 0.0, 0.2);
+
+    if (on_destruction.isSet())
+    {
+        if (info.instigator)
+        {
+            on_destruction.call(P<Mine>(this), P<SpaceObject>(info.instigator));
+        }else{
+            on_destruction.call(P<Mine>(this));
+        }
+    }
     destroy();
+}
+
+void Mine::onDestruction(ScriptSimpleCallback callback)
+{
+    this->on_destruction = callback;
 }

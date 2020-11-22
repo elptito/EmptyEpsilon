@@ -3,6 +3,7 @@
 
 #include "gui/gui2_element.h"
 #include "signalQualityIndicator.h"
+#include "gameGlobalInfo.h"
 
 class GuiPanel;
 class GuiLabel;
@@ -29,9 +30,11 @@ private:
 public:
     GuiScanningDialog(GuiContainer* owner, string id);
 
-    virtual void onDraw(sf::RenderTarget& window);
-    virtual void onHotkey(const HotkeyResult& key) override;
+    virtual void onDraw(sf::RenderTarget& window) override;
+    virtual bool onJoystickAxis(const AxisAction& axisAction) override;
 
+    virtual void onHotkey(const HotkeyResult& key) override;
+    
     void setupParameters();
     void updateSignal();
 };

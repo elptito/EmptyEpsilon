@@ -25,6 +25,7 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
         return;
 
     sf::Vector2f view_position = radar->getViewPosition();
+    float view_rotation = radar->getViewRotation();
 
     // Cap the number of signature points, which determines the raw data's
     // resolution.
@@ -80,7 +81,19 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
         }
 
         // Get the object's radar signature.
-        RawRadarSignatureInfo info = obj->getRadarSignatureInfo();
+        // If the object is a SpaceShip, adjust the signature dynamically based
+        // on its current state and activity.
+        RawRadarSignatureInfo info;
+        P<SpaceShip> ship = obj;
+
+        if (ship)
+        {
+            // Use dynamic signatures for ships.
+            info = ship->getDynamicRadarSignatureInfo();
+        } else {
+            // Otherwise, use the baseline only.
+            info = obj->getRadarSignatureInfo();
+        }
 
         // Anti-object have more signature range
         float material = info.gravity + info.biological + info.electrical;
@@ -89,10 +102,6 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
             a_0 -= - material * 10;
             a_1 += - material * 10;
         }
-
-//        a_0 = std::max(a_0, 0.0f);
-//        a_1 = std::min(a_1, 360.0f);
-
         // For each interval determined by the level of raw data resolution,
         // initialize the signatures array.
         for(float a = a_0; a <= a_1; a += 360.f / float(point_count))
@@ -163,17 +172,17 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
         // ... and add vectors for each point.
         a_r[n].position.x = rect.left + rect.width / 2.0f;
         a_r[n].position.y = rect.top + rect.height / 2.0f;
-        a_r[n].position += sf::vector2FromAngle(float(n) / float(point_count) * 360.0f) * (radius * (0.95f - r / 500));
+        a_r[n].position += sf::vector2FromAngle(float(n) / float(point_count) * 360.0f - view_rotation) * (radius * (0.95f - r / 500));
         a_r[n].color = sf::Color(255, 0, 0);
 
         a_g[n].position.x = rect.left + rect.width / 2.0f;
         a_g[n].position.y = rect.top + rect.height / 2.0f;
-        a_g[n].position += sf::vector2FromAngle(float(n) / float(point_count) * 360.0f) * (radius * (0.92f - g / 500));
+        a_g[n].position += sf::vector2FromAngle(float(n) / float(point_count) * 360.0f - view_rotation) * (radius * (0.92f - g / 500));
         a_g[n].color = sf::Color(0, 255, 0);
 
         a_b[n].position.x = rect.left + rect.width / 2.0f;
         a_b[n].position.y = rect.top + rect.height / 2.0f;
-        a_b[n].position += sf::vector2FromAngle(float(n) / float(point_count) * 360.0f) * (radius * (0.89f - b / 500));
+        a_b[n].position += sf::vector2FromAngle(float(n) / float(point_count) * 360.0f - view_rotation) * (radius * (0.89f - b / 500));
         a_b[n].color = sf::Color(0, 0, 255);
     }
 

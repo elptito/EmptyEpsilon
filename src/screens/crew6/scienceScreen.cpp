@@ -5,6 +5,7 @@
 #include "spaceObjects/nebula.h"
 #include "spaceObjects/asteroid.h"
 #include "spaceObjects/mine.h"
+#include "preferenceManager.h"
 
 #include "screenComponents/radarView.h"
 #include "screenComponents/rawScannerDataRadarOverlay.h"
@@ -15,6 +16,7 @@
 #include "screenComponents/alertOverlay.h"
 #include "screenComponents/customShipFunctions.h"
 #include "screenComponents/shipsLogControl.h"
+#include "screenComponents/noRadarPopup.h"
 
 #include "gui/gui2_autolayout.h"
 #include "gui/gui2_keyvaluedisplay.h"
@@ -44,7 +46,7 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
     radar_view->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
     // Draw the science radar.
-    science_radar = new GuiRadarView(radar_view, "SCIENCE_RADAR", my_spaceship->science_radar_range, &targets, my_spaceship);
+    science_radar = new GuiRadarView(radar_view, "SCIENCE_RADAR", my_spaceship ? my_spaceship->getLongRangeRadarRange() : 30000.0, &targets, my_spaceship);
     science_radar->setPosition(-270, 0, ACenterRight)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
     science_radar->setRangeIndicatorStepSize(5000.0)->longRange()->enableWaypoints()->enableCallsigns()->enableHeadingIndicators()->setStyle(GuiRadarView::Circular)->setFogOfWarStyle(GuiRadarView::NebulaFogOfWar);
     science_radar->setCallbacks(
@@ -55,7 +57,8 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
             targets.setToClosestTo(position, 1000, TargetsContainer::Selectable, my_spaceship);
         }, nullptr, nullptr
     );
-    new RawScannerDataRadarOverlay(science_radar, "", my_spaceship->science_radar_range);
+    science_radar->setAutoRotating(PreferencesManager::get("science_radar_lock","0")=="1");
+    new RawScannerDataRadarOverlay(science_radar, "", my_spaceship ? my_spaceship->getLongRangeRadarRange() : 30000.0f);
 
     // Draw and hide the probe radar.
     probe_radar = new GuiRadarView(radar_view, "PROBE_RADAR", 5000, &targets, my_spaceship);
@@ -71,33 +74,46 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
     );
     new RawScannerDataRadarOverlay(probe_radar, "", 5000);
 
+    sidebar_selector = new GuiSelector(radar_view, "", [this](int index, string value)
+    {
+        info_sidebar->setVisible(index == 0);
+        custom_function_sidebar->setVisible(index == 1);
+    });
+    sidebar_selector->setOptions({"Scanning", "Other"});
+    sidebar_selector->setSelectionIndex(0);
+    sidebar_selector->setPosition(-20, 120, ATopRight)->setSize(250, 50);
+
+    // Target scan data sidebar.
     info_sidebar = new GuiAutoLayout(radar_view, "SIDEBAR", GuiAutoLayout::LayoutVerticalTopToBottom);
     info_sidebar->setPosition(-20, 100, ATopRight)->setSize(250, GuiElement::GuiSizeMax);
 
+    custom_function_sidebar = new GuiCustomShipFunctions(radar_view, crew_position, "", my_spaceship);
+    custom_function_sidebar->setPosition(-270, 20, ATopRight)->setSize(200, GuiElement::GuiSizeMax)->hide();
+
     // Scan button.
     scan_button = new GuiScanTargetButton(info_sidebar, "SCAN_BUTTON", &targets);
-    scan_button->setPosition(-20, 120, ATopRight)->setSize(250, 50);
+    scan_button->setSize(GuiElement::GuiSizeMax, 50)->setVisible(my_spaceship && my_spaceship->getCanScan());
 
     // Simple scan data.
-    info_callsign = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_CALLSIGN", 0.4, "ID", "");
+    info_callsign = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_CALLSIGN", 0.4, tr("Callsign"), "");
     info_callsign->setSize(GuiElement::GuiSizeMax, 30);
-    info_distance = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_DISTANCE", 0.4, "Distance", "");
+    info_distance = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_DISTANCE", 0.4, tr("science","Distance"), "");
     info_distance->setSize(GuiElement::GuiSizeMax, 30);
-    info_heading = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_HEADING", 0.4, "Direction", "");
+    info_heading = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_HEADING", 0.4, tr("Bearing"), "");
     info_heading->setSize(GuiElement::GuiSizeMax, 30);
-    info_relspeed = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_REL_SPEED", 0.4, "Vitesse Rel.", "");
+    info_relspeed = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_REL_SPEED", 0.4, tr("Rel. Speed"), "");
     info_relspeed->setSize(GuiElement::GuiSizeMax, 30);
-    info_faction = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_FACTION", 0.4, "Faction", "");
+    info_faction = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_FACTION", 0.4, tr("Faction"), "");
     info_faction->setSize(GuiElement::GuiSizeMax, 30);
-    info_type = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_TYPE", 0.4, "Type", "");
+    info_type = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_TYPE", 0.4, tr("science","Type"), "");
     info_type->setSize(GuiElement::GuiSizeMax, 30);
-    info_type_button = new GuiButton(info_type, "SCIENCE_TYPE_BUTTON", "DB", [this]() {
+    info_type_button = new GuiButton(info_type, "SCIENCE_TYPE_BUTTON", tr("database", "DB"), [this]() {
         P<SpaceShip> ship = targets.get();
         P<SpaceStation> station = targets.get();
         if (ship)
         {
             P<ShipTemplate> st = ship->ship_template;
-            if (database_view->findAndDisplayEntry(st->getPublicName()))
+            if (database_view->findAndDisplayEntry(st->getLocaleName()))
             {
                 view_mode_selection->setSelectionIndex(1);
                 radar_view->hide();
@@ -108,7 +124,7 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
         if (station)
         {
             P<ShipTemplate> st = station->ship_template;
-            if (database_view->findAndDisplayEntry(st->getPublicName()))
+            if (database_view->findAndDisplayEntry(st->getLocaleName()))
             {
                 view_mode_selection->setSelectionIndex(1);
                 radar_view->hide();
@@ -117,10 +133,10 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
             }
         }
     });
-    info_type_button->setTextSize(20)->setPosition(0, 1, ATopRight)->setSize(50, 28);
-    info_shields = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_SHIELDS", 0.4, "Boucliers", "");
+    info_type_button->setTextSize(20)->setPosition(0, 1, ATopLeft)->setSize(50, 28);
+    info_shields = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_SHIELDS", 0.4, tr("science", "Shields"), "");
     info_shields->setSize(GuiElement::GuiSizeMax, 30);
-    info_hull = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_HULL", 0.4, "Carlingue", "");
+    info_hull = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_HULL", 0.4, tr("science", "Hull"), "");
     info_hull->setSize(GuiElement::GuiSizeMax, 30);
     info_signatures = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_SIGNATURES", 0.4, "Signatures", "");
     info_signatures->setSize(GuiElement::GuiSizeMax, 30);
@@ -165,7 +181,7 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
     // List each system's status.
     for(int n = 0; n < SYS_COUNT; n++)
     {
-        info_system[n] = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_SYSTEM_" + string(n), 0.75, getSystemName(ESystem(n)), "-");
+        info_system[n] = new GuiKeyValueDisplay(info_sidebar, "SCIENCE_SYSTEM_" + string(n), 0.75, getLocaleSystemName(ESystem(n)), "-");
         info_system[n]->setSize(GuiElement::GuiSizeMax, 30);
         info_system[n]->hide();
     }
@@ -213,9 +229,10 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
     probe_view_button->setPosition(20, -160, ABottomLeft)->setSize(200, 50)->disable();
 
     // Draw the zoom slider.
-    zoom_slider = new GuiSlider(radar_view, "", my_spaceship->science_radar_range, 5000.0, my_spaceship->science_radar_range, [this](float value)
+    zoom_slider = new GuiSlider(radar_view, "", my_spaceship ? my_spaceship->getLongRangeRadarRange() : 30000.0f, my_spaceship ? my_spaceship->getShortRangeRadarRange() : 5000.0f, my_spaceship ? my_spaceship->getLongRangeRadarRange() : 30000.0f, [this](float value)
     {
-        zoom_label->setText("Zoom: " + string(my_spaceship->science_radar_range / value, 1) + "x");
+        if (my_spaceship)
+            zoom_label->setText(tr("Zoom: {zoom}x").format({{"zoom", string(my_spaceship->getLongRangeRadarRange() / value, 1)}}));
         science_radar->setDistance(value);
     });
     zoom_slider->setPosition(-20, -60, ABottomRight)->setSize(250, 50);
@@ -228,15 +245,14 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
         background_gradient->setVisible(index == 0);
         database_view->setVisible(index == 1);
     });
-    view_mode_selection->setOptions({"Radar", "Base de donnees"})->setSelectionIndex(0)->setPosition(20, -60, ABottomLeft)->setSize(200, 100);
-
-    custom_function_sidebar = new GuiCustomShipFunctions(radar_view, crew_position, "", my_spaceship);
-    custom_function_sidebar ->setPosition(20, 20, ATopLeft)->setSize(250, GuiElement::GuiSizeMax);
+    view_mode_selection->setOptions({tr("button", "Radar"), tr("button", "Database")})->setSelectionIndex(0)->setPosition(20, -20, ABottomLeft)->setSize(200, 100);
 
     // Scanning dialog.
     new GuiScanningDialog(this, "SCANNING_DIALOG");
 
     new ShipsLog(this,"science");
+
+    new GuiNoRadarPopup(this);
 }
 
 void ScienceScreen::onDraw(sf::RenderTarget& window)
@@ -244,30 +260,40 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
     GuiOverlay::onDraw(window);
     P<ScanProbe> probe;
 
-    // Handle mouse wheel
-    float mouse_wheel_delta = InputHandler::getMouseWheelDelta();
-    if (mouse_wheel_delta != 0.0)
-    {
-        float view_distance = science_radar->getDistance() * (1.0 - (mouse_wheel_delta * 0.1f));
-        if (view_distance > my_spaceship->science_radar_range)
-            view_distance = my_spaceship->science_radar_range;
-        if (view_distance < 5000.0f)
-            view_distance = 5000.0f;
-        science_radar->setDistance(view_distance);
-        // Keep the zoom slider in sync.
-        zoom_slider->setValue(view_distance);
-        zoom_label->setText("Zoom: " + string(my_spaceship->science_radar_range / view_distance, 1) + "x");
-    }
-
     if (!my_spaceship)
         return;
+
+    if(my_spaceship->getLongRangeRadarRange() <= 0)
+    {
+        zoom_label->setText("PAS D'AUSPEX");
+        return;
+        //and popup shown
+    }
+
+    float view_distance = science_radar->getDistance();
+    float mouse_wheel_delta=InputHandler::getMouseWheelDelta();
+    if (mouse_wheel_delta!=0)
+    {
+        view_distance *= (1.0 - (mouse_wheel_delta * 0.1f));
+    }
+    view_distance = std::min(view_distance,my_spaceship->getLongRangeRadarRange());
+    view_distance = std::max(view_distance,my_spaceship->getShortRangeRadarRange());
+    if (view_distance!=science_radar->getDistance() || previous_long_range_radar != my_spaceship->getLongRangeRadarRange() || previous_short_range_radar != my_spaceship->getShortRangeRadarRange())
+    {
+        previous_short_range_radar=my_spaceship->getShortRangeRadarRange();
+        previous_long_range_radar=my_spaceship->getLongRangeRadarRange();
+        science_radar->setDistance(view_distance);
+        // Keep the zoom slider in sync.
+        zoom_slider->setValue(view_distance)->setRange(my_spaceship->getLongRangeRadarRange(),my_spaceship->getShortRangeRadarRange());
+        zoom_label->setText(tr("Zoom: {zoom}x").format({{"zoom", string(my_spaceship->getLongRangeRadarRange() / view_distance, 1)}}));
+    }
 
     if (game_server)
         probe = game_server->getObjectById(my_spaceship->linked_science_probe_id);
     else
         probe = game_client->getObjectById(my_spaceship->linked_science_probe_id);
 
-    float radar_range = 5000.0;
+    float radar_range = my_spaceship->getShortRangeRadarRange();
     if (my_spaceship->hasSystem(SYS_Drones))
         radar_range = radar_range * my_spaceship->getSystemEffectiveness(SYS_Drones);
 
@@ -279,6 +305,8 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
         if (targets.get() && !P<Nebula>(targets.get()) && Nebula::blockedByNebula(my_spaceship->getPosition(), targets.get()->getPosition()))
             targets.clear();
     }
+
+    sidebar_selector->setVisible(sidebar_selector->getSelectionIndex() > 0 || custom_function_sidebar->hasEntries());
 
     info_callsign->setValue("-");
     info_distance->setValue("-");
@@ -445,23 +473,23 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
             if (ship)
             {
 				P<ShipTemplate> st = ship->ship_template;
-                info_faction->setValue(factionInfo[ship->getFactionId()]->getName());
+                info_faction->setValue(factionInfo[ship->getFactionId()]->getLocaleName());
 //                if (factionInfo[ship->getFactionId()]->getIcon() != "")
 //                    info_faction->setIcon("gui/icons/" + factionInfo[ship->getFactionId()]->getIcon());
 //                else
 //                    info_faction->setIcon("");
                 info_type_button->show();
-                info_type->setValue(st->getPublicName());
+                info_type->setValue(st->getLocaleName());
                 info_shields->setValue(ship->getShieldDataString());
-                info_hull->setValue(int(ship->getHull()));
+                info_hull->setValue(int(ceil(ship->getHull())));
             }
 
             if (station)
             {
 				P<ShipTemplate> st = station->ship_template;
-                info_faction->setValue(factionInfo[station->getFactionId()]->getName());
+                info_faction->setValue(factionInfo[station->getFactionId()]->getLocaleName());
                 info_type_button->show();
-                info_type->setValue(st->getPublicName());
+                info_type->setValue(st->getLocaleName());
                 info_shields->setValue(station->getShieldDataString());
                 info_hull->setValue(int(station->getHull()));
             }
@@ -521,6 +549,41 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
                     else
                         info_oxygen->setColor(sf::Color::White);
                 }
+        // Tsht : copie en commentaire depuis le merge du master. A voir si on veut reutiliser le module oxygene de tdelc larp et revenir a un ecran plus proche du master
+        //         else
+        //         {
+        //             LOG(WARNING) << "Invalid pager state: " << sidebar_pager_selection;
+        //         }
+
+        //         // If beam and shield frequencies are enabled on the server,
+        //         // populate their graphs.
+        //         if (gameGlobalInfo->use_beam_shield_frequencies)
+        //         {
+        //             info_shield_frequency->setFrequency(ship->shield_frequency);
+        //             info_beam_frequency->setFrequency(ship->beam_frequency);
+        //         }
+
+        //         // Show the status of each subsystem.
+        //         for(int n = 0; n < SYS_COUNT; n++)
+        //         {
+        //             float system_health = ship->systems[n].health;
+        //             info_system[n]->setValue(string(int(system_health * 100.0f)) + "%")->setColor(sf::Color(255, 127.5 * (system_health + 1), 127.5 * (system_health + 1), 255));
+        //         }
+        //     }
+        // }
+
+        // // If the target isn't a ship, show basic info.
+        // else
+        // {
+        //     sidebar_pager->hide();
+        //     info_faction->setValue(factionInfo[obj->getFactionId()]->getLocaleName());
+
+        //     // If the target is a station, show basic tactical info.
+        //     if (station)
+        //     {
+        //         info_type->setValue(station->template_name);
+        //         info_shields->setValue(station->getShieldDataString());
+        //         info_hull->setValue(int(ceil(station->getHull())));
             }
 //            sidebar_pager->setVisible(sidebar_pager->entryCount() > 1);
         }
@@ -654,50 +717,72 @@ void ScienceScreen::onHotkey(const HotkeyResult& key)
 {
     if (key.category == "SCIENCE" && my_spaceship)
     {
-        if (key.hotkey == "NEXT_SCAN")
+ 		// Initiate a scan on scannable objects.
+        if (key.hotkey == "SCAN_OBJECT" &&
+            my_spaceship->getCanScan() &&
+            my_spaceship->scanning_delay == 0.0)
+        {
+            P<SpaceObject> obj = targets.get();
+
+            // Allow scanning only if the object is scannable, and if the player
+            // isn't already scanning something.
+            if (obj &&
+                obj->canBeScannedBy(my_spaceship))
+            {
+                my_spaceship->commandScan(obj);
+                return;
+            }
+        }
+
+        // Cycle selection through scannable objects.
+        if (key.hotkey == "NEXT_SCANNABLE_OBJECT" &&
+            my_spaceship->scanning_delay == 0.0)
         {
             bool current_found = false;
-            float distance_max = science_radar->getDistance();
-            float radar_range = 5000.0 * my_spaceship->getSystemEffectiveness(SYS_Drones);
-
-            if (probe_radar->isActive())
-                distance_max = radar_range;
-            if (Nebula::inNebula(my_spaceship->getPosition()))
-                distance_max = 5000.0;
-
-            foreach(SpaceObject, obj, space_object_list)
+            for (P<SpaceObject> obj : space_object_list)
             {
-                P<Nebula> nebula = obj;
+                // If this object is the current object, flag and skip it.
                 if (obj == targets.get())
                 {
                     current_found = true;
                     continue;
                 }
-                if (obj == my_spaceship || nebula)
+
+                // If this object is my ship or not visible due to a Nebula,
+                // skip it.
+                if (obj == my_spaceship ||
+                    Nebula::blockedByNebula(my_spaceship->getPosition(), obj->getPosition()))
                     continue;
-                if (obj->canHideInNebula() && my_spaceship && Nebula::blockedByNebula(my_spaceship->getPosition(), obj->getPosition()))
-                    continue;
-                if (current_found && sf::length(obj->getPosition() - my_spaceship->getPosition()) < distance_max)
+
+                // If this is a scannable object and the currently selected
+                // object, and it remains in radar range, continue to set it.
+                if (current_found &&
+                    sf::length(obj->getPosition() - my_spaceship->getPosition()) < science_radar->getDistance() &&
+                    obj->canBeScannedBy(my_spaceship))
                 {
                     targets.set(obj);
                     return;
                 }
             }
-            foreach(SpaceObject, obj, space_object_list)
+
+            // Advance to the next object.
+            for (P<SpaceObject> obj : space_object_list)
             {
-                P<Nebula> nebula = obj;
-                if (obj == targets.get() || obj == my_spaceship || nebula)
+                if (obj == targets.get() ||
+                    obj == my_spaceship ||
+                    Nebula::blockedByNebula(my_spaceship->getPosition(), obj->getPosition()))
                     continue;
-                if (obj->canHideInNebula() && my_spaceship && Nebula::blockedByNebula(my_spaceship->getPosition(), obj->getPosition()))
-                    continue;
-                if (sf::length(obj->getPosition() - my_spaceship->getPosition()) < distance_max)
+
+                if (sf::length(obj->getPosition() - my_spaceship->getPosition()) < science_radar->getDistance() &&
+                    obj->canBeScannedBy(my_spaceship))
                 {
                     targets.set(obj);
                     return;
                 }
             }
         }
- 		if (key.hotkey == "SHOW_PROBE")
+         
+        if (key.hotkey == "SHOW_PROBE")
         {
             P<ScanProbe> probe;
              if (game_server)
@@ -721,7 +806,7 @@ void ScienceScreen::onHotkey(const HotkeyResult& key)
 		{
 		    P<SpaceShip> ship = targets.get();
 		    if (ship && ship->getScannedStateFor(my_spaceship) >= SS_SimpleScan)
-                database_view->findAndDisplayEntry(ship->getPublicName());
+                database_view->findAndDisplayEntry(ship->getLocaleName());
 
 		    view_mode_selection->setSelectionIndex(1);
 		    radar_view->hide();
@@ -738,26 +823,27 @@ void ScienceScreen::onHotkey(const HotkeyResult& key)
 		if (key.hotkey == "DECREASE_ZOOM")
 		{
 			float view_distance = science_radar->getDistance() + 1500.0f;
-			if (view_distance > my_spaceship->science_radar_range)
-				view_distance = my_spaceship->science_radar_range;
-			if (view_distance < 5000.0f)
-				view_distance = 5000.0f;
+			if (view_distance > my_spaceship->getLongRangeRadarRange())
+				view_distance = my_spaceship->getLongRangeRadarRange();
+			if (view_distance < my_spaceship->getShortRangeRadarRange() )
+				view_distance = my_spaceship->getShortRangeRadarRange();
 			science_radar->setDistance(view_distance);
 			// Keep the zoom slider in sync.
 			zoom_slider->setValue(view_distance);
-			zoom_label->setText("Zoom: " + string(my_spaceship->science_radar_range / view_distance, 1) + "x");
+			zoom_label->setText("Zoom: " + string(my_spaceship->getLongRangeRadarRange() / view_distance, 1) + "x");
 		}
 		if (key.hotkey == "INCREASE_ZOOM")
 		{
 			float view_distance = science_radar->getDistance() - 1500.0f;
-			if (view_distance > my_spaceship->science_radar_range)
-				view_distance = my_spaceship->science_radar_range;
-			if (view_distance < 5000.0f)
-				view_distance = 5000.0f;
+			if (view_distance > my_spaceship->getLongRangeRadarRange())
+				view_distance = my_spaceship->getLongRangeRadarRange();
+			if (view_distance < my_spaceship->getShortRangeRadarRange() )
+				view_distance = my_spaceship->getShortRangeRadarRange();
 			science_radar->setDistance(view_distance);
 			// Keep the zoom slider in sync.
 			zoom_slider->setValue(view_distance);
-			zoom_label->setText("Zoom: " + string(my_spaceship->science_radar_range / view_distance, 1) + "x");
+			zoom_label->setText("Zoom: " + string(my_spaceship->getLongRangeRadarRange() / view_distance, 1) + "x");
 		}
-	}
+        
+    }
 }

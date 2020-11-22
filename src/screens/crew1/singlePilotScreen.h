@@ -15,11 +15,6 @@ class SinglePilotScreen : public GuiOverlay
 private:
     GuiOverlay* background_crosses;
     SinglePilotView* single_pilot_view;
-
-    GuiViewport3D* viewport;
-    GuiElement* left_panel;
-    GuiToggleButton* show_3d_button;
-
     P<PlayerSpaceship> current_spaceship;
 
     void init(GuiContainer* owner, P<PlayerSpaceship> targetSpaceship);
@@ -29,7 +24,7 @@ public:
     SinglePilotScreen(GuiContainer* owner, P<PlayerSpaceship> targetSpaceship);
 
     void setTargetSpaceship(P<PlayerSpaceship> targetSpaceship);
-    virtual void onDraw(sf::RenderTarget& window);
+    virtual void onDraw(sf::RenderTarget& window) override;
 };
 
 #endif//SINGLE_PILOT_SCREEN_H

@@ -238,11 +238,11 @@ void ModelData::render(float alpha)
 	glRotatef(mesh_rotation.z, 0.0, 0.0, 1.0);
     glColor4f(1.0,1.0,1.0,alpha);
 
-    shader->setParameter("baseMap", *texture);
+    shader->setUniform("baseMap", *texture);
     if (specular_texture)
-        shader->setParameter("specularMap", *specular_texture);
+        shader->setUniform("specularMap", *specular_texture);
     if (illumination_texture)
-        shader->setParameter("illuminationMap", *illumination_texture);
+        shader->setUniform("illuminationMap", *illumination_texture);
     sf::Shader::bind(shader);
 
     if (animated_mesh)

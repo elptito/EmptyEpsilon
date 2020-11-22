@@ -8,24 +8,37 @@
 #include "screenComponents/indicatorOverlays.h"
 #include "screenComponents/noiseOverlay.h"
 #include "screenComponents/shipDestroyedPopup.h"
+#include "screenComponents/helpOverlay.h"
+#include "screenComponents/impulseSound.h"
+#include "screenComponents/viewportMainScreen.h"
 
 #include "gui/gui2_togglebutton.h"
 #include "gui/gui2_panel.h"
 #include "gui/gui2_scrolltext.h"
+#include "gui/joystickConfig.h"
 
 CrewStationScreen::CrewStationScreen()
 {
-    select_station_button = new GuiButton(this, "", "", [this]()
+    // Create a 3D viewport behind everything, to serve as the right-side panel
+    viewport = new GuiViewportMainScreen(this, "3D_VIEW");
+    viewport->showCallsigns()->showHeadings()->showSpacedust();
+    viewport->setPosition(1200, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+    viewport->hide();
+
+    main_panel = new GuiElement(this, "MAIN");
+    main_panel->setSize(1200, GuiElement::GuiSizeMax);
+
+    select_station_button = new GuiButton(main_panel, "", "", [this]()
     {
         button_strip->show();
     });
     select_station_button->setPosition(-20, 20, ATopRight)->setSize(250, 50);
 
-    button_strip = new GuiPanel(this, "");
+    button_strip = new GuiPanel(main_panel, "");
     button_strip->setPosition(-20, 20, ATopRight)->setSize(250, 50);
     button_strip->hide();
 
-    message_frame = new GuiPanel(this, "");
+    message_frame = new GuiPanel(main_panel, "");
     message_frame->setPosition(0, 0, ATopCenter)->setSize(900, 230)->hide();
 
     message_text = new GuiScrollText(message_frame, "", "");
@@ -45,12 +58,12 @@ CrewStationScreen::CrewStationScreen()
     });
     message_close_button->setTextSize(30)->setPosition(-20, -20, ABottomRight)->setSize(300, 30);
 
-    keyboard_help = new GuiHelpOverlay(this, "Keyboard Shortcuts");
+    keyboard_help = new GuiHelpOverlay(main_panel, "Keyboard Shortcuts");
 
-    for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("General"))
+    for (std::pair<string, string> shortcut : listControlsByCategory("General"))
         keyboard_general += shortcut.second + ":\t" + shortcut.first + "\n";
 
-//#ifndef __ANDROID__
+#ifndef __ANDROID__
     if (PreferencesManager::get("music_enabled") == "1")
     {
         threat_estimate = new ThreatLevelEstimate();
@@ -62,13 +75,21 @@ CrewStationScreen::CrewStationScreen()
             soundManager->playMusicSet(findResources("music/combat/*.ogg"));
         });
     }
-//#endif
+#endif
+
+    // Initialize and play the impulse engine sound.
+    impulse_sound = std::unique_ptr<ImpulseSound>( new ImpulseSound(PreferencesManager::get("impulse_sound_enabled", "2") == "1") );
+}
+
+GuiContainer* CrewStationScreen::getTabContainer()
+{
+    return main_panel;
 }
 
 void CrewStationScreen::addStationTab(GuiElement* element, ECrewPosition position, string name, string icon)
 {
     CrewTabInfo info;
-
+    tileViewport();
     element->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
     info.position = position;
     info.element = element;
@@ -90,7 +111,7 @@ void CrewStationScreen::addStationTab(GuiElement* element, ECrewPosition positio
 
         string keyboard_category = "";
 
-        for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory(info.button->getText()))
+        for (std::pair<string, string> shortcut : listControlsByCategory(info.button->getText()))
             keyboard_category += shortcut.second + ":\t" + shortcut.first + "\n";
         if (keyboard_category == "")	// special hotkey combination for crew1 and crew4 screens
             keyboard_category = listHotkeysLimited(info.button->getText());
@@ -112,8 +133,8 @@ void CrewStationScreen::finishCreation()
 
     message_frame->moveToFront();
 
-    new GuiIndicatorOverlays(this);
-    new GuiNoiseOverlay(this);
+    new GuiIndicatorOverlays(main_panel);
+    new GuiNoiseOverlay(main_panel);
     new GuiShipDestroyedPopup(this);
 
     if (tabs.size() < 2)
@@ -124,25 +145,32 @@ void CrewStationScreen::finishCreation()
 
 void CrewStationScreen::update(float delta)
 {
-    if (game_client && game_client->getStatus() == GameClient::Disconnected)
+    if ((game_client && game_client->getStatus() == GameClient::Disconnected)
+    || (my_spaceship && my_spaceship->id_dock != PreferencesManager::get("id_dock")))
     {
         destroy();
         soundManager->stopMusic();
+        impulse_sound->stop();
         disconnectFromServer();
         returnToMainMenu();
         return;
     }
+
+    // Responsively show/hide the 3D viewport.
+    if (!main_screen_enabled || viewport->getRect().width < viewport->getRect().height / 3.0f)
+    {
+        viewport->hide();
+        main_panel->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+    } else {
+        viewport->show();
+        tileViewport();
+    }
+
     if (my_spaceship)
     {
-        if (my_spaceship->id_dock != PreferencesManager::get("id_dock"))
-        {
-            destroy();
-            soundManager->stopMusic();
-            disconnectFromServer();
-            returnToMainMenu();
-            return;
-        }
+        // Show custom ship function messages.
         message_frame->hide();
+
         for(PlayerSpaceship::CustomShipFunction& csf : my_spaceship->custom_functions)
         {
             if (csf.crew_position == current_position && csf.type == PlayerSpaceship::CustomShipFunction::Type::Message)
@@ -152,6 +180,18 @@ void CrewStationScreen::update(float delta)
                 break;
             }
         }
+
+        // Update the impulse engine sound.
+        impulse_sound->update(delta);
+    } else {
+        // If we're not the player ship (ie. we exploded), stop playing the
+        // impulse engine sound.
+        impulse_sound->stop();
+    }
+
+    if(viewport)
+    {
+        viewport->update(delta);
     }
 }
 
@@ -185,6 +225,7 @@ void CrewStationScreen::onKey(sf::Event::KeyEvent key, int unicode)
     case sf::Keyboard::Home:
         destroy();
         soundManager->stopMusic();
+        impulse_sound->stop();
         returnToShipSelection();
         break;
     case sf::Keyboard::Slash:
@@ -232,7 +273,7 @@ void CrewStationScreen::showTab(GuiElement* element)
 
             string keyboard_category = "";
 
-            for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory(info.button->getText()))
+            for (std::pair<string, string> shortcut : listControlsByCategory(info.button->getText()))
                 keyboard_category += shortcut.second + ":\t" + shortcut.first + "\n";
 			if (keyboard_category == "")	// special hotkey combination for crew1 and crew4 screens
 				keyboard_category = listHotkeysLimited(info.button->getText());
@@ -260,15 +301,15 @@ string CrewStationScreen::listHotkeysLimited(string station)
 {
 	string ret = "";
 	keyboard_general = "";
-	for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("General"))
-		if (shortcut.first == "Station suivante" || shortcut.first =="Station precedente")
+	for (std::pair<string, string> shortcut : listControlsByCategory("General"))
+		if (shortcut.first == "Station suivante" || shortcut.first =="Station precedente") 				
 			keyboard_general += shortcut.second + ":\t" + shortcut.first + "\n";
 	if (station == "Tactique")
-	{
-
-		for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Pilote"))
+	{	
+		
+		for (std::pair<string, string> shortcut : listControlsByCategory("Pilote"))
             ret += shortcut.second + ":\t" + shortcut.first + "\n";
-		for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Armes"))
+		for (std::pair<string, string> shortcut : listControlsByCategory("Armes"))
 		{
 			if (shortcut.first != "Action boucliers")
 				ret += shortcut.second + ":\t" + shortcut.first + "\n";
@@ -276,9 +317,9 @@ string CrewStationScreen::listHotkeysLimited(string station)
 	}
 	else if (station == "Engineering+")
 	{
-		for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Ingenieur"))
+		for (std::pair<string, string> shortcut : listControlsByCategory("Ingenieur"))
             ret += shortcut.second + ":\t" + shortcut.first + "\n";
-        for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Armes"))
+        for (std::pair<string, string> shortcut : listControlsByCategory("Armes"))
         {
             if (shortcut.first == "Action boucliers")
 				ret += shortcut.second + ":\t" + shortcut.first + "\n";
@@ -292,10 +333,29 @@ string CrewStationScreen::listHotkeysLimited(string station)
 
 	else if (station == "Pilote a tout faire")
 	{
-		for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Pilote"))
+		for (std::pair<string, string> shortcut : listControlsByCategory("Pilote"))
             ret += shortcut.second + ":\t" + shortcut.first + "\n";
-		for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Armes"))
+		for (std::pair<string, string> shortcut : listControlsByCategory("Armes"))
 			ret += shortcut.second + ":\t" + shortcut.first + "\n";
 	}
     return ret;
+}
+
+void CrewStationScreen::tileViewport()
+{
+    if (current_position == singlePilot)
+    {
+        main_panel->setSize(1000, GuiElement::GuiSizeMax);
+        viewport->setPosition(1000, 0, ATopLeft);
+    } else {
+        main_panel->setSize(1200, GuiElement::GuiSizeMax);
+        viewport->setPosition(1200, 0, ATopLeft);
+    }
+}
+
+std::vector<std::pair<string, string>> CrewStationScreen::listControlsByCategory(string category){
+    std::vector<std::pair<string, string>> hotkeyControls = hotkeys.listHotkeysByCategory(category);
+    std::vector<std::pair<string, string>> joystickControls = joystick.listJoystickByCategory(category);
+    hotkeyControls.insert(hotkeyControls.end(), joystickControls.begin(), joystickControls.end());
+    return hotkeyControls;
 }

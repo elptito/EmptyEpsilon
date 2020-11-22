@@ -1,3 +1,4 @@
+#include <i18n.h>
 #include "playerInfo.h"
 #include "spaceObjects/playerSpaceship.h"
 #include "combatManeuver.h"
@@ -12,7 +13,7 @@ GuiCombatManeuver::GuiCombatManeuver(GuiContainer* owner, string id, P<PlayerSpa
     charge_bar = new GuiProgressbar(this, id + "_CHARGE", 0.0, 1.0, 0.0);
     charge_bar->setColor(sf::Color(192, 192, 192, 64));
     charge_bar->setPosition(0, 0, ABottomCenter)->setSize(GuiElement::GuiSizeMax, 50);
-    (new GuiLabel(charge_bar, "CHARGE_LABEL", "Manoeuvre de combat", 20))->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+    (new GuiLabel(charge_bar, "CHARGE_LABEL", tr("Combat maneuver"), 20))->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
     slider = new GuiSnapSlider2D(this, id + "_STRAFE", sf::Vector2f(-1.0, 1.0), sf::Vector2f(1.0, 0.0), sf::Vector2f(0.0, 0.0), [this](sf::Vector2f value) {
         if (target_spaceship)
@@ -33,6 +34,11 @@ GuiCombatManeuver::GuiCombatManeuver(GuiContainer* owner, string id, P<PlayerSpa
     target_spaceship = targetSpaceship;
     strafe_pdi->setTargetSpaceship(target_spaceship);
     boost_pdi->setTargetSpaceship(target_spaceship);
+}
+
+void GuiCombatManeuver::onUpdate()
+{
+    setVisible(my_spaceship && my_spaceship->getCanCombatManeuver());
 }
 
 void GuiCombatManeuver::onDraw(sf::RenderTarget& window)
@@ -56,7 +62,7 @@ void GuiCombatManeuver::onDraw(sf::RenderTarget& window)
 
 void GuiCombatManeuver::onHotkey(const HotkeyResult& key)
 {
-    if (key.category == "HELMS" && target_spaceship)
+    if (key.category == "HELMS" && target_spaceship && isVisible())
     {
         if (key.hotkey == "COMBAT_LEFT")
         {

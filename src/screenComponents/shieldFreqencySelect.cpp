@@ -1,3 +1,4 @@
+#include <i18n.h>
 #include "shieldFreqencySelect.h"
 #include "playerInfo.h"
 #include "spaceObjects/playerSpaceship.h"
@@ -7,18 +8,24 @@
 #include "gui/gui2_keyvaluedisplay.h"
 #include "gui/gui2_selector.h"
 #include "gui/gui2_progressbar.h"
+#include "gui/gui2_autolayout.h"
 
-GuiShieldFrequencySelect::GuiShieldFrequencySelect(GuiContainer* owner, string id)
-: GuiElement(owner, id)
+GuiShieldFrequencySelect::GuiShieldFrequencySelect(GuiContainer* owner, string id, P<PlayerSpaceship> target)
+: GuiElement(owner, id), target_spaceship(target)
 {
-    (new GuiShieldsEnableButton(this, "SHIELDS_ENABLE", my_spaceship))->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, 50);
-    calibrate_button = new GuiButton(this, "", "Calibrer", [this]() {
-        if (my_spaceship)
-            my_spaceship->commandSetShieldFrequency(new_frequency->getSelectionIndex());
+    (new GuiShieldsEnableButton(this, "SHIELDS_ENABLE", target_spaceship))->setPosition(0, 0, ATopLeft)->setSize(GuiElement::GuiSizeMax, 50);
+    GuiElement* calibration_row = new GuiAutoLayout(this, "", GuiAutoLayout::LayoutHorizontalRightToLeft);
+    calibration_row->setPosition(0, 50, ATopLeft)->setSize(GuiElement::GuiSizeMax, 50);
+
+    new_frequency = new GuiSelector(calibration_row, "", nullptr);
+    new_frequency->setSize(120, 50);
+
+    calibrate_button = new GuiButton(calibration_row, "", tr("shields","Calibrate"), [this]() {
+        if (target_spaceship)
+            target_spaceship->commandSetShieldFrequency(new_frequency->getSelectionIndex());
     });
-    calibrate_button->setPosition(0, 50, ATopLeft)->setSize(280 * 0.55, 50);
-    new_frequency = new GuiSelector(this, "", nullptr);
-    new_frequency->setPosition(280 * 0.55, 50, ATopLeft)->setSize(280 * 0.45, 50);
+    calibrate_button->setSize(GuiElement::GuiSizeMax, 50);
+
     for(int n=0; n<=SpaceShip::max_frequency; n++)
     {
         new_frequency->addEntry(frequencyToString(n), string(n));
@@ -28,17 +35,17 @@ GuiShieldFrequencySelect::GuiShieldFrequencySelect(GuiContainer* owner, string i
 
 void GuiShieldFrequencySelect::onDraw(sf::RenderTarget& window)
 {
-    if (my_spaceship)
+    if (target_spaceship)
     {
-        calibrate_button->setEnable(my_spaceship->shield_calibration_delay <= 0.0);
-        new_frequency->setEnable(my_spaceship->shield_calibration_delay <= 0.0);
+        calibrate_button->setEnable(target_spaceship->shield_calibration_delay <= 0.0);
+        new_frequency->setEnable(target_spaceship->shield_calibration_delay <= 0.0);
     }
     GuiElement::onDraw(window);
 }
 
 void GuiShieldFrequencySelect::onHotkey(const HotkeyResult& key)
 {
-    if ((key.category == "ENGINEERING"  || key.category == "WEAPONS") && my_spaceship)
+    if ((key.category == "ENGINEERING"  || key.category == "WEAPONS") && target_spaceship)
     {
         if (key.hotkey == "SHIELD_CAL_INC")
         {

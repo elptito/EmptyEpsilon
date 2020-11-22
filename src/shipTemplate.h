@@ -33,6 +33,7 @@ enum ESystem
     SYS_Cloaking,
     SYS_COUNT
 };
+
 /* Define script conversion function for the ESystem enum. */
 template<> void convert<ESystem>::param(lua_State* L, int& idx, ESystem& es);
 class DroneTemplate {
@@ -76,11 +77,12 @@ public:
         float load_time;
         uint32_t type_allowed_mask;
         float direction;
+        EMissileSizes size;
     };
 private:
     static std::unordered_map<string, P<ShipTemplate> > templateMap;
     string name;
-    string public_name;
+    string locale_name = "";
     string description;
     string class_name;
     string sub_class_name;
@@ -90,7 +92,7 @@ private:
     bool secret;
 public:
     string getName();
-    string getPublicName();
+    string getLocaleName();
     string getDescription();
     string getClass();
     string getSubClass();
@@ -114,6 +116,15 @@ public:
     bool shares_energy_with_docked;
     bool repair_docked;
     bool has_reactor;
+
+    bool restocks_scan_probes;
+    bool restocks_missiles_docked;
+    bool can_scan = true;
+    bool can_hack = true;
+    bool can_dock = true;
+    bool can_combat_maneuver = true;
+    bool can_self_destruct = true;
+    bool can_launch_probe = true;
 
     float energy_storage_amount;
     int repair_crew_count;
@@ -147,6 +158,9 @@ public:
     int stock_dock_count;
     string radar_trace;
     float energy_consumption_ratio;
+    float long_range_radar_range = 30000.0f;
+    float short_range_radar_range = 5000.0f;
+    string impulse_sound_file;
 
     std::vector<ShipRoomTemplate> rooms;
     std::vector<ShipDoorTemplate> doors;
@@ -155,7 +169,7 @@ public:
     ShipTemplate();
 
     void setName(string name);
-    void setPublicName(string public_name);
+    void setLocaleName(string name);
     void setClass(string class_name, string sub_class_name);
     void setDescription(string description);
     void setModel(string model_name);
@@ -164,6 +178,14 @@ public:
     void setSharesEnergyWithDocked(bool enabled);
     void setRepairDocked(bool enabled);
     void setReactor(bool enabled);
+    void setRestocksScanProbes(bool enabled);
+    void setRestocksMissilesDocked(bool enabled);
+    void setCanScan(bool enabled) { can_scan = enabled; }
+    void setCanHack(bool enabled) { can_hack = enabled; }
+    void setCanDock(bool enabled) { can_dock = enabled; }
+    void setCanCombatManeuver(bool enabled) { can_combat_maneuver = enabled; }
+    void setCanSelfDestruct(bool enabled) { can_self_destruct = enabled; }
+    void setCanLaunchProbe(bool enabled) { can_launch_probe = enabled; }
     void setMesh(string model, string color_texture, string specular_texture, string illumination_texture);
     void setEnergyStorage(float energy_amount);
     void setRepairCrewCount(int amount);
@@ -185,6 +207,8 @@ public:
     void weaponTubeAllowMissle(int index, EMissileWeapons type);
     void weaponTubeDisallowMissle(int index, EMissileWeapons type);
     void setWeaponTubeExclusiveFor(int index, EMissileWeapons type);
+    void setTubeSize(int index, EMissileSizes size);
+
     void setTubeDirection(int index, float direction);
     void setHull(float amount) { hull = amount; }
     void setShields(std::vector<float> values);
@@ -211,6 +235,9 @@ public:
     void setSystemDamageRatio(float ratio) { system_damage_ratio = ratio ;}
     void setSystemDamageHullThreshold(float ratio) {system_damage_hull_threshold = ratio;}
 
+    void setLongRangeRadarRange(float range);
+    void setShortRangeRadarRange(float range);
+    void setImpulseSoundFile(string sound);
 
     P<ShipTemplate> copy(string new_name);
 
@@ -225,6 +252,7 @@ public:
     static std::vector<string> getTemplateClassList(TemplateType type);
 };
 string getSystemName(ESystem system);
+string getLocaleSystemName(ESystem system);
 REGISTER_MULTIPLAYER_ENUM(ESystem);
 
 /* Define script conversion function for the ShipTemplate::TemplateType enum. */

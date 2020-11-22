@@ -25,6 +25,11 @@ ExplosionEffect::ExplosionEffect()
     registerMemberReplication(&on_radar);
 }
 
+//due to a suspected compiler bug this deconstructor needs to be explicitly defined
+ExplosionEffect::~ExplosionEffect()
+{
+}
+
 #if FEATURE_3D_RENDERING
 void ExplosionEffect::draw3DTransparent()
 {
@@ -48,13 +53,13 @@ void ExplosionEffect::draw3DTransparent()
     sf::Vector3f v3 = sf::Vector3f( 1,  1, 0);
     sf::Vector3f v4 = sf::Vector3f(-1,  1, 0);
 
-    ShaderManager::getShader("basicShader")->setParameter("textureMap", *textureManager.getTexture("fire_sphere_texture.png"));
+    ShaderManager::getShader("basicShader")->setUniform("textureMap", *textureManager.getTexture("fire_sphere_texture.png"));
     sf::Shader::bind(ShaderManager::getShader("basicShader"));
     Mesh* m = Mesh::getMesh("sphere.obj");
     if(m) //FIXME why ? probleme d'ordre d'init des mesh ? a investiguer
         m->render();
 
-    ShaderManager::getShader("basicShader")->setParameter("textureMap", *textureManager.getTexture("fire_ring.png"));
+    ShaderManager::getShader("basicShader")->setUniform("textureMap", *textureManager.getTexture("fire_ring.png"));
     sf::Shader::bind(ShaderManager::getShader("basicShader"));
     glScalef(1.5, 1.5, 1.5);
     glBegin(GL_QUADS);
@@ -70,7 +75,7 @@ void ExplosionEffect::draw3DTransparent()
     glPopMatrix();
 
 
-    ShaderManager::getShader("billboardShader")->setParameter("textureMap", *textureManager.getTexture("particle.png"));
+    ShaderManager::getShader("billboardShader")->setUniform("textureMap", *textureManager.getTexture("particle.png"));
     sf::Shader::bind(ShaderManager::getShader("billboardShader"));
     scale = Tween<float>::easeInCubic(f, 0.0, 1.0, 0.3f, 5.0f);
     float r = Tween<float>::easeInQuad(f, 0.0, 1.0, 1.0f, 0.0f);
@@ -94,7 +99,7 @@ void ExplosionEffect::draw3DTransparent()
 }
 #endif//FEATURE_3D_RENDERING
 
-void ExplosionEffect::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range)
+void ExplosionEffect::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, float rotation, bool long_range)
 {
     if (!on_radar)
         return;

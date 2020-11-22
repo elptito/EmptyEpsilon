@@ -3,6 +3,7 @@
 
 #include "gui/gui2_overlay.h"
 #include "screenComponents/targetsContainer.h"
+#include "gui/joystickConfig.h"
 
 class GuiMissileTubeControls;
 class GuiRadarView;
@@ -50,9 +51,10 @@ private:
 public:
     SinglePilotView(GuiContainer* owner, P<PlayerSpaceship> targetSpaceship);
 
-    virtual void onDraw(sf::RenderTarget& window);
+    virtual void onDraw(sf::RenderTarget& window) override;
     virtual void onHotkey(const HotkeyResult& key) override;
     void setTargetSpaceship(P<PlayerSpaceship> targetSpaceship);
+    virtual bool onJoystickAxis(const AxisAction& axisAction) override;
 };
 
 #endif//SINGLE_PILOT_VIEW_H

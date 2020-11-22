@@ -2,6 +2,8 @@
 #define GAME_MASTER_SCREEN_H
 
 #include "engine.h"
+#include "gui/gui2_panel.h"
+#include "gui/gui2_scrolltext.h"
 #include "gui/gui2_canvas.h"
 #include "gui/gui2_overlay.h"
 #include "screenComponents/targetsContainer.h"
@@ -44,8 +46,12 @@ private:
 
     bool position_text_custom;
     GuiTextEntry* position_text;
+    GuiObjectTweak* station_tweak_dialog;
+    GuiObjectTweak* jammer_tweak_dialog;
+
     GuiAutoLayout* info_layout;
     std::vector<GuiKeyValueDisplay*> info_items;
+    GuiKeyValueDisplay* info_clock;
     GuiListbox* gm_script_options;
     GuiAutoLayout* order_layout;
     GuiButton* player_comms_hail;
@@ -60,6 +66,11 @@ private:
     GuiSelector* CPU_ship_selector;
     GuiSelector* space_station_selector;
 
+
+    GuiPanel* message_frame;
+    GuiScrollText* message_text;
+    GuiButton* message_close_button;
+
     enum EClickAndDragState
     {
         CD_None,
@@ -72,11 +83,12 @@ private:
     sf::Vector2f drag_previous_position;
     const float max_distance = 30000000.0f;
     const float min_distance = 6250.0f;
-public:
     GuiButton* create_button;
-    GuiButton* cancel_create_button;
+    GuiButton* cancel_action_button;
+public:
 
     GameMasterScreen();
+    virtual ~GameMasterScreen();
 
     virtual void update(float delta);
 

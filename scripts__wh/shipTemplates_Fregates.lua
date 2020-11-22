@@ -63,7 +63,7 @@ template:setDockClasses("Drone")
 
 --[[Frégate Imperial Firestorm]]
 variation = template:copy("Fregate Imperial Firestorm"):setModel("Navy_Frigate")
-variation:setPublicName("Fregate Imperial Firestorm")
+variation:setLocaleName("Fregate Imperial Firestorm")
 variation:setDescription([[La fregate de classe Firestorm est une variante recente de la Fregate Sword destine a associer la rapidite de manœuvre de l'escorteur a la puissance de feu superieure d'une Piece d'artillerie navale.
 La fregate Sword fut donc modifiee pour pouvoir diriger une partie du flux laser du vaisseau vers le canon imposant monte sous sa proue.]])
 variation:setHull(800)
@@ -74,7 +74,7 @@ variation:setBeam(2,30, 0, 3500.0, 30.0, 150)
 
 --[[Frégate Firestorm]]
 variation = variation:copy("Fregate Firestorm"):setType("playership")
-variation:setPublicName("Fregate Firestorm")
+variation:setLocaleName("Fregate Firestorm")
 variation:setHull(800)
 variation:setShields(125, 125)
 variation:setSpeed(95, 12, 15)

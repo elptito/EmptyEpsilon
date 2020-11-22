@@ -67,9 +67,14 @@ void AutoConnectScreen::update(float delta)
     if (scanner)
     {
         std::vector<ServerScanner::ServerInfo> serverList = scanner->getServerList();
+        string autoconnect_address = PreferencesManager::get("autoconnect_address", "");
 
-        if (serverList.size() > 0)
-        {
+        if (autoconnect_address != "") {
+            status_label->setText("Using autoconnect server " + autoconnect_address);
+            connect_to_address = autoconnect_address;
+            new GameClient(VERSION_NUMBER, autoconnect_address);
+            scanner->destroy();
+        } else if (serverList.size() > 0) {
             status_label->setText("Found server " + serverList[0].name);
             connect_to_address = serverList[0].address;
             new GameClient(VERSION_NUMBER, serverList[0].address);
@@ -99,7 +104,7 @@ void AutoConnectScreen::update(float delta)
                         my_player_info = i;
                 if (my_player_info && gameGlobalInfo)
                 {
-                    status_label->setText("Retablissement du systeme...");
+                    status_label->setText("Retablissement du systeme " + connect_to_address.toString() + "...");
                     if (!my_spaceship)
                     {
                         for(int n=0; n<GameGlobalInfo::max_player_ships; n++)
@@ -110,7 +115,9 @@ void AutoConnectScreen::update(float delta)
                                 break;
                             }
                         }
-                    }else{
+                    }
+                    else
+                    {
                         if (my_spaceship->getMultiplayerId() == my_player_info->ship_id && (auto_mainscreen == 1 || crew_position == max_crew_positions || my_player_info->crew_position[crew_position]))
                         {
                             if (auto_mainscreen == 1)
@@ -122,7 +129,9 @@ void AutoConnectScreen::update(float delta)
                             my_player_info->spawnUI();
                         }
                     }
-                }else{
+                }
+                else
+                {
                     status_label->setText("Connexion en cours...");
                 }
             }

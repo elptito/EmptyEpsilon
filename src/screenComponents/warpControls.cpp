@@ -1,3 +1,4 @@
+#include <i18n.h>
 #include "warpControls.h"
 #include "playerInfo.h"
 #include "spaceObjects/playerSpaceship.h"
@@ -37,7 +38,7 @@ GuiWarpControls::GuiWarpControls(GuiContainer* owner, string id, P<PlayerSpacesh
     }
 
     // Label the warp slider.
-    label = new GuiKeyValueDisplay(this, id + "_LABEL", 0.5, "Warp", "0.0");
+    label = new GuiKeyValueDisplay(this, id + "_LABEL", 0.5, tr("slider", "Warp"), "0.0");
     label->setTextSize(30)->setPosition(50, 0, ATopLeft)->setSize(40, GuiElement::GuiSizeMax);
 
     // Prep the alert overlay.
@@ -56,6 +57,7 @@ void GuiWarpControls::onDraw(sf::RenderTarget& window)
     if (target_spaceship)
     {
         label->setValue(string(target_spaceship->current_warp, 1));
+        slider->setValue(my_spaceship->warp_request);
 //        if (target_spaceship->current_warp > 0)
 //        {
 //            if (!launch_sound_played)

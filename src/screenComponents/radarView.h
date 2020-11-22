@@ -48,6 +48,9 @@ private:
     GuiMissileTubeControls* missile_tube_controls;
 
     P<PlayerSpaceship> target_spaceship;
+    bool auto_center_on_my_ship;
+    bool auto_rotate_on_my_ship;
+    bool auto_distance = false;
     bool long_range;
     bool show_ghost_dots;
     bool show_waypoints;
@@ -56,18 +59,14 @@ private:
     bool show_callsigns;
     bool show_heading_indicators;
     bool show_game_master_data;
-    bool auto_center_on_my_ship;
     float range_indicator_step_size;
     ERadarStyle style;
     EFogOfWarStyle fog_style;
     func_t mouse_down_func;
     func_t mouse_drag_func;
     func_t mouse_up_func;
-    ffunc_t joystick_x_func;
-    ffunc_t joystick_y_func;
-    ffunc_t joystick_z_func;
-    ffunc_t joystick_r_func;
 public:
+    GuiRadarView(GuiContainer* owner, string id, TargetsContainer* targets, P<PlayerSpaceship> targetSpaceship);
     GuiRadarView(GuiContainer* owner, string id, float distance, TargetsContainer* targets, P<PlayerSpaceship> targetSpaceship);
 
     virtual void onDraw(sf::RenderTarget& window);
@@ -86,6 +85,8 @@ public:
     GuiRadarView* disableMissileTubeIndicators() { show_missile_tubes = false; return this; }
     GuiRadarView* enableCallsigns() { show_callsigns = true; return this; }
     GuiRadarView* disableCallsigns() { show_callsigns = false; return this; }
+    GuiRadarView* showCallsigns(bool value) { show_callsigns = value; return this; }
+    bool getCallsigns() { return show_callsigns; }
     GuiRadarView* enableHeadingIndicators() { show_heading_indicators = true; return this; }
     GuiRadarView* disableHeadingIndicators() { show_heading_indicators = false; return this; }
     GuiRadarView* gameMaster() { show_game_master_data = true; return this; }
@@ -93,9 +94,10 @@ public:
     GuiRadarView* setFogOfWarStyle(EFogOfWarStyle style) { this->fog_style = style; return this; }
     bool getAutoCentering() { return auto_center_on_my_ship; }
     GuiRadarView* setAutoCentering(bool value) { this->auto_center_on_my_ship = value; return this; }
+    bool getAutoRotating() { return auto_rotate_on_my_ship; }
+    GuiRadarView* setAutoRotating(bool value) { this->auto_rotate_on_my_ship = value; return this; }
+   
     virtual GuiRadarView* setCallbacks(func_t mouse_down_func, func_t mouse_drag_func, func_t mouse_up_func) { SectorsView::setCallbacks(mouse_down_func, mouse_drag_func, mouse_up_func); return this; }
-    virtual GuiRadarView* setJoystickCallbacks(ffunc_t joystick_x_func, ffunc_t joystick_y_func, ffunc_t joystick_z_func, ffunc_t joystick_r_func)
-        { SectorsView::setJoystickCallbacks(joystick_x_func, joystick_y_func, joystick_z_func, joystick_r_func); return this; }
     virtual GuiRadarView* setViewPosition(sf::Vector2f view_position) { SectorsView::setViewPosition(view_position); return this; }
 
     virtual bool onMouseDown(sf::Vector2f position);

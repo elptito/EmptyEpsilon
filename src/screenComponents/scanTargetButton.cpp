@@ -17,6 +17,11 @@ GuiScanTargetButton::GuiScanTargetButton(GuiContainer* owner, string id, Targets
     progress->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 }
 
+void GuiScanTargetButton::onUpdate()
+{
+    setVisible(my_spaceship && my_spaceship->getCanScan());
+}
+
 void GuiScanTargetButton::onDraw(sf::RenderTarget& window)
 {
     if (!my_spaceship)
@@ -40,17 +45,5 @@ void GuiScanTargetButton::onDraw(sf::RenderTarget& window)
         else
             button->disable();
         progress->hide();
-    }
-}
-
-void GuiScanTargetButton::onHotkey(const HotkeyResult& key)
-{
-    if (key.category == "SCIENCE" && my_spaceship)
-    {
-		if (key.hotkey == "SCAN_START")
-		{
-			if (this->targets && this->targets->get())
-                my_spaceship->commandScan(this->targets->get());
-		}
     }
 }

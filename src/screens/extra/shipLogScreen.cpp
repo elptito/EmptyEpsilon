@@ -3,15 +3,19 @@
 #include "spaceObjects/playerSpaceship.h"
 
 #include "gui/gui2_advancedscrolltext.h"
+#include "screenComponents/customShipFunctions.h"
 
 ShipLogScreen::ShipLogScreen(GuiContainer* owner, string station)
 : GuiOverlay(owner, "SHIP_LOG_SCREEN", colorConfig.background), station(station)
 {
+    GuiAutoLayout* shiplog_layout = new GuiAutoLayout(this, "SHIPLOG_LAYOUT", GuiAutoLayout::LayoutHorizontalRightToLeft);
+    shiplog_layout->setPosition(50, 120)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+    custom_function_sidebar= new GuiCustomShipFunctions(shiplog_layout, shipLog, "", my_spaceship);
+    custom_function_sidebar->setSize(270, GuiElement::GuiSizeMax);
     (new GuiOverlay(this, "", sf::Color::White))->setTextureTiled("gui/BackgroundCrosses");
-
-    log_text = new GuiAdvancedScrollText(this, "SHIP_LOG");
+    log_text = new GuiAdvancedScrollText(shiplog_layout, "SHIP_LOG");
     log_text->enableAutoScrollDown();
-    log_text->setPosition(50, 50)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+    log_text->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 }
 
 void ShipLogScreen::onDraw(sf::RenderTarget& window)
@@ -21,6 +25,11 @@ void ShipLogScreen::onDraw(sf::RenderTarget& window)
     if (my_spaceship)
     {
         const std::vector<PlayerSpaceship::ShipLogEntry>& logs = my_spaceship->getShipsLog(station);
+        if (custom_function_sidebar->hasEntries())
+            custom_function_sidebar->show();
+        else
+            custom_function_sidebar->hide();
+
         if (log_text->getEntryCount() > 0 && logs.size() == 0)
             log_text->clearEntries();
 

@@ -105,7 +105,6 @@ class DocumentationGenerator(object):
         self._files.add(filename)
         ext = os.path.splitext(filename)[1].lower()
         if ext == '.c' or ext == '.cpp' or ext == '.h':
-            print("File : " + filename)
             for line in open(filename, "r", errors="ignore"): #encoding issues
                 m = re.match('^# *include *[<"](.*)[>"]$', line)
                 if m is not None:
@@ -234,10 +233,20 @@ class DocumentationGenerator(object):
         stream.write('<div class="ui-widget ui-widget-content ui-corner-all">')
         stream.write('<p>Some of the types in the parameters:</p>')
         stream.write('<ul>\n')
-        stream.write('<li>EAlertLevel: "Normal", "YELLOW ALERT", "RED ALERT" (<code>playerSpaceship.cpp</code>)</li>')
-        stream.write('<li>ECrewPosition: "Helms", "Weapons", "Engineering", "Science", "Relay" (<code>playerInfo.cpp</code>)</li>')
-        stream.write('<li>ESystem: "reactor", "beamweapons", "missilesystem", "maneuver", "impulse", "warp", "jumpdrive", "frontshield", "rearshield"</li>')
+        stream.write('<li>ScriptSimpleCallback / function: Note that the callback function must reference something global, otherwise you get an error like "??[convert<ScriptSimpleCallback>::param] Upvalue 1 of function is not a table...". Use e.g. `math.abs(0) -- Provides global context for SeriousProton` to do nothing.</li>\n')
+        stream.write('<li>EAlertLevel: "Normal", "YELLOW ALERT", "RED ALERT" (<code>playerSpaceship.cpp</code>)</li>\n')
+        stream.write('<li>ECrewPosition: "Helms", "Weapons", "Engineering", "Science", "Relay" (<code>playerInfo.cpp</code>)</li>\n')
+        stream.write('<li>EMissileSizes: "small", "medium", "large"</li>\n')
+        stream.write('<li>EMissileWeapons: "Homing", "Nuke", "Mine", "EMP", "HVLI" (<code>spaceship.cpp</code>)</li>\n')
+        stream.write('<li>EScannedState: "notscanned", "friendorfoeidentified", "simplescan", "fullscan" (<code>spaceObject.h</code>)</li>\n')
+        stream.write('<li>ESystem: "reactor", "beamweapons", "missilesystem", "maneuver", "impulse", "warp", "jumpdrive", "frontshield", "rearshield"</li>\n')
+        stream.write('<!--\n')
+        stream.write('<li>EMainScreenOverlay: TODO</li>\n')
+        stream.write('<li>EMainScreenSetting: TODO</li>\n')
+        stream.write('-->\n')
+        stream.write('<li>Factions: "Independent", "Kraylor", "Arlenians", "Exuari", "Ghosts", "Ktlitans", "TSN", "USN", "CUF" (<code>factionInfo.lua</code>)</li>\n')
         stream.write('</ul>\n')
+        stream.write('<p>Note that most <code>SpaceObject</code>s directly switch to fully scanned, only <code>SpaceShips</code>s go through all the states.</p>')
         stream.write('</div>\n')
 
         stream.write('<div class="ui-widget ui-widget-content ui-corner-all">')

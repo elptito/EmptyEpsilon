@@ -1,3 +1,4 @@
+#include <i18n.h>
 #include "playerInfo.h"
 #include "spaceObjects/playerSpaceship.h"
 #include "jumpControls.h"
@@ -18,11 +19,11 @@ GuiJumpControls::GuiJumpControls(GuiContainer* owner, string id, P<PlayerSpacesh
     charge_bar->setPosition(0, -50, ABottomLeft)->setSize(50, GuiElement::GuiSizeMax);
     charge_bar->hide();
 
-    label = new GuiKeyValueDisplay(this, id + "_LABEL", 0.5, "Distance", "10.0");
+    label = new GuiKeyValueDisplay(this, id + "_LABEL", 0.5, tr("jumpcontrol", "Distance"), "10.0");
     label->setTextSize(30)->setPosition(50, -50, ABottomLeft)->setSize(40, GuiElement::GuiSizeMax);
 
-    button = new GuiButton(this, id + "_BUTTON", "Jump", [this]() {
-        target_spaceship->commandJump(slider->getValue());
+    button = new GuiButton(this, id + "_BUTTON", tr("jumpcontrol", "Jump"), [this]() {
+        my_spaceship->commandJump(slider->getValue());
     });
     button->setPosition(0, 0, ABottomLeft)->setSize(GuiElement::GuiSizeMax, 50);
 
@@ -41,7 +42,7 @@ void GuiJumpControls::onDraw(sf::RenderTarget& window)
     {
         if (target_spaceship->jump_delay > 0.0)
         {
-            label->setKey("Jump dans :");
+            label->setKey(tr("jumpcontrol","Jump in"));
             label->setValue(string(int(ceilf(target_spaceship->jump_delay / target_spaceship->getJumpDriveRechargeRate()))) + " S");
             slider->disable();
             button->disable();
@@ -62,7 +63,7 @@ void GuiJumpControls::onDraw(sf::RenderTarget& window)
             charge_bar->setRange(0.0, target_spaceship->jump_drive_max_distance);
             charge_bar->setValue(target_spaceship->jump_drive_charge)->show();
         }else{
-            label->setKey("Distance");
+            label->setKey(tr("jumpcontrol", "Distance"));
             label->setValue(string(slider->getValue() / 1000.0, 0) + " " + DISTANCE_UNIT_1K);
             slider->enable()->show();
             float factor_jump = std::max(1.0f,target_spaceship->getSystemEffectiveness(SYS_JumpDrive));

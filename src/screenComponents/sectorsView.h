@@ -16,16 +16,12 @@ class SectorsView : public GuiElement
         const float sub_sectors_count = 8;
         float distance;
         sf::Vector2f view_position;
+        float view_rotation;
 
         TargetsContainer *targets;
         func_t mouse_down_func;
         func_t mouse_drag_func;
         func_t mouse_up_func;
-        ffunc_t joystick_x_func;
-        ffunc_t joystick_y_func;
-        ffunc_t joystick_z_func;
-        ffunc_t joystick_r_func;
-
     public:
         SectorsView(GuiContainer *owner, string id, float distance, TargetsContainer *targets);
         virtual SectorsView *setDistance(float distance)
@@ -34,35 +30,29 @@ class SectorsView : public GuiElement
             return this;
         }
         float getDistance() { return distance; }
-        virtual SectorsView *setViewPosition(sf::Vector2f view_position)
+        virtual SectorsView* setViewPosition(sf::Vector2f view_position)
         {
             this->view_position = view_position;
             return this;
         }
-        sf::Vector2f getViewPosition() { return view_position; }
-        sf::Vector2f worldToScreen(sf::Vector2f world_position);
-        sf::Vector2f screenToWorld(sf::Vector2f screen_position);
-        float getScale() { return std::min(rect.width, rect.height) / 2.0f / distance; };
+        virtual sf::Vector2f getViewPosition() { return view_position; }
+        virtual void setViewRotation(float view_rotation) 
+        { 
+            this->view_rotation = view_rotation; 
+        }
+        virtual float getViewRotation() { return view_rotation; }
+        virtual sf::Vector2f worldToScreen(sf::Vector2f world_position);
+        virtual sf::Vector2f screenToWorld(sf::Vector2f screen_position);
+        virtual float getScale() { return std::min(rect.width, rect.height) / 2.0f / distance; };
         void drawSectorGrid(sf::RenderTarget &window);
         virtual bool onMouseDown(sf::Vector2f position);
         virtual void onMouseDrag(sf::Vector2f position);
         virtual void onMouseUp(sf::Vector2f position);
-        virtual bool onJoystickXYMove(sf::Vector2f position);
-        virtual bool onJoystickZMove(float position);
-        virtual bool onJoystickRMove(float position);
         virtual SectorsView *setCallbacks(func_t mouse_down_func, func_t mouse_drag_func, func_t mouse_up_func)
         {
             this->mouse_down_func = mouse_down_func;
             this->mouse_drag_func = mouse_drag_func;
             this->mouse_up_func = mouse_up_func;
-            return this;
-        }
-        virtual SectorsView *setJoystickCallbacks(ffunc_t joystick_x_func, ffunc_t joystick_y_func, ffunc_t joystick_z_func, ffunc_t joystick_r_func)
-        {
-            this->joystick_x_func = joystick_x_func;
-            this->joystick_y_func = joystick_y_func;
-            this->joystick_z_func = joystick_z_func;
-            this->joystick_r_func = joystick_r_func;
             return this;
         }
     protected:

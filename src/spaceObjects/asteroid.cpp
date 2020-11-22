@@ -44,8 +44,8 @@ void Asteroid::draw3D()
 //    glScalef(getRadius(), getRadius(), getRadius());
     glScalef(size, size, size);
     sf::Shader* shader = ShaderManager::getShader("objectShaderBS");
-    shader->setParameter("baseMap", *textureManager.getTexture("Astroid_" + string(model_number) + "_d.png"));
-    shader->setParameter("specularMap", *textureManager.getTexture("Astroid_" + string(model_number) + "_s.png"));
+    shader->setUniform("baseMap", *textureManager.getTexture("Astroid_" + string(model_number) + "_d.png"));
+    shader->setUniform("specularMap", *textureManager.getTexture("Astroid_" + string(model_number) + "_s.png"));
     sf::Shader::bind(shader);
     Mesh* m = Mesh::getMesh("Astroid_" + string(model_number) + ".model");
     if(m)
@@ -53,7 +53,7 @@ void Asteroid::draw3D()
 #endif//FEATURE_3D_RENDERING
 }
 
-void Asteroid::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range)
+void Asteroid::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, float rotation, bool long_range)
 {
     if (size != getRadius())
         setRadius(size);
@@ -84,6 +84,7 @@ void Asteroid::collide(Collisionable* target, float force)
     P<ExplosionEffect> e = new ExplosionEffect();
     e->setSize(getRadius());
     e->setPosition(getPosition());
+    e->setRadarSignatureInfo(0.0, 0.1, 0.2);
     destroy();
 }
 
@@ -135,8 +136,8 @@ void VisualAsteroid::draw3D()
     glRotatef(engine->getElapsedTime() * rotation_speed, 0, 0, 1);
     glScalef(size, size, size);
     sf::Shader* shader = ShaderManager::getShader("objectShaderBS");
-    shader->setParameter("baseMap", *textureManager.getTexture("Astroid_" + string(model_number) + "_d.png"));
-    shader->setParameter("specularMap", *textureManager.getTexture("Astroid_" + string(model_number) + "_s.png"));
+    shader->setUniform("baseMap", *textureManager.getTexture("Astroid_" + string(model_number) + "_d.png"));
+    shader->setUniform("specularMap", *textureManager.getTexture("Astroid_" + string(model_number) + "_s.png"));
     sf::Shader::bind(shader);
     Mesh* m = Mesh::getMesh("Astroid_" + string(model_number) + ".model");
     if(m)
@@ -146,6 +147,7 @@ void VisualAsteroid::draw3D()
 
 void VisualAsteroid::setSize(float size)
 {
+    this->size = size;
     setRadius(size);
     while(fabs(z) < size * 2)
         z *= random(1.2, 2.0);

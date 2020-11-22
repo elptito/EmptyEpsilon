@@ -200,7 +200,7 @@ void GuiHackDialog::onDraw(sf::RenderTarget& window)
         P<PlayerSpaceship> player_target = hack_target;
         if (player_target)
         {
-            player_target -> addToShipLog("Tentative de Piratage de la signature de faction",colorConfig.log_receive_enemy,"extern");
+            player_target -> addToShipLog("Tentative de Piratage de la signature de faction",colorConfig.log_receive_enemy,"generic");
             player_target -> addToShipLog("Tentative de Piratage de la signature de faction",colorConfig.log_receive_enemy,"intern");
         }
 
@@ -342,7 +342,7 @@ void GuiHackDialog::commandHack()
                 hack_message  = "\n> Acces complet au S-PAY";
                 hack_message  += "\n> Retrait de 200 Q obtenu";
                 hack_message  += "\n> Somme verse sur votre compte S-PAY";
-                my_spaceship -> addToShipLog("Obtention de 200Q par hack du S-PAY",colorConfig.log_receive_enemy,"extern");
+                my_spaceship -> addToShipLog("Obtention de 200Q par hack du S-PAY",colorConfig.log_receive_enemy,"generic");
                 P<PlayerSpaceship> player_target = hack_target;
                 if (player_target)
                     player_target -> addToShipLog("Perte de 200Q par hack du S-PAY",colorConfig.log_receive_enemy,"intern");

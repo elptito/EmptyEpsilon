@@ -1,3 +1,4 @@
+#include <i18n.h>
 #include "playerInfo.h"
 #include "gameGlobalInfo.h"
 #include "beamTargetSelector.h"
@@ -15,7 +16,7 @@ GuiBeamTargetSelector::GuiBeamTargetSelector(GuiContainer* owner, string id, P<P
     });
     selector->setPosition(0, 0, ABottomLeft)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
-    selector->addEntry("Carlingue", "-1");
+    selector->addEntry(tr("target","Hull"), "-1");
 
     if (!gameGlobalInfo->use_system_damage)
         hide();
@@ -30,7 +31,8 @@ void GuiBeamTargetSelector::onDraw(sf::RenderTarget& window)
 {
 //    if (target_spaceship)
 //        selector->setSelectionIndex(selector->indexByValue(target_spaceship->beam_system_target));
-
+    if(!target_spaceship)
+        return;
     target = target_spaceship->getTarget();
     P<SpaceShip> ship = target;
     if(ship)
@@ -43,7 +45,7 @@ void GuiBeamTargetSelector::onDraw(sf::RenderTarget& window)
             if (ship->hasSystem(ESystem(n)))
             {
                 if (selector->indexByValue(string(n)) == -1)
-                    selector->addEntry(getSystemName(ESystem(n)), string(n));
+                    selector->addEntry(getLocaleSystemName(ESystem(n)), string(n));
             }
             else
                 selector->removeEntry(selector->indexByValue(string(n)));

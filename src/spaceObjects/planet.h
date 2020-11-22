@@ -14,12 +14,19 @@ public:
     virtual void draw3D() override;
     virtual void draw3DTransparent() override;
 #endif//FEATURE_3D_RENDERING
-    virtual void drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool long_range) override;
-    virtual void drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f draw_position, float scale, bool long_range) override;
+    virtual void drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, float rotation, bool long_range) override;
+    virtual void drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f draw_position, float scale, float rotation, bool long_range) override;
     virtual void update(float delta) override;
     virtual void collide(Collisionable* target, float force) override;
+    virtual bool canHideInNebula()  override { return false; }
+
+    //Ajout Tdelc
     virtual bool canBeDockedBy(P<SpaceObject> obj) { return true; }
     virtual bool canBeLandedOn(P<SpaceObject> obj) { return false; }
+
+    
+    float getPlanetRadius();
+    float getCollisionSize();
 
     void setPlanetAtmosphereColor(float r, float g, float b);
     void setPlanetAtmosphereTexture(string texture_name);
@@ -35,7 +42,7 @@ public:
     void setAxialRotation(float axis);
     void setOrbit(P<SpaceObject> target, float orbit_time);
 
-    virtual string getExportLine() { return "Planet():setPosition(" + string(getPosition().x, 0) + ", " + string(getPosition().y, 0) + ")"; }
+    virtual string getExportLine() override;
 
 private:
     //Config:
@@ -60,5 +67,4 @@ private:
     void updateCollisionSize();
 };
 
-#endif//WORM_HOLE_H
-
+#endif//PLANET_H

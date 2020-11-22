@@ -1,9 +1,9 @@
 #include "weaponTube.h"
-#include "spaceObjects/EMPMissile.h"
-#include "spaceObjects/homingMissile.h"
+#include "spaceObjects/missiles/EMPMissile.h"
+#include "spaceObjects/missiles/homingMissile.h"
 #include "spaceObjects/mine.h"
-#include "spaceObjects/nuke.h"
-#include "spaceObjects/hvli.h"
+#include "spaceObjects/missiles/nuke.h"
+#include "spaceObjects/missiles/hvli.h"
 #include "spaceObjects/spaceship.h"
 
 WeaponTube::WeaponTube()
@@ -17,6 +17,7 @@ WeaponTube::WeaponTube()
     state = WTS_Empty;
     delay = 0.0;
     tube_index = 0;
+    size = MS_Medium;
 }
 
 void WeaponTube::setParent(SpaceShip* parent)
@@ -27,6 +28,7 @@ void WeaponTube::setParent(SpaceShip* parent)
     parent->registerMemberReplication(&load_time);
     parent->registerMemberReplication(&type_allowed_mask);
     parent->registerMemberReplication(&direction);
+    parent->registerMemberReplication(&size);
 
     parent->registerMemberReplication(&type_loaded);
     parent->registerMemberReplication(&state);
@@ -137,6 +139,22 @@ void WeaponTube::fire(float target_angle)
     type_loaded = "";
 }
 
+float WeaponTube::getSizeCategoryModifier()
+{
+    switch(size)
+    {
+        case MS_Small:
+            return 0.5;
+        case MS_Medium:
+            return 1.0;
+        case MS_Large:
+            return 2.0;
+        default:
+            return 1.0;
+    }
+}
+
+
 void WeaponTube::spawnProjectile(float target_angle)
 {
 //    sf::Vector2f fireLocation = parent->getPosition() + sf::rotateVector(parent->ship_template->model_data->getTubePosition2D(tube_index), parent->getRotation());
@@ -158,6 +176,7 @@ void WeaponTube::spawnProjectile(float target_angle)
             missile->damage_multiplier = data.damage_multiplier;
             missile->damage_type = data.damage_type;
             missile->color = data.color;
+            missile->category_modifier = getSizeCategoryModifier();
         }
         break;
     case MW_Nuke:
@@ -174,6 +193,7 @@ void WeaponTube::spawnProjectile(float target_angle)
             missile->damage_multiplier = data.damage_multiplier;
             missile->damage_type = data.damage_type;
             missile->color = data.color;
+            missile->category_modifier = getSizeCategoryModifier();
         }
         break;
     case MW_Mine:
@@ -202,6 +222,7 @@ void WeaponTube::spawnProjectile(float target_angle)
             missile->speed = data.speed * parent->getSystemEffectiveness(SYS_MissileSystem);
             missile->damage_type = data.damage_type;
             missile->color = data.color;
+            missile->category_modifier = getSizeCategoryModifier();
         }
         break;
     case MW_EMP:
@@ -218,6 +239,7 @@ void WeaponTube::spawnProjectile(float target_angle)
             missile->speed = data.speed * parent->getSystemEffectiveness(SYS_MissileSystem);
             missile->damage_type = data.damage_type;
             missile->color = data.color;
+            missile->category_modifier = getSizeCategoryModifier();
         }
         break;
     default:
@@ -317,6 +339,7 @@ void WeaponTube::update(float delta)
             type_loaded = "";
             break;
         case WTS_Firing:
+            if (game_server)
             {
                 spawnProjectile(0);
 
@@ -381,13 +404,13 @@ string WeaponTube::getLoadType()
 string WeaponTube::getTubeName()
 {
     if (std::abs(sf::angleDifference(0.0f, direction)) <= 45)
-        return "Avant";
+        return tr("tube","Front");
     if (std::abs(sf::angleDifference(90.0f, direction)) < 45)
-        return "Droite";
+        return tr("tube","Right");
     if (std::abs(sf::angleDifference(-90.0f, direction)) < 45)
-        return "Gauche";
+        return tr("tube","Left");
     if (std::abs(sf::angleDifference(180.0f, direction)) <= 45)
-        return "Arriere";
+        return tr("tube","Rear");
     return "?" + string(direction);
 }
 
@@ -447,4 +470,14 @@ float WeaponTube::calculateFiringSolution(P<SpaceObject> target)
         }
     }
     return std::numeric_limits<float>::infinity();
+}
+
+void WeaponTube::setSize(EMissileSizes size)
+{
+    this->size = size;
+}
+
+EMissileSizes WeaponTube::getSize()
+{
+    return size;
 }

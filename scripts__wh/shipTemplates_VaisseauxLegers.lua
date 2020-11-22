@@ -48,7 +48,7 @@ template:setTubeDirection(0, 0)
 
 --[[Chasseur Corsair]]
 variation = template:copy("Chasseur Corsair")
-variation:setPublicName("Chasseur Corsair")
+variation:setLocaleName("Chasseur Corsair")
 variation:setModel("Eldar_Corsair_Fighter")
 variation:setDescription([[Ce chasseur Eldar est rapide tout en possedant une grande puissance de feu, il ne faut surtout pas le sous estimer.]])
 variation:setHull(55)
@@ -61,7 +61,7 @@ variation:setCustomWeaponStorage("SKYR", 5)
 
 --[[Chasseur Mk2]]
 variation = template:copy("Chasseur Mk2"):setType("playership")
-variation:setPublicName("Chasseur Mk2")
+variation:setLocaleName("Chasseur Mk2")
 variation:setDescription([[On trouve ce chasseur de base dans de nombreux coins de la galaxie. Il est facile de trouver des pieces de rechange, non seulement parce qu'ils sont produites en grand nombre, mais aussi parce qu'ils subissent des pertes elevees au combat.]])
 --MGAA Skyreaper simple pour les chasseur/petit vaisseau ( homing trés rapide ) 
 --variation:setCustomWeapon("Homing", "SKY1", 0.75, 1000.0, 1, "Kinetic")
@@ -120,7 +120,7 @@ template:setCustomWeaponStorage("SKY1", 4)
 
 --[[Chasseur Imperial Fury]]
 variation = template:copy("Intercepteur Imperial Fury")
-variation:setPublicName("Intercepteur Imperial Fury")
+variation:setLocaleName("Intercepteur Imperial Fury")
 variation:setModel("WespeScoutGreen")
 variation:setDescription([[Comme tous les appareils d'attaque a bord des vaisseaux de la Flotte Imperiale, le Chasseur Intercepteur Fury est en fait une appellation regroupant une grande diversite d'engins spatiaux issus d'usines de differents mondes.
 Malgre cette diversite, les chasseurs Intercepteur Fury partagent les memes caracteristiques principales : un equipage reduit, une grande puissance de feu direct ainsi que de puissants moteurs et propulseurs leur donnant une grande vitesse et manœuvrabilite.]])
@@ -130,7 +130,7 @@ variation:setCustomWeaponStorage("SKY1", 4)
 
 --[[Chasseur Fury]]
 variation = variation:copy("Intercepteur Fury"):setType("playership")
-variation:setPublicName("Intercepteur Fury")
+variation:setLocaleName("Intercepteur Fury")
 variation:setModel("WespeScoutBlue")
 variation:setDescription([[Comme tous les appareils d'attaque a bord des vaisseaux de la Flotte Imperiale, le Chasseur Intercepteur Fury est en fait une appellation regroupant une grande diversite d'engins spatiaux issus d'usines de differents mondes.
 Malgre cette diversite, les chasseurs Intercepteur Fury partagent les memes caracteristiques principales : un equipage reduit, une grande puissance de feu direct ainsi que de puissants moteurs et propulseurs leur donnant une grande vitesse et manœuvrabilite.]])
@@ -197,14 +197,14 @@ template:setCustomWeaponStorage("MELT", 1)
 
 --[[Bombardier Imperial Starhawk]]
 variation = template:copy("Bombardier Imperial Starhawk")
-variation:setPublicName("Bombardier Imperial Starhawk")
+variation:setLocaleName("Bombardier Imperial Starhawk")
 variation:setModel("AdlerLongRangeScoutGreen")
 variation:setDescription([[Comme tous les appareils d'attaque a bord des vaisseaux de la Flotte Imperiale, le Bombardier Starhawk est en fait une appellation regroupant une grande diversite d'engins spatiaux issus d'usines de differents mondes.]])
 variation:setShields(20)
 
 --[[Bombardier Starhawk]]
 variation = template:copy("Bombardier Starhawk"):setType("playership")
-variation:setPublicName("Bombardier Starhawk")
+variation:setLocaleName("Bombardier Starhawk")
 variation:setModel("AdlerLongRangeScoutBlue")
 variation:setDescription([[Comme tous les appareils d'attaque a bord des vaisseaux de la Flotte Imperiale, le Bombardier Starhawk est en fait une appellation regroupant une grande diversite d'engins spatiaux issus d'usines de differents mondes.]])
 variation:setHull(100)
@@ -265,7 +265,7 @@ template:setWeaponStorage("EMP", 3)
 
 --[[Bombardier Corsair Eagle]]
 variation = template:copy("Bombardier Corsair Eagle"):setType("playership")
-variation:setPublicName("Bombardier Corsair Eagle")
+variation:setLocaleName("Bombardier Corsair Eagle")
 variation:setModel("Eldar_Corsair_Bomber")
 variation:setDescription([[Chasseur stellaire de classe bombardier. Construit pour des frappes chirurgicales, son objectif principal est de rejoindre la cible, la detruire et de repartir avant d'etre detruit.]])
 -- PJ
@@ -316,7 +316,7 @@ template:setCustomWeaponStorage("AC", 10)
 
 --[[Chasseur Lourd Mk2]]
 variation = template:copy("Chasseur Lourd Mk2"):setType("playership")
-variation:setPublicName("Chasseur Lourd Mk2")
+variation:setLocaleName("Chasseur Lourd Mk2")
 variation:setJumpDrive(true)
 variation:setHull(100)
 variation:setShields(60)
@@ -373,7 +373,7 @@ template:setBeam(0, 100,0, 50.0, 1.0, 5)
 
 --[[Vaisseau d'abordage Mk2]]
 variation = template:copy("Vaisseau d'abordage Mk2"):setType("playership")
-variation:setPublicName("Vaisseau d'abordage Mk2")
+variation:setLocaleName("Vaisseau d'abordage Mk2")
 variation:setModel("LindwurmFighterBlue")
 -- PJ
 

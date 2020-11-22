@@ -37,7 +37,7 @@ template:setHull(900)
 template:setShields(300, 300)
 template:setSpeed(90, 20, 12)
 
-template:setPublicName("Croiseur leger DauntlessMK3")
+template:setLocaleName("Croiseur leger DauntlessMK3")
 
 
 --                  Arc, Dir, Range, CycleTime, Dmg
@@ -246,7 +246,7 @@ template:setDockClasses("Drone","Vaisseau leger")
 
 --[Croiseur leger Slaughter]]
 variation = variation:copy("Croiseur leger Slaughter"):setType("playership")
-variation:setPublicName("Croiseur leger Slaughter")
+variation:setLocaleName("Croiseur leger Slaughter")
 -- PJ
 variation:setWarpSpeed(500)
 variation:setCombatManeuver(250, 150)

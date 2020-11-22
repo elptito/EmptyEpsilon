@@ -31,7 +31,7 @@ if(NOT DEFINED CPACK_PACKAGE_VERSION_MAJOR)
 endif(NOT DEFINED CPACK_PACKAGE_VERSION_MAJOR)
 
 set(VERSION_NUMBER ${CPACK_PACKAGE_VERSION_MAJOR}${CPACK_PACKAGE_VERSION_MINOR}${CPACK_PACKAGE_VERSION_PATCH})
-message(STATUS "EmptyEpsilon Verison = ${VERSION_NUMBER}")
+message(STATUS "EmptyEpsilon Version = ${VERSION_NUMBER}")
 
 # Set our optimization flags.
 set(OPTIMIZER_FLAGS)
@@ -104,9 +104,11 @@ set(SOURCES
 	src/mesh.cpp
 	src/scenarioInfo.cpp
 	src/repairCrew.cpp
+	src/GMMessage.cpp
 	src/tutorialGame.cpp
 	src/EDamageType.cpp
-        src/menus/joinServerMenu.cpp
+	src/scriptDataStorage.cpp
+	src/menus/joinServerMenu.cpp
 	src/menus/serverBrowseMenu.cpp
 	src/menus/mainMenus.cpp
 	src/menus/serverCreationScreen.cpp
@@ -119,6 +121,7 @@ set(SOURCES
 	src/screens/topDownScreen.cpp
 	src/screens/windowScreen.cpp
 	src/screens/mainScreen.cpp
+	src/screens/spectatorScreen.cpp
 	src/screens/crew4/operationsScreen.cpp
 	src/screens/crew4/engineeringAdvancedScreen.cpp
 	src/screens/crew4/tacticalScreen.cpp
@@ -133,6 +136,7 @@ set(SOURCES
 	src/screens/extra/oxygenScreen.cpp
 	src/screens/extra/powerManagement.cpp
 	src/screens/extra/databaseScreen.cpp
+	src/screens/extra/commsScreen.cpp
 	src/screens/extra/shipLogScreen.cpp
 	src/screens/extra/radarScreen.cpp
 	src/screens/extra/navigationScreen.cpp
@@ -152,6 +156,7 @@ set(SOURCES
 	src/screenComponents/missileTubeControls.cpp
 	src/screenComponents/selfDestructIndicator.cpp
 	src/screenComponents/viewport3d.cpp
+	src/screenComponents/viewportMainScreen.cpp
 	src/screenComponents/selfDestructEntry.cpp
 	src/screenComponents/dockingButton.cpp
     src/screenComponents/landingButton.cpp
@@ -192,8 +197,14 @@ set(SOURCES
 	src/screenComponents/hackDialog.cpp
 	src/screenComponents/customShipFunctions.cpp
 	src/screenComponents/scrollingBanner.cpp
+	src/screenComponents/lightsOut.cpp
+	src/screenComponents/miniGame.cpp
+	src/screenComponents/mineSweeper.cpp
+	src/screenComponents/impulseSound.cpp
+	src/screenComponents/noRadarPopup.cpp
 	src/gui/colorConfig.cpp
 	src/gui/hotkeyConfig.cpp
+	src/gui/joystickConfig.cpp
 	src/gui/mouseRenderer.cpp
 	src/gui/scriptError.cpp
 	src/gui/gui2_slider.cpp
@@ -209,6 +220,7 @@ set(SOURCES
 	src/gui/gui2_arrowbutton.cpp
 	src/gui/gui2_entrylist.cpp
 	src/gui/gui2_progressbar.cpp
+	src/gui/gui2_progressslider.cpp
 	src/gui/gui2_scrolltext.cpp
 	src/gui/gui2_advancedscrolltext.cpp
 	src/gui/gui2_button.cpp
@@ -221,6 +233,11 @@ set(SOURCES
 	src/gui/gui2_container.cpp
 	src/gui/gui2_panel.cpp
 	src/gui/gui2_overlay.cpp
+	src/spaceObjects/missiles/missileWeapon.cpp
+	src/spaceObjects/missiles/EMPMissile.cpp
+	src/spaceObjects/missiles/homingMissile.cpp
+	src/spaceObjects/missiles/hvli.cpp
+	src/spaceObjects/missiles/nuke.cpp
 	src/spaceObjects/spaceStation.cpp
 	src/spaceObjects/spaceship.cpp
 	src/spaceObjects/wormHole.cpp
@@ -231,17 +248,12 @@ set(SOURCES
 	src/spaceObjects/asteroid.cpp
 	src/spaceObjects/mine.cpp
 	src/spaceObjects/blackHole.cpp
-	src/spaceObjects/missileWeapon.cpp
-	src/spaceObjects/EMPMissile.cpp
 	src/spaceObjects/playerSpaceship.cpp
 	src/spaceObjects/beamEffect.cpp
-	src/spaceObjects/homingMissile.cpp
-	src/spaceObjects/hvli.cpp
 	src/spaceObjects/electricExplosionEffect.cpp
 	src/spaceObjects/supplyDrop.cpp
 	src/spaceObjects/warpJammer.cpp
 	src/spaceObjects/scanProbe.cpp
-	src/spaceObjects/nuke.cpp
 	src/spaceObjects/artifact.cpp
 	src/spaceObjects/shipTemplateBasedObject.cpp
 	src/spaceObjects/planet.cpp
@@ -252,10 +264,10 @@ set(SOURCES
 	src/ai/fighterAI.cpp
 	src/ai/ai.cpp
 	src/ai/aiFactory.cpp
+	src/ai/evasionAI.cpp
 	src/ai/missileVolleyAI.cpp
 	src/hardware/hardwareController.cpp
 	src/hardware/hardwareMappingEffects.cpp
-	src/hardware/hardwareOutputDevice.cpp
 	src/hardware/serialDriver.cpp
 	src/hardware/devices/dmx512SerialDevice.cpp
 	src/hardware/devices/enttecDMXProDevice.cpp
@@ -264,8 +276,9 @@ set(SOURCES
 	src/hardware/devices/virtualOutputDevice.cpp
 	src/hardware/devices/philipsHueDevice.cpp
 )
+
 if(WIN32)
-    list(APPEND SOURCES EmptyEpsilon.rc)
+    list(APPEND SOURCES EmptyEpsilon.rc src/discord.cpp)
 endif()
 
 foreach(SP_SOURCE
@@ -434,6 +447,15 @@ if(WIN32)
     include_directories(${DRMINGW_ROOT}/include/)
     target_link_libraries(${EXECUTABLE_NAME} exchndl)
   endif()
+  if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/discord/lib/x86/discord_game_sdk.dll.lib")
+    file(DOWNLOAD "https://dl-game-sdk.discordapp.net/latest/discord_game_sdk.zip" "${CMAKE_CURRENT_BINARY_DIR}/discord/game_sdk.zip" TIMEOUT 60 TLS_VERIFY ON)
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xf "${CMAKE_CURRENT_BINARY_DIR}/discord/game_sdk.zip" WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/discord")
+  endif()
+  target_link_libraries(${EXECUTABLE_NAME} "${CMAKE_CURRENT_BINARY_DIR}/discord/lib/x86/discord_game_sdk.dll.lib")
+  target_include_directories(${EXECUTABLE_NAME} PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/discord/c/")
+elseif(ANDROID)
+  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--whole-archive ${SFML_INSTALL_PATH}/lib/${ANDROID_ABI}/libsfml-main.a -Wl,--no-whole-archive")
+  target_link_libraries(${EXECUTABLE_NAME} log android EGL)
 elseif(APPLE)
   set_target_properties(${EXECUTABLE_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/osx/MacOSXBundleInfo.plist.in)
   set_target_properties(${EXECUTABLE_NAME} PROPERTIES MACOSX_BUNDLE_ICON_FILE "${EXECUTABLE_NAME}.icns")
@@ -469,6 +491,7 @@ if(WIN32)
     install(FILES ${DRMINGW_ROOT}/bin/symsrv.dll DESTINATION .)
     install(FILES ${DRMINGW_ROOT}/bin/symsrv.yes DESTINATION .)
   endif()
+  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/discord/lib/x86/discord_game_sdk.dll" DESTINATION .)
 
   install(DIRECTORY resources DESTINATION .)
   install(DIRECTORY scripts DESTINATION .)
@@ -508,5 +531,6 @@ add_custom_target(update_locale
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 set(CPACK_PACKAGE_EXECUTABLES ${EXECUTABLE_NAME})
+set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}")
 set(CPACK_GENERATOR "ZIP")
 include(CPack)

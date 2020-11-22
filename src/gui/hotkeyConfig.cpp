@@ -1,3 +1,4 @@
+#include <i18n.h>
 #include "hotkeyConfig.h"
 #include "preferenceManager.h"
 #include "shipTemplate.h"
@@ -14,6 +15,16 @@ HotkeyConfig::HotkeyConfig()
     newKey("STATION_ENGINEERING", std::make_tuple("Station ingenieur", "F4"));
     newKey("STATION_SCIENCE", std::make_tuple("Station Auspex CP", "F5"));
     newKey("STATION_RELAY", std::make_tuple("Station Auspex LP", "F6"));
+
+    newCategory("MAIN_SCREEN", "Ecran Principal");
+    newKey("VIEW_FORWARD", std::make_tuple("Vue avant", "Up"));
+    newKey("VIEW_LEFT", std::make_tuple("Vue babord", "Left"));
+    newKey("VIEW_RIGHT", std::make_tuple("Vue tribord", "Right"));
+    newKey("VIEW_BACK", std::make_tuple("Vue arriere", "Down"));
+    newKey("VIEW_TARGET", std::make_tuple("Verouiller la vue sur la cible", "T"));
+    newKey("TACTICAL_RADAR", std::make_tuple("Voir l'auspex courte portee", "Tab"));
+    newKey("LONG_RANGE_RADAR", std::make_tuple("Voir l'auspex longue portee", "Q"));
+    newKey("FIRST_PERSON", std::make_tuple("Permuter vue a la premiere personne", "F"));
 
     newCategory("HELMS", "Pilote");
     newKey("INC_IMPULSE", std::make_tuple("Augmenter Impulsion", "Up"));
@@ -70,9 +81,9 @@ HotkeyConfig::HotkeyConfig()
     newKey("DISABLE_AIM_LOCK", std::make_tuple("desactiver visee manuelle", ""));
     newKey("AIM_MISSILE_LEFT", std::make_tuple("visee manuelle a gauche", ""));
     newKey("AIM_MISSILE_RIGHT", std::make_tuple("visee manuelle a droite", ""));
-    newKey("SHIELD_CAL_INC", std::make_tuple("Increase shield frequency target", ""));
-    newKey("SHIELD_CAL_DEC", std::make_tuple("Decrease shield frequency target", ""));
-    newKey("SHIELD_CAL_START", std::make_tuple("Start shield calibration", ""));
+    newKey("SHIELD_CAL_INC", std::make_tuple("Augmenter frequence boucliers", ""));
+    newKey("SHIELD_CAL_DEC", std::make_tuple("Diminuer frequence boucliers", ""));
+    newKey("SHIELD_CAL_START", std::make_tuple("Calibrer les boucliers", ""));
 
     newCategory("ENGINEERING", "Ingenieur");
     newKey("SELECT_REACTOR", std::make_tuple("Selectionner systeme reacteur", "Num1"));
@@ -93,14 +104,19 @@ HotkeyConfig::HotkeyConfig()
     newKey("COOLANT_MAX", std::make_tuple("refroidissement max du systeme", ""));
     newKey("COOLANT_MIN", std::make_tuple("refroidissement min du systeme", ""));
     newKey("RESET", std::make_tuple("Remise a zero du systeme", "Gauche"));
+    newKey("SET_POWER_000", std::make_tuple("Set system power to 0%", ""));
+    newKey("SET_POWER_030", std::make_tuple("Set system power to 30%", ""));
+    newKey("SET_POWER_050", std::make_tuple("Set system power to 50%", ""));
+    newKey("SET_POWER_100", std::make_tuple("Set system power to 100%", "Space"));
+    newKey("SET_POWER_150", std::make_tuple("Set system power to 150%", ""));
+    newKey("SET_POWER_200", std::make_tuple("Set system power to 200%", ""));
+    newKey("SET_POWER_250", std::make_tuple("Set system power to 250%", ""));
+    newKey("SET_POWER_300", std::make_tuple("Set system power to 300%", ""));
     newKey("NEXT_REPAIR_CREW", std::make_tuple("Equipe de reparation suivante", ""));
     newKey("REPAIR_CREW_MOVE_UP", std::make_tuple("Deplacer equipe de reparation haut", ""));
     newKey("REPAIR_CREW_MOVE_DOWN", std::make_tuple("Deplacer equipe de reparation bas", ""));
     newKey("REPAIR_CREW_MOVE_LEFT", std::make_tuple("Deplacer equipe de reparation gauche", ""));
     newKey("REPAIR_CREW_MOVE_RIGHT", std::make_tuple("Deplacer equipe de reparation droite", ""));
-    newKey("SHIELD_CAL_INC", std::make_tuple("Augmenter frequence boucliers", ""));
-    newKey("SHIELD_CAL_DEC", std::make_tuple("Diminuer frequence boucliers", ""));
-    newKey("SHIELD_CAL_START", std::make_tuple("Calibrer les boucliers", ""));
     newKey("SELF_DESTRUCT_START", std::make_tuple("Activer l'auto destruction", ""));
     newKey("SELF_DESTRUCT_CONFIRM", std::make_tuple("Confirmer l'auto destruction", ""));
     newKey("SELF_DESTRUCT_CANCEL", std::make_tuple("Annuler l'auto destruction", ""));
@@ -117,7 +133,8 @@ HotkeyConfig::HotkeyConfig()
     }
 
     newCategory("SCIENCE", "Science");
-    newKey("NEXT_SCAN", std::make_tuple("Selectionner cible suivant", ""));
+    newKey("SCAN_OBJECT", std::make_tuple("Lancer le scan", "S"));
+    newKey("NEXT_SCANNABLE_OBJECT", std::make_tuple("Selectionner cible suivante", "C"));
     newKey("SCAN_START", std::make_tuple("Lancer scan", ""));
     newKey("ABORD_SCAN", std::make_tuple("Stopper scan", ""));
     newKey("NEXT_INFO_TARGET", std::make_tuple("Info suivante sur la cible", ""));
@@ -324,7 +341,17 @@ std::vector<std::pair<string, string>> HotkeyConfig::listHotkeysByCategory(strin
                 for(auto key_name : sfml_key_names)
                 {
                     if (key_name.second == item.hotkey.code)
-                        ret.push_back({std::get<0>(item.value), key_name.first});
+                    {
+                        string keyModifier = "";
+                        if (item.hotkey.shift) {
+                            keyModifier = "Shift+";
+                        } else if (item.hotkey.control) {
+                            keyModifier = "Ctrl+";
+                        } else if (item.hotkey.alt){
+                            keyModifier = "Alt+";
+                        }
+                        ret.push_back({std::get<0>(item.value), keyModifier + key_name.first});
+                    }
                 }
             }
         }

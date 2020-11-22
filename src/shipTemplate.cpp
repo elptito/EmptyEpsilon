@@ -1,3 +1,4 @@
+#include <i18n.h>
 #include "shipTemplate.h"
 #include "spaceObjects/spaceObject.h"
 #include "mesh.h"
@@ -9,7 +10,7 @@
 REGISTER_SCRIPT_CLASS(ShipTemplate)
 {
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setName);
-    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setPublicName);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setLocaleName);
     /// Set the class name, and subclass name for the ship. Used to divide ships into different classes.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setClass);
     /// Set is the ShipTemplate is secret (not shown in database), false by default
@@ -44,6 +45,7 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setBeamTexture);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setBeamWeaponEnergyPerFire);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setBeamWeaponHeatPerFire);
+
     /// Set the amount of missile tubes, limited to a maximum of 16.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setTubes);
     /// set the amount of docks (launcher, energy, weapon, thermic, mainteance, stock)
@@ -54,6 +56,10 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setWeaponTubeExclusiveFor);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setTubeDirection);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setReactor);
+    ///Set tube size, this will increase damage and blast radius.
+    ///Possible values are : Small, Medium or Large
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setTubeSize);
+
     /// Set the amount of starting hull
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setHull);
     /// Set the shield levels, amount of parameters defines the amount of shields. (Up to a maximum of 8 shields)
@@ -62,6 +68,7 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     /// Sets by how much the shields recharge over time for all shields. Default value is 0.3. Value is a float.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setShieldRechargeRate);
     /// Set the impulse speed, rotation speed and impulse acceleration for this ship.
+    /// Compare SpaceShip:setImpulseMaxSpeed, :setRotationMaxSpeed, :setAcceleration.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setSpeed);
     /// Sets the combat maneuver power of this ship.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCombatManeuver);
@@ -69,18 +76,51 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setWarpSpeed);
     /// Set if this ship shares energy with docked ships. Example: template:setSharesEnergyWithDocked(false)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setSharesEnergyWithDocked);
+    /// Set if this ship repairs docked ships. Example: template:setRepairDocked(false)
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setRepairDocked);
+    /// Set if this ship restocks scan probes on docked ships. Example: template:setRestocksScanProbes(false)
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setRestocksScanProbes);
+    /// Set if this ship restores missiles on docked cpuships. Example template:setRestocksMissilesDocked(false)
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setRestocksMissilesDocked);
     /// Set if this ship has a jump drive. Example: template:setJumpDrive(true)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setJumpDrive);
+    /// Set this ship's minimum and maximum jump drive distances.
+    /// Example: template:setJumpDrive(5000.0, 50000.0)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setJumpDriveRange);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setJumpDriveChargeTime);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setJumpDriveEnergy);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCloaking);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setWeaponStorage);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCustomWeaponStorage);
+    ///Set a custom weapon based on a regular one.
+    ///6 mandatory Arguments : base name (Homing, HVLI etc.), new weapon name, damage multiplier, speed, number of shots successively fired, type of damage
+    // Damage multiplier and speed are ratio from base missile (1 is the same as the base missile). It will not increase blast radius.
+    // Damage type is Kinetic, EMP, Energy
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCustomWeapon);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCustomWeaponColor);
+    /// Add an empty room to a ship template.
+    /// Rooms are shown on the engineering and damcon screens.
+    /// If a system room isn't accessible via other rooms connected by doors, that system
+    /// might not be repairable.
+    /// Rooms are placed on an integer x/y grid. The minimum size for a room is 1x1.
+    /// Accepts four parameters: the room's x coordinate, y coordinate, width, and height.
+    /// Example: template:addRoom(1, 2, 3, 4)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, addRoom);
+    /// Add a room containing a ship system to a ship template.
+    /// Rooms are shown on the engineering and damcon screens.
+    /// If a system doesn't have a room, or repair crews can't reach a system's room, it
+    /// might not be repairable.
+    /// Accepts five parameters: the room's x coordinate, y coordinate, width, height, and
+    /// the ship system as the string equivalent of an ESystem value.
+    /// Example: template:addRoomSystem(1, 2, 3, 4, "Reactor")
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, addRoomSystem);
+    /// Add a door between rooms in a ship template.
+    /// Rooms are shown on the engineering and damcon screens.
+    /// If a system room doesn't have a door connecting it to other rooms, repair crews
+    /// might not be able to reach it for repairs.
+    /// Accepts three parameters: the door's x coordinate, y coordinate, and a Boolean
+    /// value for whether it's horizontal (true) or vertical (false).
+    /// Example: template:addDoor(2, 2, false)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, addDoor);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, addDrones);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setRadarTrace);
@@ -90,6 +130,15 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setSystemDamageHullThreshold);
     /// Apply a rate to energy decrease. Float, default is 1. Won't affect production of energy.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setEnergyConsumptionRatio);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setLongRangeRadarRange);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setShortRangeRadarRange);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setImpulseSoundFile);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCanScan);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCanHack);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCanDock);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCanCombatManeuver);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCanSelfDestruct);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCanLaunchProbe);
     /// Return a new template with the given name, which is an exact copy of this template.
     /// Used to make easy variations of templates.
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, copy);
@@ -102,8 +151,9 @@ ShipTemplate::ShipTemplate()
     if (game_server) { LOG(ERROR) << "ShipTemplate objects can not be created during a scenario."; destroy(); return; }
 
     type = Ship;
-    class_name = "Sans classe";
-    class_name = "Sans sous-classe";
+    class_name = tr("No class");
+    sub_class_name = tr("No sub-class");
+    shares_energy_with_docked = false;
     secret = false;
     hack_diff = 2;
 
@@ -122,9 +172,10 @@ ShipTemplate::ShipTemplate()
     case 8: os_name = "hub" + string(os_name_counter); break;
     case 9: os_name = "zer" + string(os_name_counter); break;
     }
-
-    shares_energy_with_docked = false;
+    
     repair_docked = false;
+    restocks_scan_probes = false;
+    restocks_missiles_docked = false;
     energy_storage_amount = 1000;
     repair_crew_count = 3;
     weapon_tube_count = 0;
@@ -133,6 +184,7 @@ ShipTemplate::ShipTemplate()
         weapon_tube[n].load_time = 8.0;
         weapon_tube[n].type_allowed_mask = (1 << MW_Count) - 1;
         weapon_tube[n].direction = 0;
+        weapon_tube[n].size = MS_Medium;
     }
     hull = 70;
     shield_count = 0;
@@ -166,6 +218,7 @@ ShipTemplate::ShipTemplate()
     system_damage_ratio =1.0f;
     system_damage_hull_threshold = 0.0f;
     energy_consumption_ratio = 1.0f;
+    impulse_sound_file = "sfx/engine.wav";
 }
 
 void ShipTemplate::setBeamTexture(int index, string texture)
@@ -219,6 +272,13 @@ void ShipTemplate::setTubeDirection(int index, float direction)
     weapon_tube[index].direction = direction;
 }
 
+void ShipTemplate::setTubeSize(int index, EMissileSizes size)
+{
+    if (index < 0 || index >= max_weapon_tubes)
+        return;
+    weapon_tube[index].size = size;
+}
+
 void ShipTemplate::setType(TemplateType type)
 {
     if (radar_trace == "RadarArrow.png" && type == Station)
@@ -241,12 +301,13 @@ void ShipTemplate::setName(string name)
     if (name.startswith("Joueur "))
         name = name.substr(7);
     this->name = name;
-    this->public_name = name;
+    if (this->locale_name == "")
+        this->locale_name = name;
 }
 
-void ShipTemplate::setPublicName(string public_name)
+void ShipTemplate::setLocaleName(string name)
 {
-    this->public_name = public_name;
+    this->locale_name = name;
 }
 
 void ShipTemplate::setClass(string class_name, string sub_class_name)
@@ -392,6 +453,27 @@ string getSystemName(ESystem system)
     }
 }
 
+string getLocaleSystemName(ESystem system)
+{
+    switch(system)
+    {
+    case SYS_Reactor: return tr("system", "Reactor");
+    case SYS_BeamWeapons: return tr("system", "Beam Weapons");
+    case SYS_MissileSystem: return tr("system", "Missile System");
+    case SYS_Maneuver: return tr("system", "Maneuvering");
+    case SYS_Impulse: return tr("system", "Impulse Engines");
+    case SYS_Warp: return tr("system", "Warp Drive");
+    case SYS_JumpDrive: return tr("system", "Jump Drive");
+    case SYS_FrontShield: return tr("system", "Front Shield Generator");
+    case SYS_RearShield: return tr("system", "Rear Shield Generator");
+    case SYS_Docks: return "Gestion du Cargo";
+    case SYS_Drones: return "Drones et radar";
+    case SYS_Door: return "Sas exterieur";
+    default:
+        return "UNKNOWN";
+    }
+}
+
 void ShipTemplate::setDescription(string description)
 {
     this->description = description;
@@ -443,6 +525,16 @@ void ShipTemplate::setRepairDocked(bool enabled)
 void ShipTemplate::setReactor(bool enabled)
 {
     has_reactor = enabled;
+}
+
+void ShipTemplate::setRestocksScanProbes(bool enabled)
+{
+    restocks_scan_probes = enabled;
+}
+
+void ShipTemplate::setRestocksMissilesDocked(bool enabled)
+{
+    restocks_missiles_docked = enabled;
 }
 
 void ShipTemplate::setJumpDrive(bool enabled)
@@ -514,12 +606,31 @@ void ShipTemplate::setRadarTrace(string trace)
     radar_trace = trace;
 }
 
+void ShipTemplate::setLongRangeRadarRange(float range)
+{
+    range = std::max(range, 100.0f);
+    long_range_radar_range = range;
+    short_range_radar_range = std::min(short_range_radar_range, range);
+}
+
+void ShipTemplate::setShortRangeRadarRange(float range)
+{
+    range = std::max(range, 100.0f);
+    short_range_radar_range = range;
+    long_range_radar_range = std::max(long_range_radar_range, range);
+}
+
+void ShipTemplate::setImpulseSoundFile(string sound)
+{
+    impulse_sound_file = sound;
+}
+
 P<ShipTemplate> ShipTemplate::copy(string new_name)
 {
     P<ShipTemplate> result = new ShipTemplate();
     result->setName(new_name);
 
-    result->public_name = public_name;
+    result->locale_name = locale_name;
     result->description = description;
     result->class_name = class_name;
     result->sub_class_name = sub_class_name;
@@ -531,6 +642,14 @@ P<ShipTemplate> ShipTemplate::copy(string new_name)
     result->can_be_docked_by_class = can_be_docked_by_class;
     result->energy_storage_amount = energy_storage_amount;
     result->repair_crew_count = repair_crew_count;
+
+    result->can_scan = can_scan;
+    result->can_hack = can_hack;
+    result->can_dock = can_dock;
+    result->can_combat_maneuver = can_combat_maneuver;
+    result->can_self_destruct = can_self_destruct;
+    result->can_launch_probe = can_launch_probe;
+
     result->default_ai_name = default_ai_name;
     for(int n=0; n<max_beam_weapons; n++)
         result->beams[n] = beams[n];
@@ -545,11 +664,13 @@ P<ShipTemplate> ShipTemplate::copy(string new_name)
     result->impulse_speed = impulse_speed;
     result->turn_speed = turn_speed;
     result->warp_speed = warp_speed;
-    result->impulse_acceleration;
-    result->combat_maneuver_boost_speed;
-    result->combat_maneuver_strafe_speed;
+    result->impulse_acceleration = impulse_acceleration;
+    result->combat_maneuver_boost_speed = combat_maneuver_boost_speed;
+    result->combat_maneuver_strafe_speed = combat_maneuver_strafe_speed;
     result->shares_energy_with_docked = shares_energy_with_docked;
     result->repair_docked = repair_docked;
+    result->restocks_scan_probes = restocks_scan_probes;
+    result->restocks_missiles_docked = restocks_missiles_docked;
     result->has_jump_drive = has_jump_drive;
     result->has_reactor = has_reactor;
     result->jump_drive_min_distance = jump_drive_min_distance;
@@ -591,9 +712,9 @@ string ShipTemplate::getName()
     return this->name;
 }
 
-string ShipTemplate::getPublicName()
+string ShipTemplate::getLocaleName()
 {
-    return this->public_name;
+    return this->locale_name;
 }
 
 string ShipTemplate::getDescription()

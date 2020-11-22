@@ -121,6 +121,7 @@ public:
     void setTranslateZ(float z) { translate_z = z; }
 
     SpaceObject(float collisionRange, string multiplayerName, float multiplayer_significant_range=-1);
+    virtual ~SpaceObject();
 
     float getRadius() { return object_radius; }
     void setRadius(float radius) { object_radius = radius; setCollisionRadius(radius); }
@@ -135,6 +136,7 @@ public:
 
     void setGalaxyId(int value) { id_galaxy = value; }
     int getGalaxyId() { return id_galaxy; }
+    bool hasWeight() { return has_weight; }
 
     // Return the object's raw radar signature. The default signature is 0,0,0.
     RawRadarSignatureInfo radar_signature;
@@ -227,18 +229,22 @@ public:
     float getHeading() { float ret = getRotation() - 270; while(ret < 0) ret += 360.0f; while(ret > 360.0f) ret -= 360.0f; return ret; }
     void setHeading(float heading) { setRotation(heading - 90); }
 
-#if FEATURE_3D_RENDERING
+    void onDestroyed(ScriptSimpleCallback callback)
+    {
+        on_destroyed = callback;
+    }
+
     virtual void draw3D();
     virtual void draw3DTransparent() {}
-#endif//FEATURE_3D_RENDERING
-    virtual void drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool longRange);
-    virtual void drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool longRange);
+    virtual void drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, float rotation, bool longRange);
+    virtual void drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, float rotation, bool longRange);
     virtual void destroy();
 
     virtual void setCallSign(string new_callsign) { callsign = new_callsign; }
     virtual string getCallSign() { return callsign; }
     virtual bool canBeDockedBy(P<SpaceObject> obj) { return false; }
     virtual bool canBeLandedOn(P<SpaceObject> obj) { return false; }
+    virtual bool canRestockMissiles() { return false; }
     virtual bool hasShield() { return false; }
     void setHull(float amount) { hull = amount; }
     float getHull() { return hull; }
@@ -272,6 +278,7 @@ public:
     bool isFriendly(P<SpaceObject> obj);
     void setFaction(string faction_name) { this->faction_id = FactionInfo::findFactionId(faction_name); }
     string getFaction() { return factionInfo[this->faction_id]->getName(); }
+    string getLocaleFaction() { return factionInfo[this->faction_id]->getLocaleName(); }
     void setFactionId(unsigned int faction_id) { this->faction_id = faction_id; }
     unsigned int getFactionId() { return faction_id; }
 
@@ -310,10 +317,11 @@ public:
     bool openCommsTo(P<PlayerSpaceship> target);
     bool sendCommsMessage(P<PlayerSpaceship> target, string message);
 
-    ScriptCallback onDestroyed;
+    ScriptSimpleCallback on_destroyed;
 
 protected:
     ModelInfo model_info;
+    bool has_weight = true;
 };
 
 // Define a script conversion function for the DamageInfo structure.

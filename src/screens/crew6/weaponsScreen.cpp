@@ -1,6 +1,8 @@
+#include <i18n.h>
 #include "playerInfo.h"
 #include "gameGlobalInfo.h"
 #include "weaponsScreen.h"
+#include "preferenceManager.h"
 
 #include "screenComponents/missileTubeControls.h"
 #include "screenComponents/aimLock.h"
@@ -29,7 +31,7 @@ WeaponsScreen::WeaponsScreen(GuiContainer* owner)
     // Render the alert level color overlay.
     (new AlertLevelOverlay(this));
 
-    radar = new GuiRadarView(this, "HELMS_RADAR", my_spaceship->tactical_radar_range, &targets, my_spaceship);
+    radar = new GuiRadarView(this, "HELMS_RADAR", &targets, my_spaceship);
     radar->setPosition(0, 0, ACenter)->setSize(GuiElement::GuiSizeMatchHeight, 800);
     radar->setRangeIndicatorStepSize(1000.0)->shortRange()->enableCallsigns()->enableHeadingIndicators()->setStyle(GuiRadarView::Circular);
     radar->setCallbacks(
@@ -41,7 +43,9 @@ WeaponsScreen::WeaponsScreen(GuiContainer* owner)
                 my_spaceship->commandSetTarget(NULL);
         }, nullptr, nullptr
     );
-    missile_aim = new GuiRotationDial(this, "MISSILE_AIM", -90, 360 - 90, 0, [this](float value){
+    radar->setAutoRotating(PreferencesManager::get("weapons_radar_lock","0")=="1");
+
+    missile_aim = new AimLock(this, "MISSILE_AIM", radar, -90, 360 - 90, 0, [this](float value){
         tube_controls->setMissileTargetAngle(value);
     });
     missile_aim->setPosition(0, 0, ACenter)->setSize(GuiElement::GuiSizeMatchHeight, 850);
@@ -81,19 +85,21 @@ WeaponsScreen::WeaponsScreen(GuiContainer* owner)
         }
     }
 
-    energy_display = new GuiKeyValueDisplay(this, "ENERGY_DISPLAY", 0.45, "Energie", "");
-    energy_display->setIcon("gui/icons/energy")->setTextSize(20)->setPosition(20, 100, ATopLeft)->setSize(240, 40);
-    target_display = new GuiKeyValueDisplay(this, "TARGET_DISPLAY", 0.45, "Cible", "");
-    target_display->setIcon("gui/icons/lock")->setTextSize(20)->setPosition(20, 180, ATopLeft)->setSize(240, 40);
-    shields_display = new GuiKeyValueDisplay(this, "SHIELDS_DISPLAY", 0.45, "Boucliers", "");
-    shields_display->setIcon("gui/icons/shields")->setTextSize(20)->setPosition(20, 140, ATopLeft)->setSize(240, 40);
+    GuiAutoLayout* stats = new GuiAutoLayout(this, "WEAPONS_STATS", GuiAutoLayout::LayoutVerticalTopToBottom);
+    stats->setPosition(20, 100, ATopLeft)->setSize(240, 120);
+    energy_display = new GuiKeyValueDisplay(stats, "ENERGY_DISPLAY", 0.45, tr("Energy"), "");
+    energy_display->setIcon("gui/icons/energy")->setTextSize(20)->setSize(240, 40);
+    target_display = new GuiKeyValueDisplay(stats, "TARGET_DISPLAY", 0.45, "Cible", "");
+    target_display->setIcon("gui/icons/lock")->setTextSize(20)->setSize(240, 40);
+    shields_display = new GuiKeyValueDisplay(stats, "SHIELDS_DISPLAY", 0.45, "Boucliers", "");
+    shields_display->setIcon("gui/icons/shields")->setTextSize(20)->setSize(240, 40);
 
     if (my_spaceship && my_spaceship->getShieldCount() > 0)
     {
          if (gameGlobalInfo->use_beam_shield_frequencies)
         {
             //The shield frequency selection includes a shield enable button.
-            (new GuiShieldFrequencySelect(this, "SHIELD_FREQ"))->setPosition(-20, -20, ABottomRight)->setSize(280, 100);
+            (new GuiShieldFrequencySelect(this, "SHIELD_FREQ", my_spaceship))->setPosition(-20, -20, ABottomRight)->setSize(280, 100);
         }else{
             (new GuiShieldsEnableButton(this, "SHIELDS_ENABLE", my_spaceship))->setPosition(-20, -20, ABottomRight)->setSize(280, 50);
         }
@@ -150,7 +156,7 @@ void WeaponsScreen::onHotkey(const HotkeyResult& key)
                     current_found = true;
                     continue;
                 }
-                if (current_found && sf::length(obj->getPosition() - my_spaceship->getPosition()) < 5000 && my_spaceship->isEnemy(obj) && my_spaceship->getScannedStateFor(obj) >= SS_FriendOrFoeIdentified && obj->canBeTargetedBy(my_spaceship))
+                if (current_found && sf::length(obj->getPosition() - my_spaceship->getPosition()) < my_spaceship->getShortRangeRadarRange() && my_spaceship->isEnemy(obj) && my_spaceship->getScannedStateFor(obj) >= SS_FriendOrFoeIdentified && obj->canBeTargetedBy(my_spaceship))
                 {
                     targets.set(obj);
                     my_spaceship->commandSetTarget(targets.get());
@@ -163,7 +169,7 @@ void WeaponsScreen::onHotkey(const HotkeyResult& key)
                 {
                     continue;
                 }
-                if (my_spaceship->isEnemy(obj) && sf::length(obj->getPosition() - my_spaceship->getPosition()) < 5000 && my_spaceship->getScannedStateFor(obj) >= SS_FriendOrFoeIdentified && obj->canBeTargetedBy(my_spaceship))
+                if (my_spaceship->isEnemy(obj) && sf::length(obj->getPosition() - my_spaceship->getPosition()) < my_spaceship->getShortRangeRadarRange() && my_spaceship->getScannedStateFor(obj) >= SS_FriendOrFoeIdentified && obj->canBeTargetedBy(my_spaceship))
                 {
                     targets.set(obj);
                     my_spaceship->commandSetTarget(targets.get());
@@ -183,7 +189,7 @@ void WeaponsScreen::onHotkey(const HotkeyResult& key)
                 }
                 if (obj == my_spaceship)
                     continue;
-                if (current_found && sf::length(obj->getPosition() - my_spaceship->getPosition()) < 5000 && obj->canBeTargetedBy(my_spaceship))
+                if (current_found && sf::length(obj->getPosition() - my_spaceship->getPosition()) < my_spaceship->getShortRangeRadarRange() && obj->canBeTargetedBy(my_spaceship))
                 {
                     targets.set(obj);
                     my_spaceship->commandSetTarget(targets.get());
@@ -194,7 +200,7 @@ void WeaponsScreen::onHotkey(const HotkeyResult& key)
             {
                 if (obj == targets.get() || obj == my_spaceship)
                     continue;
-                if (sf::length(obj->getPosition() - my_spaceship->getPosition()) < 5000 && obj->canBeTargetedBy(my_spaceship))
+                if (sf::length(obj->getPosition() - my_spaceship->getPosition()) < my_spaceship->getShortRangeRadarRange() && obj->canBeTargetedBy(my_spaceship))
                 {
                     targets.set(obj);
                     my_spaceship->commandSetTarget(targets.get());
@@ -213,4 +219,14 @@ void WeaponsScreen::onHotkey(const HotkeyResult& key)
             tube_controls->setMissileTargetAngle(missile_aim->getValue());
         }
     }
+}
+bool WeaponsScreen::onJoystickAxis(const AxisAction& axisAction){
+    if (axisAction.category == "WEAPONS" && my_spaceship){
+        if (axisAction.action == "AIM_MISSILE"){
+            missile_aim->setValue(axisAction.value * 180);
+            tube_controls->setMissileTargetAngle(missile_aim->getValue());
+            return true;
+        }
+    }
+    return false;
 }

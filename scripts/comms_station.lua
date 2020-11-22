@@ -1,42 +1,56 @@
+--- Basic station comms.
+--
+-- Station comms that allows buying ordnance, supply drop, and reinforcements.
+-- Default script for any `SpaceStation`.
+--
+-- @script comms_station
+
+-- uses `mergeTables`
 require("utils.lua")
 
+--- Main menu of communication.
 function mainMenu()
     if comms_target.comms_data == nil then
         comms_target.comms_data = {}
     end
-    mergeTables(comms_target.comms_data, {
-        friendlyness = random(0.0, 100.0),
-        weapons = {
-            Homing = "neutral",
-            HVLI = "neutral",
-            Mine = "neutral",
-            Nuke = "friend",
-            EMP = "friend"
-        },
-        weapon_cost = {
-            Homing = 2,
-            HVLI = 2,
-            Mine = 2,
-            Nuke = 15,
-            EMP = 10
-        },
-        services = {
-            supplydrop = "friend",
-            reinforcements = "friend",
-        },
-        service_cost = {
-            supplydrop = 100,
-            reinforcements = 150,
-        },
-        reputation_cost_multipliers = {
-            friend = 1.0,
-            neutral = 2.5
-        },
-        max_weapon_refill_amount = {
-            friend = 1.0,
-            neutral = 0.5
+    mergeTables(
+        comms_target.comms_data,
+        {
+            friendlyness = random(0.0, 100.0),
+            weapons = {
+                Homing = "neutral",
+                HVLI = "neutral",
+                Mine = "neutral",
+                Nuke = "friend",
+                EMP = "friend"
+            },
+            weapon_cost = {
+                Homing = 2,
+                HVLI = 2,
+                Mine = 2,
+                Nuke = 15,
+                EMP = 10
+            },
+            services = {
+                supplydrop = "friend",
+                reinforcements = "friend"
+            },
+            service_cost = {
+                supplydrop = 100,
+                reinforcements = 150
+            },
+            reputation_cost_multipliers = {
+                friend = 1.0,
+                neutral = 2.5
+            },
+            max_weapon_refill_amount = {
+                friend = 1.0,
+                neutral = 0.5
+            }
         }
-    })
+    )
+
+    -- comms_data is used globally
     comms_data = comms_target.comms_data
 
     if player:isEnemy(comms_target) then
@@ -44,7 +58,7 @@ function mainMenu()
     end
 
     if comms_target:areEnemiesInRange(5000) then
-        setCommsMessage("We are under attack! No time for chatting!");
+        setCommsMessage("We are under attack! No time for chatting!")
         return true
     end
     if not player:isDocked(comms_target) then
@@ -55,12 +69,12 @@ function mainMenu()
     return true
 end
 
+--- Handle communications while docked with this station.
 function handleDockedState()
-    -- Handle communications while docked with this station.
     if player:isFriendly(comms_target) then
-        setCommsMessage("Good day, officer!\nWhat can we do for you today?")
+        setCommsMessage("Good day, officer! Welcome to " .. comms_target:getCallSign() .. ".\nWhat can we do for you today?")
     else
-        setCommsMessage("Welcome to our lovely station.")
+        setCommsMessage("Welcome to our lovely station " .. comms_target:getCallSign() .. ".")
     end
 
     if player:getWeaponStorageMax("Homing") > 0 then
@@ -90,21 +104,29 @@ function handleDockedState()
     end
 end
 
+--- handleWeaponRestock
 function handleWeaponRestock(weapon)
-    if not player:isDocked(comms_target) then setCommsMessage("You need to stay docked for that action."); return end
+    if not player:isDocked(comms_target) then
+        setCommsMessage("You need to stay docked for that action.")
+        return
+    end
     if not isAllowedTo(comms_data.weapons[weapon]) then
-        if weapon == "Nuke" then setCommsMessage("We do not deal in weapons of mass destruction.")
-        elseif weapon == "EMP" then setCommsMessage("We do not deal in weapons of mass disruption.")
-        else setCommsMessage("We do not deal in those weapons.") end
+        if weapon == "Nuke" then
+            setCommsMessage("We do not deal in weapons of mass destruction.")
+        elseif weapon == "EMP" then
+            setCommsMessage("We do not deal in weapons of mass disruption.")
+        else
+            setCommsMessage("We do not deal in those weapons.")
+        end
         return
     end
     local points_per_item = getWeaponCost(weapon)
     local item_amount = math.floor(player:getWeaponStorageMax(weapon) * comms_data.max_weapon_refill_amount[getFriendStatus()]) - player:getWeaponStorage(weapon)
     if item_amount <= 0 then
         if weapon == "Nuke" then
-            setCommsMessage("All nukes are charged and primed for destruction.");
+            setCommsMessage("All nukes are charged and primed for destruction.")
         else
-            setCommsMessage("Sorry, sir, but you are as fully stocked as I can allow.");
+            setCommsMessage("Sorry, sir, but you are as fully stocked as I can allow.")
         end
         addCommsReply("Back", mainMenu)
     else
@@ -122,12 +144,12 @@ function handleWeaponRestock(weapon)
     end
 end
 
+--- Handle communications when we are not docked with the station.
 function handleUndockedState()
-    --Handle communications when we are not docked with the station.
     if player:isFriendly(comms_target) then
-        setCommsMessage("Good day, officer.\nIf you need supplies, please dock with us first.")
+        setCommsMessage("This is " .. comms_target:getCallSign() .. ". Good day, officer.\nIf you need supplies, please dock with us first.")
     else
-        setCommsMessage("Greetings.\nIf you want to do business, please dock with us first.")
+        setCommsMessage("This is " .. comms_target:getCallSign() .. ". Greetings.\nIf you want to do business, please dock with us first.")
     end
     if isAllowedTo(comms_target.comms_data.services.supplydrop) then
         addCommsReply("Can you send a supply drop? ("..getServiceCost("supplydrop").."rep)", function()
@@ -164,7 +186,7 @@ function handleUndockedState()
                 for n=1,player:getWaypointCount() do
                     addCommsReply("WP" .. n, function()
                         if player:takeReputationPoints(getServiceCost("reinforcements")) then
-                            ship = CpuShip():setFactionId(comms_target:getFactionId()):setPosition(comms_target:getPosition()):setTemplate("Adder MK5"):setScanned(true):orderDefendLocation(player:getWaypoint(n))
+                            local ship = CpuShip():setFactionId(comms_target:getFactionId()):setPosition(comms_target:getPosition()):setTemplate("Adder MK5"):setScanned(true):orderDefendLocation(player:getWaypoint(n))
                             setCommsMessage("We have dispatched " .. ship:getCallSign() .. " to assist at WP" .. n);
                         else
                             setCommsMessage("Not enough reputation!");
@@ -178,6 +200,7 @@ function handleUndockedState()
     end
 end
 
+--- isAllowedTo
 function isAllowedTo(state)
     if state == "friend" and player:isFriendly(comms_target) then
         return true
@@ -188,18 +211,19 @@ function isAllowedTo(state)
     return false
 end
 
--- Return the number of reputation points that a specified weapon costs for the
+--- Return the number of reputation points that a specified weapon costs for the
 -- current player.
 function getWeaponCost(weapon)
     return math.ceil(comms_data.weapon_cost[weapon] * comms_data.reputation_cost_multipliers[getFriendStatus()])
 end
 
--- Return the number of reputation points that a specified service costs for
+--- Return the number of reputation points that a specified service costs for
 -- the current player.
 function getServiceCost(service)
     return math.ceil(comms_data.service_cost[service])
 end
 
+--- Return "friend" or "neutral".
 function getFriendStatus()
     if player:isFriendly(comms_target) then
         return "friend"

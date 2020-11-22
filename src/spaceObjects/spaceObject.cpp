@@ -39,7 +39,13 @@ REGISTER_SCRIPT_CLASS_NO_CREATE(SpaceObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setFaction);
     /// Gets the faction name to which this object belongs.
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getFaction);
-    /// Sets the faction to which this object belongs. Requires a index in the faction list.
+    /// Gets the localized name of the faction to which this object belongs, for displaying to the players.
+    /// Example: local faction = obj:getLocaleFaction()
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getLocaleFaction);
+    /// Sets the faction to which this object belongs, by the faction's index
+    /// in the faction list.
+    /// Requires the index of a faction in the faction list.
+    /// Example: local faction_id = obj:getFactionId()
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setFactionId);
     /// Gets the index in the faction list from this object.
     /// Can be used in combination with setFactionId to make sure two objects have the same faction.
@@ -54,8 +60,45 @@ REGISTER_SCRIPT_CLASS_NO_CREATE(SpaceObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getPersonality);
     /// Gets the personality ID to which this object belongs.
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getPersonalityId);
-
+    
+    /// Gets the friend-or-foe status of the parameter's faction relative to
+    /// this object's faction.
+    /// Requires a SpaceObject.
+    /// Returns true if the parameter's faction is hostile to this object's.
+    /// Example: local is_enemy = obj:isEnemy()
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, isEnemy);
+    /// Requires a SpaceObject.
+    /// Returns true if the parameter's faction is friendly to this object's.
+    /// If an object is neither friendly nor enemy, it is neutral.
+    /// Example: local is_friendly = obj:isFriendly()
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, isFriendly);
+    /// Sets the communications script used when this object is hailed.
+    /// Accepts the filename of a Lua script as a string, or can be set to an
+    /// empty string to disable comms with this object.
+    /// In the script, `comms_source` (or `player`, deprecated) (PlayerSpaceship)
+    /// and `comms_target` (SpaceObject) are available.
+    /// Compare `setCommsFunction`.
+    /// Examples:
+    ///   obj:setCommsScript("")
+    ///   obj:setCommsScript("comms_custom_script.lua")
+    /// Defaults:
+    ///   "comms_station.lua" (in `spaceStation.cpp`)
+    ///   "comms_ship.lua" (in `cpuShip.cpp`)
+    /// Call `setCommsMessage` once and `addCommsReply` zero or more times in each dialogue.
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setCommsScript);
+    /// Defines a callback function to use when handling hails, in lieu of any
+    /// current or default comms script.
+    /// For a detailed example, see scenario_53_escape.lua.
+    /// Requires a function to call back to when hailed.
+    /// The globals `comms_source` (PlayerSpaceship)
+    /// and `comms_target` (SpaceObject) are made available in the scenario script.
+    /// (Note: They remain as globals. As usual, such globals are not accessible in required files.)
+    /// Compare `setCommsScript`.
+    /// Example: obj:setCommsFunction(commsStation)
+    /// where commsStation is a function
+    /// calling `setCommsMessage` once and `addCommsReply` zero or more times.
+    /// Instead of using the globals, the callback can take two parameters.
+    /// Example: obj:setCommsFunction(function(comms_source, comms_target) ... end)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setCommsFunction);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, isEnemy);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, isFriendly);
@@ -125,7 +168,16 @@ REGISTER_SCRIPT_CLASS_NO_CREATE(SpaceObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getRadarSignatureGravity);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getRadarSignatureElectrical);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, getRadarSignatureBiological);
-    ///Get the scanning complexity of this object (amount of bars in the minigame)
+    /// Sets this object's scanning complexity (number of bars in the scanning
+    /// minigame) and depth (number of scanning minigames to complete).
+    /// Also clears the scanned state.
+    /// Requires two integer values.
+    /// Example: obj:setScanningParameters(2, 3)
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setScanningParameters);
+    /// Gets the scanning complexity for the parameter object.
+    /// Requires a SpaceObject.
+    /// Returns an integer value.
+    /// Example: local scan_complexity = obj:scanningComplexity(obj)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, scanningComplexity);
     ///Get the scanning depth of this object (number of minigames to complete)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, scanningChannelDepth);
@@ -141,6 +193,8 @@ REGISTER_SCRIPT_CLASS_NO_CREATE(SpaceObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setScanned);
     /// Set if this object is scanned or not by a particular faction.
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, setScannedByFaction);
+    // Register a callback that is called when this object is destroyed, by any means.
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceObject, onDestroyed);
 }
 
 PVector<SpaceObject> space_object_list;
@@ -212,24 +266,31 @@ SpaceObject::SpaceObject(float collision_range, string multiplayer_name, float m
     registerMemberReplication(&id_galaxy);
 }
 
-#if FEATURE_3D_RENDERING
+//due to a suspected compiler bug this deconstructor needs to be explicitly defined
+SpaceObject::~SpaceObject()
+{
+}
+
 void SpaceObject::draw3D()
 {
+#if FEATURE_3D_RENDERING
     model_info.render(getPosition(), getRotation(), 1 - transparency);
-}
 #endif//FEATURE_3D_RENDERING
+}
 
-void SpaceObject::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool longRange)
+
+
+void SpaceObject::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, float rotation, bool longRange)
 {
 }
 
-void SpaceObject::drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, bool longRange)
+void SpaceObject::drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, float rotation, bool longRange)
 {
 }
 
 void SpaceObject::destroy()
 {
-    onDestroyed();
+    on_destroyed.call(P<SpaceObject>(this));
     MultiplayerObject::destroy();
 }
 

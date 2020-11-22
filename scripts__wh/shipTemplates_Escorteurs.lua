@@ -62,7 +62,7 @@ template:setDockClasses("Drone","Vaisseau leger")
 
 --[[Destroyer du chaos Iconoclast]]
 variation = template:copy("Destroyer du chaos Iconoclast")
-variation:setPublicName("Destroyer du chaos Iconoclast")
+variation:setLocaleName("Destroyer du chaos Iconoclast")
 variation:setModel("Chaos_Destroyer")
 variation:setRadarTrace("radar_adv_striker.png")
 variation:setDescription([[Le Destroyer Iconoclast est un vaisseau de conception simple reprenant les principales caracteristiques des differents escorteurs utilises par les Libre-Marchands ou la Flotte Marchande, ce qui fait qu'il peut etre produit dans pratiquement n'importe quel Dock Orbital de la Galaxie.

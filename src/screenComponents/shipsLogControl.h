@@ -10,7 +10,7 @@ class ShipsLog : public GuiElement
 {
 public:
     string station;
-    ShipsLog(GuiContainer* owner, string station);
+    ShipsLog(GuiContainer* owner, const string& station = "generic");
 
     virtual void onDraw(sf::RenderTarget& window) override;
     virtual void onHotkey(const HotkeyResult& key) override;
