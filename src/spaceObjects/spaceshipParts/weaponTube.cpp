@@ -110,6 +110,8 @@ void WeaponTube::fire(float target_angle)
     if (parent->current_warp > 0.0) return;
     if (state != WTS_Loaded) return;
 
+    int line_count = 1;
+
     if(isNumber(type_loaded))
     {
         int typeNumber = std::stoi(type_loaded);
@@ -133,8 +135,17 @@ void WeaponTube::fire(float target_angle)
             delay = 0.0;
             return;
         }
+        line_count = data.lined_count;
+
     }
-    spawnProjectile(target_angle);
+    constexpr int distance_line = 1.0f;
+    float offset = ((line_count-1)/2f) * distance_line; //get higher bound
+    while(line_count)
+    {
+        spawnProjectile(target_angle, sf::Vector2(0,offset));
+        line_count--;
+        offset-=distance_line;
+    }
     state = WTS_Empty;
     type_loaded = "";
 }
@@ -155,10 +166,10 @@ float WeaponTube::getSizeCategoryModifier()
 }
 
 
-void WeaponTube::spawnProjectile(float target_angle)
+void WeaponTube::spawnProjectile(float target_angle, const sf::Vector2f &offset)
 {
 //    sf::Vector2f fireLocation = parent->getPosition() + sf::rotateVector(parent->ship_template->model_data->getTubePosition2D(tube_index), parent->getRotation());
-    sf::Vector2f fireLocation = parent->getPosition() + sf::rotateVector(sf::Vector2f(parent->getRadius()/2,parent->getRadius()/2),parent->getRotation()+direction-45);
+    sf::Vector2f fireLocation = parent->getPosition() + offset + sf::rotateVector(sf::Vector2f(parent->getRadius()/2,parent->getRadius()/2),parent->getRotation()+direction-45);
     const MissileWeaponData& data = MissileWeaponData::getDataFor(type_loaded);
     switch(data.basetype)
     {
@@ -186,7 +197,7 @@ void WeaponTube::spawnProjectile(float target_angle)
             missile->setFactionId(parent->getFactionId());
             missile->target_id = parent->target_id;
             missile->setPosition(fireLocation);
-			missile->translate_z = parent->translate_z;
+            missile->translate_z = parent->translate_z;
             missile->setRotation(parent->getRotation() + direction);
             missile->target_angle = target_angle;
             missile->speed = data.speed * parent->getSystemEffectiveness(SYS_MissileSystem);
@@ -202,7 +213,7 @@ void WeaponTube::spawnProjectile(float target_angle)
             missile->owner = parent;
             missile->setFactionId(parent->getFactionId());
             missile->setPosition(fireLocation);
-			missile->translate_z = parent->translate_z;
+            missile->translate_z = parent->translate_z;
             missile->setRotation(parent->getRotation() + direction);
             missile->speed = data.speed * parent->getSystemEffectiveness(SYS_MissileSystem);
             missile->damage_multiplier = data.damage_multiplier;
@@ -215,7 +226,7 @@ void WeaponTube::spawnProjectile(float target_angle)
             missile->owner = parent;
             missile->setFactionId(parent->getFactionId());
             missile->setPosition(fireLocation);
-			missile->translate_z = parent->translate_z;
+            missile->translate_z = parent->translate_z;
             missile->setRotation(parent->getRotation() + direction);
             missile->target_angle = parent->getRotation() + direction;
             missile->damage_multiplier = data.damage_multiplier;
@@ -232,7 +243,7 @@ void WeaponTube::spawnProjectile(float target_angle)
             missile->setFactionId(parent->getFactionId());
             missile->target_id = parent->target_id;
             missile->setPosition(fireLocation);
-			missile->translate_z = parent->translate_z;
+            missile->translate_z = parent->translate_z;
             missile->setRotation(parent->getRotation() + direction);
             missile->target_angle = target_angle;
             missile->damage_multiplier = data.damage_multiplier;
