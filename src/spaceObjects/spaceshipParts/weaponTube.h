@@ -73,7 +73,7 @@ public:
 
 
 private:
-    void spawnProjectile(float target_angle);
+    void spawnProjectile(float target_angle, const sf::Vector2f &offset = sf::Vector2f(0,0));
 
     SpaceShip* parent;
     int tube_index;
