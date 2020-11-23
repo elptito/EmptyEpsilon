@@ -26,7 +26,7 @@ Mine::Mine()
     ejectTimeout = 0.0;
     particleTimeout = 0.0;
     setRadarSignatureInfo(0.0, 0.05, 0.0);
-    hull = 5;
+    hull = 0; //not destructible
     speed = 0;
     damage_multiplier = 1;
 

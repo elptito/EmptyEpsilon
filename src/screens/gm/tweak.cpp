@@ -136,7 +136,8 @@ GuiObjectTweakBase::GuiObjectTweakBase(GuiContainer* owner)
     callsign = new GuiTextEntry(left_col, "", "");
     callsign->setSize(GuiElement::GuiSizeMax, 50);
     callsign->callback([this](string text) {
-        target->callsign = text;
+        if(target)
+            target->callsign = text;
     });
 
     // Edit object's description.
@@ -146,37 +147,43 @@ GuiObjectTweakBase::GuiObjectTweakBase(GuiContainer* owner)
     description = new GuiTextEntry(left_col, "", "");
     description->setSize(GuiElement::GuiSizeMax, 50);
     description->callback([this](string text) {
-        target->setDescriptionForScanState(SS_NotScanned, text);
+        if(target)
+            target->setDescriptionForScanState(SS_NotScanned, text);
         //target->setDescription(text);
     });
     (new GuiLabel(left_col, "", tr("Friend or Foe Description:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
     description_fof = new GuiTextEntry(left_col, "", "");
     description_fof->setSize(GuiElement::GuiSizeMax, 50);
     description_fof->callback([this](string text) {
-        target->setDescriptionForScanState(SS_FriendOrFoeIdentified,text);
+        if(target)
+            target->setDescriptionForScanState(SS_FriendOrFoeIdentified,text);
     });
     (new GuiLabel(left_col, "", tr("Simple Scan Description:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
     description_scan = new GuiTextEntry(left_col, "", "");
     description_scan->setSize(GuiElement::GuiSizeMax, 50);
     description_scan->callback([this](string text) {
-        target->setDescriptionForScanState(SS_SimpleScan, text);
+        if(target)
+            target->setDescriptionForScanState(SS_SimpleScan, text);
     });
     (new GuiLabel(left_col, "", tr("Full Scan Description:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
     description_full_scan = new GuiTextEntry(left_col, "", "");
     description_full_scan->setSize(GuiElement::GuiSizeMax, 50);
     description_full_scan->callback([this](string text) {
-        target->setDescriptionForScanState(SS_FullScan, text);
+        if(target)
+            target->setDescriptionForScanState(SS_FullScan, text);
     });
 
     (new GuiLabel(left_col, "", tr("Hull current:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
     hull_slider = new GuiSlider(left_col, "", 0.0, 500, 0.0, [this](float value) {
-        target->hull = value;
+        if(target)
+            target->hull = value;
     });
     hull_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
     (new GuiLabel(left_col, "", "Axe-Z:", 30))->setSize(GuiElement::GuiSizeMax, 50);
     zaxis_slider = new GuiSlider(left_col, "", -100.0, 100, 0.0, [this](float value) {
-        target->translate_z = value;
+        if(target)
+            target->translate_z = value;
     });
     zaxis_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
@@ -185,19 +192,22 @@ GuiObjectTweakBase::GuiObjectTweakBase(GuiContainer* owner)
 	//(new GuiLabel(right_col, "", "Radar Signature", 30))->setSize(GuiElement::GuiSizeMax, 50);
 	(new GuiLabel(right_col, "", "Signature Gravitationnelle", 30))->setSize(GuiElement::GuiSizeMax, 50);
 	gravity_s_slider = new GuiSlider(right_col, "", -100.0, 100.0, 0.0, [this](float value) {
-        target->radar_signature.gravity = value / 100.0f;
+        if(target)
+            target->radar_signature.gravity = value / 100.0f;
     });
     gravity_s_slider->addSnapValue(0.0f, 5.0f);
     gravity_s_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 50);
  	(new GuiLabel(right_col, "", "Signature Energetique", 30))->setSize(GuiElement::GuiSizeMax, 50);
 	electrical_s_slider = new GuiSlider(right_col, "", -100.0, 100.0, 0.0, [this](float value) {
-        target->radar_signature.electrical = value / 100.0f;
+        if(target)
+            target->radar_signature.electrical = value / 100.0f;
     });
     electrical_s_slider->addSnapValue(0.0f, 5.0f);
     electrical_s_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 50);
  	(new GuiLabel(right_col, "", "Signature Biologique", 30))->setSize(GuiElement::GuiSizeMax, 50);
 	biological_s_slider = new GuiSlider(right_col, "", -100.0, 100.0, 0.0, [this](float value) {
-        target->radar_signature.biological = value / 100.0f;
+        if(target)
+            target->radar_signature.biological = value / 100.0f;
     });
     biological_s_slider->addSnapValue(0.0f, 5.0f);
     biological_s_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 50);
@@ -205,21 +215,24 @@ GuiObjectTweakBase::GuiObjectTweakBase(GuiContainer* owner)
     // Scanning complexity
 	(new GuiLabel(right_col, "", tr("Scanning Complexity:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
     scanning_complexity_selector = new GuiSlider(right_col, "", 0, 4, 0, [this](int value) {
-        target->setScanningParameters(value,target->scanning_depth_value);
+        if(target)
+            target->setScanningParameters(value,target->scanning_depth_value);
 //        target->scanning_complexity_value = value;
     });
     scanning_complexity_selector->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
  	// Scanning Channel Depth
 	(new GuiLabel(right_col, "", tr("Scanning Depth:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
     scanning_channel_depth_selector = new GuiSlider(right_col, "", 0, 4, 0, [this](int value) {
-        target->setScanningParameters(target->scanning_complexity_value,value);
+        if(target)
+            target->setScanningParameters(target->scanning_complexity_value,value);
 //        target->scanning_depth_value = value;
     });
     scanning_channel_depth_selector->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
     (new GuiLabel(right_col, "", "Taille:", 30))->setSize(GuiElement::GuiSizeMax, 50);
     radius_slider = new GuiSlider(right_col, "", 0, 50000, 0.0, [this](float value) {
-        target->setRadius(value);
+        if(target)
+            target->setRadius(value);
     });
     radius_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
