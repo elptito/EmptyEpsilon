@@ -24,6 +24,8 @@ void GuiCustomShipFunctions::onDraw(sf::RenderTarget& window)
 
 void GuiCustomShipFunctions::checkEntries()
 {
+    if(!target_spaceship)
+        return;
     if (target_spaceship->custom_functions.size() != entries.size())
     {
         createEntries();

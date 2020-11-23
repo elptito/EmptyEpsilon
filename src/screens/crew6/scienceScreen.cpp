@@ -306,7 +306,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
             targets.clear();
     }
 
-    sidebar_selector->setVisible(sidebar_selector->getSelectionIndex() > 0 || custom_function_sidebar->hasEntries());
+    sidebar_selector->setVisible(sidebar_selector->getSelectionIndex() > 0 || (custom_function_sidebar && custom_function_sidebar->hasEntries()));
 
     info_callsign->setValue("-");
     info_distance->setValue("-");

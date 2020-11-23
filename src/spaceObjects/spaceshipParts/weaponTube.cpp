@@ -135,14 +135,14 @@ void WeaponTube::fire(float target_angle)
             delay = 0.0;
             return;
         }
-        line_count = data.lined_count;
+        line_count = data.line_count;
 
     }
-    constexpr int distance_line = 1.0f;
-    float offset = ((line_count-1)/2f) * distance_line; //get higher bound
+    constexpr int distance_line = 150.0f;
+    float offset = ((line_count-1)/2.0f) * distance_line; //get higher bound
     while(line_count)
     {
-        spawnProjectile(target_angle, sf::Vector2(0,offset));
+        spawnProjectile(target_angle, sf::Vector2f(offset, 0));
         line_count--;
         offset-=distance_line;
     }
@@ -168,8 +168,12 @@ float WeaponTube::getSizeCategoryModifier()
 
 void WeaponTube::spawnProjectile(float target_angle, const sf::Vector2f &offset)
 {
-//    sf::Vector2f fireLocation = parent->getPosition() + sf::rotateVector(parent->ship_template->model_data->getTubePosition2D(tube_index), parent->getRotation());
-    sf::Vector2f fireLocation = parent->getPosition() + offset + sf::rotateVector(sf::Vector2f(parent->getRadius()/2,parent->getRadius()/2),parent->getRotation()+direction-45);
+    sf::Vector2f fireLocation = parent->getPosition() + sf::rotateVector(offset, parent->getRotation()) + sf::rotateVector(parent->ship_template->model_data->getTubePosition2D(tube_index), parent->getRotation());
+    //sf::Vector2f fireLocation = parent->getPosition() + offset + sf::rotateVector(sf::Vector2f(parent->getRadius()/2,parent->getRadius()/2),parent->getRotation()+direction-45);
+    std::cout << "pos " << string(parent->getPosition().x) << "/" << string(parent->getPosition().y) << std::endl;
+    std::cout << "offset " << string(offset.x) << std::endl;
+    std::cout << "fire loc " << string(fireLocation.x) << "/" << string(fireLocation.y) << std::endl;
+
     const MissileWeaponData& data = MissileWeaponData::getDataFor(type_loaded);
     switch(data.basetype)
     {
