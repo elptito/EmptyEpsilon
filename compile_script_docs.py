@@ -105,7 +105,7 @@ class DocumentationGenerator(object):
         self._files.add(filename)
         ext = os.path.splitext(filename)[1].lower()
         if ext == '.c' or ext == '.cpp' or ext == '.h':
-            for line in open(filename, "r", errors="ignore"): #encoding issues
+            for line in open(filename, "r"): 
                 m = re.match('^# *include *[<"](.*)[>"]$', line)
                 if m is not None:
                     self.addFile(m.group(1))
@@ -137,7 +137,7 @@ class DocumentationGenerator(object):
             description = ""
             current_class = None
             #print("Processing: %s" % (filename))
-            for line in open(filename, "r", errors="ignore"): #encoding issues
+            for line in open(filename, "r"):
                 if line.startswith('#'):
                     continue
                 res = re.search('///(.*)', line)

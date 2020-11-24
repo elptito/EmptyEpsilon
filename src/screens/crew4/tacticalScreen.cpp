@@ -130,7 +130,7 @@ void TacticalScreen::onDraw(sf::RenderTarget& window)
     if (my_spaceship)
     {
         energy_display->setValue(string(int(my_spaceship->energy_level)));
-        heading_display->setValue(string(my_spaceship->getHeading(), 1) + "�");
+        heading_display->setValue(string(fmodf(my_spaceship->getRotation() + 360.0 + 360.0 - 270.0, 360.0), 1));
         float velocity = sf::length(my_spaceship->getVelocity()) / 1000 * 60;
         velocity_display->setValue(tr("{value} {unit}/min").format({{"value", string(velocity, 1)}, {"unit", DISTANCE_UNIT_1K}}));
 
