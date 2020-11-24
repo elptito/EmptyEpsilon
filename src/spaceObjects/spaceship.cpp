@@ -647,13 +647,36 @@ void SpaceShip::drawOnRadar(sf::RenderTarget& window, sf::Vector2f position, flo
 		objectSprite.setColor(factionInfo[getFactionId()]->gm_color);
         textureManager.setTexture(objectSprite, radar_trace);
         sprite_scale = std::max(sprite_min,std::min(sprite_max,scale * getRadius() * 2 / objectSprite.getTextureRect().width));
-		if (long_range)
-			sprite_scale = sprite_scale * 0.7;
+        if (long_range)
+            sprite_scale = sprite_scale * 0.7;
     }
 
     objectSprite.setRotation(getRotation()-rotation);
     objectSprite.setPosition(position);
     objectSprite.setScale(sprite_scale, sprite_scale);
+
+    if(my_spaceship == this)
+    {
+        objectSprite.setColor(sf::Color(192,192,255));
+    }
+    else if(my_spaceship)
+    {
+        if(getScannedStateFor(my_spaceship) == SS_FriendOrFoeIdentified)
+        {
+            if(isEnemy(my_spaceship))
+            {
+                objectSprite.setColor(sf::Color::Red);
+            }
+            else if(isFriendly(my_spaceship))
+            {
+                objectSprite.setColor(sf::Color(128,255,128));
+            }
+            else
+            {
+                objectSprite.setColor(sf::Color(192,192,192));
+            }
+        }
+    }
     window.draw(objectSprite);
 }
 
