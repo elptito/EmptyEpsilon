@@ -389,7 +389,7 @@ public:
     float getNetSystemEnergyUsage();
 
     // Ship's log functions
-    void addToShipLog(string message, sf::Color color, string station);
+    void addToShipLog(string message, sf::Color color, const string &station = "generic");
     void addToShipLogBy(string message, P<SpaceObject> target);
     const std::vector<ShipLogEntry>& getShipsLog(string station) const;
 

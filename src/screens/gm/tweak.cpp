@@ -495,6 +495,26 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
     });
     cloaking_toggle->setSize(GuiElement::GuiSizeMax, 40);
 
+    (new GuiLabel(left_col, "", tr("Short range radar:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
+    short_range_radar_slider = new GuiSlider(right_col, "", 100.0, 20000.0, 0.0, [this](float value) {
+        P<PlayerSpaceship> player = target;
+        if (player)
+        {
+            player->setShortRangeRadarRange(value);
+        }
+    });
+    short_range_radar_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
+    (new GuiLabel(left_col, "", tr("Long range radar:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
+    long_range_radar_slider = new GuiSlider(right_col, "", 100.0, 100000.0, 0.0, [this](float value) {
+        P<PlayerSpaceship> player = target;
+        if (player)
+        {
+            player->setLongRangeRadarRange(value);
+        }
+    });
+    long_range_radar_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
     (new GuiLabel(right_col, "", "JUMP, distance Min :", 30))->setSize(GuiElement::GuiSizeMax, 50);
     jump_drive_min_distance_slider = new GuiSlider(right_col, "", 0.0, 50000, 0.0, [this](float value) {
         target->jump_drive_min_distance = round(value / 1000) * 1000000;
@@ -539,26 +559,6 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
         target->warp_speed_per_warp_level = value*16.667;
     });
     warp_speed_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
-	
-	(new GuiLabel(right_col, "", tr("Short range radar:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
-    short_range_radar_slider = new GuiSlider(right_col, "", 100.0, 20000.0, 0.0, [this](float value) {
-        P<PlayerSpaceship> player = target;
-        if (player)
-		{
-			player->setShortRangeRadarRange(value);
-		}
-    });
-    short_range_radar_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
-
-    (new GuiLabel(right_col, "", tr("Long range radar:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
-    long_range_radar_slider = new GuiSlider(right_col, "", 100.0, 100000.0, 0.0, [this](float value) {
-        P<PlayerSpaceship> player = target;
-        if (player)
-		{
-			player->setLongRangeRadarRange(value);
-		}
-    });
-    long_range_radar_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
 }
  void GuiShipTweak::onDraw(sf::RenderTarget& window)

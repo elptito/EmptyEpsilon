@@ -1108,7 +1108,7 @@ void PlayerSpaceship::setRepairCrewCount(int amount)
     }
 }
 
-void PlayerSpaceship::addToShipLog(string message, sf::Color color, string station = "generic")
+void PlayerSpaceship::addToShipLog(string message, sf::Color color, const string &station)
 {
     if (station == "generic")
     {
