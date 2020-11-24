@@ -86,7 +86,7 @@ DockMasterScreen::DockMasterScreen(GuiContainer *owner)
                             bays->setEntryName(n,"Baie-"+string(n+1));
                     selected_ship->setDockId(index_bay + 1);
                     bays->setEntryName(index_bay,selected_ship->callsign);
-                    my_spaceship->addToShipLog("Transfert du vaisseau " + selected_ship->callsign + " Vers la baie d'amarrage " + string(index_bay+1),colorConfig.log_generic,"docks");
+                    my_spaceship->addToSpecificShipLog("Transfert du vaisseau " + selected_ship->callsign + " Vers la baie d'amarrage " + string(index_bay+1),colorConfig.log_generic,"docks");
                     return;
                 }
             }

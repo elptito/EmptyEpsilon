@@ -87,7 +87,7 @@ DroneMasterScreen::DroneMasterScreen(GuiContainer *owner)
                 Dock &dockData = my_spaceship->docks[index];
                 P<Cargo> cargo = dockData.getCargo();
 
-                my_spaceship->addToShipLog("Transfert de l'astronef " + cargo->getCallSign(),colorConfig.log_generic,"docks");
+                my_spaceship->addToSpecificShipLog("Transfert de l'astronef " + cargo->getCallSign(),colorConfig.log_generic,"docks");
                 my_spaceship->commandMoveCargo(index);
             }
     });
@@ -114,7 +114,7 @@ DroneMasterScreen::DroneMasterScreen(GuiContainer *owner)
                 Dock &dockData = my_spaceship->docks[index];
                 P<Cargo> cargo = dockData.getCargo();
 
-                my_spaceship->addToShipLog("Faire decoller " + cargo->getCallSign(),colorConfig.log_generic,"docks");
+                my_spaceship->addToSpecificShipLog("Faire decoller " + cargo->getCallSign(),colorConfig.log_generic,"docks");
                 my_spaceship->commandLaunchCargo(index);
             }
     });
@@ -134,7 +134,7 @@ DroneMasterScreen::DroneMasterScreen(GuiContainer *owner)
         if (my_spaceship)
         {
             my_spaceship->commandSetDockEnergyRequest(index, value);
-            my_spaceship->addToShipLog("Transfert d'energie requis",colorConfig.log_generic,"docks");
+            my_spaceship->addToSpecificShipLog("Transfert d'energie requis",colorConfig.log_generic,"docks");
         }
     });
     energy_slider->setSize(GuiElement::GuiSizeMax, 50);
@@ -184,17 +184,17 @@ DroneMasterScreen::DroneMasterScreen(GuiContainer *owner)
 
                 if (my_spaceship->weapon_storage[n] <= 0)
                 {
-                    my_spaceship->addToShipLog("Transfert de missile impossible. Aucun stock dans la station",colorConfig.log_generic,"docks");
+                    my_spaceship->addToSpecificShipLog("Transfert de missile impossible. Aucun stock dans la station",colorConfig.log_generic,"docks");
                     return;
                 }
 
                 if (cargo->getWeaponStorageMax(EMissileWeapons(n)) == cargo->getWeaponStorage(EMissileWeapons(n)))
                 {
-                    my_spaceship->addToShipLog("Transfert de missile impossible. Stock maximum dans l'astronef",colorConfig.log_generic,"docks");
+                    my_spaceship->addToSpecificShipLog("Transfert de missile impossible. Stock maximum dans l'astronef",colorConfig.log_generic,"docks");
                     return;
                 }
 
-                my_spaceship->addToShipLog("Transfert de 1 " + getMissileWeaponName(EMissileWeapons(n)) + " Vers l'astronef",colorConfig.log_generic,"docks");
+                my_spaceship->addToSpecificShipLog("Transfert de 1 " + getMissileWeaponName(EMissileWeapons(n)) + " Vers l'astronef",colorConfig.log_generic,"docks");
 
                 my_spaceship->weapon_storage[n] -= 1;
                 cargo->setWeaponStorage(EMissileWeapons(n), cargo->getWeaponStorage(EMissileWeapons(n)) + 1);
@@ -213,17 +213,17 @@ DroneMasterScreen::DroneMasterScreen(GuiContainer *owner)
 
                 if (cargo->getWeaponStorage(EMissileWeapons(n)) <= 0)
                 {
-                    my_spaceship->addToShipLog("Transfert de missile impossible. Aucun stock dans l'astronef",colorConfig.log_generic,"docks");
+                    my_spaceship->addToSpecificShipLog("Transfert de missile impossible. Aucun stock dans l'astronef",colorConfig.log_generic,"docks");
                     return;
                 }
 
                 if (my_spaceship->weapon_storage[n] == my_spaceship->weapon_storage_max[n])
                 {
-                    my_spaceship->addToShipLog("Transfert de missile impossible. Stock maximum dans la station",colorConfig.log_generic,"docks");
+                    my_spaceship->addToSpecificShipLog("Transfert de missile impossible. Stock maximum dans la station",colorConfig.log_generic,"docks");
                     return;
                 }
 
-                my_spaceship->addToShipLog("Transfert de 1 " + getMissileWeaponName(EMissileWeapons(n)) + " vers la station",colorConfig.log_generic,"docks");
+                my_spaceship->addToSpecificShipLog("Transfert de 1 " + getMissileWeaponName(EMissileWeapons(n)) + " vers la station",colorConfig.log_generic,"docks");
 
                 my_spaceship->weapon_storage[n] += 1;
                 cargo->setWeaponStorage(EMissileWeapons(n), cargo->getWeaponStorage(EMissileWeapons(n)) - 1);
@@ -259,17 +259,17 @@ DroneMasterScreen::DroneMasterScreen(GuiContainer *owner)
 
                 if (my_spaceship->custom_weapon_storage[kv.first] <= 0)
                 {
-                    my_spaceship->addToShipLog("Transfert de missile impossible. Aucun stock dans la station",colorConfig.log_generic,"docks");
+                    my_spaceship->addToSpecificShipLog("Transfert de missile impossible. Aucun stock dans la station",colorConfig.log_generic,"docks");
                     return;
                 }
 
                 if (cargo->getCustomWeaponStorageMax(kv.first) == cargo->getCustomWeaponStorage(kv.first))
                 {
-                    my_spaceship->addToShipLog("Transfert de missile impossible. Stock maximum dans l'astronef",colorConfig.log_generic,"docks");
+                    my_spaceship->addToSpecificShipLog("Transfert de missile impossible. Stock maximum dans l'astronef",colorConfig.log_generic,"docks");
                     return;
                 }
 
-                my_spaceship->addToShipLog("Transfert de 1 " + getMissileWeaponName(kv.first) + " Vers l'astronef",colorConfig.log_generic,"docks");
+                my_spaceship->addToSpecificShipLog("Transfert de 1 " + getMissileWeaponName(kv.first) + " Vers l'astronef",colorConfig.log_generic,"docks");
 
                 my_spaceship->custom_weapon_storage[kv.first] -= 1;
                 cargo->setCustomWeaponStorage(kv.first, cargo->getCustomWeaponStorage(kv.first) + 1);
@@ -288,17 +288,17 @@ DroneMasterScreen::DroneMasterScreen(GuiContainer *owner)
 
                 if (cargo->getCustomWeaponStorage(kv.first) <= 0)
                 {
-                    my_spaceship->addToShipLog("Transfert de missile impossible. Aucun stock dans l'astronef",colorConfig.log_generic,"docks");
+                    my_spaceship->addToSpecificShipLog("Transfert de missile impossible. Aucun stock dans l'astronef",colorConfig.log_generic,"docks");
                     return;
                 }
 
                 if (my_spaceship->custom_weapon_storage[kv.first] == my_spaceship->custom_weapon_storage_max[kv.first])
                 {
-                    my_spaceship->addToShipLog("Transfert de missile impossible. Stock maximum dans la station",colorConfig.log_generic,"docks");
+                    my_spaceship->addToSpecificShipLog("Transfert de missile impossible. Stock maximum dans la station",colorConfig.log_generic,"docks");
                     return;
                 }
 
-                my_spaceship->addToShipLog("Transfert de 1 " + getMissileWeaponName(kv.first) + " vers la station",colorConfig.log_generic,"docks");
+                my_spaceship->addToSpecificShipLog("Transfert de 1 " + getMissileWeaponName(kv.first) + " vers la station",colorConfig.log_generic,"docks");
 
                 my_spaceship->custom_weapon_storage[kv.first] += 1;
                 cargo->setCustomWeaponStorage(kv.first, cargo->getCustomWeaponStorage(kv.first) - 1);

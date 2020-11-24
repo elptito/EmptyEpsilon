@@ -1089,7 +1089,7 @@ void SpaceShip::collide(Collisionable* other, float force)
 
                     P<PlayerSpaceship> ship = gameGlobalInfo->getPlayerShip(n);
                     if(ship)
-                        ship->addToShipLog("Atterrissage de " + getCallSign() + " dans un dock de " + land_object->getCallSign(),colorConfig.log_generic,"docks");
+                        ship->addToSpecificShipLog("Atterrissage de " + getCallSign() + " dans un dock de " + land_object->getCallSign(),colorConfig.log_generic,"docks");
                 }
                 destroy();
 
@@ -1642,7 +1642,7 @@ void SpaceShip::addBroadcast(int threshold, string message)
 
             if (addtolog && id_galaxy == ship->id_galaxy)
             {
-                ship->addToShipLog(message, color, "generic");
+                ship->addToShipLog(message, color);
             }
         }
     }

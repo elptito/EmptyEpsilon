@@ -200,8 +200,8 @@ void GuiHackDialog::onDraw(sf::RenderTarget& window)
         P<PlayerSpaceship> player_target = hack_target;
         if (player_target)
         {
-            player_target -> addToShipLog("Tentative de Piratage de la signature de faction",colorConfig.log_receive_enemy,"generic");
-            player_target -> addToShipLog("Tentative de Piratage de la signature de faction",colorConfig.log_receive_enemy,"intern");
+            player_target -> addToShipLog("Tentative de Piratage de la signature de faction",colorConfig.log_receive_enemy);
+            player_target -> addToSpecificShipLog("Tentative de Piratage de la signature de faction",colorConfig.log_receive_enemy,"intern");
         }
 
         hack_message  += "\n> Hack reussi vers " + hack_target -> getCallSign();
@@ -281,7 +281,7 @@ void GuiHackDialog::commandHack()
 
                     P<PlayerSpaceship> player_target = obj;
                     if (player_target)
-                        player_target -> addToShipLog("Intrusion informatique en cours",colorConfig.log_receive_enemy,"intern");
+                        player_target -> addToSpecificShipLog("Intrusion informatique en cours",colorConfig.log_receive_enemy,"intern");
                     hack_step = 2;
                     break;
                 }
@@ -342,10 +342,10 @@ void GuiHackDialog::commandHack()
                 hack_message  = "\n> Acces complet au S-PAY";
                 hack_message  += "\n> Retrait de 200 Q obtenu";
                 hack_message  += "\n> Somme verse sur votre compte S-PAY";
-                my_spaceship -> addToShipLog("Obtention de 200Q par hack du S-PAY",colorConfig.log_receive_enemy,"generic");
+                my_spaceship -> addToShipLog("Obtention de 200Q par hack du S-PAY",colorConfig.log_receive_enemy);
                 P<PlayerSpaceship> player_target = hack_target;
                 if (player_target)
-                    player_target -> addToShipLog("Perte de 200Q par hack du S-PAY",colorConfig.log_receive_enemy,"intern");
+                    player_target -> addToSpecificShipLog("Perte de 200Q par hack du S-PAY",colorConfig.log_receive_enemy,"intern");
                 hack_step = 99;
             }
             else if (hack_text.length() != 6)

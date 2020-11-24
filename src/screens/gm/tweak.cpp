@@ -1683,11 +1683,11 @@ GuiShipTweakMessages::GuiShipTweakMessages(GuiContainer* owner)
             {
                 P<PlayerSpaceship> ship = gameGlobalInfo->getPlayerShip(n);
                 if (ship)
-                    ship -> addToShipLog(message,color_message,type_log);
+                    ship -> addToSpecificShipLog(message,color_message,type_log);
             }
        }
         else
-            target -> addToShipLog(message,color_message,type_log);
+            target -> addToSpecificShipLog(message,color_message,type_log);
     });
     send_message_log->setSize(GuiElement::GuiSizeMax, 40);
 

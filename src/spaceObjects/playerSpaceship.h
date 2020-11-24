@@ -389,7 +389,8 @@ public:
     float getNetSystemEnergyUsage();
 
     // Ship's log functions
-    void addToShipLog(string message, sf::Color color, const string &station = "generic");
+    void addToSpecificShipLog(string message, sf::Color color, string station); // avec le register script, impossible d'avoir des signatures avec arguments differents
+    void addToShipLog(string message, sf::Color color) { addToSpecificShipLog(message, color, "generic"); }
     void addToShipLogBy(string message, P<SpaceObject> target);
     const std::vector<ShipLogEntry>& getShipsLog(string station) const;
 
