@@ -1,4 +1,5 @@
 #include "repairCrew.h"
+#include "gameGlobalInfo.h"
 
 const static int16_t CMD_SET_TARGET_POSITION = 0x0000;
 
@@ -132,6 +133,12 @@ ERepairCrewDirection pathFind(sf::Vector2i start_pos, sf::Vector2i target_pos, P
 
 void RepairCrew::update(float delta)
 {
+    if (gameGlobalInfo->use_nano_repair_crew)
+    {
+        destroy();
+        return;
+    }    
+
     P<PlayerSpaceship> ship;
     if (game_server)
         ship = game_server->getObjectById(ship_id);

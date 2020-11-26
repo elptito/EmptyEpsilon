@@ -1,6 +1,7 @@
 #include "playerInfo.h"
 #include "repairCrew.h"
 #include "shipInternalView.h"
+#include "gameGlobalInfo.h"
 
 GuiShipInternalView::GuiShipInternalView(GuiContainer* owner, string id, float room_size)
 : GuiElement(owner, id), room_size(room_size), room_container(nullptr)
@@ -59,30 +60,32 @@ GuiShipInternalView* GuiShipInternalView::setShip(P<SpaceShip> ship)
 void GuiShipInternalView::onDraw(sf::RenderTarget& window)
 {
     setShip(my_spaceship);
-
     if (!viewing_ship && room_container)
     {
         room_container->destroy();
         room_container = nullptr;
     }else{
-        PVector<RepairCrew> crew = getRepairCrewFor(viewing_ship);
-        if (crew.size() != crew_list.size())
+        if (!gameGlobalInfo->use_nano_repair_crew)
         {
-            for(GuiShipCrew* c : crew_list)
-                c->destroy();
-            crew_list.clear();
-
-            for(P<RepairCrew> rc : crew)
+            PVector<RepairCrew> crew = getRepairCrewFor(viewing_ship);
+            if (crew.size() != crew_list.size())
             {
-                int id = rc->getMultiplayerId();
-                crew_list.push_back(new GuiShipCrew(room_container, std::to_string(id) + "_CREW", rc, [this](P<RepairCrew> crew_member){
-                    if (selected_crew_member)
-                        selected_crew_member->selected = false;
-                    selected_crew_member = crew_member;
-                    if (selected_crew_member)
-                        selected_crew_member->selected = true;
-                }));
-                crew_list.back()->setSize(room_size, room_size);
+                for(GuiShipCrew* c : crew_list)
+                    c->destroy();
+                crew_list.clear();
+
+                for(P<RepairCrew> rc : crew)
+                {
+                    int id = rc->getMultiplayerId();
+                    crew_list.push_back(new GuiShipCrew(room_container, std::to_string(id) + "_CREW", rc, [this](P<RepairCrew> crew_member){
+                        if (selected_crew_member)
+                            selected_crew_member->selected = false;
+                        selected_crew_member = crew_member;
+                        if (selected_crew_member)
+                            selected_crew_member->selected = true;
+                    }));
+                    crew_list.back()->setSize(room_size, room_size);
+                }
             }
         }
     }
