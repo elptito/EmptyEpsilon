@@ -133,6 +133,12 @@ ERepairCrewDirection pathFind(sf::Vector2i start_pos, sf::Vector2i target_pos, P
 
 void RepairCrew::update(float delta)
 {
+    if (gameGlobalInfo->use_nano_repair_crew)
+    {
+        destroy();
+        break;
+    }    
+
     P<PlayerSpaceship> ship;
     if (game_server)
         ship = game_server->getObjectById(ship_id);
@@ -176,9 +182,6 @@ void RepairCrew::update(float delta)
     {
     case RC_Idle:
         {
-            if (gameGlobalInfo->use_nano_repair_crew)
-                break;
-            
             action_delay = 1.0 / move_speed;
             if (pos != target_position)
             {

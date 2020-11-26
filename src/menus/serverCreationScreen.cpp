@@ -31,13 +31,13 @@ ServerCreationScreen::ServerCreationScreen()
     gameGlobalInfo->hacking_games = EHackingGames(PreferencesManager::get("server_config_hacking_games", "2").toInt());
     gameGlobalInfo->use_beam_shield_frequencies = PreferencesManager::get("server_config_use_beam_shield_frequencies", "1").toInt();
     gameGlobalInfo->use_system_damage = PreferencesManager::get("server_config_use_system_damage", "1").toInt();
-    gameGlobalInfo->use_repair_crew = PreferencesManager::get("server_config_use_repair_crew", "1").toInt();
+    gameGlobalInfo->use_repair_crew = PreferencesManager::get("server_config_use_repair_crew", "0").toInt();
     gameGlobalInfo->intercept_all_comms_to_gm = ECommsGmInterception(PreferencesManager::get("server_config_intercept_all_comms_to_gm", "0").toInt());
     gameGlobalInfo->allow_main_screen_tactical_radar = PreferencesManager::get("server_config_allow_main_screen_tactical_radar", "1").toInt();
     gameGlobalInfo->allow_main_screen_long_range_radar = PreferencesManager::get("server_config_allow_main_screen_long_range_radar", "1").toInt();
     gameGlobalInfo->allow_main_screen_global_range_radar = PreferencesManager::get("server_config_allow_main_screen_global_range_radar", "1").toInt();
     gameGlobalInfo->allow_main_screen_ship_state = PreferencesManager::get("server_config_allow_main_screen_ship_state", "1").toInt();
-    gameGlobalInfo->use_nano_repair_crew = PreferencesManager::get("server_use_nano_repair_crew", "0").toInt();
+    gameGlobalInfo->use_nano_repair_crew = PreferencesManager::get("server_use_nano_repair_crew", "1").toInt();
     gameGlobalInfo->gm_control_code = PreferencesManager::get("server_config_gm_control_code", "").upper();
 
     // Create a two-column layout.

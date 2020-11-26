@@ -52,7 +52,7 @@ GameGlobalInfo::GameGlobalInfo()
     allow_main_screen_global_range_radar = true;
     allow_main_screen_ship_state = true;
     intercept_all_comms_to_gm = CGI_None;
-    use_nano_repair_crew = false;
+    use_nano_repair_crew = true;
     gm_control_code = "";
     elapsed_time = 0.0f;
 

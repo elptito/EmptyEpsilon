@@ -41,12 +41,13 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner, ECrewPosition crew_pos
     oxygen_display->setIcon("gui/icons/oxygen")->setTextSize(20)->setSize(240, 40);
     coolant_display = new GuiKeyValueDisplay(stats, "COOLANT_DISPLAY", 0.45, tr("total","Coolant"), "");
     coolant_display->setIcon("gui/icons/coolant")->setTextSize(20)->setSize(240, 40);
-    if (gameGlobalInfo->use_nano_repair_crew and gameGlobalInfo->use_system_damage)
+    if (gameGlobalInfo->use_nano_repair_crew && gameGlobalInfo->use_system_damage)
     {
-        repair_display = new GuiKeyValueDisplay(stats, "COOLANT_DISPLAY", 0.45, tr("total","Repair"), "");
-        repair_display->setIcon("gui/icons/system_health")->setTextSize(20)->setPosition(20, 300, ATopLeft)->setSize(240, 40);
+        repair_display = new GuiKeyValueDisplay(stats, "REPAIR_DISPLAY", 0.45, tr("total","Repair"), "");
+        //repair_display->setIcon("gui/icons/system_health")->setTextSize(20)->setPosition(20, 300, ATopLeft)->setSize(240, 40);
+        repair_display->setIcon("gui/icons/system_health")->setTextSize(20)->setSize(240, 40);
     }
-
+    
     self_destruct_button = new GuiSelfDestructButton(this, "SELF_DESTRUCT");
     self_destruct_button->setPosition(20, 20, ATopLeft)->setSize(240, 100)->setVisible(my_spaceship && my_spaceship->getCanSelfDestruct());
 
