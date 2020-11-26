@@ -172,7 +172,7 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner, ECrewPosition crew_pos
     {
 //        system_effects_container = new GuiAutoLayout(this, "", GuiAutoLayout::LayoutVerticalTopToBottom);
         system_effects_container = new GuiAutoLayout(this, "", GuiAutoLayout::LayoutVerticalBottomToTop);
-        system_effects_container->setPosition(-20, 20, ATopRight)->setSize(270, 340);
+        system_effects_container->setPosition(-20, -100, ATopRight)->setSize(270, 340);
     } else {
         system_effects_container = new GuiAutoLayout(system_config_container, "", GuiAutoLayout::LayoutVerticalBottomToTop);
         system_effects_container->setPosition(0, -400, ABottomRight)->setSize(270, 400);
@@ -180,9 +180,9 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner, ECrewPosition crew_pos
     
     GuiPanel* box = new GuiPanel(system_config_container, "POWER_COOLANT_BOX");
     box->setPosition(0, 0, ABottomRight)->setSize(270, 400);
-    power_label = new GuiLabel(box, "POWER_LABEL", tr("slider", "Power"), 30);
+    power_label = new GuiLabel(box, "POWER_LABEL", tr("slider", "Power"), 20);
     power_label->setVertical()->setAlignment(ACenterLeft)->setPosition(20, 20, ATopLeft)->setSize(30, 360);
-    coolant_label = new GuiLabel(box, "COOLANT_LABEL", tr("slider", "Coolant"), 30);
+    coolant_label = new GuiLabel(box, "COOLANT_LABEL", tr("slider", "Coolant"), 20);
     coolant_label->setVertical()->setAlignment(ACenterLeft)->setPosition(110, 20, ATopLeft)->setSize(30, 360);
 
     power_slider = new GuiSlider(box, "POWER_SLIDER", 3.0, 0.0, 1.0, [this](float value) {
@@ -205,21 +205,21 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner, ECrewPosition crew_pos
         
     if (gameGlobalInfo->use_nano_repair_crew)
     {
-        box->setPosition(0, 20, ATopCenter)->setSize(450, 340);
-        power_label->setHorizontal()->setPosition(20, 20, ATopLeft)->setSize(400, 30);
-        power_slider->setRange(0.0, 3.0)->setPosition(20, 60, ATopLeft)->setSize(400, 50);
-        coolant_label->setHorizontal()->setPosition(20, 120, ATopLeft)->setSize(400, 30);
-        coolant_slider->setRange(0.0, 10.0)->setPosition(20, 160, ATopLeft)->setSize(400, 50);
+        box->setPosition(0, 20, ATopCenter)->setSize(450, 220);
+        power_label->setHorizontal()->setPosition(20, 20, ATopLeft)->setSize(400, 20);
+        power_slider->setRange(0.0, 3.0)->setPosition(20, 40, ATopLeft)->setSize(400, 40);
+        coolant_label->setHorizontal()->setPosition(20, 80, ATopLeft)->setSize(400, 20);
+        coolant_slider->setRange(0.0, 10.0)->setPosition(20, 100, ATopLeft)->setSize(400, 40);
         
         if (gameGlobalInfo->use_system_damage)
         {
-            repair_label = new GuiLabel(box, "COOLANT_LABEL", tr("slider", "Repair"), 30);
-            repair_label->setAlignment(ACenterLeft)->setPosition(20, 220, ATopLeft)->setSize(400, 30);
+            repair_label = new GuiLabel(box, "COOLANT_LABEL", tr("slider", "Repair"), 20);
+            repair_label->setAlignment(ACenterLeft)->setPosition(20, 140, ATopLeft)->setSize(400, 20);
             repair_slider = new GuiSlider(box, "COOLANT_SLIDER", 0.0, 10.0, 0.0, [this](float value) {
             if (my_spaceship && selected_system != SYS_None)
                 my_spaceship->commandSetSystemRepairRequest(selected_system, value);
             });
-            repair_slider->setPosition(20, 260, ATopLeft)->setSize(400, 50);
+            repair_slider->setPosition(20, 160, ATopLeft)->setSize(400, 40);
             repair_slider->disable();
         }
     }

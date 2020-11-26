@@ -136,7 +136,7 @@ void RepairCrew::update(float delta)
     if (gameGlobalInfo->use_nano_repair_crew)
     {
         destroy();
-        break;
+        return;
     }    
 
     P<PlayerSpaceship> ship;
