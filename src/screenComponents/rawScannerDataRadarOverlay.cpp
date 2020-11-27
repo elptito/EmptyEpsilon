@@ -29,8 +29,7 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
 
     // Cap the number of signature points, which determines the raw data's
     // resolution.
-//    const int point_count = 512;
-    const int point_count = 256;
+    const int point_count = 512;
     float radius = std::min(rect.width, rect.height) / 2.0f;
 
     RawRadarSignatureInfo signatures[point_count];
@@ -52,21 +51,25 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
         float a_0, a_1;
         float dist = sf::length(obj->getPosition() - view_position);
         float scale = 1.0;
-        // Nombre de fois la portee du radar
-        float dist_max = 50.0;
-
+        
         // If the object is more than twice as far away as the maximum radar
         // range, disregard it.
-        float distance_modif = distance * std::pow(my_spaceship->getSystemEffectiveness(SYS_Drones),2)/2.0;
-        if (dist > distance_modif * dist_max)
+        //float distance_modif = distance * std::pow(my_spaceship->getSystemEffectiveness(SYS_Drones),2)/2.0;
+        float distance_modif = distance;
+        if(my_spaceship && my_spaceship->hasSystem(SYS_Drones))
+        {
+            distance_modif = distance * std::sqrt(my_spaceship->getSystemEffectiveness(SYS_Drones));
+        }
+
+        if (dist > distance_modif * 2)
             continue;
 
         // The further away the object is, the less its effect on radar data.
         if (dist > distance_modif)
-            scale = scale - (dist - distance_modif) / (distance_modif * dist_max - distance_modif);
+            scale = 1.0f - ((dist - distance_modif) / distance_modif);
 
         // If we're adjacent to the object ...
-        if (dist <= 2*obj->getRadius())
+        if (dist <= obj->getRadius())
         {
             // ... affect all angles of the radar.
             a_0 = 0.0f;
@@ -74,7 +77,7 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
         }else{
             // Otherwise, measure the affected range of angles by the object's
             // distance and radius.
-            float a_diff = asinf(2*obj->getRadius() / dist) / M_PI * 180.0f;
+            float a_diff = asinf(obj->getRadius() / dist) / M_PI * 180.0f;
             float a_center = sf::vector2ToAngle(obj->getPosition() - view_position);
             a_0 = a_center - a_diff;
             a_1 = a_center + a_diff;
@@ -125,17 +128,17 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
         signatures[n].biological = std::max(0.0f, std::min(1.0f, signatures[n].biological));
 
         // ... make some noise ...
-        float r = 0;
-        float g = 0;
-        float b = 0;
+        float r = random(-1, 1);
+        float g = random(-1, 1);
+        float b = random(-1, 1);
 
         // ... and then modify the bands' values based on the object's signature.
         // Biological signatures amplify the green band.
-        if (my_spaceship->has_biological_sensor) { g += random(-20, 20) * signatures[n].biological; }
+        if (my_spaceship->has_biological_sensor) { g += signatures[n].biological * 30; }
         // Electrical signatures amplify the red band.
-        if (my_spaceship->has_electrical_sensor) { r += random(-20, 20) * signatures[n].electrical; }
+        if (my_spaceship->has_electrical_sensor) { r += signatures[n].electrical * 30; }
         // Gravitational signatures amplify the blue band.
- 		if (my_spaceship->has_gravity_sensor) { b += random(-20, 20) * signatures[n].gravity; }
+ 		if (my_spaceship->has_gravity_sensor) { b += signatures[n].gravity * 30; }
 
         // Apply the values to the radar bands.
         amp_r[n] = r * my_spaceship->getSystemEffectiveness(SYS_Drones);
