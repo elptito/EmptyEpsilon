@@ -361,9 +361,9 @@ PlayerSpaceship::PlayerSpaceship()
     warp_indicator = 0;
     auto_repairing_system = SYS_None;
     control_code = "";
-    has_gravity_sensor = false;
-	has_electrical_sensor = false;
-	has_biological_sensor = false;
+    has_gravity_sensor = true;
+	has_electrical_sensor = true;
+	has_biological_sensor = true;
 	timer_log_intern = 0.0;
 	timer_log_generic = 0.0;
 	timer_log_docks = 0.0;
