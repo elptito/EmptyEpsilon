@@ -232,7 +232,9 @@ void GuiRadarView::drawNoneFriendlyBlockedAreas(sf::RenderTarget& window)
     if (my_spaceship)
     {
 
-        float r = my_spaceship->getShortRangeRadarRange() * getScale();
+        float r = gameGlobalInfo->use_long_range_for_relay ? my_spaceship->getLongRangeRadarRange() : my_spaceship->getShortRangeRadarRange();
+        r *= getScale();
+
         sf::CircleShape circle(r, 50);
         circle.setOrigin(r, r);
         circle.setFillColor(sf::Color(255, 255, 255, 255));
@@ -539,8 +541,9 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
 
         foreach(SpaceObject, obj, space_object_list)
         {
+            if (!obj->canHideInNebula())
+                visible_objects.insert(*obj);
 //            if ((!P<SpaceShip>(obj) && !P<SpaceStation>(obj) && !P<WormHole>(obj)) || !obj->isFriendly(my_spaceship))
-//            if (!obj->isFriendly(my_spaceship))
 //            {
 //                P<ScanProbe> sp = obj;
 //                if (!sp || sp->owner_id != my_spaceship->getMultiplayerId())
@@ -558,15 +561,12 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
                 continue;
 
             sf::Vector2f position = obj->getPosition();
-            float radar_range = my_spaceship->getShortRangeRadarRange();
-            PVector<Collisionable> obj_list = CollisionManager::queryArea(position - sf::Vector2f(radar_range*100, radar_range*100), position + sf::Vector2f(radar_range*100, radar_range*100));
+            float radar_range = gameGlobalInfo->use_long_range_for_relay ? my_spaceship->getLongRangeRadarRange() : my_spaceship->getShortRangeRadarRange();
+            PVector<Collisionable> obj_list = CollisionManager::queryArea(position - sf::Vector2f(radar_range, radar_range), position + sf::Vector2f(radar_range, radar_range));
             foreach(Collisionable, c_obj, obj_list)
             {
                 P<SpaceObject> obj2 = c_obj;
 
-                radar_range = my_spaceship->getShortRangeRadarRange();
-                if (obj2 && !obj2->canHideInNebula())
-                    radar_range *= 100;
 
                 if (obj2 && (obj->getPosition() - obj2->getPosition()) < radar_range + obj2->getRadius())
                 {
