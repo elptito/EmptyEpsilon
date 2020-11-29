@@ -61,7 +61,7 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
     new RawScannerDataRadarOverlay(science_radar, "", my_spaceship ? my_spaceship->getLongRangeRadarRange() : 30000.0f);
 
     // Draw and hide the probe radar.
-    probe_radar = new GuiRadarView(radar_view, "PROBE_RADAR", my_spaceship->getShortRangeRadarRange(), &targets, my_spaceship);
+    probe_radar = new GuiRadarView(radar_view, "PROBE_RADAR", my_spaceship->getProbeRangeRadarRange(), &targets, my_spaceship);
     probe_radar->setPosition(-270, 0, ACenterRight)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax)->hide();
     probe_radar->setAutoCentering(false)->longRange()->enableWaypoints()->enableCallsigns()->enableHeadingIndicators()->setStyle(GuiRadarView::Circular)->setFogOfWarStyle(GuiRadarView::NoFogOfWar);
     probe_radar->setCallbacks(
@@ -72,7 +72,7 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
             targets.setToClosestTo(position, 1000, TargetsContainer::Selectable, my_spaceship);
         }, nullptr, nullptr
     );
-    new RawScannerDataRadarOverlay(probe_radar, "", my_spaceship->getShortRangeRadarRange()); // Tsht : portee radar pour les sondes egale a celle du vaisseau
+    new RawScannerDataRadarOverlay(probe_radar, "", my_spaceship->getProbeRangeRadarRange()); 
 
     sidebar_selector = new GuiSelector(radar_view, "", [this](int index, string value)
     {
@@ -220,10 +220,16 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
             science_radar->hide();
             probe_radar->show();
             probe_radar->setViewPosition(probe_position)->show();
+
+            zoom_slider->hide(); //FIXME plus bas pour afficher la bonne chose avec la sonde
+            zoom_label->hide();
         }else{
             probe_view_button->setValue(false);
             science_radar->show();
             probe_radar->hide();
+
+            zoom_slider->show();
+            zoom_label->show();
         }
     });
     probe_view_button->setPosition(20, -160, ABottomLeft)->setSize(200, 50)->disable();
@@ -336,7 +342,8 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
     {
         probe_view_button->enable();
         probe_radar->setViewPosition(probe->getPosition());
-        probe_radar->setDistance(radar_range);
+        //probe_radar->setDistance(radar_range);
+        probe_radar->setDistance(my_spaceship->getProbeRangeRadarRange());
     }
     else
     {

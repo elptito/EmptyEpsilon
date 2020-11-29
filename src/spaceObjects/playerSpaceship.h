@@ -438,6 +438,7 @@ public:
     // Radar range
     float getLongRangeRadarRange();
     float getShortRangeRadarRange();
+    float getProbeRangeRadarRange();
     void setLongRangeRadarRange(float range);
     void setShortRangeRadarRange(float range);
 

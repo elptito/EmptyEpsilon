@@ -13,6 +13,7 @@ private:
     sf::Vector2f target_position;
 public:
     int owner_id;
+    P<SpaceObject> owner;
 
     ScriptSimpleCallback on_expiration;
     ScriptSimpleCallback on_destruction;

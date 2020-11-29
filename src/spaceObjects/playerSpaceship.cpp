@@ -2604,6 +2604,12 @@ float PlayerSpaceship::getShortRangeRadarRange()
     return hasSystem(SYS_Drones) ? short_range_radar_range * std::sqrt(getSystemEffectiveness(SYS_Drones)) : short_range_radar_range;
 }
 
+float PlayerSpaceship::getProbeRangeRadarRange()
+{
+    return short_range_radar_range;
+}
+
+
 void PlayerSpaceship::setLongRangeRadarRange(float range)
 {
     range = std::max(range, 100.0f);

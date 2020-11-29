@@ -1187,13 +1187,7 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
         target->setMaxRepairPerSystem(value);
     });
     repair_per_system_slider->addSnapValue(2,1)->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
-
-
-    repair_slider = new GuiSlider(left_col, "", 0, 10, 2, [this](int value) {
-        target->setRepairCrewCount(value);
-    });
-    repair_slider->addSnapValue(2,1)->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
-
+    
     auto_coolant_toogle = new GuiToggleButton(left_col, "", tr("button", "Auto coolant"), [this](bool value) {
         target->setAutoCoolant(value);
     });
@@ -1326,7 +1320,6 @@ void GuiShipTweakPlayer::onDraw(sf::RenderTarget& window)
     max_energy_level_slider->setValue(target->max_energy_level);
     energy_conso_ratio_slider->setValue(target->energy_consumption_ratio * 100);
     coolant_per_system_slider->setValue(target->max_coolant_per_system);
-    repair_slider->setValue(target->max_repair);
     repair_per_system_slider->setValue(target->max_repair_per_system);
 
     // Update Max of coolant level
@@ -1336,9 +1329,6 @@ void GuiShipTweakPlayer::onDraw(sf::RenderTarget& window)
     repair_team_slider->setValue(target->getRepairCrewCount());
     probe_max_slider->setValue(target->getMaxScanProbeCount());
 
-    // Update oxygen points.
-//    oxygen_point_slider->setValue(target->getOxygenPoints());
-//    max_oxygen_point_slider->setValue(target->getOxygenMax());
 }
 
 void GuiShipTweakPlayer::open(P<SpaceObject> target)

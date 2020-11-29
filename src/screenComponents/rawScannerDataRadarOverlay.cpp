@@ -1,4 +1,5 @@
 #include "rawScannerDataRadarOverlay.h"
+#include "gameGlobalInfo.h"
 #include "radarView.h"
 #include "playerInfo.h"
 #include "spaceObjects/playerSpaceship.h"
@@ -21,7 +22,7 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
     else
         probe = game_client->getObjectById(my_spaceship->linked_science_probe_id);
 
-    if (my_spaceship->getSystemEffectiveness(SYS_Drones) < 0.1)
+    if (!probe && my_spaceship->getSystemEffectiveness(SYS_Drones) < 0.1)
         return;
 
     sf::Vector2f view_position = radar->getViewPosition();
