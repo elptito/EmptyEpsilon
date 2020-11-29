@@ -40,6 +40,7 @@ ServerCreationScreen::ServerCreationScreen()
     gameGlobalInfo->use_nano_repair_crew = PreferencesManager::get("server_use_nano_repair_crew", "1").toInt();
     gameGlobalInfo->gm_control_code = PreferencesManager::get("server_config_gm_control_code", "").upper();
     gameGlobalInfo->use_long_range_for_relay = PreferenceManager::get("server_use_long_range_for_relay", "1").toInt();
+    gameGlobalInfo->use_complex_radar_signatures = PreferencesManager::get("server_config_use_complex_radar_signatures", "0").toInt();
 
     // Create a two-column layout.
     GuiElement* container = new GuiAutoLayout(this, "", GuiAutoLayout::ELayoutMode::LayoutVerticalColumns);

@@ -133,18 +133,41 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
         float g = random(-1, 1);
         float b = random(-1, 1);
 
-        // ... and then modify the bands' values based on the object's signature.
-        // Biological signatures amplify the green band.
-        if (my_spaceship->has_biological_sensor) { g += signatures[n].biological * 30; }
-        // Electrical signatures amplify the red band.
-        if (my_spaceship->has_electrical_sensor) { r += signatures[n].electrical * 30; }
-        // Gravitational signatures amplify the blue band.
- 		if (my_spaceship->has_gravity_sensor) { b += signatures[n].gravity * 30; }
+         if (gameGlobalInfo->use_complex_radar_signatures)
+        {
+            // ... and then modify the bands' values based on the object's signature.
+            // Biological signatures amplify the red and green bands.
+            r += signatures[n].biological * 30;
+            g += signatures[n].biological * 30;
+
+            // Electrical signatures amplify the red and blue bands.
+            r += random(-20, 20) * signatures[n].electrical;
+            b += random(-20, 20) * signatures[n].electrical;
+
+            // Gravitational signatures amplify all bands, but especially modify
+            // the green and blue bands.
+            r = r * (1.0f - signatures[n].gravity);
+            g = g * (1.0f - signatures[n].gravity) + 40 * signatures[n].gravity;
+            b = b * (1.0f - signatures[n].gravity) + 40 * signatures[n].gravity;
+        }
+        else
+        {
+            r += signatures[n].gravity * 40;
+            g += signatures[n].biological * 30;
+            b += random(-20, 20) * signatures[n].electrical;
+        }
 
         // Apply the values to the radar bands.
-        amp_r[n] = r * my_spaceship->getSystemEffectiveness(SYS_Drones);
-        amp_g[n] = g * my_spaceship->getSystemEffectiveness(SYS_Drones);
-        amp_b[n] = b * my_spaceship->getSystemEffectiveness(SYS_Drones);
+        if(!probe)
+        {
+            r *= my_spaceship->getSystemEffectiveness(SYS_Drones);
+            g *= my_spaceship->getSystemEffectiveness(SYS_Drones);
+            b *= my_spaceship->getSystemEffectiveness(SYS_Drones);
+        }
+        amp_r[n] = r;
+        amp_g[n] = g;
+        amp_b[n] = b;
+        
     }
 
     // Create a vertex array containing each data point.
