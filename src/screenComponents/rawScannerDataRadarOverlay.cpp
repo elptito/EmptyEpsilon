@@ -56,7 +56,7 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
         // range, disregard it.
         //float distance_modif = distance * std::pow(my_spaceship->getSystemEffectiveness(SYS_Drones),2)/2.0;
         float distance_modif = distance;
-        if(my_spaceship && my_spaceship->hasSystem(SYS_Drones))
+        if(!probe && my_spaceship && my_spaceship->hasSystem(SYS_Drones))
         {
             distance_modif = distance * std::sqrt(my_spaceship->getSystemEffectiveness(SYS_Drones));
         }
@@ -93,7 +93,8 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
         {
             // Use dynamic signatures for ships.
             info = ship->getDynamicRadarSignatureInfo();
-        } else {
+        } else 
+        {
             // Otherwise, use the baseline only.
             info = obj->getRadarSignatureInfo();
         }

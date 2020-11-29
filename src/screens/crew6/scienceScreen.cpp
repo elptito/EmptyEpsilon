@@ -61,7 +61,7 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
     new RawScannerDataRadarOverlay(science_radar, "", my_spaceship ? my_spaceship->getLongRangeRadarRange() : 30000.0f);
 
     // Draw and hide the probe radar.
-    probe_radar = new GuiRadarView(radar_view, "PROBE_RADAR", 5000, &targets, my_spaceship);
+    probe_radar = new GuiRadarView(radar_view, "PROBE_RADAR", my_spaceship->getShortRangeRadarRange(), &targets, my_spaceship);
     probe_radar->setPosition(-270, 0, ACenterRight)->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax)->hide();
     probe_radar->setAutoCentering(false)->longRange()->enableWaypoints()->enableCallsigns()->enableHeadingIndicators()->setStyle(GuiRadarView::Circular)->setFogOfWarStyle(GuiRadarView::NoFogOfWar);
     probe_radar->setCallbacks(
@@ -72,7 +72,7 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
             targets.setToClosestTo(position, 1000, TargetsContainer::Selectable, my_spaceship);
         }, nullptr, nullptr
     );
-    new RawScannerDataRadarOverlay(probe_radar, "", 5000);
+    new RawScannerDataRadarOverlay(probe_radar, "", my_spaceship->getShortRangeRadarRange()); // Tsht : portee radar pour les sondes egale a celle du vaisseau
 
     sidebar_selector = new GuiSelector(radar_view, "", [this](int index, string value)
     {
