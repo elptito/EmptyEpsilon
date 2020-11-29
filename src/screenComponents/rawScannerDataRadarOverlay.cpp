@@ -1,4 +1,5 @@
 #include "rawScannerDataRadarOverlay.h"
+#include "gameGlobalInfo.h"
 #include "radarView.h"
 #include "playerInfo.h"
 #include "spaceObjects/playerSpaceship.h"
@@ -21,7 +22,7 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
     else
         probe = game_client->getObjectById(my_spaceship->linked_science_probe_id);
 
-    if (my_spaceship->getSystemEffectiveness(SYS_Drones) < 0.1)
+    if (!probe && my_spaceship->getSystemEffectiveness(SYS_Drones) < 0.1)
         return;
 
     sf::Vector2f view_position = radar->getViewPosition();
@@ -56,7 +57,7 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
         // range, disregard it.
         //float distance_modif = distance * std::pow(my_spaceship->getSystemEffectiveness(SYS_Drones),2)/2.0;
         float distance_modif = distance;
-        if(my_spaceship && my_spaceship->hasSystem(SYS_Drones))
+        if(!probe && my_spaceship && my_spaceship->hasSystem(SYS_Drones))
         {
             distance_modif = distance * std::sqrt(my_spaceship->getSystemEffectiveness(SYS_Drones));
         }
@@ -93,7 +94,8 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
         {
             // Use dynamic signatures for ships.
             info = ship->getDynamicRadarSignatureInfo();
-        } else {
+        } else 
+        {
             // Otherwise, use the baseline only.
             info = obj->getRadarSignatureInfo();
         }
@@ -132,18 +134,41 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
         float g = random(-1, 1);
         float b = random(-1, 1);
 
-        // ... and then modify the bands' values based on the object's signature.
-        // Biological signatures amplify the green band.
-        if (my_spaceship->has_biological_sensor) { g += signatures[n].biological * 30; }
-        // Electrical signatures amplify the red band.
-        if (my_spaceship->has_electrical_sensor) { r += signatures[n].electrical * 30; }
-        // Gravitational signatures amplify the blue band.
- 		if (my_spaceship->has_gravity_sensor) { b += signatures[n].gravity * 30; }
+         if (gameGlobalInfo->use_complex_radar_signatures)
+        {
+            // ... and then modify the bands' values based on the object's signature.
+            // Biological signatures amplify the red and green bands.
+            r += signatures[n].biological * 30;
+            g += signatures[n].biological * 30;
+
+            // Electrical signatures amplify the red and blue bands.
+            r += random(-20, 20) * signatures[n].electrical;
+            b += random(-20, 20) * signatures[n].electrical;
+
+            // Gravitational signatures amplify all bands, but especially modify
+            // the green and blue bands.
+            r = r * (1.0f - signatures[n].gravity);
+            g = g * (1.0f - signatures[n].gravity) + 40 * signatures[n].gravity;
+            b = b * (1.0f - signatures[n].gravity) + 40 * signatures[n].gravity;
+        }
+        else
+        {
+            r += signatures[n].gravity * 40;
+            g += signatures[n].biological * 30;
+            b += random(-20, 20) * signatures[n].electrical;
+        }
 
         // Apply the values to the radar bands.
-        amp_r[n] = r * my_spaceship->getSystemEffectiveness(SYS_Drones);
-        amp_g[n] = g * my_spaceship->getSystemEffectiveness(SYS_Drones);
-        amp_b[n] = b * my_spaceship->getSystemEffectiveness(SYS_Drones);
+        if(!probe)
+        {
+            r *= my_spaceship->getSystemEffectiveness(SYS_Drones);
+            g *= my_spaceship->getSystemEffectiveness(SYS_Drones);
+            b *= my_spaceship->getSystemEffectiveness(SYS_Drones);
+        }
+        amp_r[n] = r;
+        amp_g[n] = g;
+        amp_b[n] = b;
+        
     }
 
     // Create a vertex array containing each data point.

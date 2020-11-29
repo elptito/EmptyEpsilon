@@ -53,6 +53,9 @@ GameGlobalInfo::GameGlobalInfo()
     allow_main_screen_ship_state = true;
     intercept_all_comms_to_gm = CGI_None;
     use_nano_repair_crew = true;
+    use_long_range_for_relay = true;
+    use_complex_radar_signatures = false;
+    
     gm_control_code = "";
     elapsed_time = 0.0f;
 
@@ -73,6 +76,8 @@ GameGlobalInfo::GameGlobalInfo()
     registerMemberReplication(&gm_callback_names);
     registerMemberReplication(&intercept_all_comms_to_gm);
     registerMemberReplication(&use_nano_repair_crew);
+    registerMemberReplication(&use_long_range_for_relay);
+    registerMemberReplication(&use_complex_radar_signatures);
     registerMemberReplication(&gm_control_code);
     registerMemberReplication(&elapsed_time, 0.1);
 
