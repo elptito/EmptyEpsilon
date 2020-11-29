@@ -496,7 +496,7 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
     cloaking_toggle->setSize(GuiElement::GuiSizeMax, 40);
 
     (new GuiLabel(left_col, "", tr("Short range radar:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
-    short_range_radar_slider = new GuiSlider(right_col, "", 100.0, 20000.0, 0.0, [this](float value) {
+    short_range_radar_slider = new GuiSlider(left_col, "", 100.0, 20000.0, 0.0, [this](float value) {
         P<PlayerSpaceship> player = target;
         if (player)
         {
@@ -506,7 +506,7 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
     short_range_radar_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
     (new GuiLabel(left_col, "", tr("Long range radar:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
-    long_range_radar_slider = new GuiSlider(right_col, "", 100.0, 100000.0, 0.0, [this](float value) {
+    long_range_radar_slider = new GuiSlider(left_col, "", 100.0, 100000.0, 0.0, [this](float value) {
         P<PlayerSpaceship> player = target;
         if (player)
         {
@@ -590,12 +590,12 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
     jump_drive_energy_slider->setValue(target->jump_drive_energy_per_km_charge);
     warp_speed_slider->setValue(target->warp_speed_per_warp_level/16.667);
 
-	P<PlayerSpaceship> player = target;
+    P<PlayerSpaceship> player = target;
     if (player)
-	{
-		short_range_radar_slider->setValue(player->getShortRangeRadarRange());
-		long_range_radar_slider->setValue(player->getLongRangeRadarRange());
-	}
+    {
+        short_range_radar_slider->setValue(player->getShortRangeRadarRange());
+        long_range_radar_slider->setValue(player->getLongRangeRadarRange());
+    }
 }
 
  void GuiShipTweak::open(P<SpaceObject> target)
@@ -1114,66 +1114,50 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
 
     // Left column
     // Edit control code.
-    (new GuiLabel(left_col, "", tr("Control code:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(left_col, "", tr("Control code:"), 25))->setSize(GuiElement::GuiSizeMax, 45);
 
     control_code = new GuiTextEntry(left_col, "", "");
-    control_code->setSize(GuiElement::GuiSizeMax, 50);
+    control_code->setSize(GuiElement::GuiSizeMax, 45);
     control_code->callback([this](string text) {
         target->control_code = text.upper();
     });
 
     // Edit reputation.
-    (new GuiLabel(left_col, "", "Nombre de droides:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(left_col, "", "Nombre de droides:", 25))->setSize(GuiElement::GuiSizeMax, 45);
      repair_team_slider = new GuiSlider(left_col, "", 0, 15, 0, [this](int value) {
         target->setRepairCrewCount(value);
     });
-    repair_team_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    repair_team_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
     //(new GuiLabel(left_col, "", tr("Reputation:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
 
     auto_repair_toogle = new GuiToggleButton(left_col, "", tr("button", "Auto repair"), [this](bool value) {
         target->commandSetAutoRepair(value);
     });
-    auto_repair_toogle->setSize(GuiElement::GuiSizeMax, 40);
-
-    // Edit oxygen.
-//    (new GuiLabel(left_col, "", "Oxygen:", 30))->setSize(GuiElement::GuiSizeMax, 50);
-//     oxygen_point_slider = new GuiSlider(left_col, "", 0.0, 500.0, 0.0, [this](float value) {
-////        target->setOxygenPoints(value);
-//        target->oxygen_points = std::min(value, target->oxygen_max);
-//    });
-//    oxygen_point_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
-
-    // Edit oxygen.
-//    (new GuiLabel(left_col, "", "Oxygen Max:", 30))->setSize(GuiElement::GuiSizeMax, 50);
-//     max_oxygen_point_slider = new GuiSlider(left_col, "", 0.0, 500.0, 0.0, [this](float value) {
-//        target->setOxygenMax(value);
-//        target->oxygen_points = std::min(target->oxygen_points, target->oxygen_max);
-//    });
-//    max_oxygen_point_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    auto_repair_toogle->setSize(GuiElement::GuiSizeMax, 35);
 
     // Edit energy level.
-    (new GuiLabel(left_col, "", tr("Max energy:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(left_col, "", tr("Max energy:"), 25))->setSize(GuiElement::GuiSizeMax, 45);
 
     max_energy_level_slider = new GuiSlider(left_col, "", 0.0, 5000, 0.0, [this](float value) {
         target->max_energy_level = value;
         target->energy_level = std::min(target->energy_level, target->max_energy_level);
     });
-    max_energy_level_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    max_energy_level_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
 
-    (new GuiLabel(left_col, "", tr("Current energy:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(left_col, "", tr("Current energy:"), 25))->setSize(GuiElement::GuiSizeMax, 45);
 
     energy_level_slider = new GuiSlider(left_col, "", 0.0, 5000, 0.0, [this](float value) {
         target->energy_level = std::min(value, target->max_energy_level);
     });
-    energy_level_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    energy_level_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
 
-    (new GuiLabel(left_col, "", "Ratio de consommation d'energie:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(left_col, "", "Ratio de consommation d'energie:", 25))->setSize(GuiElement::GuiSizeMax, 45);
     energy_conso_ratio_slider = new GuiSlider(left_col, "", 0.0, 200, 0.0, [this](float value) {
         target->energy_consumption_ratio = value/100.0f;
     });
-    energy_conso_ratio_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    energy_conso_ratio_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
 
-    (new GuiLabel(left_col, "", tr("Coolant:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(left_col, "", tr("Coolant:"), 25))->setSize(GuiElement::GuiSizeMax, 45);
 
     max_coolant_slider = new GuiSlider(left_col, "", 0.0, 300.0, 0.0, [this](float value) {
         target->max_coolant = value / 100.0;
@@ -1181,7 +1165,7 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
         if (player)
             player->setSystemCoolantRequest(ESystem(0), player->systems[0].coolant_request);
     });
-    max_coolant_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    max_coolant_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
     max_coolant_slider->addSnapValue(0.0, 1.0);
     max_coolant_slider->addSnapValue(50.0, 1.0);
     max_coolant_slider->addSnapValue(100.0, 1.0);
@@ -1190,53 +1174,53 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
     max_coolant_slider->addSnapValue(250.0, 1.0);
     max_coolant_slider->addSnapValue(300.0, 1.0);
 
-    (new GuiLabel(left_col, "", "Coolant (per system / max):", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(left_col, "", "Coolant (per system / max):", 25))->setSize(GuiElement::GuiSizeMax, 45);
 
     coolant_per_system_slider = new GuiSlider(left_col, "", 0.0, 50.0, 0.0, [this](float value) {
         target->setMaxCoolantPerSystem(value);
     });
-    coolant_per_system_slider->addSnapValue(10,1)->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    coolant_per_system_slider->addSnapValue(10,1)->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
 
-    (new GuiLabel(left_col, "", "Repair (per system / max):", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(left_col, "", "Repair (per system / max):", 30))->setSize(GuiElement::GuiSizeMax, 45);
 
     repair_per_system_slider = new GuiSlider(left_col, "", 0, 10, 0, [this](int value) {
         target->setMaxRepairPerSystem(value);
     });
-    repair_per_system_slider->addSnapValue(2,1)->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    repair_per_system_slider->addSnapValue(2,1)->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
 
 
     repair_slider = new GuiSlider(left_col, "", 0, 10, 2, [this](int value) {
         target->setRepairCrewCount(value);
     });
-    repair_slider->addSnapValue(2,1)->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    repair_slider->addSnapValue(2,1)->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
 
     auto_coolant_toogle = new GuiToggleButton(left_col, "", tr("button", "Auto coolant"), [this](bool value) {
         target->setAutoCoolant(value);
     });
-    auto_coolant_toogle->setSize(GuiElement::GuiSizeMax, 40);
+    auto_coolant_toogle->setSize(GuiElement::GuiSizeMax, 35);
 
     // Right column
 
     // Radar Capabilities
-    (new GuiLabel(right_col, "", "Radar Capabilities:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(right_col, "", "Radar Capabilities:", 25))->setSize(GuiElement::GuiSizeMax, 45);
     gravity_toggle = new GuiToggleButton(right_col, "", "Gravity Sensor", [this](bool value) {
         target->setGravitySensor(value);
     });
-    gravity_toggle->setSize(GuiElement::GuiSizeMax, 40);
+    gravity_toggle->setSize(GuiElement::GuiSizeMax, 35);
     electrical_toggle = new GuiToggleButton(right_col, "", "Electrical Sensor", [this](bool value) {
         target->setElectricalSensor(value);
     });
-    electrical_toggle->setSize(GuiElement::GuiSizeMax, 40);
+    electrical_toggle->setSize(GuiElement::GuiSizeMax, 35);
     biological_toggle = new GuiToggleButton(right_col, "", "Biological Sensor", [this](bool value) {
         target->setBiologicalSensor(value);
     });
-    biological_toggle->setSize(GuiElement::GuiSizeMax, 40);
+    biological_toggle->setSize(GuiElement::GuiSizeMax, 35);
 
-    (new GuiLabel(right_col, "", "Nombre de sondes max:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(right_col, "", "Nombre de sondes max:", 25))->setSize(GuiElement::GuiSizeMax, 45);
     probe_max_slider = new GuiSlider(right_col, "", 0, 20, 0, [this](int value) {
         target->setMaxScanProbeCount(value);
     });
-    probe_max_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    probe_max_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
 
     // Count and list ship positions and whether they're occupied.
 //    position_count = new GuiLabel(right_col, "", tr("Positions occupied: "), 30);
