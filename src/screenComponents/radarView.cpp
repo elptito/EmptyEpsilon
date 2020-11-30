@@ -232,52 +232,40 @@ void GuiRadarView::drawNoneFriendlyBlockedAreas(sf::RenderTarget& window)
     window.clear(sf::Color(0, 0, 0, 255));
     if (my_spaceship)
     {
-
-        float r_player_ship = gameGlobalInfo->use_long_range_for_relay ? my_spaceship->getLongRangeRadarRange() : my_spaceship->getShortRangeRadarRange();
-        r_player_ship *= getScale();
+        auto drawCircle = [=](float r)
+        {
+            sf::CircleShape circle(r, 50);
+            circle.setOrigin(r, r);
+            circle.setFillColor(sf::Color(255, 255, 255, 255));
+            circle.setPosition(worldToScreen(obj->getPosition()));
+            window.draw(circle);
+        }
 
         float r_probe = my_spaceship->getProbeRangeRadarRange();
         r_probe *= getScale();
 
         float r_default = 5000.0f * getScale();
 
-        sf::CircleShape circle_player_ship(r_player_ship, 50);
-        circle_player_ship.setOrigin(r_player_ship, r_player_ship);
-        circle_player_ship.setFillColor(sf::Color(255, 255, 255, 255));
-        
-        sf::CircleShape circle_default(r_default, 50);
-        circle_default.setOrigin(r_default, r_default);
-        circle_default.setFillColor(sf::Color(255, 255, 255, 255));
-
-        sf::CircleShape circle_probe(r_probe, 50);
-        circle_probe.setOrigin(r_probe, r_probe);
-        circle_probe.setFillColor(sf::Color(255, 255, 255, 255));
-
-
         foreach(SpaceObject, obj, space_object_list)
         {
             if(obj->id_galaxy != my_spaceship->id_galaxy)
                 continue;
-
-            if (obj == my_spaceship || P<PlayerSpaceship>(obj))
+            P<PlayerSpaceship> player = obj;
+            if (obj == my_spaceship || (player && (obj->faction_id == my_spaceship->faction_id || obj->personality_id == 1))
             {
-                circle_player_ship.setPosition(worldToScreen(obj->getPosition()));
-                window.draw(circle_player_ship);
-                
+                float r_player_ship = gameGlobalInfo->use_long_range_for_relay ? player->getLongRangeRadarRange() : player->getShortRangeRadarRange();
+                r_player_ship *= getScale();
+                drawCircle(r_player_ship)
             }
-//          if ((P<SpaceShip>(obj) || P<SpaceStation>(obj)) && obj->isFriendly(my_spaceship))
             else if ((P<SpaceShip>(obj) || P<SpaceStation>(obj) || P<Planet>(obj)) 
                  && (obj->faction_id == my_spaceship->faction_id || obj->personality_id == 1))
             {
-                circle_default.setPosition(worldToScreen(obj->getPosition()));
-                window.draw(circle_default);
-                
+                drawCircle(r_default);
             }
             P<ScanProbe> sp = obj;
             if (sp && sp->owner_id == my_spaceship->getMultiplayerId())
             {
-                circle_probe.setPosition(worldToScreen(obj->getPosition()));
-                window.draw(circle_probe);
+                drawCircle(r_probe);
             }
         }
     }
@@ -486,8 +474,8 @@ void GuiRadarView::drawTargetProjections(sf::RenderTarget& window)
                     p = worldToScreen(fire_position + (turn_exit + sf::vector2FromAngle(missile_target_angle) * (offset - turn_distance)));
                     n = sf::vector2FromAngle(missile_target_angle + 90.0f);
                 }
-				n = sf::rotateVector(n, -getViewRotation());
-				n = sf::normalize(n);
+                n = sf::rotateVector(n, -getViewRotation());
+                n = sf::normalize(n);
                 sf::VertexArray a(sf::Lines, 2);
                 a[0].position = p - n * 10.0f;
                 a[1].position = p + n * 10.0f;
@@ -582,16 +570,16 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
                 continue;
 
             sf::Vector2f position = obj->getPosition();
-            float radar_range = 5000.0f;
+            float radar_range = 5000.0f; //default value, we can do better someday
             P<ScanProbe> sp = obj;
             if (sp && sp->owner_id == my_spaceship->getMultiplayerId())
             {
                 radar_range = my_spaceship->getProbeRangeRadarRange();
             } 
-            else
+            else if(target_spaceship == obj) //we already checked we shared same faction
             {
-                radar_range = gameGlobalInfo->use_long_range_for_relay ? my_spaceship->getLongRangeRadarRange() : my_spaceship->getShortRangeRadarRange();
-            }    
+                radar_range = gameGlobalInfo->use_long_range_for_relay ? target_spaceship->getLongRangeRadarRange() : target_spaceship->getShortRangeRadarRange();
+            }     
             PVector<Collisionable> obj_list = CollisionManager::queryArea(position - sf::Vector2f(radar_range, radar_range), position + sf::Vector2f(radar_range, radar_range));
             foreach(Collisionable, c_obj, obj_list)
             {
