@@ -43,7 +43,6 @@ GuiRadarView::GuiRadarView(GuiContainer* owner, string id, float distance, Targe
     missile_tube_controls(nullptr), 
     auto_center_on_my_ship(true),
     auto_rotate_on_my_ship(false),
-    auto_distance(false),
     target_spaceship(targetSpaceship), 
     long_range(false), 
     show_ghost_dots(false),
@@ -232,14 +231,14 @@ void GuiRadarView::drawNoneFriendlyBlockedAreas(sf::RenderTarget& window)
     window.clear(sf::Color(0, 0, 0, 255));
     if (my_spaceship)
     {
-        auto drawCircle = [=](float r)
+        auto drawCircle = [this, &window](P<SpaceObject> obj, float r)
         {
             sf::CircleShape circle(r, 50);
             circle.setOrigin(r, r);
             circle.setFillColor(sf::Color(255, 255, 255, 255));
             circle.setPosition(worldToScreen(obj->getPosition()));
             window.draw(circle);
-        }
+        };
 
         float r_probe = my_spaceship->getProbeRangeRadarRange();
         r_probe *= getScale();
@@ -251,21 +250,21 @@ void GuiRadarView::drawNoneFriendlyBlockedAreas(sf::RenderTarget& window)
             if(obj->id_galaxy != my_spaceship->id_galaxy)
                 continue;
             P<PlayerSpaceship> player = obj;
-            if (obj == my_spaceship || (player && (obj->faction_id == my_spaceship->faction_id || obj->personality_id == 1))
+            if (obj == my_spaceship || (player && (obj->faction_id == my_spaceship->faction_id || obj->personality_id == 1)))
             {
                 float r_player_ship = gameGlobalInfo->use_long_range_for_relay ? player->getLongRangeRadarRange() : player->getShortRangeRadarRange();
                 r_player_ship *= getScale();
-                drawCircle(r_player_ship)
+                drawCircle(obj, r_player_ship);
             }
             else if ((P<SpaceShip>(obj) || P<SpaceStation>(obj) || P<Planet>(obj)) 
                  && (obj->faction_id == my_spaceship->faction_id || obj->personality_id == 1))
             {
-                drawCircle(r_default);
+                drawCircle(obj, r_default);
             }
             P<ScanProbe> sp = obj;
             if (sp && sp->owner_id == my_spaceship->getMultiplayerId())
             {
-                drawCircle(r_probe);
+                drawCircle(obj, r_probe);
             }
         }
     }
