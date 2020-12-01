@@ -30,7 +30,7 @@ Mine::Mine()
     speed = 0;
     damage_multiplier = 1;
 
-    PathPlannerManager::getInstance()->addAvoidObject(this, trigger_range * 1.2f);
+    PathPlannerManager::getInstance()->addAvoidObject(this, blastRange * 1.2f);
 }
 
 void Mine::draw3D()
