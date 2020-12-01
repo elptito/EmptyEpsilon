@@ -87,7 +87,7 @@ void CpuShip::update(float delta)
         systems[n].heat_level = std::max(0.0f, systems[n].heat_level - delta * auto_system_repair_per_second);
     }
 
-    if (new_ai_name.length() && !ai || ai->canSwitchAI())
+    if (new_ai_name.length() && (!ai || ai->canSwitchAI()))
     {
         shipAIFactoryFunc_t f = ShipAIFactory::getAIFactory(new_ai_name);
         delete ai;
