@@ -63,10 +63,8 @@ CpuShip::CpuShip()
 
     missile_resupply = 0.0;
 
-    if (game_server)
-        ai = ShipAIFactory::getAIFactory("default")(this);
-    else
-        ai = NULL;
+    new_ai_name = "default";
+    ai = nullptr;
 }
 
 CpuShip::~CpuShip()
@@ -89,14 +87,15 @@ void CpuShip::update(float delta)
         systems[n].heat_level = std::max(0.0f, systems[n].heat_level - delta * auto_system_repair_per_second);
     }
 
-    if (new_ai_name.length() && ai->canSwitchAI())
+    if (new_ai_name.length() && !ai || ai->canSwitchAI())
     {
         shipAIFactoryFunc_t f = ShipAIFactory::getAIFactory(new_ai_name);
         delete ai;
         ai = f(this);
         new_ai_name = "";
     }
-    ai->run(delta);
+    if (ai)
+        ai->run(delta);
 
     //recharge missiles of CPU ships docked to station. Can be disabled setting the restocks_missiles_docked flag to false.
     if (docking_state == DS_Docked)
@@ -256,7 +255,7 @@ void CpuShip::orderDock(P<SpaceObject> object)
 void CpuShip::drawOnGMRadar(sf::RenderTarget& window, sf::Vector2f position, float scale, float rotation, bool long_range)
 {
     SpaceShip::drawOnGMRadar(window, position, scale, rotation, long_range);
-    if (ai && game_server)
+    if (game_server && ai)
         ai->drawOnGMRadar(window, position, scale);
 }
 
