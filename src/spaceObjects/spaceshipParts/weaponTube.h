@@ -73,7 +73,7 @@ public:
 
 
 private:
-    void spawnProjectile(float target_angle, const sf::Vector2f &offset = sf::Vector2f(0,0));
+    void spawnProjectile(float target_angle);
 
     SpaceShip* parent;
     int tube_index;
@@ -92,6 +92,7 @@ private:
     EWeaponTubeState state;
     float delay;
     int fire_count;
+    int line_count;
 };
 
 #endif//WEAPON_TUBE_H

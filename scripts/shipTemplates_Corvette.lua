@@ -28,11 +28,11 @@ template:setTubes(4, 10.0)
 -- Base, New name, Damage Multiplier (0 to infinite), Speed
 template:setCustomWeapon("Homing", "Homing_2", 1.5, 200.0, "Emp")
 template:setCustomWeaponColor("Homing_2", 0, 255, 0)
-template:setCustomWeaponMultiple("Homing_2",1,3)
+template:setCustomWeaponMultiple("Homing_2",2,3)
 
 template:setCustomWeapon("Homing", "Homing_3", 1.5, 200.0, "Emp")
 template:setCustomWeaponColor("Homing_3", 0, 255, 0)
-template:setCustomWeaponMultiple("Homing_3", 3,1)
+template:setCustomWeaponMultiple("Homing_3", 3,2)
 
 
 template:setWeaponStorage("HVLI", 20)

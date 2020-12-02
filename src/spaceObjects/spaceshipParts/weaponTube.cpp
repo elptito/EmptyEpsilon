@@ -110,7 +110,7 @@ void WeaponTube::fire(float target_angle)
     if (parent->current_warp > 0.0) return;
     if (state != WTS_Loaded) return;
 
-    int line_count = 1;
+    line_count = 1;
 
     if(isNumber(type_loaded))
     {
@@ -125,8 +125,10 @@ void WeaponTube::fire(float target_angle)
     }
     else
     {
+        std::cout << "cus " << std::endl;
         const MissileWeaponData& data = MissileWeaponData::getDataFor(type_loaded);
         int target_fire_count = data.fire_count;
+        line_count = data.line_count;
 
         if(target_fire_count > 1)
         {
@@ -135,17 +137,8 @@ void WeaponTube::fire(float target_angle)
             delay = 0.0;
             return;
         }
-        line_count = data.line_count;
-
     }
-    constexpr int distance_line = 150.0f;
-    float offset = ((line_count-1)/2.0f) * distance_line; //get higher bound
-    while(line_count)
-    {
-        spawnProjectile(target_angle, sf::Vector2f(offset, 0));
-        line_count--;
-        offset-=distance_line;
-    }
+    spawnProjectile(target_angle);
     state = WTS_Empty;
     type_loaded = "";
 }
@@ -166,96 +159,107 @@ float WeaponTube::getSizeCategoryModifier()
 }
 
 
-void WeaponTube::spawnProjectile(float target_angle, const sf::Vector2f &offset)
+void WeaponTube::spawnProjectile(float target_angle)
 {
-    sf::Vector2f fireLocation = parent->getPosition() + sf::rotateVector(offset, parent->getRotation()) + sf::rotateVector(parent->ship_template->model_data->getTubePosition2D(tube_index), parent->getRotation());
-    //sf::Vector2f fireLocation = parent->getPosition() + offset + sf::rotateVector(sf::Vector2f(parent->getRadius()/2,parent->getRadius()/2),parent->getRotation()+direction-45);
- 
-    const MissileWeaponData& data = MissileWeaponData::getDataFor(type_loaded);
-    switch(data.basetype)
+    //get higher bound for lined shots then substract distance each time
+    constexpr int distance_line = 150.0f;
+    sf::Vector2f offset(((line_count-1)/2.0f) * distance_line, 0); 
+
+    int local_line_count{line_count};
+    while(local_line_count)
     {
-    case MW_Homing:
+        sf::Vector2f fireLocation = parent->getPosition() + sf::rotateVector(offset, parent->getRotation()) + sf::rotateVector(parent->ship_template->model_data->getTubePosition2D(tube_index), parent->getRotation());
+        //sf::Vector2f fireLocation = parent->getPosition() + offset + sf::rotateVector(sf::Vector2f(parent->getRadius()/2,parent->getRadius()/2),parent->getRotation()+direction-45);
+    
+        const MissileWeaponData& data = MissileWeaponData::getDataFor(type_loaded);
+        switch(data.basetype)
         {
-            P<HomingMissile> missile = new HomingMissile();
-            missile->owner = parent;
-            missile->setFactionId(parent->getFactionId());
-            missile->target_id = parent->target_id;
-            missile->setPosition(fireLocation);
-            missile->translate_z = parent->translate_z;
-            missile->setRotation(parent->getRotation() + direction);
-            missile->target_angle = target_angle;
-            missile->speed = data.speed * parent->getSystemEffectiveness(SYS_MissileSystem);
-            missile->damage_multiplier = data.damage_multiplier;
-            missile->damage_type = data.damage_type;
-            missile->color = data.color;
-            missile->category_modifier = getSizeCategoryModifier();
+        case MW_Homing:
+            {
+                P<HomingMissile> missile = new HomingMissile();
+                missile->owner = parent;
+                missile->setFactionId(parent->getFactionId());
+                missile->target_id = parent->target_id;
+                missile->setPosition(fireLocation);
+                missile->translate_z = parent->translate_z;
+                missile->setRotation(parent->getRotation() + direction);
+                missile->target_angle = target_angle;
+                missile->speed = data.speed * parent->getSystemEffectiveness(SYS_MissileSystem);
+                missile->damage_multiplier = data.damage_multiplier;
+                missile->damage_type = data.damage_type;
+                missile->color = data.color;
+                missile->category_modifier = getSizeCategoryModifier();
+            }
+            break;
+        case MW_Nuke:
+            {
+                P<Nuke> missile = new Nuke();
+                missile->owner = parent;
+                missile->setFactionId(parent->getFactionId());
+                missile->target_id = parent->target_id;
+                missile->setPosition(fireLocation);
+                missile->translate_z = parent->translate_z;
+                missile->setRotation(parent->getRotation() + direction);
+                missile->target_angle = target_angle;
+                missile->speed = data.speed * parent->getSystemEffectiveness(SYS_MissileSystem);
+                missile->damage_multiplier = data.damage_multiplier;
+                missile->damage_type = data.damage_type;
+                missile->color = data.color;
+                missile->category_modifier = getSizeCategoryModifier();
+            }
+            break;
+        case MW_Mine:
+            {
+                P<Mine> missile = new Mine();
+                missile->owner = parent;
+                missile->setFactionId(parent->getFactionId());
+                missile->setPosition(fireLocation);
+                missile->translate_z = parent->translate_z;
+                missile->setRotation(parent->getRotation() + direction);
+                missile->speed = data.speed * parent->getSystemEffectiveness(SYS_MissileSystem);
+                missile->damage_multiplier = data.damage_multiplier;
+                missile->eject();
+            }
+            break;
+        case MW_HVLI:
+            {
+                P<HVLI> missile = new HVLI();
+                missile->owner = parent;
+                missile->setFactionId(parent->getFactionId());
+                missile->setPosition(fireLocation);
+                missile->translate_z = parent->translate_z;
+                missile->setRotation(parent->getRotation() + direction);
+                missile->target_angle = parent->getRotation() + direction;
+                missile->damage_multiplier = data.damage_multiplier;
+                missile->speed = data.speed * parent->getSystemEffectiveness(SYS_MissileSystem);
+                missile->damage_type = data.damage_type;
+                missile->color = data.color;
+                missile->category_modifier = getSizeCategoryModifier();
+            }
+            break;
+        case MW_EMP:
+            {
+                P<EMPMissile> missile = new EMPMissile();
+                missile->owner = parent;
+                missile->setFactionId(parent->getFactionId());
+                missile->target_id = parent->target_id;
+                missile->setPosition(fireLocation);
+                missile->translate_z = parent->translate_z;
+                missile->setRotation(parent->getRotation() + direction);
+                missile->target_angle = target_angle;
+                missile->damage_multiplier = data.damage_multiplier;
+                missile->speed = data.speed * parent->getSystemEffectiveness(SYS_MissileSystem);
+                missile->damage_type = data.damage_type;
+                missile->color = data.color;
+                missile->category_modifier = getSizeCategoryModifier();
+            }
+            break;
+        default:
+            break;
         }
-        break;
-    case MW_Nuke:
-        {
-            P<Nuke> missile = new Nuke();
-            missile->owner = parent;
-            missile->setFactionId(parent->getFactionId());
-            missile->target_id = parent->target_id;
-            missile->setPosition(fireLocation);
-            missile->translate_z = parent->translate_z;
-            missile->setRotation(parent->getRotation() + direction);
-            missile->target_angle = target_angle;
-            missile->speed = data.speed * parent->getSystemEffectiveness(SYS_MissileSystem);
-            missile->damage_multiplier = data.damage_multiplier;
-            missile->damage_type = data.damage_type;
-            missile->color = data.color;
-            missile->category_modifier = getSizeCategoryModifier();
-        }
-        break;
-    case MW_Mine:
-        {
-            P<Mine> missile = new Mine();
-            missile->owner = parent;
-            missile->setFactionId(parent->getFactionId());
-            missile->setPosition(fireLocation);
-            missile->translate_z = parent->translate_z;
-            missile->setRotation(parent->getRotation() + direction);
-            missile->speed = data.speed * parent->getSystemEffectiveness(SYS_MissileSystem);
-            missile->damage_multiplier = data.damage_multiplier;
-            missile->eject();
-        }
-        break;
-    case MW_HVLI:
-        {
-            P<HVLI> missile = new HVLI();
-            missile->owner = parent;
-            missile->setFactionId(parent->getFactionId());
-            missile->setPosition(fireLocation);
-            missile->translate_z = parent->translate_z;
-            missile->setRotation(parent->getRotation() + direction);
-            missile->target_angle = parent->getRotation() + direction;
-            missile->damage_multiplier = data.damage_multiplier;
-            missile->speed = data.speed * parent->getSystemEffectiveness(SYS_MissileSystem);
-            missile->damage_type = data.damage_type;
-            missile->color = data.color;
-            missile->category_modifier = getSizeCategoryModifier();
-        }
-        break;
-    case MW_EMP:
-        {
-            P<EMPMissile> missile = new EMPMissile();
-            missile->owner = parent;
-            missile->setFactionId(parent->getFactionId());
-            missile->target_id = parent->target_id;
-            missile->setPosition(fireLocation);
-            missile->translate_z = parent->translate_z;
-            missile->setRotation(parent->getRotation() + direction);
-            missile->target_angle = target_angle;
-            missile->damage_multiplier = data.damage_multiplier;
-            missile->speed = data.speed * parent->getSystemEffectiveness(SYS_MissileSystem);
-            missile->damage_type = data.damage_type;
-            missile->color = data.color;
-            missile->category_modifier = getSizeCategoryModifier();
-        }
-        break;
-    default:
-        break;
+        
+        local_line_count--;
+        offset.x-=distance_line;
     }
 }
 
