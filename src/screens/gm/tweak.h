@@ -184,7 +184,7 @@ private:
     GuiSlider* direction_slider;
     GuiSlider* load_time_slider;
     GuiSelector* size_selector;
-    GuiToggleButton* allowed_use[MW_Count];
+    std::vector<GuiToggleButton*> allowed_use;
 public:
     GuiShipTweakMissileTubes(GuiContainer* owner);
 

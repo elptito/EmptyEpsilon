@@ -12,7 +12,8 @@ WeaponTube::WeaponTube()
 
     load_time = 8.0;
     direction = 0;
-    type_allowed_mask = (1 << MW_Count) - 1;
+    //type_allowed_mask = (1 << MW_Count) - 1;
+    type_allowed_mask = ~(type_allowed_mask & 0);
     type_loaded = "";
     state = WTS_Empty;
     delay = 0.0;
@@ -265,46 +266,63 @@ void WeaponTube::spawnProjectile(float target_angle)
 
 bool WeaponTube::canLoad(string type)
 {
+    int32_t numType;
     if(isNumber(type))
     {
-        int numType = std::stoi(type);
-        if (numType <= MW_None || numType >= MW_Count)
-            return false;
-        if (type_allowed_mask & (1 << numType))
-            return true;
-        return false;
+        numType = std::stoi(type);
     }
-    else return true; //FIXME
+    else
+    {
+        numType = CustomMissileWeaponRegistry::getMissileWeaponType(type);
+    }
+    if (type_allowed_mask & (1 << numType))
+        return true;
+    return false;
 }
 
 bool WeaponTube::canOnlyLoad(string type)
 {
+    int32_t numType;
     if(isNumber(type))
     {
-        int numType = std::stoi(type);
-        if (type_allowed_mask == (1U << numType))
-            return true;
-        return false;
+        numType = std::stoi(type);
     }
-    else return false;
+    else
+    {
+        numType = CustomMissileWeaponRegistry::getMissileWeaponType(type);
+    }
+
+    if (type_allowed_mask == (1U << numType))
+        return true;
+    return false;
 }
 
 void WeaponTube::allowLoadOf(string type)
 {
+    int32_t numType;
     if(isNumber(type))
     {
-        int numType = std::stoi(type);
-        type_allowed_mask |= (1 << numType);
+        numType = std::stoi(type);
     }
+    else
+    {
+        numType = CustomMissileWeaponRegistry::getMissileWeaponType(type);
+    }
+    type_allowed_mask |= (1 << numType);
 }
 
 void WeaponTube::disallowLoadOf(string type)
 {
+    int32_t numType;
     if(isNumber(type))
     {
-        int numType = std::stoi(type);
-        type_allowed_mask &=~(1 << numType);
+        numType = std::stoi(type);
     }
+    else
+    {
+        numType = CustomMissileWeaponRegistry::getMissileWeaponType(type);
+    }
+    type_allowed_mask &=~(1 << numType);
 }
 
 void WeaponTube::forceUnload()

@@ -415,6 +415,15 @@ void ShipAI::runOrders()
                         break;
                     }
                 }
+                for(auto& kv : CustomMissileWeaponRegistry::getCustomMissileWeapons())
+                {
+                    if (owner->custom_weapon_storage[kv.first] < owner->custom_weapon_storage_max[kv.first])
+                    {
+                        allow_undock = false;
+                        break;
+                    }
+                }
+
             }
             if (allow_undock && target->repair_docked && (owner->hull_strength < owner->hull_max))
             {

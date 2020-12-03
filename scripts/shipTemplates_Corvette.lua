@@ -40,6 +40,9 @@ template:setWeaponStorage("Homing", 4)
 template:setCustomWeaponStorage("Homing_2", 4)
 template:setCustomWeaponStorage("Homing_3", 4)
 
+template:setWeaponTubeExclusiveForCustom(0,"Homing_3")
+template:weaponTubeDisallowCustomMissile(1,"Homing_3")
+template:weaponTubeAllowCustomMissile(0,"Homing_2")
 
 template:setTubeDirection(0, -90)
 template:setTubeDirection(1, -90)

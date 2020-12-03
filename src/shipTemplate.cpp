@@ -52,8 +52,11 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setDocks);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setTubeLoadTime);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, weaponTubeAllowMissle);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, weaponTubeAllowCustomMissile);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, weaponTubeDisallowMissle);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, weaponTubeDisallowCustomMissile);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setWeaponTubeExclusiveFor);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setWeaponTubeExclusiveForCustom);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setTubeDirection);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setReactor);
     ///Set tube size, this will increase damage and blast radius.
@@ -186,7 +189,8 @@ ShipTemplate::ShipTemplate()
     for(int n=0; n<max_weapon_tubes; n++)
     {
         weapon_tube[n].load_time = 8.0;
-        weapon_tube[n].type_allowed_mask = (1 << MW_Count) - 1;
+        //weapon_tube[n].type_allowed_mask = (1 << MW_Count) - 1;
+        weapon_tube[n].type_allowed_mask = ~(weapon_tube[n].type_allowed_mask & 0);
         weapon_tube[n].direction = 0;
         weapon_tube[n].size = MS_Medium;
     }
@@ -255,11 +259,25 @@ void ShipTemplate::weaponTubeAllowMissle(int index, EMissileWeapons type)
     weapon_tube[index].type_allowed_mask |= (1 << type);
 }
 
+void ShipTemplate::weaponTubeAllowCustomMissile(int index, string weapon_name)
+{
+    if (index < 0 || index >= max_weapon_tubes)
+        return;
+    weapon_tube[index].type_allowed_mask |= (1 << CustomMissileWeaponRegistry::getMissileWeaponType(weapon_name));
+}
+
 void ShipTemplate::weaponTubeDisallowMissle(int index, EMissileWeapons type)
 {
     if (index < 0 || index >= max_weapon_tubes)
         return;
     weapon_tube[index].type_allowed_mask &=~(1 << type);
+}
+
+void ShipTemplate::weaponTubeDisallowCustomMissile(int index, string weapon_name)
+{
+    if (index < 0 || index >= max_weapon_tubes)
+        return;
+    weapon_tube[index].type_allowed_mask &=~(1 << CustomMissileWeaponRegistry::getMissileWeaponType(weapon_name));
 }
 
 void ShipTemplate::setWeaponTubeExclusiveFor(int index, EMissileWeapons type)
@@ -268,6 +286,14 @@ void ShipTemplate::setWeaponTubeExclusiveFor(int index, EMissileWeapons type)
         return;
     weapon_tube[index].type_allowed_mask = (1 << type);
 }
+
+void ShipTemplate::setWeaponTubeExclusiveForCustom(int index, string weapon_name)
+{
+    if (index < 0 || index >= max_weapon_tubes)
+        return;
+    weapon_tube[index].type_allowed_mask = (1 << CustomMissileWeaponRegistry::getMissileWeaponType(weapon_name));
+}
+
 
 void ShipTemplate::setTubeDirection(int index, float direction)
 {

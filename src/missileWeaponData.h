@@ -62,6 +62,7 @@ class CustomMissileWeaponRegistry
 {
 private:
     using MissileWeaponMap = std::map<string,MissileWeaponData>;
+    using MissileWeaponTypeMap = std::map<string, uint32_t>;
 
 public:
 
@@ -70,7 +71,15 @@ public:
         static MissileWeaponMap custom_missile_data{};
         return custom_missile_data;
     }
+
+    static auto getCustomMissileWeaponTypes() -> MissileWeaponTypeMap&
+    {
+        static MissileWeaponTypeMap custom_missile_data_types{};
+        return custom_missile_data_types;
+    }
+
     static auto getMissileWeapon (const std::string &iName) -> MissileWeaponData& ;
+    static auto getMissileWeaponType (const std::string &iName) -> uint32_t& ;
     static void createMissileWeapon(const EMissileWeapons &iBaseType, const std::string &iNewName, const float &iDamageMultiplier, const float &iSpeed, const EDamageType &iDT);
 
 };

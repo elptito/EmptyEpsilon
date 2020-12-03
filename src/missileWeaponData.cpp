@@ -47,6 +47,8 @@ const MissileWeaponData& MissileWeaponData::getDataFor(const string& type)
 
 void CustomMissileWeaponRegistry::createMissileWeapon(const EMissileWeapons &iBaseType, const std::string &iNewName, const float &iDamageMultiplier, const float &iSpeed, const EDamageType &iDT)
 {
+    if((getCustomMissileWeaponTypes().size()) >= (sizeof(uint32_t) - MW_Count))
+        assert(0 && "Taille maximum de custom weapon atteinte");
     MissileWeaponData base = MissileWeaponData::getDataFor(iBaseType);
     MissileWeaponData copyMWD = base;
     copyMWD.damage_multiplier = iDamageMultiplier;
@@ -57,6 +59,8 @@ void CustomMissileWeaponRegistry::createMissileWeapon(const EMissileWeapons &iBa
     //copyMWD.line_count = iLineCount;
 
     getCustomMissileWeapons().insert(MissileWeaponMap::value_type(iNewName,copyMWD));
+    getCustomMissileWeaponTypes().insert(MissileWeaponTypeMap::value_type(iNewName,getCustomMissileWeaponTypes().size()+ MW_Count +1));
+
 }
 auto CustomMissileWeaponRegistry::getMissileWeapon(const std::string &iName) -> MissileWeaponData&
 {
@@ -64,6 +68,16 @@ auto CustomMissileWeaponRegistry::getMissileWeapon(const std::string &iName) -> 
 
     if (found == getCustomMissileWeapons().end())
         return missile_data[0]; //This is BADDDD !!! FIXME FIXME FIXME (why does it assert on some case when AI fighting ? must be a stupid mistake)
+        //assert(0 && "not found ");
+    return found->second;
+}
+
+auto CustomMissileWeaponRegistry::getMissileWeaponType(const std::string &iName) -> uint32_t&
+{
+    auto found = getCustomMissileWeaponTypes().find(iName);
+    static uint32_t type_default = 0;
+    if (found == getCustomMissileWeaponTypes().end())
+        return type_default; //This is BADDDD !!! FIXME FIXME FIXME (why does it assert on some case when AI fighting ? must be a stupid mistake)
         //assert(0 && "not found ");
     return found->second;
 }
