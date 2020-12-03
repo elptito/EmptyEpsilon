@@ -125,6 +125,9 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, weaponTubeAllowMissle);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, weaponTubeDisallowMissle);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setWeaponTubeExclusiveFor);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, weaponTubeAllowCustomMissile);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, weaponTubeDisallowCustomMissile);
+    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setWeaponTubeExclusiveForCustom);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setWeaponTubeDirection);
     /// Set the tube size
     /// Example: ship:setTubeSize(0,"small")
@@ -378,6 +381,15 @@ void SpaceShip::applyTemplateValues()
             else
                 weapon_tube[n].disallowLoadOf(EMissileWeapons(m));
         }
+        for(auto& kv : ship_template->custom_weapon_storage)
+        {
+            int32_t m = CustomMissileWeaponRegistry::getMissileWeaponType(kv.first);
+            if (ship_template->weapon_tube[n].type_allowed_mask & (1 << m))
+                weapon_tube[n].allowLoadOf(kv.first);
+            else
+                weapon_tube[n].disallowLoadOf(kv.first);
+        }   
+
     }
     for(int n=0; n<MW_Count; n++)
         weapon_storage[n] = weapon_storage_max[n] = ship_template->weapon_storage[n];
@@ -1595,6 +1607,38 @@ void SpaceShip::setWeaponTubeExclusiveFor(int index, EMissileWeapons type)
         return;
     for(int n=0; n<MW_Count; n++)
         weapon_tube[index].disallowLoadOf(EMissileWeapons(n));
+    for(auto &kv : CustomMissileWeaponRegistry::getCustomMissileWeapons())
+    {
+        weapon_tube[index].disallowLoadOf(kv.first);
+    }        
+    weapon_tube[index].allowLoadOf(type);
+}
+
+void SpaceShip::weaponTubeAllowCustomMissile(int index, string type)
+{
+    if (index < 0 || index >= weapon_tube_count)
+        return;
+    weapon_tube[index].allowLoadOf(type);
+}
+
+void SpaceShip::weaponTubeDisallowCustomMissile(int index, string type)
+{
+    if (index < 0 || index >= weapon_tube_count)
+        return;
+    weapon_tube[index].disallowLoadOf(type);
+}
+
+void SpaceShip::setWeaponTubeExclusiveForCustom(int index, string type)
+{
+    if (index < 0 || index >= weapon_tube_count)
+        return;
+    for(int n=0; n<MW_Count; n++)
+        weapon_tube[index].disallowLoadOf(EMissileWeapons(n));
+    for(auto &kv : CustomMissileWeaponRegistry::getCustomMissileWeapons())
+    {
+        weapon_tube[index].disallowLoadOf(kv.first);
+    }
+    
     weapon_tube[index].allowLoadOf(type);
 }
 

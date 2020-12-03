@@ -207,6 +207,10 @@ public:
     void weaponTubeAllowMissle(int index, EMissileWeapons type);
     void weaponTubeDisallowMissle(int index, EMissileWeapons type);
     void setWeaponTubeExclusiveFor(int index, EMissileWeapons type);
+    void weaponTubeAllowCustomMissile(int index, string type);
+    void weaponTubeDisallowCustomMissile(int index, string type);
+    void setWeaponTubeExclusiveForCustom(int index, string type);
+    
     void setTubeSize(int index, EMissileSizes size);
 
     void setTubeDirection(int index, float direction);

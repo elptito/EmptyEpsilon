@@ -809,16 +809,29 @@ GuiShipTweakMissileTubes::GuiShipTweakMissileTubes(GuiContainer* owner)
     size_selector->setSize(GuiElement::GuiSizeMax, 40);
 
     (new GuiLabel(right_col, "", tr("tube", "Allowed use:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
-    for(int n=0; n<MW_Count; n++)
+    int n=0;
+    for(n=0; n<MW_Count; n++)
     {
-        allowed_use[n] = new GuiToggleButton(right_col, "", getLocaleMissileWeaponName(EMissileWeapons(n)), [this, n](bool value) {
+        allowed_use.push_back(new GuiToggleButton(right_col, "", getLocaleMissileWeaponName(EMissileWeapons(n)), [this, n](bool value) {
             if (value)
                 target->weapon_tube[tube_index].allowLoadOf(EMissileWeapons(n));
             else
                 target->weapon_tube[tube_index].disallowLoadOf(EMissileWeapons(n));
-        });
+        }));
         allowed_use[n]->setSize(GuiElement::GuiSizeMax, 40);
     }
+    for(auto& kv : CustomMissileWeaponRegistry::getCustomMissileWeapons())
+    {
+         allowed_use.push_back(new GuiToggleButton(right_col, "", getLocaleMissileWeaponName(kv.first), [this, kv](bool value) {
+            if (value)
+                target->weapon_tube[tube_index].allowLoadOf(kv.first);
+            else
+                target->weapon_tube[tube_index].disallowLoadOf(kv.first);
+        }));
+        allowed_use[n]->setSize(GuiElement::GuiSizeMax, 40);
+        n++;
+    }
+
 }
 
 void GuiShipTweakMissileTubes::onDraw(sf::RenderTarget& window)
@@ -827,10 +840,17 @@ void GuiShipTweakMissileTubes::onDraw(sf::RenderTarget& window)
         return;
     direction_slider->setValue(sf::angleDifference(0.0f, target->weapon_tube[tube_index].getDirection()));
     load_time_slider->setValue(target->weapon_tube[tube_index].getLoadTimeConfig());
-    for(int n=0; n<MW_Count; n++)
+    int n=0;
+    for(n=0; n<MW_Count; n++)
     {
         allowed_use[n]->setValue(target->weapon_tube[tube_index].canLoad(EMissileWeapons(n)));
     }
+    for(auto& kv : CustomMissileWeaponRegistry::getCustomMissileWeapons())
+    {
+        allowed_use[n]->setValue(target->weapon_tube[tube_index].canLoad(kv.first));
+        n++;
+    }
+      
     size_selector->setSelectionIndex(target->weapon_tube[tube_index].getSize());
 }
 
