@@ -215,7 +215,7 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner, ECrewPosition crew_pos
         {
             repair_label = new GuiLabel(box, "COOLANT_LABEL", tr("slider", "Repair"), 20);
             repair_label->setAlignment(ACenterLeft)->setPosition(20, 140, ATopLeft)->setSize(400, 20);
-            repair_slider = new GuiSlider(box, "COOLANT_SLIDER", 0.0, 10.0, 0.0, [this](float value) {
+            repair_slider = new GuiSlider(box, "REPAIR_SLIDER", 0.0, 10.0, 0.0, [this](float value) {
             if (my_spaceship && selected_system != SYS_None)
                 my_spaceship->commandSetSystemRepairRequest(selected_system, value);
             });
@@ -364,6 +364,7 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
                     repair_slider->setEnable(!my_spaceship->auto_repair_enabled);
                     repair_slider->setRange(0.0, my_spaceship->max_repair_per_system);
                     repair_slider->setValue(std::min(system.repair_request, my_spaceship->max_repair));
+                    repair_slider->addSnapValue(my_spaceship->max_repair, 0.1);
                 }
             }
 

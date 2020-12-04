@@ -1143,11 +1143,21 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
     });
 
     // Edit reputation.
-    (new GuiLabel(left_col, "", "Nombre de droides:", 25))->setSize(GuiElement::GuiSizeMax, 45);
-     repair_team_slider = new GuiSlider(left_col, "", 0, 15, 0, [this](int value) {
-        target->setRepairCrewCount(value);
-    });
-    repair_team_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
+    if(gameGlobalInfo->use_nano_repair_crew)
+    {
+        (new GuiLabel(left_col, "", "Capacite de reparation:", 25))->setSize(GuiElement::GuiSizeMax, 45);
+        repair_total_slider = new GuiSlider(left_col, "", 0, 15, 0, [this](int value) {
+            target->setRepairCrewCount(value);
+        });
+    }
+    else
+    {
+        (new GuiLabel(left_col, "", "Nombre de droides:", 25))->setSize(GuiElement::GuiSizeMax, 45);
+        repair_total_slider = new GuiSlider(left_col, "", 0, 15, 0, [this](int value) {
+            target->setRepairCrewCount(value);
+        });
+    }
+    repair_total_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
     //(new GuiLabel(left_col, "", tr("Reputation:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
 
     auto_repair_toogle = new GuiToggleButton(left_col, "", tr("button", "Auto repair"), [this](bool value) {
@@ -1346,7 +1356,10 @@ void GuiShipTweakPlayer::onDraw(sf::RenderTarget& window)
     max_coolant_slider->setValue(target->max_coolant * 100.0);
 
     // Update reputation points.
-    repair_team_slider->setValue(target->getRepairCrewCount());
+    if(gameGlobalInfo->use_nano_repair_crew)
+        repair_total_slider->setValue(target->max_repair);
+    else
+        repair_total_slider->setValue(target->getRepairCrewCount());
     probe_max_slider->setValue(target->getMaxScanProbeCount());
 
 }

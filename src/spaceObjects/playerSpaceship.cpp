@@ -1669,7 +1669,7 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
             ESystem system;
             float request;
             packet >> system >> request;
-            if (system < SYS_COUNT && request >= 0.0 && request <= 10.0)
+            if (system < SYS_COUNT && request >= 0.0 && request <= max_repair_per_system)
                 setSystemRepairRequest(system, request);
         }
         break;
