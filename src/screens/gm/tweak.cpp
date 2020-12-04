@@ -448,54 +448,54 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
     right_col->setPosition(-25, 25, ATopRight)->setSize(300, GuiElement::GuiSizeMax);
 
     // Left column
-    (new GuiLabel(left_col, "",  tr("Impulse speed:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(left_col, "",  tr("Impulse speed:"), 30))->setSize(GuiElement::GuiSizeMax, 45);
     impulse_speed_slider = new GuiSlider(left_col, "", 0.0, 250, 0.0, [this](float value) {
         target->impulse_max_speed = value;
     });
-    impulse_speed_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    impulse_speed_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
 
-    (new GuiLabel(left_col, "", tr("Turn speed:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(left_col, "", tr("Turn speed:"), 30))->setSize(GuiElement::GuiSizeMax, 45);
     turn_speed_slider = new GuiSlider(left_col, "", 0.0, 35, 0.0, [this](float value) {
         target->turn_speed = value;
     });
-    turn_speed_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    turn_speed_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
 
     // Display Boost/Strafe speed sliders
-    (new GuiLabel(left_col, "", tr("Boost Speed:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(left_col, "", tr("Boost Speed:"), 30))->setSize(GuiElement::GuiSizeMax, 45);
     combat_maneuver_boost_speed_slider = new GuiSlider(left_col, "", 0.0, 1000, 0.0, [this](float value) {
         target->combat_maneuver_boost_speed = value;
     });
-    combat_maneuver_boost_speed_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    combat_maneuver_boost_speed_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
 
-    (new GuiLabel(left_col, "", tr("Strafe Speed:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(left_col, "", tr("Strafe Speed:"), 30))->setSize(GuiElement::GuiSizeMax, 45);
     combat_maneuver_strafe_speed_slider = new GuiSlider(left_col, "", 0.0, 1000, 0.0, [this](float value) {
         target->combat_maneuver_strafe_speed = value;
     });
-    combat_maneuver_strafe_speed_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    combat_maneuver_strafe_speed_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
 
     // Warp and jump drive toggles
-    (new GuiLabel(left_col, "", "Moteurs speciaux:", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(left_col, "", "Moteurs speciaux:", 30))->setSize(GuiElement::GuiSizeMax, 45);
     warp_toggle = new GuiToggleButton(left_col, "", "Moteur WARP", [this](bool value) {
         target->setWarpDrive(value);
     });
-    warp_toggle->setSize(GuiElement::GuiSizeMax, 40);
+    warp_toggle->setSize(GuiElement::GuiSizeMax, 35);
 
     jump_toggle = new GuiToggleButton(right_col, "", tr("Jump Drive"), [this](bool value) {
         target->setJumpDrive(value);
     });
-    jump_toggle->setSize(GuiElement::GuiSizeMax, 40);
+    jump_toggle->setSize(GuiElement::GuiSizeMax, 35);
 
     reactor_toggle = new GuiToggleButton(left_col, "", "Reacteur", [this](bool value) {
         target->setReactor(value);
     });
-    reactor_toggle->setSize(GuiElement::GuiSizeMax, 40);
+    reactor_toggle->setSize(GuiElement::GuiSizeMax, 35);
 
     cloaking_toggle = new GuiToggleButton(left_col, "", "Invisibilite", [this](bool value) {
         target->setCloaking(value);
     });
-    cloaking_toggle->setSize(GuiElement::GuiSizeMax, 40);
+    cloaking_toggle->setSize(GuiElement::GuiSizeMax, 35);
 
-    (new GuiLabel(left_col, "", tr("Short range radar:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(left_col, "", tr("Short range radar:"), 30))->setSize(GuiElement::GuiSizeMax, 45);
     short_range_radar_slider = new GuiSlider(left_col, "", 100.0, 20000.0, 0.0, [this](float value) {
         P<PlayerSpaceship> player = target;
         if (player)
@@ -503,9 +503,9 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
             player->setShortRangeRadarRange(value);
         }
     });
-    short_range_radar_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    short_range_radar_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
 
-    (new GuiLabel(left_col, "", tr("Long range radar:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(left_col, "", tr("Long range radar:"), 30))->setSize(GuiElement::GuiSizeMax, 45);
     long_range_radar_slider = new GuiSlider(left_col, "", 100.0, 100000.0, 0.0, [this](float value) {
         P<PlayerSpaceship> player = target;
         if (player)
@@ -513,58 +513,60 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
             player->setLongRangeRadarRange(value);
         }
     });
-    long_range_radar_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    long_range_radar_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
 
-    (new GuiLabel(left_col, "", tr("Engineering presets:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(left_col, "", tr("Engineering presets:"), 30))->setSize(GuiElement::GuiSizeMax, 45);
     engineering_presets_slider = new GuiSlider(left_col, "", 0, 9, 0, [this](int value) {
-        target->active_engineer_presets_number = value;
+        P<PlayerSpaceship> player = target;
+        if(player)
+            player->active_engineer_presets_number = value;
     });
-    engineering_presets_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    engineering_presets_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
 
-    (new GuiLabel(right_col, "", "JUMP, distance Min :", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(right_col, "", "JUMP, distance Min :", 30))->setSize(GuiElement::GuiSizeMax, 45);
     jump_drive_min_distance_slider = new GuiSlider(right_col, "", 0.0, 50000, 0.0, [this](float value) {
         target->jump_drive_min_distance = round(value / 1000) * 1000000;
         target->jump_drive_max_distance = std::max(target->jump_drive_min_distance, target->jump_drive_max_distance);
     });
-    jump_drive_min_distance_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    jump_drive_min_distance_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
 
-    (new GuiLabel(right_col, "", "JUMP, distance Max :", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(right_col, "", "JUMP, distance Max :", 30))->setSize(GuiElement::GuiSizeMax, 45);
     jump_drive_max_distance_slider = new GuiSlider(right_col, "", 0.0, 100000, 0.0, [this](float value) {
         target->jump_drive_max_distance = round(value / 1000) * 1000000;
         target->jump_drive_min_distance = std::min(target->jump_drive_min_distance, target->jump_drive_max_distance);
    });
-    jump_drive_max_distance_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    jump_drive_max_distance_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
 
-    (new GuiLabel(right_col, "", tr("Jump charge:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(right_col, "", tr("Jump charge:"), 30))->setSize(GuiElement::GuiSizeMax, 45);
     jump_drive_charge_slider = new GuiSlider(right_col, "", 0.0, 100.0, 0.0, [this](float value) {
         target->jump_drive_charge = value / 100.0 * target->jump_drive_max_distance;
     });
-    jump_drive_charge_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    jump_drive_charge_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
 
-    (new GuiLabel(right_col, "", "Jump charge complete :", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(right_col, "", "Jump charge complete :", 30))->setSize(GuiElement::GuiSizeMax, 45);
     jump_drive_charge_time_slider = new GuiSlider(right_col, "", 0.0, 90*60, 0.0, [this](float value) {
         target->jump_drive_charge_time = value;
     });
-    jump_drive_charge_time_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    jump_drive_charge_time_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
 
-    (new GuiLabel(right_col, "", "Jump, energie :", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(right_col, "", "Jump, energie :", 30))->setSize(GuiElement::GuiSizeMax, 45);
     jump_drive_energy_slider = new GuiSlider(right_col, "", 0.0, 100, 0.0, [this](float value) {
         target->jump_drive_energy_per_km_charge = value;
     });
-    jump_drive_energy_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    jump_drive_energy_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
 
-    (new GuiLabel(right_col, "", "Jump, delai :", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(right_col, "", "Jump, delai :", 30))->setSize(GuiElement::GuiSizeMax, 45);
     jump_delay_slider = new GuiSlider(right_col, "", 0.0, 60*20, 0.0, [this](float value) {
         if (target->jump_delay > 0)
             target->jump_delay = value;
     });
-    jump_delay_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    jump_delay_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
 
-    (new GuiLabel(right_col, "", "Warp, vitesse :", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(right_col, "", "Warp, vitesse :", 30))->setSize(GuiElement::GuiSizeMax, 45);
     warp_speed_slider = new GuiSlider(right_col, "", 0.0, 90, 0.0, [this](float value) {
         target->warp_speed_per_warp_level = value*16.667;
     });
-    warp_speed_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+    warp_speed_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
 
 }
  void GuiShipTweak::onDraw(sf::RenderTarget& window)
@@ -601,7 +603,7 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
     {
         short_range_radar_slider->setValue(player->getShortRangeRadarRange());
         long_range_radar_slider->setValue(player->getLongRangeRadarRange());
-        engineering_presets_slider->setValue(target->active_engineer_presets_number);
+        engineering_presets_slider->setValue(player->active_engineer_presets_number);
     }
 }
 

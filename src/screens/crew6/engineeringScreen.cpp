@@ -303,7 +303,7 @@ void EngineeringScreen::applyPreset(int preset)
             my_spaceship->commandSetSystemPowerRequest(system, my_spaceship->power_presets[n][preset-1]);
             my_spaceship->commandSetSystemCoolantRequest(system, my_spaceship->coolant_presets[n][preset-1]);
         }
-        my_spaceship->addToShipLog(tr("preset","Preset {id_preset} loaded").format({{"id_preset", string(preset)}}), colorConfig.log_receive_neutral, engineering);
+        my_spaceship->addToSpecificShipLog(tr("preset","Preset {id_preset} loaded").format({{"id_preset", string(preset)}}), colorConfig.log_receive_neutral, "intern");
     }
 }
 
@@ -314,8 +314,8 @@ void EngineeringScreen::updatePreset(int preset)
         for(int n = 0; n < SYS_COUNT; n++)
         {
             ESystem system = ESystem(n);
-            my_spaceship->commandSetSystemPowerPreset(system, preset, my_spaceship->systems[n].power_request);
-            my_spaceship->commandSetSystemCoolantPreset(system, preset, my_spaceship->systems[n].coolant_request);
+            my_spaceship->commandSetSystemPowerPreset(system, preset-1, my_spaceship->systems[n].power_request);
+            my_spaceship->commandSetSystemCoolantPreset(system, preset-1, my_spaceship->systems[n].coolant_request);
         }
     }
     // Save preset to options.ini file

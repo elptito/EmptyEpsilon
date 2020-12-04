@@ -10,7 +10,7 @@ ShipsLog::ShipsLog(GuiContainer* owner, const string& station)
 {
     setPosition(0, 0, ABottomCenter);
     setSize(GuiElement::GuiSizeMax, 50);
-    setMargins(20, 0);
+    setMargins(350, 0);
 
     open = false;
 
@@ -92,9 +92,15 @@ bool ShipsLog::onMouseDown(sf::Vector2f position)
 {
     open = !open;
     if (open)
+    {   
         setSize(getSize().x, 800);
+        setMargins(20,0);
+    }
     else
+    {
         setSize(getSize().x, 50);
+        setMargins(350,0);
+    }
     return true;
 }
 
@@ -106,9 +112,15 @@ void ShipsLog::onHotkey(const HotkeyResult& key)
         {
 			open = !open;
 		    if (open)
+            {   
 				setSize(getSize().x, 800);
+                setMargins(20, 0);
+            }
 			else
+            {
 				setSize(getSize().x, 50);
+                setMargins(350, 0);
+            }
 		}
 	}
 }

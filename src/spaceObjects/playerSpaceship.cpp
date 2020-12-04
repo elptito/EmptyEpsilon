@@ -1710,7 +1710,7 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
             {
                 power_presets[system][preset] = request;
                 if (system == 0)
-                    addToShipLog(tr("preset","Preset {id_preset} updated").format({{"id_preset", string(preset)}}), colorConfig.log_receive_neutral, engineering);
+                    addToSpecificShipLog(tr("preset","Preset {id_preset} updated").format({{"id_preset", string(preset+1)}}), colorConfig.log_receive_neutral, "intern");
             }
         }
         break;
@@ -1730,7 +1730,7 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
             float request;
             packet >> system >> preset >> request;
             if (system < SYS_COUNT && request >= 0.0 && request <= max_coolant_per_system && preset > 0 && preset <= max_engineer_presets_number)
-                coolant_presets[system][preset-1] = request;
+                coolant_presets[system][preset] = request;
         }
         break;
     case CMD_DOCK:
