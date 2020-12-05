@@ -241,7 +241,7 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
         else
             my_spaceship->commandSetAnalysisLink(-1);
     });
-    link_to_analysis_button->setPosition(-20, -70, ABottomRight)->setSize(250, 50);
+    link_to_analysis_button->setPosition(-20, -120, ABottomRight)->setSize(250, 50);
 
     // Draw the zoom slider.
     zoom_slider = new GuiSlider(radar_view, "", my_spaceship ? my_spaceship->getLongRangeRadarRange() : 30000.0f, my_spaceship ? my_spaceship->getShortRangeRadarRange() : 5000.0f, my_spaceship ? my_spaceship->getLongRangeRadarRange() : 30000.0f, [this](float value)
