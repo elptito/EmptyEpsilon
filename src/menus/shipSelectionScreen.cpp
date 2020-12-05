@@ -526,9 +526,9 @@ void ShipSelectionScreen::updateCrewTypeOptions()
     case 3:
         crew_position_button[damageControl]->show();
         crew_position_button[databaseView]->show();
-        crew_position_button[tacticalRadar]->show();
-        crew_position_button[scienceRadar]->show();
-        crew_position_button[relayRadar]->show();
+        //crew_position_button[tacticalRadar]->show();
+        //crew_position_button[scienceRadar]->show();
+        //crew_position_button[relayRadar]->show();
         crew_position_button[navigation]->show();
         crew_position_button[altRelay]->show();
         crew_position_button[commsOnly]->show();

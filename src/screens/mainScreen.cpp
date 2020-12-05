@@ -157,7 +157,8 @@ void ScreenMainScreen::update(float delta)
             viewport->hide();
             tactical_radar->hide();
             long_range_radar->hide();
-            far_range_radar->hide();
+            global_range_radar->hide();
+            ship_state->hide();
             target_analysis->show();
             break;
         }

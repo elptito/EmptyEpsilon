@@ -2119,6 +2119,8 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
     case CMD_SET_PROBE_3D_LINK:
         {
             packet >> linked_probe_3D_id;
+        }
+        break;    
     case CMD_SET_ANALYSIS_LINK:
         {
             packet >> linked_analysis_object_id;

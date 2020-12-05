@@ -317,7 +317,6 @@ public:
     void commandSetLandingTarget(P<SpaceObject> target);
     void commandSetScienceLink(int32_t id);
     void commandSetAnalysisLink(int32_t id);
-    void commandSetAnalysisLink(int32_t id);
     void commandSetProbe3DLink(int32_t id);
     void commandLoadTube(int8_t tubeNumber, string missileType);
     void commandUnloadTube(int8_t tubeNumber);

@@ -11,7 +11,6 @@
 #include "spaceObjects/playerSpaceship.h"
 
 #include "screenComponents/customShipFunctions.h"
-#include "screenComponents/tractorBeamControl.h"
 #include "screenComponents/radarView.h"
 #include "screenComponents/powerDamageIndicator.h"
 #include "screenComponents/frequencyCurve.h"
