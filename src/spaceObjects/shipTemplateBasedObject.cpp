@@ -382,7 +382,7 @@ void ShipTemplateBasedObject::setTemplate(string template_name)
     P<ShipTemplate> new_ship_template = ShipTemplate::getTemplate(template_name);
     this->template_name = template_name;
     ship_template = new_ship_template;
-    type_name = template_name;
+    type_name = new_ship_template->getLocaleName();
     locale_name = new_ship_template->getLocaleName();
     class_name = ship_template->getClass();
     sub_class_name = ship_template->getSubClass();

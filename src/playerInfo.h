@@ -34,7 +34,7 @@ enum ECrewPosition
     scienceRadar,
     relayRadar,
     navigation,
-
+    targetAnalysisScreen,
     max_crew_positions
 };
 

@@ -131,6 +131,7 @@ REGISTER_SCRIPT_SUBCLASS(PlayerSpaceship, SpaceShip)
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandCombatManeuverBoost);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetScienceLink);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetProbe3DLink);
+    REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetAnalysisLink);
     REGISTER_SCRIPT_CLASS_FUNCTION(PlayerSpaceship, commandSetAlertLevel);
 
     /// Return the number of Engineering repair crews on the ship.
@@ -302,6 +303,7 @@ static const int16_t CMD_ABORT_LANDING = 0x0039;
 static const int16_t CMD_SET_LANDING_TARGET = 0x0040;
 static const int16_t CMD_TURN_SPEED = 0x002A;
 static const int16_t CMD_SET_SYSTEM_REPAIR_REQUEST = 0x002B;
+static const int16_t CMD_SET_ANALYSIS_LINK = 0x003A;
 static const int16_t CMD_SET_SYSTEM_POWER_PRESET = 0x003B;
 static const int16_t CMD_SET_SYSTEM_COOLANT_PRESET = 0x003C;
 
@@ -428,6 +430,7 @@ PlayerSpaceship::PlayerSpaceship()
     registerMemberReplication(&alert_level);
     registerMemberReplication(&linked_science_probe_id);
     registerMemberReplication(&linked_probe_3D_id);
+    registerMemberReplication(&linked_analysis_object_id);
     registerMemberReplication(&control_code);
     registerMemberReplication(&has_gravity_sensor);
     registerMemberReplication(&has_electrical_sensor);
@@ -2117,6 +2120,11 @@ void PlayerSpaceship::onReceiveClientCommand(int32_t client_id, sf::Packet& pack
         {
             packet >> linked_probe_3D_id;
         }
+        break;    
+    case CMD_SET_ANALYSIS_LINK:
+        {
+            packet >> linked_analysis_object_id;
+        }
         break;
     case CMD_HACKING_FINISHED:
         {
@@ -2595,6 +2603,12 @@ void PlayerSpaceship::commandSetProbe3DLink(int32_t id){
     packet << CMD_SET_PROBE_3D_LINK << id;
     sendClientCommand(packet);
 }
+void PlayerSpaceship::commandSetAnalysisLink(int32_t id){
+    sf::Packet packet;
+    packet << CMD_SET_ANALYSIS_LINK << id;
+    sendClientCommand(packet);
+}
+
  void PlayerSpaceship::commandSetAutoRepairSystemTarget(ESystem system)
 {
     sf::Packet packet;

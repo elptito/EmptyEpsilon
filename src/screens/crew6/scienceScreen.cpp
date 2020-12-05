@@ -234,6 +234,15 @@ ScienceScreen::ScienceScreen(GuiContainer* owner, ECrewPosition crew_position)
     });
     probe_view_button->setPosition(20, -160, ABottomLeft)->setSize(200, 50)->disable();
 
+    // Link target to analysis screen.
+    link_to_analysis_button = new GuiToggleButton(radar_view, "LINK_TO_ANALYSIS", tr("Link to Analysis"), [this](bool value){
+        if (value)
+            my_spaceship->commandSetAnalysisLink(targets.get()->getMultiplayerId());
+        else
+            my_spaceship->commandSetAnalysisLink(-1);
+    });
+    link_to_analysis_button->setPosition(-20, -120, ABottomRight)->setSize(250, 50);
+
     // Draw the zoom slider.
     zoom_slider = new GuiSlider(radar_view, "", my_spaceship ? my_spaceship->getLongRangeRadarRange() : 30000.0f, my_spaceship ? my_spaceship->getShortRangeRadarRange() : 5000.0f, my_spaceship ? my_spaceship->getLongRangeRadarRange() : 30000.0f, [this](float value)
     {
@@ -337,6 +346,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
         info_other[n]->setValue("-")->hide();
         info_other[n]->setKey("-")->hide();
     }
+    link_to_analysis_button->disable();
 
     if (probe)
     {
@@ -361,7 +371,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
         P<Asteroid> asteroid = obj;
         P<Mine> mine = obj;
 
-        // Info lat�rale
+        // Info laterale
 
         // Toujours :
             // ID
@@ -380,6 +390,17 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
             // Description ameliore
             // Frequences
             // Systemes
+        
+        if (my_spaceship and obj->getScannedStateFor(my_spaceship) >= SS_FullScan)
+        {
+            link_to_analysis_button->setValue(my_spaceship->linked_analysis_object_id == obj->getMultiplayerId());
+            link_to_analysis_button->enable();
+        }
+        else
+        {
+            link_to_analysis_button->setValue(false);
+            link_to_analysis_button->disable();
+        }
 
         sf::Vector2f position_diff = obj->getPosition() - my_spaceship->getPosition();
         float distance = sf::length(position_diff);
@@ -466,12 +487,25 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
             string show_signature_gravity = "-";
             string show_signature_biological = "-";
             string show_signature_electrical = "-";
+            
+            RawRadarSignatureInfo info;
+
+            if (P<SpaceShip>(ship))
+            {
+                // Use dynamic signatures for ships.
+                info = ship->getDynamicRadarSignatureInfo();
+            } else 
+            {
+                // Otherwise, use the baseline only.
+                info = obj->getRadarSignatureInfo();
+            }
+            
             if(my_spaceship->has_gravity_sensor)
-                show_signature_gravity = string(obj->radar_signature.gravity);
+                show_signature_gravity = string(std::max(0.0f,info.gravity));
             if(my_spaceship->has_biological_sensor)
-                show_signature_biological = string(obj->radar_signature.biological);
+                show_signature_biological = string(std::max(0.0f,info.biological));
             if(my_spaceship->has_electrical_sensor)
-                show_signature_electrical = string(obj->radar_signature.electrical);
+                show_signature_electrical = string(std::max(0.0f,info.electrical));
             string radarSignatureString = show_signature_gravity + " / " + show_signature_biological + " / "  + show_signature_electrical;
             info_signatures->setValue(radarSignatureString);
 
@@ -479,7 +513,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
 
             if (ship)
             {
-				P<ShipTemplate> st = ship->ship_template;
+                P<ShipTemplate> st = ship->ship_template;
                 info_faction->setValue(factionInfo[ship->getFactionId()]->getLocaleName());
 //                if (factionInfo[ship->getFactionId()]->getIcon() != "")
 //                    info_faction->setIcon("gui/icons/" + factionInfo[ship->getFactionId()]->getIcon());
@@ -493,7 +527,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
 
             if (station)
             {
-				P<ShipTemplate> st = station->ship_template;
+                P<ShipTemplate> st = station->ship_template;
                 info_faction->setValue(factionInfo[station->getFactionId()]->getLocaleName());
                 info_type_button->show();
                 info_type->setValue(st->getLocaleName());
@@ -724,7 +758,7 @@ void ScienceScreen::onHotkey(const HotkeyResult& key)
 {
     if (key.category == "SCIENCE" && my_spaceship)
     {
- 		// Initiate a scan on scannable objects.
+         // Initiate a scan on scannable objects.
         if (key.hotkey == "SCAN_OBJECT" &&
             my_spaceship->getCanScan() &&
             my_spaceship->scanning_delay == 0.0)
@@ -798,7 +832,7 @@ void ScienceScreen::onHotkey(const HotkeyResult& key)
                 probe = game_client->getObjectById(my_spaceship->linked_science_probe_id);
              if (probe && !probe_view_button->getValue())
             {
-				probe_view_button->setValue(true);
+                probe_view_button->setValue(true);
                 sf::Vector2f probe_position = probe->getPosition();
                 science_radar->hide();
                 probe_radar->show();
@@ -808,49 +842,49 @@ void ScienceScreen::onHotkey(const HotkeyResult& key)
                 science_radar->show();
                 probe_radar->hide();
             }
-		}
-		if (key.hotkey == "SHOW_DATABASE")
-		{
-		    P<SpaceShip> ship = targets.get();
-		    if (ship && ship->getScannedStateFor(my_spaceship) >= SS_SimpleScan)
+        }
+        if (key.hotkey == "SHOW_DATABASE")
+        {
+            P<SpaceShip> ship = targets.get();
+            if (ship && ship->getScannedStateFor(my_spaceship) >= SS_SimpleScan)
                 database_view->findAndDisplayEntry(ship->getLocaleName());
 
-		    view_mode_selection->setSelectionIndex(1);
-		    radar_view->hide();
-			background_gradient->hide();
-			database_view->show();
-		}
-		if (key.hotkey == "SHOW_RADAR")
-		{
-			view_mode_selection->setSelectionIndex(0);
-			radar_view->show();
-			background_gradient->show();
-			database_view->hide();
-		}
-		if (key.hotkey == "DECREASE_ZOOM")
-		{
-			float view_distance = science_radar->getDistance() + 1500.0f;
-			if (view_distance > my_spaceship->getLongRangeRadarRange())
-				view_distance = my_spaceship->getLongRangeRadarRange();
-			if (view_distance < my_spaceship->getShortRangeRadarRange() )
-				view_distance = my_spaceship->getShortRangeRadarRange();
-			science_radar->setDistance(view_distance);
-			// Keep the zoom slider in sync.
-			zoom_slider->setValue(view_distance);
-			zoom_label->setText("Zoom: " + string(my_spaceship->getLongRangeRadarRange() / view_distance, 1) + "x");
-		}
-		if (key.hotkey == "INCREASE_ZOOM")
-		{
-			float view_distance = science_radar->getDistance() - 1500.0f;
-			if (view_distance > my_spaceship->getLongRangeRadarRange())
-				view_distance = my_spaceship->getLongRangeRadarRange();
-			if (view_distance < my_spaceship->getShortRangeRadarRange() )
-				view_distance = my_spaceship->getShortRangeRadarRange();
-			science_radar->setDistance(view_distance);
-			// Keep the zoom slider in sync.
-			zoom_slider->setValue(view_distance);
-			zoom_label->setText("Zoom: " + string(my_spaceship->getLongRangeRadarRange() / view_distance, 1) + "x");
-		}
+            view_mode_selection->setSelectionIndex(1);
+            radar_view->hide();
+            background_gradient->hide();
+            database_view->show();
+        }
+        if (key.hotkey == "SHOW_RADAR")
+        {
+            view_mode_selection->setSelectionIndex(0);
+            radar_view->show();
+            background_gradient->show();
+            database_view->hide();
+        }
+        if (key.hotkey == "DECREASE_ZOOM")
+        {
+            float view_distance = science_radar->getDistance() + 1500.0f;
+            if (view_distance > my_spaceship->getLongRangeRadarRange())
+                view_distance = my_spaceship->getLongRangeRadarRange();
+            if (view_distance < my_spaceship->getShortRangeRadarRange() )
+                view_distance = my_spaceship->getShortRangeRadarRange();
+            science_radar->setDistance(view_distance);
+            // Keep the zoom slider in sync.
+            zoom_slider->setValue(view_distance);
+            zoom_label->setText("Zoom: " + string(my_spaceship->getLongRangeRadarRange() / view_distance, 1) + "x");
+        }
+        if (key.hotkey == "INCREASE_ZOOM")
+        {
+            float view_distance = science_radar->getDistance() - 1500.0f;
+            if (view_distance > my_spaceship->getLongRangeRadarRange())
+                view_distance = my_spaceship->getLongRangeRadarRange();
+            if (view_distance < my_spaceship->getShortRangeRadarRange() )
+                view_distance = my_spaceship->getShortRangeRadarRange();
+            science_radar->setDistance(view_distance);
+            // Keep the zoom slider in sync.
+            zoom_slider->setValue(view_distance);
+            zoom_label->setText("Zoom: " + string(my_spaceship->getLongRangeRadarRange() / view_distance, 1) + "x");
+        }
         
     }
 }

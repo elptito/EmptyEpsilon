@@ -97,6 +97,7 @@ REGISTER_SCRIPT_SUBCLASS(Planet, SpaceObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(Planet, setPlanetAtmosphereTexture);
     REGISTER_SCRIPT_CLASS_FUNCTION(Planet, setPlanetSurfaceTexture);
     REGISTER_SCRIPT_CLASS_FUNCTION(Planet, setPlanetIcon);
+    REGISTER_SCRIPT_CLASS_FUNCTION(Planet, getPlanetSurfaceTexture);
     REGISTER_SCRIPT_CLASS_FUNCTION(Planet, setPlanetCloudTexture);
     REGISTER_SCRIPT_CLASS_FUNCTION(Planet, getPlanetRadius);
     REGISTER_SCRIPT_CLASS_FUNCTION(Planet, setPlanetRadius);
