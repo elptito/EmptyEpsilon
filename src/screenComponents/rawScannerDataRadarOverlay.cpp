@@ -62,7 +62,7 @@ void RawScannerDataRadarOverlay::onDraw(sf::RenderTarget& window)
             distance_modif = distance * std::sqrt(my_spaceship->getSystemEffectiveness(SYS_Drones));
         }
 
-        if (dist > distance_modif * 2)
+        if (dist > distance_modif * 3)
             continue;
 
         // The further away the object is, the less its effect on radar data.

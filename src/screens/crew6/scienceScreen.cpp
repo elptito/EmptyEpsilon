@@ -501,11 +501,11 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
             }
             
             if(my_spaceship->has_gravity_sensor)
-                show_signature_gravity = string(info.gravity);
+                show_signature_gravity = string(std::max(0.0f,info.gravity));
             if(my_spaceship->has_biological_sensor)
-                show_signature_biological = string(info.biological);
+                show_signature_biological = string(std::max(0.0f,info.biological));
             if(my_spaceship->has_electrical_sensor)
-                show_signature_electrical = string(info.electrical);
+                show_signature_electrical = string(std::max(0.0f,info.electrical));
             string radarSignatureString = show_signature_gravity + " / " + show_signature_biological + " / "  + show_signature_electrical;
             info_signatures->setValue(radarSignatureString);
 
