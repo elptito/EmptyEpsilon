@@ -91,6 +91,12 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(ShipTemplateBasedObject, SpaceObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, setRearShieldMax);
     /// Set a function that will be called if the object is taking damage.
     /// First argument given to the function will be the object taking damage, the second the instigator SpaceObject (or nil).
+    /// If instigator is not nil, you will get in this order :
+    /// a string which is the damage type as defined in EDamageType and converted as string in shipTemplate source, 
+    /// a number which is the frequency used, 
+    /// a string which is the subsystem hit, 
+    /// two floats which are resp. damage taken by shields and damage taken by hull
+    /// and a number which is the shield index if shield is hit, -1 if no shield is hit
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplateBasedObject, onTakingDamage);
     /// Set a function that will be called if the object is destroyed by taking damage.
     /// First argument given to the function will be the object taking damage, the second the instigator SpaceObject that gave the final blow (or nil).
@@ -298,6 +304,8 @@ bool ShipTemplateBasedObject::hasShield()
 
 void ShipTemplateBasedObject::takeDamage(float damage_amount, DamageInfo info)
 {
+    signed int hit_shield_index = -1;
+    float shield_damage = 0;
     if (shield_count > 0 && getShieldsActive())
     {
         float angle = sf::angleDifference(getRotation(), sf::vector2ToAngle(info.location - getPosition()));
@@ -307,11 +315,13 @@ void ShipTemplateBasedObject::takeDamage(float damage_amount, DamageInfo info)
         int shield_index = int((angle + arc / 2.0f) / arc);
         shield_index %= shield_count;
 
-        float shield_damage = damage_amount * getShieldDamageFactor(info, shield_index);
+        shield_damage = damage_amount * getShieldDamageFactor(info, shield_index);
         soundManager->playSound("explosion_shields.wav", getPosition(), 200.0, 1.0, 1.0f + random(-0.1f, 0.1f),shield_damage*100.0);
 
         damage_amount -= shield_level[shield_index];
         shield_level[shield_index] -= shield_damage;
+        hit_shield_index = shield_index;
+
         if (shield_level[shield_index] < 0)
         {
             shield_level[shield_index] = 0.0;
@@ -336,7 +346,12 @@ void ShipTemplateBasedObject::takeDamage(float damage_amount, DamageInfo info)
         {
             if (info.instigator)
             {
-                on_taking_damage.call(P<ShipTemplateBasedObject>(this), P<SpaceObject>(info.instigator));
+                on_taking_damage.call(P<ShipTemplateBasedObject>(this), P<SpaceObject>(info.instigator), 
+                                        info.type, frequencyToDisplayNumber(info.frequency), 
+                                        info.system_target, 
+                                        shield_damage, 
+                                        damage_amount,
+                                        hit_shield_index);
             } else {
                 on_taking_damage.call(P<ShipTemplateBasedObject>(this));
             }
@@ -382,7 +397,7 @@ void ShipTemplateBasedObject::setTemplate(string template_name)
     P<ShipTemplate> new_ship_template = ShipTemplate::getTemplate(template_name);
     this->template_name = template_name;
     ship_template = new_ship_template;
-    type_name = template_name;
+    type_name = new_ship_template->getLocaleName();
     locale_name = new_ship_template->getLocaleName();
     class_name = ship_template->getClass();
     sub_class_name = ship_template->getSubClass();
@@ -461,3 +476,7 @@ string ShipTemplateBasedObject::getShieldDataString()
     return data;
 }
 
+int frequencyToDisplayNumber(int frequency)
+{
+    return 400 + (frequency * 20);
+}

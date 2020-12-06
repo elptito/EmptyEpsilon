@@ -49,6 +49,7 @@ GameGlobalInfo::GameGlobalInfo()
     use_repair_crew = false;
     allow_main_screen_tactical_radar = true;
     allow_main_screen_long_range_radar = true;
+    allow_main_screen_target_analysis = true;
     allow_main_screen_global_range_radar = true;
     allow_main_screen_ship_state = true;
     intercept_all_comms_to_gm = CGI_None;
@@ -75,6 +76,7 @@ GameGlobalInfo::GameGlobalInfo()
     registerMemberReplication(&allow_main_screen_ship_state);
     registerMemberReplication(&gm_callback_names);
     registerMemberReplication(&intercept_all_comms_to_gm);
+    registerMemberReplication(&allow_main_screen_target_analysis);
     registerMemberReplication(&use_nano_repair_crew);
     registerMemberReplication(&use_long_range_for_relay);
     registerMemberReplication(&use_complex_radar_signatures);

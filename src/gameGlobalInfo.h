@@ -91,6 +91,7 @@ public:
     bool allow_main_screen_tactical_radar;
     bool allow_main_screen_long_range_radar;
     bool allow_main_screen_global_range_radar;
+    bool allow_main_screen_target_analysis;
     bool allow_main_screen_ship_state;
     bool use_nano_repair_crew;
     bool use_long_range_for_relay;

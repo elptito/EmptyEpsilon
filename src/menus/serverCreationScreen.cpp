@@ -37,6 +37,7 @@ ServerCreationScreen::ServerCreationScreen()
     gameGlobalInfo->allow_main_screen_long_range_radar = PreferencesManager::get("server_config_allow_main_screen_long_range_radar", "1").toInt();
     gameGlobalInfo->allow_main_screen_global_range_radar = PreferencesManager::get("server_config_allow_main_screen_global_range_radar", "1").toInt();
     gameGlobalInfo->allow_main_screen_ship_state = PreferencesManager::get("server_config_allow_main_screen_ship_state", "1").toInt();
+    gameGlobalInfo->allow_main_screen_target_analysis = PreferencesManager::get("server_config_allow_main_screen_target_analysis", "1").toInt();
     gameGlobalInfo->use_nano_repair_crew = PreferencesManager::get("server_use_nano_repair_crew", "1").toInt();
     gameGlobalInfo->gm_control_code = PreferencesManager::get("server_config_gm_control_code", "").upper();
     gameGlobalInfo->use_long_range_for_relay = PreferencesManager::get("server_use_long_range_for_relay", "1").toInt();
