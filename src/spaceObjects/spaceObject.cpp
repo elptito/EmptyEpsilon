@@ -2,6 +2,8 @@
 #include "factionInfo.h"
 #include "gameGlobalInfo.h"
 #include "explosionEffect.h"
+#include "EDamageType.h"
+#include "shipTemplate.h"
 
 #include "scriptInterface.h"
 /// The SpaceObject is the base for every object which can be seen in space.
@@ -755,3 +757,4 @@ template<> void convert<EScannedState>::param(lua_State* L, int& idx, EScannedSt
     else if (str == "full" || str == "fullscan")
         ss = SS_FullScan;
 }
+
