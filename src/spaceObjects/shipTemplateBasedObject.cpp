@@ -298,6 +298,7 @@ bool ShipTemplateBasedObject::hasShield()
 
 void ShipTemplateBasedObject::takeDamage(float damage_amount, DamageInfo info)
 {
+    signed int hit_shield_index = -1;
     if (shield_count > 0 && getShieldsActive())
     {
         float angle = sf::angleDifference(getRotation(), sf::vector2ToAngle(info.location - getPosition()));
@@ -312,6 +313,8 @@ void ShipTemplateBasedObject::takeDamage(float damage_amount, DamageInfo info)
 
         damage_amount -= shield_level[shield_index];
         shield_level[shield_index] -= shield_damage;
+        hit_shield_index = shield_index;
+
         if (shield_level[shield_index] < 0)
         {
             shield_level[shield_index] = 0.0;
@@ -336,9 +339,9 @@ void ShipTemplateBasedObject::takeDamage(float damage_amount, DamageInfo info)
         {
             if (info.instigator)
             {
-                on_taking_damage.call(P<ShipTemplateBasedObject>(this), P<SpaceObject>(info.instigator));
+                on_taking_damage.call(P<ShipTemplateBasedObject>(this), P<SpaceObject>(info.instigator), info, hit_shield_index);
             } else {
-                on_taking_damage.call(P<ShipTemplateBasedObject>(this));
+                on_taking_damage.call(P<ShipTemplateBasedObject>(this), nullptr, info, hit_shield_index);
             }
         }
     }

@@ -2,6 +2,8 @@
 #include "factionInfo.h"
 #include "gameGlobalInfo.h"
 #include "explosionEffect.h"
+#include "EDamageType.h"
+#include "shipTemplate.h"
 
 #include "scriptInterface.h"
 /// The SpaceObject is the base for every object which can be seen in space.
@@ -740,6 +742,15 @@ template<> void convert<DamageInfo>::param(lua_State* L, int& idx, DamageInfo& d
     convert<ESystem>::param(L, idx, di.system_target);
 }
 
+template<> int convert<DamageInfo>::returnType(lua_State* L, DamageInfo& di)
+{
+    convert<EDamageType>::returnType(L, di.type);
+    lua_pushinteger(L, di.frequency);
+
+    convert<ESystem>::returnType(L, di.system_target);
+    return 1;
+}
+
 template<> void convert<EScannedState>::param(lua_State* L, int& idx, EScannedState& ss)
 {
     ss = SS_NotScanned;
@@ -755,3 +766,4 @@ template<> void convert<EScannedState>::param(lua_State* L, int& idx, EScannedSt
     else if (str == "full" || str == "fullscan")
         ss = SS_FullScan;
 }
+
