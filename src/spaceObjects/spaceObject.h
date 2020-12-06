@@ -326,7 +326,6 @@ protected:
 
 // Define a script conversion function for the DamageInfo structure.
 template<> void convert<DamageInfo>::param(lua_State* L, int& idx, DamageInfo& di);
-template<> int convert<DamageInfo>::returnType(lua_State* L, DamageInfo& di);
 // Function to convert a lua parameter to a scan state.
 template<> void convert<EScannedState>::param(lua_State* L, int& idx, EScannedState& ss);
 

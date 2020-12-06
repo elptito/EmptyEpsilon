@@ -35,7 +35,7 @@ template<> void convert<ESystem>::param(lua_State* L, int& idx, ESystem& es)
         es = SYS_None;
 }
 
-template<> int convert<ESystem>::returnType(lua_State* L, ESystem& es)
+template<> int convert<ESystem>::returnType(lua_State* L, ESystem es)
 {
     switch(es)
     {
@@ -77,6 +77,9 @@ template<> int convert<ESystem>::returnType(lua_State* L, ESystem& es)
         return 1;
     case SYS_Door:  
         lua_pushstring(L, "door");
+        return 1;
+    case SYS_None:  
+        lua_pushstring(L, "none");
         return 1;
     default:
         return 0;
