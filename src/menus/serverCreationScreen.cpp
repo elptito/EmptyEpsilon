@@ -42,6 +42,7 @@ ServerCreationScreen::ServerCreationScreen()
     gameGlobalInfo->gm_control_code = PreferencesManager::get("server_config_gm_control_code", "").upper();
     gameGlobalInfo->use_long_range_for_relay = PreferencesManager::get("server_use_long_range_for_relay", "1").toInt();
     gameGlobalInfo->use_complex_radar_signatures = PreferencesManager::get("server_config_use_complex_radar_signatures", "0").toInt();
+    gameGlobalInfo->hack_efficiency_ratio = PreferencesManager::get("hack_efficiency_ratio", "1.0").toFloat();
 
     // Create a two-column layout.
     GuiElement* container = new GuiAutoLayout(this, "", GuiAutoLayout::ELayoutMode::LayoutVerticalColumns);
