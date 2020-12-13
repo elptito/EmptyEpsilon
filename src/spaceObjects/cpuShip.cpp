@@ -132,7 +132,8 @@ void CpuShip::applyTemplateValues()
 {
     SpaceShip::applyTemplateValues();
 
-    new_ai_name = ship_template->default_ai_name;
+    if(ship_template->default_ai_name != "")
+        new_ai_name = ship_template->default_ai_name;
 }
 
 void CpuShip::setAI(string new_ai)
