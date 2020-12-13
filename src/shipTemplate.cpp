@@ -105,6 +105,7 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     ///3rd param and for second parameter lined fire (number of shots fired simultaneously)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCustomWeaponMultiple);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCustomWeaponColor);
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, onCustomWeaponDetonation);
     /// Add an empty room to a ship template.
     /// Rooms are shown on the engineering and damcon screens.
     /// If a system room isn't accessible via other rooms connected by doors, that system
@@ -591,9 +592,9 @@ void ShipTemplate::setCustomWeaponStorage(string weapon, int amount)
 }
 
 
-void ShipTemplate::setCustomWeapon(EMissileWeapons base, string weapon_name, float damage_multiplier, float speed, EDamageType dt)
+void ShipTemplate::setCustomWeapon(EMissileWeapons base, string weapon_name, float damage_multiplier, float speed, EDamageType dt, float lifetime)
 {
-    CustomMissileWeaponRegistry::createMissileWeapon(base, weapon_name, damage_multiplier, speed, dt);
+    CustomMissileWeaponRegistry::createMissileWeapon(base, weapon_name, damage_multiplier, speed, dt, lifetime);
 
 }
 
@@ -606,6 +607,11 @@ void ShipTemplate::setCustomWeaponMultiple(string weapon_name, int fire_count, i
 void ShipTemplate::setCustomWeaponColor(string weapon_name, char color_r, char color_g, char color_b)
 {
     CustomMissileWeaponRegistry::getMissileWeapon(weapon_name).color = sf::Color(color_r, color_g, color_b);
+}
+
+void ShipTemplate::onCustomWeaponDetonation(string weapon_name, ScriptSimpleCallback callback)
+{
+    CustomMissileWeaponRegistry::getMissileWeapon(weapon_name).on_detonation = callback;
 }
 
 void ShipTemplate::addRoom(sf::Vector2i position, sf::Vector2i size)

@@ -227,11 +227,12 @@ public:
     void setJumpDriveChargeTime(float time) { jump_drive_charge_time = time; }
 	void setJumpDriveEnergy(float charge) { jump_drive_energy_per_km_charge = charge; }
     void setCloaking(bool enabled);
-    void setCustomWeapon(EMissileWeapons weapon, string  new_name, float damage_multiplier, float speed, EDamageType dt);
+    void setCustomWeapon(EMissileWeapons weapon, string  new_name, float damage_multiplier, float speed, EDamageType dt, float lifetime);
     void setCustomWeaponMultiple(string weapon_name, int fire_count, int line_count);
     void setCustomWeaponColor(string weapon_name, char color_r, char color_g, char color_b);
     void setWeaponStorage(EMissileWeapons weapon, int amount);
     void setCustomWeaponStorage(string weapon, int amount);
+    void onCustomWeaponDetonation(string weapon_name, ScriptSimpleCallback callback);
     void addRoom(sf::Vector2i position, sf::Vector2i size);
     void addRoomSystem(sf::Vector2i position, sf::Vector2i size, ESystem system);
     void addDoor(sf::Vector2i position, bool horizontal);

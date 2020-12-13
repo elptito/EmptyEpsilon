@@ -13,6 +13,8 @@ MissileWeapon::MissileWeapon(string multiplayer_name, const MissileWeaponData& d
     speed = 0;
     color = data.color;
 
+    std::cout << "lifeT " << lifetime << std::endl;
+
     registerMemberReplication(&target_id);
     registerMemberReplication(&target_angle);
     registerMemberReplication(&damage_multiplier);
@@ -68,6 +70,10 @@ void MissileWeapon::update(float delta)
     if (lifetime < 0)
     {
         lifeEnded();
+        if(on_detonation.isSet())
+        {   
+            on_detonation.call(P<SpaceObject>(this), string("Expired"));
+        }
         destroy();
     }
     setVelocity(sf::vector2FromAngle(getRotation()) * speed * size_speed_modifier);
@@ -89,13 +95,20 @@ void MissileWeapon::collide(Collisionable* target, float force)
     {
         return;
     }
+    
+    if(on_detonation.isSet())
+    {   
+        on_detonation.call(P<SpaceObject>(this), string("Collided"));
+    }
+    
     P<SpaceShip> ship = object;
-    if (ship && ship->isDockedWith(owner))
+    if (ship && ship->isDockedWith(owner)) //Tsht : Is this really OK ??? The missile vanishes or what ?
     {
         return;
     }
-
+    
     hitObject(object);
+    
     destroy();
 }
 
