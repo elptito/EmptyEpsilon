@@ -190,6 +190,8 @@ void WeaponTube::spawnProjectile(float target_angle)
                 missile->damage_type = data.damage_type;
                 missile->color = data.color;
                 missile->category_modifier = getSizeCategoryModifier();
+                missile->lifetime = data.lifetime;
+                missile->on_detonation = data.on_detonation;
             }
             break;
         case MW_Nuke:
@@ -207,6 +209,8 @@ void WeaponTube::spawnProjectile(float target_angle)
                 missile->damage_type = data.damage_type;
                 missile->color = data.color;
                 missile->category_modifier = getSizeCategoryModifier();
+                missile->lifetime = data.lifetime;
+                missile->on_detonation = data.on_detonation;
             }
             break;
         case MW_Mine:
@@ -236,6 +240,8 @@ void WeaponTube::spawnProjectile(float target_angle)
                 missile->damage_type = data.damage_type;
                 missile->color = data.color;
                 missile->category_modifier = getSizeCategoryModifier();
+                missile->lifetime = data.lifetime;
+                missile->on_detonation = data.on_detonation;
             }
             break;
         case MW_EMP:
@@ -253,6 +259,8 @@ void WeaponTube::spawnProjectile(float target_angle)
                 missile->damage_type = data.damage_type;
                 missile->color = data.color;
                 missile->category_modifier = getSizeCategoryModifier();
+                missile->lifetime = data.lifetime;
+                missile->on_detonation = data.on_detonation;
             }
             break;
         default:

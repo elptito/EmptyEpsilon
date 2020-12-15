@@ -53,6 +53,7 @@ public:
     int fire_count;
     int line_count;
     EDamageType damage_type;
+    ScriptSimpleCallback on_detonation;
 
     static const MissileWeaponData& getDataFor(const EMissileWeapons& type);
     static const MissileWeaponData& getDataFor(const string& type);
@@ -80,7 +81,7 @@ public:
 
     static auto getMissileWeapon (const std::string &iName) -> MissileWeaponData& ;
     static auto getMissileWeaponType (const std::string &iName) -> uint32_t& ;
-    static void createMissileWeapon(const EMissileWeapons &iBaseType, const std::string &iNewName, const float &iDamageMultiplier, const float &iSpeed, const EDamageType &iDT);
+    static void createMissileWeapon(const EMissileWeapons &iBaseType, const std::string &iNewName, const float &iDamageMultiplier, const float &iSpeed, const EDamageType &iDT, const float &iLifeTime);
 
 };
 

@@ -93,6 +93,13 @@ end
 function init()
     -- Spawn a player Atlantis.
     player = PlayerSpaceship():setFaction("Human Navy"):setTemplate("Atlantis")
+    player:onTakingDamage(function(self,instigator, type, freq, sys, shi, dam, hit)
+		string.format("")	--serious proton needs a global context
+		if instigator ~= nil then
+            print(string.format("Degats: type %s freq %i sys %s shi %f dam %f hit %i",type,freq,sys,shi,dam,hit))
+            
+		end
+	end)
 
     enemyList = {}
     friendlyList = {}

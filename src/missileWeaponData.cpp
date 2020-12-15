@@ -45,7 +45,7 @@ const MissileWeaponData& MissileWeaponData::getDataFor(const string& type)
 }
 
 
-void CustomMissileWeaponRegistry::createMissileWeapon(const EMissileWeapons &iBaseType, const std::string &iNewName, const float &iDamageMultiplier, const float &iSpeed, const EDamageType &iDT)
+void CustomMissileWeaponRegistry::createMissileWeapon(const EMissileWeapons &iBaseType, const std::string &iNewName, const float &iDamageMultiplier, const float &iSpeed, const EDamageType &iDT, const float &iLifeTime)
 {
     if((getCustomMissileWeaponTypes().size()) >= (sizeof(uint32_t) - MW_Count))
         assert(0 && "Taille maximum de custom weapon atteinte");
@@ -55,6 +55,8 @@ void CustomMissileWeaponRegistry::createMissileWeapon(const EMissileWeapons &iBa
     copyMWD.speed = iSpeed;
     copyMWD.basetype = iBaseType;
     copyMWD.damage_type = iDT;
+    if(iLifeTime != -1)
+        copyMWD.lifetime = iLifeTime;
     //copyMWD.fire_count = iFireCount;
     //copyMWD.line_count = iLineCount;
 

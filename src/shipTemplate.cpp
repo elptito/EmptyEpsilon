@@ -105,6 +105,13 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     ///3rd param and for second parameter lined fire (number of shots fired simultaneously)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCustomWeaponMultiple);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCustomWeaponColor);
+    ///Called after a custom missile explodes on a target, or after it ends its life.
+    ///If the target is a ship, the ship is given as third argument
+    ///If it ends life, or if hit an object which is not a spaceship, or destroyed second parameter of
+    ///the calback will be nil
+    ///Two arguments : weapon name, and callback
+    ///Three arguments callback : self (missile) ; Hit, HitShip, Destroyed or Expired ; and ship object (if HitShip), object or nil
+    REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, onCustomWeaponDetonation);
     /// Add an empty room to a ship template.
     /// Rooms are shown on the engineering and damcon screens.
     /// If a system room isn't accessible via other rooms connected by doors, that system
@@ -591,9 +598,9 @@ void ShipTemplate::setCustomWeaponStorage(string weapon, int amount)
 }
 
 
-void ShipTemplate::setCustomWeapon(EMissileWeapons base, string weapon_name, float damage_multiplier, float speed, EDamageType dt)
+void ShipTemplate::setCustomWeapon(EMissileWeapons base, string weapon_name, float damage_multiplier, float speed, EDamageType dt, float lifetime)
 {
-    CustomMissileWeaponRegistry::createMissileWeapon(base, weapon_name, damage_multiplier, speed, dt);
+    CustomMissileWeaponRegistry::createMissileWeapon(base, weapon_name, damage_multiplier, speed, dt, lifetime);
 
 }
 
@@ -606,6 +613,11 @@ void ShipTemplate::setCustomWeaponMultiple(string weapon_name, int fire_count, i
 void ShipTemplate::setCustomWeaponColor(string weapon_name, char color_r, char color_g, char color_b)
 {
     CustomMissileWeaponRegistry::getMissileWeapon(weapon_name).color = sf::Color(color_r, color_g, color_b);
+}
+
+void ShipTemplate::onCustomWeaponDetonation(string weapon_name, ScriptSimpleCallback callback)
+{
+    CustomMissileWeaponRegistry::getMissileWeapon(weapon_name).on_detonation = callback;
 }
 
 void ShipTemplate::addRoom(sf::Vector2i position, sf::Vector2i size)

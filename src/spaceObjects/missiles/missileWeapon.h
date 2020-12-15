@@ -10,8 +10,6 @@ class MissileWeapon : public SpaceObject, public Updatable
 protected:
     const MissileWeaponData& data;
 
-    float lifetime; //sec
-
     bool launch_sound_played;
 
 public:
@@ -27,7 +25,9 @@ public:
     //Les deux sont cumulables, et damage_multiplier est finement customisable
     float damage_multiplier;
     EDamageType damage_type;
+    float lifetime; //sec
     //
+    ScriptSimpleCallback on_detonation;
 
     MissileWeapon(string multiplayer_name, const MissileWeaponData& data, const EDamageType &i_damage_type);
 

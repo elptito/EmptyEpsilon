@@ -26,11 +26,17 @@ template:setBeam(2,100, 180, 1500.0, 6.0, 8)
 template:setTubes(4, 10.0)
 
 -- Base, New name, Damage Multiplier (0 to infinite), Speed
-template:setCustomWeapon("Homing", "Homing_2", 1.5, 200.0, "Emp")
+template:setCustomWeapon("Homing", "Homing_2", 1.5, 200.0, "Emp", -1)
 template:setCustomWeaponColor("Homing_2", 0, 255, 0)
 template:setCustomWeaponMultiple("Homing_2",2,3)
+template:onCustomWeaponDetonation("Homing_2", function(self, typeOfDetonation, hitObject)
+print(typeOfDetonation)
+if typeOfDetonation == "HitShip" then
+    print(hitObject:getCallSign())
+end
+end)
 
-template:setCustomWeapon("Homing", "Homing_3", 1.5, 200.0, "Emp")
+template:setCustomWeapon("Homing", "Homing_3", 1.5, 200.0, "Emp", -1)
 template:setCustomWeaponColor("Homing_3", 0, 255, 0)
 template:setCustomWeaponMultiple("Homing_3", 3,2)
 

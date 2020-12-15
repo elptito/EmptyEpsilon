@@ -63,8 +63,6 @@ REGISTER_SCRIPT_SUBCLASS_NO_CREATE(SpaceShip, ShipTemplateBasedObject)
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setSystemPower);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getSystemCoolant);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setSystemCoolant);
-    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getSystemHack);
-    REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setSystemHack);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getSystemEffectiveness);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, getSystemRepair);
     REGISTER_SCRIPT_CLASS_FUNCTION(SpaceShip, setSystemRepair);
@@ -1362,7 +1360,7 @@ void SpaceShip::hackFinished(P<SpaceObject> source, string target)
         {
             if (target == getSystemName(ESystem(n)))
             {
-                systems[n].hacked_level = std::min(1.0f, systems[n].hacked_level + 0.5f);
+                systems[n].hacked_level = std::min(1.0f * gameGlobalInfo->hack_efficiency_ratio, (systems[n].hacked_level + 0.5f) * gameGlobalInfo->hack_efficiency_ratio);
                 return;
             }
         }

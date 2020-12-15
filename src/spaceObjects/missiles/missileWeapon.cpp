@@ -13,6 +13,8 @@ MissileWeapon::MissileWeapon(string multiplayer_name, const MissileWeaponData& d
     speed = 0;
     color = data.color;
 
+    std::cout << "lifeT " << lifetime << std::endl;
+
     registerMemberReplication(&target_id);
     registerMemberReplication(&target_angle);
     registerMemberReplication(&damage_multiplier);
@@ -68,6 +70,10 @@ void MissileWeapon::update(float delta)
     if (lifetime < 0)
     {
         lifeEnded();
+        if(on_detonation.isSet())
+        {   
+            on_detonation.call(P<SpaceObject>(this), string("Expired"));
+        }
         destroy();
     }
     setVelocity(sf::vector2FromAngle(getRotation()) * speed * size_speed_modifier);
@@ -89,13 +95,21 @@ void MissileWeapon::collide(Collisionable* target, float force)
     {
         return;
     }
+    
     P<SpaceShip> ship = object;
-    if (ship && ship->isDockedWith(owner))
+    if (ship && ship->isDockedWith(owner)) //Tsht : Is this really OK ? Do we want missiles just to ignore docked ship whatsoever, or take into account size, shields etc. ?
     {
         return;
     }
-
+    if(on_detonation.isSet())
+    {   
+        if(ship)
+            on_detonation.call(P<SpaceObject>(this), string("HitShip"), ship);
+        else
+            on_detonation.call(P<SpaceObject>(this), string("Hit"), object);
+    }
     hitObject(object);
+    
     destroy();
 }
 
@@ -112,6 +126,10 @@ void MissileWeapon::takeDamage(float damage_amount, DamageInfo info)
     hull -= damage_amount;
     if (hull <= 0)
     {
+        if(on_detonation.isSet())
+        {
+            on_detonation.call(P<SpaceObject>(this), string("Destroyed"));
+        }        
         P<ExplosionEffect> e = new ExplosionEffect();
         e->setSize(getRadius());
         e->setPosition(getPosition());
