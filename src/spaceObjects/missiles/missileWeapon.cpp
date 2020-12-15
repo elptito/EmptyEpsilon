@@ -13,8 +13,6 @@ MissileWeapon::MissileWeapon(string multiplayer_name, const MissileWeaponData& d
     speed = 0;
     color = data.color;
 
-    std::cout << "lifeT " << lifetime << std::endl;
-
     registerMemberReplication(&target_id);
     registerMemberReplication(&target_angle);
     registerMemberReplication(&damage_multiplier);
