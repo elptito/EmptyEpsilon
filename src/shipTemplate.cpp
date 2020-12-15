@@ -105,6 +105,12 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     ///3rd param and for second parameter lined fire (number of shots fired simultaneously)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCustomWeaponMultiple);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCustomWeaponColor);
+    ///Called after a custom missile explodes on a target, or after it ends its life.
+    ///If the target is a ship, the ship is given as third argument
+    ///If it ends life, or if hit an object which is not a spaceship, or destroyed second parameter of
+    ///the calback will be nil
+    ///Two arguments : weapon name, and callback
+    ///Three arguments callback : self (missile) ; Hit, HitShip, Destroyed or Expired ; and ship object (if HitShip), object or nil
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, onCustomWeaponDetonation);
     /// Add an empty room to a ship template.
     /// Rooms are shown on the engineering and damcon screens.

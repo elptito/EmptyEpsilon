@@ -55,7 +55,6 @@ void CustomMissileWeaponRegistry::createMissileWeapon(const EMissileWeapons &iBa
     copyMWD.speed = iSpeed;
     copyMWD.basetype = iBaseType;
     copyMWD.damage_type = iDT;
-    std::cout << "lifet i : " << iLifeTime << " namae : " << iNewName << std::endl;
     if(iLifeTime != -1)
         copyMWD.lifetime = iLifeTime;
     //copyMWD.fire_count = iFireCount;

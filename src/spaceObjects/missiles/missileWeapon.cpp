@@ -96,17 +96,18 @@ void MissileWeapon::collide(Collisionable* target, float force)
         return;
     }
     
-    if(on_detonation.isSet())
-    {   
-        on_detonation.call(P<SpaceObject>(this), string("Collided"));
-    }
-    
     P<SpaceShip> ship = object;
-    if (ship && ship->isDockedWith(owner)) //Tsht : Is this really OK ??? The missile vanishes or what ?
+    if (ship && ship->isDockedWith(owner)) //Tsht : Is this really OK ? Do we want missiles just to ignore docked ship whatsoever, or take into account size, shields etc. ?
     {
         return;
     }
-    
+    if(on_detonation.isSet())
+    {   
+        if(ship)
+            on_detonation.call(P<SpaceObject>(this), string("HitShip"), ship);
+        else
+            on_detonation.call(P<SpaceObject>(this), string("Hit"), object);
+    }
     hitObject(object);
     
     destroy();
@@ -125,6 +126,10 @@ void MissileWeapon::takeDamage(float damage_amount, DamageInfo info)
     hull -= damage_amount;
     if (hull <= 0)
     {
+        if(on_detonation.isSet())
+        {
+            on_detonation.call(P<SpaceObject>(this), string("Destroyed"));
+        }        
         P<ExplosionEffect> e = new ExplosionEffect();
         e->setSize(getRadius());
         e->setPosition(getPosition());
