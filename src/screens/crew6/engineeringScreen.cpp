@@ -167,7 +167,7 @@ EngineeringScreen::EngineeringScreen(GuiContainer* owner, ECrewPosition crew_pos
     system_rows[SYS_RearShield].button->setIcon("gui/icons/shields-aft");
     system_rows[SYS_Docks].button->setIcon("gui/icons/docking");
     system_rows[SYS_Drones].button->setIcon("gui/icons/heading");
-    system_rows[SYS_Door].button->setIcon("gui/icons/door");
+    system_rows[SYS_Hangar].button->setIcon("gui/icons/door");
 
     if (gameGlobalInfo->use_nano_repair_crew)
     {
@@ -592,8 +592,16 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
                 }
                 
                 break;
-            case SYS_Door:
-                addSystemEffect("Resistance du sas exterieur", string(int(my_spaceship->getSystemEffectiveness(SYS_Door) * 100))+ "%");
+            case SYS_Hangar:
+                if(my_spaceship->getSystemEffectiveness(SYS_Hangar) >= 0)
+                {
+                    addSystemEffect("Etat du pont d'envol", string(int(my_spaceship->getSystemEffectiveness(SYS_Hangar) * 100))+ "%");
+                }
+                else
+                {
+                    addSystemEffect("Pont d'envol inutilisable", "X", sf::Color::Red);
+                }
+                
                 break;
             default:
                 break;

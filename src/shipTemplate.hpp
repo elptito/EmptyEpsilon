@@ -29,8 +29,8 @@ template<> void convert<ESystem>::param(lua_State* L, int& idx, ESystem& es)
         es = SYS_Docks;
     else if (str == "drones")
         es = SYS_Drones;
-    else if (str == "door")
-        es = SYS_Door;
+    else if (str == "hangar")
+        es = SYS_Hangar;
     else
         es = SYS_None;
 }

@@ -218,7 +218,7 @@ void GuiShipRoom::onDraw(sf::RenderTarget& window)
         case SYS_Drones:
             textureManager.setTexture(sprite, "gui/icons/heading");
             break;
-        case SYS_Door:
+        case SYS_Hangar:
             textureManager.setTexture(sprite, "gui/icons/door");
             break;
         default:

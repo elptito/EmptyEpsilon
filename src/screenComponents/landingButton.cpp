@@ -39,11 +39,22 @@ void GuiLandingButton::onDraw(sf::RenderTarget& window)
         {
         case LS_NotLanding:
             //setText("Atterrissage demande");
-            if (landing_spaceship->canStartLanding() && findLandingTarget())
+            if ((landing_spaceship->getSystemEffectiveness(SYS_Hangar) > 0) 
+                && landing_spaceship->canStartLanding() 
+                && findLandingTarget())
             {
                 enable();
                 setText("Se poser : " + findLandingTarget()->callsign);
-            }else{
+            }
+            else if((landing_spaceship->getSystemEffectiveness(SYS_Hangar) <= 0)
+                && landing_spaceship->canStartLanding() 
+                && findLandingTarget())
+            {
+                disable();
+                setText("Hangar HS");
+            }
+            else
+            {
                 disable();
                 setText("Se poser");
             }

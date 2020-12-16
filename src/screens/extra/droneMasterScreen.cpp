@@ -109,7 +109,7 @@ DroneMasterScreen::DroneMasterScreen(GuiContainer *owner)
     (new GuiLabel(action_launch, "ACTION_LAUNCH_LABEL", "Lancer dans l'espace :", 30))->setAlignment(ACenterRight)->setMargins(20,20,20,20);
     action_launch_button = new GuiButton(action_launch, "LAUNCH_DRONE_BUTTON", "Decollage", [this]() {
         if (my_spaceship)
-            if (my_spaceship->getSystemEffectiveness(SYS_Docks) > 0)
+            //if (my_spaceship->getSystemEffectiveness(SYS_Docks) > 0)
             {
                 Dock &dockData = my_spaceship->docks[index];
                 P<Cargo> cargo = dockData.getCargo();
@@ -119,7 +119,7 @@ DroneMasterScreen::DroneMasterScreen(GuiContainer *owner)
             }
     });
     action_launch_button->setSize(COLUMN_WIDTH, 50);
-    (new GuiPowerDamageIndicator(action_launch_button, "DOCKS_DPI", SYS_Docks, ABottomCenter, my_spaceship))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
+    (new GuiPowerDamageIndicator(action_launch_button, "DOCKS_DPI", SYS_Hangar, ABottomCenter, my_spaceship))->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
     action_energy = new GuiAutoLayout(topPanel, "ACTION_MOVE", GuiAutoLayout::LayoutVerticalColumns);
     action_energy->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax)->setPosition(0, 50, ATopCenter);
@@ -383,6 +383,19 @@ void DroneMasterScreen::onDraw(sf::RenderTarget &window)
     GuiOverlay::onDraw(window);
     if (my_spaceship)
     {
+        
+        if (my_spaceship->getSystemEffectiveness(SYS_Hangar) > 0)
+        {
+            action_launch_button->enable();
+            action_launch_button->setText("Decollage");
+        }
+        else
+        {
+            action_launch_button->disable();
+            action_launch_button->setText("Reparer le hangar");
+        }
+        
+
         action_move_selector->setOptions({});
         for (int n = 0; n < max_docks_count; n++)
         {
