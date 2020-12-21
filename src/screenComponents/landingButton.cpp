@@ -39,23 +39,40 @@ void GuiLandingButton::onDraw(sf::RenderTarget& window)
         {
         case LS_NotLanding:
             //setText("Atterrissage demande");
-            if (landing_spaceship->canStartLanding() && findLandingTarget())
+            if ((my_spaceship->getSystemEffectiveness(SYS_Hangar) > 0.3) 
+                && landing_spaceship->canStartLanding() 
+                && findLandingTarget())
             {
                 enable();
                 setText("Se poser : " + findLandingTarget()->callsign);
-            }else{
+            }
+            else if((my_spaceship->getSystemEffectiveness(SYS_Hangar) <= 0.3)
+                && landing_spaceship->canStartLanding() 
+                && findLandingTarget())
+            {
+                disable();
+                setText("Hangar HS");
+            }
+            else
+            {
                 disable();
                 setText("Se poser");
             }
             break;
         case LS_Landing:
-            setText("Annuler se poser");
-            enable();
+            if((my_spaceship->getSystemEffectiveness(SYS_Hangar) <= 0.3))
+            {
+                disable();
+                setText("Hangar HS");
+                landing_spaceship->commandAbortLanding();
+                landing_spaceship->commandSetLandingTarget(NULL);
+            }   
+            else
+            {
+                setText("Annuler se poser");
+                enable();    
+            }
             break;
-//        case DS_Docked:
-//            setText("Se Dedocker");
-//            enable();
-//            break;
         }
 
         setVisible(landing_spaceship->hasSystem(SYS_Impulse));

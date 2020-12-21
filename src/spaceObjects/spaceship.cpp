@@ -1509,7 +1509,7 @@ bool SpaceShip::hasSystem(ESystem system)
     case SYS_Drones:
         return true;
     case SYS_Docks:
-    case SYS_Door:
+    case SYS_Hangar:
         return docks[0].dock_type != Dock_Disabled;
     }
     return true;

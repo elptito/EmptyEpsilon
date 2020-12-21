@@ -245,7 +245,7 @@ float PlayerSpaceship::system_power_user_factor[] = {
     /*SYS_RearShield*/    5.0 * 0.08,
     /*SYS_Docks*/         1.0 * 0.08,
     /*SYS_Drones*/        3.0 * 0.08,
-    /*SYS_Door*/          1.0 * 0.08,
+    /*SYS_Hangar*/        1.0 * 0.08,
     /*SYS_Cloaking*/     50.0 * 0.08,
 };
 

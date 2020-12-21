@@ -485,7 +485,7 @@ string getSystemName(ESystem system)
     case SYS_RearShield: return "Generateur Bouclier Ar.";
     case SYS_Docks: return "Gestion du Cargo";
     case SYS_Drones: return "Drones et radar";
-    case SYS_Door: return "Sas exterieur";
+    case SYS_Hangar: return "Pont d'envol";
     default:
         return "UNKNOWN";
     }
@@ -506,7 +506,7 @@ string getLocaleSystemName(ESystem system)
     case SYS_RearShield: return tr("system", "Rear Shield Generator");
     case SYS_Docks: return "Gestion du Cargo";
     case SYS_Drones: return "Drones et radar";
-    case SYS_Door: return "Sas exterieur";
+    case SYS_Hangar: return "Pont d'envol";
     default:
         return "UNKNOWN";
     }
