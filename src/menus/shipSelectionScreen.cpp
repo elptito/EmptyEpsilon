@@ -529,7 +529,7 @@ void ShipSelectionScreen::updateCrewTypeOptions()
         crew_position_button[powerManagement]->show();
         crew_position_button[dronePilot]->show();
         crew_position_button[droneMaster]->show();
-        crew_position_button[dockMaster]->show();
+        //crew_position_button[dockMaster]->show();
         break;
     case 3:
         crew_position_button[damageControl]->show();
