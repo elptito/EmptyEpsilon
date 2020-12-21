@@ -593,15 +593,17 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
                 
                 break;
             case SYS_Hangar:
-                if(my_spaceship->getSystemEffectiveness(SYS_Hangar) >= 0)
+            {
+                
+                if(my_spaceship->getSystemEffectiveness(SYS_Hangar) >= 0.3)
                 {
-                    addSystemEffect("Etat du pont d'envol", string(int(my_spaceship->getSystemEffectiveness(SYS_Hangar) * 100))+ "%");
+                    addSystemEffect("Operationnel","");
                 }
                 else
                 {
-                    addSystemEffect("Pont d'envol inutilisable", "X", sf::Color::Red);
+                    addSystemEffect("Energie insuffisante","", sf::Color::Red);
                 }
-                
+            }
                 break;
             default:
                 break;

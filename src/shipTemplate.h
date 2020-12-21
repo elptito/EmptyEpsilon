@@ -29,7 +29,7 @@ enum ESystem
     SYS_RearShield,
     SYS_Docks,
     SYS_Drones,
-    SYS_Door,
+    SYS_Hangar,
     SYS_Cloaking,
     SYS_COUNT
 };

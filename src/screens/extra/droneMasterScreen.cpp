@@ -384,7 +384,7 @@ void DroneMasterScreen::onDraw(sf::RenderTarget &window)
     if (my_spaceship)
     {
         
-        if (my_spaceship->getSystemEffectiveness(SYS_Hangar) > 0)
+        if (my_spaceship->getSystemEffectiveness(SYS_Hangar) > 0.3)
         {
             action_launch_button->enable();
             action_launch_button->setText("Decollage");
@@ -392,7 +392,7 @@ void DroneMasterScreen::onDraw(sf::RenderTarget &window)
         else
         {
             action_launch_button->disable();
-            action_launch_button->setText("Reparer le hangar");
+            action_launch_button->setText("Hangar HS");
         }
         
 
