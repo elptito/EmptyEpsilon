@@ -27,7 +27,6 @@ GuiViewport3D::GuiViewport3D(GuiContainer* owner, string id)
     show_callsigns = false;
     show_headings = false;
     show_spacedust = false;
-    show_target = false;
 }
 
 void GuiViewport3D::onDraw(sf::RenderTarget& window)
@@ -175,17 +174,15 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
     {
         if (my_spaceship && obj && my_spaceship->id_galaxy != obj->id_galaxy)
             continue;
-        if (my_spaceship && obj && my_spaceship == obj && first_person)
+          float depth = sf::dot(viewVector, obj->getPosition() - sf::Vector2f(camera_position.x, camera_position.y));
+        if (depth + obj->getRadius() < depth_cutoff_back)
             continue;
-        float depth = sf::dot(viewVector, obj->getPosition() - sf::Vector2f(camera_position.x, camera_position.y));
-        float distance = sf::length(obj->getPosition() - my_spaceship->getPosition());
-        if (depth + obj->getRadius() < depth_cutoff_back && distance > obj->getRadius()*3)
+        if (depth - obj->getRadius() > depth_cutoff_front)
             continue;
-        if (depth - obj->getRadius() > depth_cutoff_front && distance > obj->getRadius()*3)
+        if (depth > 0 && obj->getRadius() / depth < 1.0 / 500)
             continue;
-        if (depth > 0 && obj->getRadius() / depth < 1.0 / 500 && distance > obj->getRadius()*3)
-            continue;
-        int render_list_index = std::max(0, int((depth + obj->getRadius()) / 25000));
+        //int render_list_index = std::max(0, int((depth + obj->getRadius()) / 25000));
+        int render_list_index = std::max(0, int((depth + obj->getRadius()) / 1000000));
         while(render_list_index >= int(render_lists.size()))
             render_lists.emplace_back();
         render_lists[render_list_index].emplace_back(*obj, depth);
@@ -270,7 +267,7 @@ void GuiViewport3D::onDraw(sf::RenderTarget& window)
     }
     glPopMatrix();
 
-    if (my_spaceship && my_spaceship->getTarget() && show_target)
+    if (my_spaceship && my_spaceship->getTarget() && show_callsigns)
     {
         P<SpaceObject> target = my_spaceship->getTarget();
         glDisable(GL_DEPTH_TEST);
