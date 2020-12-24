@@ -7,7 +7,7 @@
 #include "SFML/System/NonCopyable.hpp"
 
 class Dock;
-class Cargo;
+//class Cargo;
 
 enum EDockType
 {
@@ -39,7 +39,7 @@ string getDockStateName(EDockState state);
 
 class Dock : public sf::NonCopyable
 {
-    public:
+  public:
     static Dock* findOpenForDocking(Dock docks[], int size);
   protected:
     SpaceShip *parent;
@@ -75,6 +75,7 @@ class Dock : public sf::NonCopyable
     {
         move_target_index = index;
     }
+    
     sf::Vector2f getLaunchPosition(float cargoRadius);
     float getLaunchRotation();
     unsigned int getFactionId();

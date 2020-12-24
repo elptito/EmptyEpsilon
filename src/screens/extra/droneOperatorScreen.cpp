@@ -89,6 +89,7 @@ bool DroneOperatorScreen::isConnectableDrone(P<PlayerSpaceship> ship)
     && ship->ship_template
     && ship->ship_template->getType() == ShipTemplate::TemplateType::Drone
     && ship->getFactionId() == my_spaceship->getFactionId()
+    && (ship->getBaseCarrier() == my_spaceship)
     && getConnectionQuality(ship) >= 0.01f;
 }
 
@@ -98,7 +99,8 @@ bool DroneOperatorScreen::isShip(P<PlayerSpaceship> ship)
     && ship->ship_template
     && ((ship->ship_template->getType() == ShipTemplate::TemplateType::Ship) || (ship->ship_template->getType() == ShipTemplate::TemplateType::PlayerShip)) 
     && ship->getFactionId() == my_spaceship->getFactionId()
-    && drone_and_ship_template_names.find(ship->ship_template->getName()) != drone_and_ship_template_names.end();
+    //&& drone_and_ship_template_names.find(ship->ship_template->getName()) != drone_and_ship_template_names.end();
+    && (ship->getBaseCarrier() == my_spaceship); //only control ships or drones based on this carrier
 }
 
 float DroneOperatorScreen::getConnectionQuality(P<PlayerSpaceship> ship)

@@ -4,16 +4,18 @@
 #include "P.h"
 #include "shipTemplate.h"
 #include "cargo.h"
+#include "spaceObjects/spaceship.h"
 
 //class ShipCargo;
 class ShipTemplate;
-class SpaceShip;
 
 class ShipCargo : public Cargo
 {
 public:
   string callsign;
   string template_name;
+  int32_t base_carrier_id; 
+
 private:
   float hull_strength;
   bool has_reactor;
@@ -35,6 +37,10 @@ public:
   void addHealth(float amount);
   P<ModelData> getModel();
   bool onLaunch(Dock &source);
+  P<SpaceShip> getBaseCarrier() //null if not based
+  { return (game_server) ? game_server->getObjectById(base_carrier_id) : game_client->getObjectById(base_carrier_id);}
+  void setBaseCarrier(P<SpaceShip> iBased) { assert(iBased); base_carrier_id = iBased->getMultiplayerId(); }
+
 };
 
 #endif //SHIP_CARGO_H

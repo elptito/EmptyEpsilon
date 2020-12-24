@@ -215,6 +215,11 @@ public:
     P<SpaceObject> landing_target; // Server only
     sf::Vector2f docking_offset; //Server only
 
+    int32_t base_carrier_id;
+
+    P<SpaceShip> getBaseCarrier() //null if not based
+    { return (game_server) ? game_server->getObjectById(base_carrier_id) : game_client->getObjectById(base_carrier_id);}
+    void setBaseCarrier(P<SpaceShip> iBased) { assert(iBased); base_carrier_id = iBased->getMultiplayerId(); }
     SpaceShip(string multiplayerClassName, float multiplayer_significant_range=-1);
     virtual ~SpaceShip();
 
@@ -544,6 +549,7 @@ public:
     // This function is used in getScriptExport calls to adjust for tweaks done in the GM screen.
     string getScriptExportModificationsOnTemplate();
     bool tryDockDrone(SpaceShip* other);
+
 };
 
 float frequencyVsFrequencyDamageFactor(int beam_frequency, int shield_frequency);

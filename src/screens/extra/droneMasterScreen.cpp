@@ -114,7 +114,7 @@ DroneMasterScreen::DroneMasterScreen(GuiContainer *owner)
                 Dock &dockData = my_spaceship->docks[index];
                 P<Cargo> cargo = dockData.getCargo();
 
-                my_spaceship->addToSpecificShipLog("Faire decoller " + cargo->getCallSign(),colorConfig.log_generic,"docks");
+                my_spaceship->addToSpecificShipLog("Decollage " + cargo->getCallSign(),colorConfig.log_generic,"docks");
                 my_spaceship->commandLaunchCargo(index);
             }
     });

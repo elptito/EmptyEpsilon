@@ -204,6 +204,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     turnSpeed = 0.0f;
     passagers_count = 6;
     max_passagers_count = 20;
+    base_carrier_id = -1;
 
     registerMemberReplication(&target_rotation, 1.5);
     registerMemberReplication(&turnSpeed, 0.1);
@@ -244,6 +245,7 @@ SpaceShip::SpaceShip(string multiplayerClassName, float multiplayer_significant_
     registerMemberReplication(&radar_trace);
     registerMemberReplication(&passagers_count);
     registerMemberReplication(&max_passagers_count);
+    registerMemberReplication(&base_carrier_id);
 
 
     // Initialize each subsystem to be powered with no coolant or heat.
@@ -433,6 +435,7 @@ void SpaceShip::applyTemplateValues()
             }
             P<ShipCargo> cargo = new ShipCargo(drone_ship_template);
             dock->dock(cargo);
+            cargo->setBaseCarrier(this);
         }
     }
 }
@@ -1877,6 +1880,12 @@ bool SpaceShip::tryDockDrone(SpaceShip* other){
     }
     return false;
 }
+
+/*void SpaceShip::setBaseCarrier(P<SpaceShip> iBased)
+{ 
+    assert(iBased); 
+    base_carrier_id = iBased->getMultiplayerId(); 
+}*/
 
 namespace
 {

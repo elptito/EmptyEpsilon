@@ -14,6 +14,7 @@ ShipCargo::ShipCargo() : Cargo("ShipCargo")
     registerMemberReplication(&hull_strength);
     registerMemberReplication(&has_reactor);
     registerMemberReplication(&has_cloaking);
+    registerMemberReplication(&base_carrier_id);
     for(int n=0; n<SYS_COUNT; n++) {
         registerMemberReplication(&systems_health[n]);
     }
@@ -21,6 +22,7 @@ ShipCargo::ShipCargo() : Cargo("ShipCargo")
 
 ShipCargo::ShipCargo(P<ShipTemplate> ship_template) : ShipCargo()
 {
+    base_carrier_id = -1;
     template_name = ship_template->getName();
     std::string prefix = (ship_template->getType() == ShipTemplate::TemplateType::Drone) ? "DRN-" : "SHP-";
     callsign = prefix + gameGlobalInfo->getNextShipCallsign();
@@ -81,6 +83,7 @@ ShipCargo::ShipCargo(P<SpaceShip> ship) : ShipCargo()
         auto_repair_enabled=pship->auto_repair_enabled;
         auto_coolant_enabled=pship->auto_coolant_enabled;
     }
+    base_carrier_id = ship->base_carrier_id;
 }
 
 P<ModelData> ShipCargo::getModel()
@@ -129,6 +132,7 @@ bool ShipCargo::onLaunch(Dock &source)
             ship->has_reactor = has_reactor;
             ship->has_cloaking = has_cloaking;
             ship->impulse_request = -0.5;
+            ship->base_carrier_id = base_carrier_id;
             int systemsCount = 0;
             for (unsigned int n = 0; n < SYS_COUNT; n++){
                 if (ship->hasSystem(ESystem(n)))

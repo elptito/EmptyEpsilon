@@ -1303,6 +1303,7 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
             {
                 P<ShipCargo> cargo = new ShipCargo(drone_ship_template);
                 dock->dock(cargo);
+                cargo->setBaseCarrier(ship);
             }
         });
         list_ships_box->setTextSize(20)->setButtonHeight(30)->setPosition(-20, 20, ATopRight)->setSize(300, 200);

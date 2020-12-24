@@ -3,7 +3,7 @@
 
 #include "P.h"
 #include "engine.h"
-#include "spaceObjects/spaceshipParts/dock.h"
+#include "missileWeaponData.h"
 
 class Cargo;
 class Dock;
