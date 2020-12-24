@@ -438,6 +438,12 @@ void SpaceShip::applyTemplateValues()
             cargo->setBaseCarrier(this);
         }
     }
+
+    if (!on_new_ship_called)
+    {
+        on_new_ship_called=true;
+        gameGlobalInfo->on_new_ship.call(P<SpaceShip>(this));
+    }
 }
 
 #if FEATURE_3D_RENDERING

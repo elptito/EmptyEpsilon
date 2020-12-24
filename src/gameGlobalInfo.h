@@ -114,6 +114,9 @@ public:
     ScriptSimpleCallback on_new_player_ship;
     bool allow_new_player_ships = true;
 
+    //Callback called when a new ship is created.
+    ScriptSimpleCallback on_new_ship;
+
     std::function<void(sf::Vector2f)> on_gm_click;
 
     GameGlobalInfo();

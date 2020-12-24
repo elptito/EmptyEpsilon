@@ -108,7 +108,7 @@ function luaRandomSystems(number_of_systems)
 end
 
 --You should only have to modify what is between "Begin balance modification" and "end balance modification"
-onNewPlayerShip(
+onNewShip(
     function(ship)
         ship:onTakingDamage(
             function(self,instigator, typeOfDamage, freq, systemHit, shieldsDamage, hullDamage, hitShield)
