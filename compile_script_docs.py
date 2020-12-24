@@ -239,7 +239,7 @@ class DocumentationGenerator(object):
         stream.write('<li>EMissileSizes: "small", "medium", "large"</li>\n')
         stream.write('<li>EMissileWeapons: "Homing", "Nuke", "Mine", "EMP", "HVLI" (<code>spaceship.cpp</code>)</li>\n')
         stream.write('<li>EScannedState: "notscanned", "friendorfoeidentified", "simplescan", "fullscan" (<code>spaceObject.h</code>)</li>\n')
-        stream.write('<li>ESystem: "reactor", "beamweapons", "missilesystem", "maneuver", "impulse", "warp", "jumpdrive", "frontshield", "rearshield"</li>\n')
+        stream.write('<li>ESystem: "reactor", "beamweapons", "missilesystem", "maneuver", "impulse", "warp", "jumpdrive", "frontshield", "rearshield", "docks", "drones", "hangar"</li>\n')
         stream.write('<!--\n')
         stream.write('<li>EMainScreenOverlay: TODO</li>\n')
         stream.write('<li>EMainScreenSetting: TODO</li>\n')

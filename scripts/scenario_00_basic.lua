@@ -19,6 +19,9 @@ require("utils.lua")
 --   setCirclePos(obj, x, y, angle, distance)
 --      Returns the object with its position set to the resulting coordinates.
 
+require("ee.lua") --tsht for systems
+require("luax.lua") --tsht for table functions
+
 -- Global variables for this scenario
 local enemyList
 local friendlyList
@@ -89,17 +92,83 @@ function randomWaveDistance(enemy_group_count)
     return random(35000, 40000 + enemy_group_count * 3000)
 end
 
+-- Get number_of_systems random systems. Warning : systems may or may not be activated on the ship
+function luaRandomSystems(number_of_systems)
+    --local pship = getPlayerShip(-1)
+    rand_table = {}
+    for _, system in ipairs(SYSTEMS) do
+        table.insert(rand_table, system)
+    end
+    table.shuffle(rand_table)
+    return_table = {}
+    for count = 1,number_of_systems do
+        table.insert(return_table, rand_table[count])
+    end
+    return return_table
+end
+
+--You should only have to modify what is between "Begin balance modification" and "end balance modification"
+onNewPlayerShip(
+    function(ship)
+        ship:onTakingDamage(
+            function(self,instigator, typeOfDamage, freq, systemHit, shieldsDamage, hullDamage, hitShield)
+                string.format("")	--serious proton needs a global context
+                print(string.format("%s is hit", ship:getCallSign()))
+                if instigator ~= nil then --mandatory to check there is an instigator, else it can be asteroid etc.
+                    if typeOfDamage == "emp" and hullDamage > 0 then --means damage is an EMP missile, and some damage passed through shields
+                        -- BEGIN BALANCE MODIFICATION HERE
+                        -- BEGIN BALANCE MODIFICATION HERE
+                        -- BEGIN BALANCE MODIFICATION HERE
+                        local num_of_sys_hit = 3 --edit here to change number of affected systems
+                        -- END BALANCE MODIFICATION
+                        -- END BALANCE MODIFICATION
+                        -- END BALANCE MODIFICATION
+
+                        list_of_systems = luaRandomSystems(num_of_sys_hit) --means we get the random systems (which may NOT be activated on ship)
+                        --print(string.format("Degats: type %s freq %i sys %s shi %f dam %f hit %i",typeOfDamage,freq,systemHit,shieldsDamage,hullDamage,hitShield))
+                        for count = 1, num_of_sys_hit do
+                            print(string.format("%s hit for %f damage ", list_of_systems[count], hullDamage))
+
+                            -- BEGIN BALANCE MODIFICATION HERE
+                            -- BEGIN BALANCE MODIFICATION HERE
+                            -- BEGIN BALANCE MODIFICATION HERE
+                            
+                            --inflicts energy loss
+                            local current_energy = ship:getEnergy()
+                            ship:setEnergy((current_energy - hullDamage) *10 ) --set the multiplier as it's total energy - damage
+                            
+                            --inflicts heat (between 0 and 1)
+                            local current_heat = ship:getSystemHeat(list_of_systems[count])
+                            ship:setSystemHeat(list_of_systems[count], (current_heat + hullDamage)/100) --set this as for now it's 1 damage = 1%
+                            
+                            --inflicts hack (between 0 and 1)
+                            local current_hack = ship:getSystemHackedLevel(list_of_systems[count])
+                            ship:setSystemHackedLevel(list_of_systems[count], (current_hack + hullDamage)/100) --set this as for now it's 1 damage = 1%
+
+                            --inflicts damage on system (overrides system harness set by ratio or minimal damage needed to hit) (between 0 and 1)
+                            local current_health = ship:getSystemHealth(list_of_systems[count])
+                            ship:setSystemHealth(list_of_systems[count], (current_health + hullDamage)/100) --set this as for now it's 1 damage = 1%
+
+                            -- END BALANCE MODIFICATION
+                            -- END BALANCE MODIFICATION
+                            -- END BALANCE MODIFICATION
+
+                        end --for
+                    elseif typeOfDamage ~= "emp" then
+                            print "Not emp damage"
+                    elseif hullDamage <= 0 then
+                            print "No damage went through shields"
+                    end --if damage and type
+                end --if instigator
+            end
+        )
+    end
+)
+
 --- Initialize scenario.
 function init()
     -- Spawn a player Atlantis.
     player = PlayerSpaceship():setFaction("Human Navy"):setTemplate("Atlantis")
-    player:onTakingDamage(function(self,instigator, type, freq, sys, shi, dam, hit)
-		string.format("")	--serious proton needs a global context
-		if instigator ~= nil then
-            print(string.format("Degats: type %s freq %i sys %s shi %f dam %f hit %i",type,freq,sys,shi,dam,hit))
-            
-		end
-	end)
 
     enemyList = {}
     friendlyList = {}

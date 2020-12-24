@@ -29,6 +29,7 @@ template:setTubes(4, 10.0)
 template:setCustomWeapon("Homing", "Homing_2", 1.5, 200.0, "Emp", -1)
 template:setCustomWeaponColor("Homing_2", 0, 255, 0)
 template:setCustomWeaponMultiple("Homing_2",2,3)
+
 template:onCustomWeaponDetonation("Homing_2", function(self, typeOfDetonation, hitObject)
 print(typeOfDetonation)
 if typeOfDetonation == "HitShip" then

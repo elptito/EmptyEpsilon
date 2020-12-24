@@ -97,6 +97,13 @@ SYS_JUMPDRIVE = "jumpdrive"
 SYS_FRONTSHIELD = "frontshield"
 --- `"rearshield"`
 SYS_REARSHIELD = "rearshield"
+--- `"docks"`
+SYS_DOCKS = "docks"
+--- `"drones"`
+SYS_DRONES = "drones"
+--- `"hangar"`
+SYS_HANGAR = "hangar"
+
 
 --- Array of the system names.
 --
@@ -119,7 +126,10 @@ SYSTEMS = {
   SYS_WARP,
   SYS_JUMPDRIVE,
   SYS_FRONTSHIELD,
-  SYS_REARSHIELD
+  SYS_REARSHIELD,
+  SYS_DOCKS,
+  SYS_DRONES,
+  SYS_HANGAR
 }
 
 --- Scanned states.
