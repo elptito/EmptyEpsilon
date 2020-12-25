@@ -30,25 +30,24 @@ template:setCustomWeapon("Homing", "Homing_2", 1.5, 200.0, "Emp", -1)
 template:setCustomWeaponColor("Homing_2", 0, 255, 0)
 template:setCustomWeaponMultiple("Homing_2",2,3)
 
-template:onCustomWeaponDetonation("Homing_2", function(self, typeOfDetonation, hitObject)
-print(typeOfDetonation)
-if typeOfDetonation == "HitShip" then
-    print(hitObject:getCallSign())
-end
-end)
+template:setCustomWeapon("Homing", "WormholeXTreme", 1.5, 200.0, "Emp", 5)
+template:setCustomWeaponColor("WormholeXTreme", 0, 255, 0)
 
-template:setCustomWeapon("Homing", "Homing_3", 1.5, 200.0, "Emp", -1)
-template:setCustomWeaponColor("Homing_3", 0, 255, 0)
-template:setCustomWeaponMultiple("Homing_3", 3,2)
-
+template:onCustomWeaponDetonation("WormholeXTreme", function(self, typeOfDetonation, hitObject)
+    print(typeOfDetonation)
+    if typeOfDetonation == "HitShip" or typeOfDetonation == "Expired" then
+        local posx, posy = self:getPosition()
+        Script():setVariable("posx", posx):setVariable("posy", posy):setVariable("runtime", 20):run("weapon_wormhole.lua")
+    end
+    end)
 
 template:setWeaponStorage("HVLI", 20)
 template:setWeaponStorage("Homing", 4)
 template:setCustomWeaponStorage("Homing_2", 4)
-template:setCustomWeaponStorage("Homing_3", 4)
+template:setCustomWeaponStorage("WormholeXTreme", 4)
 
-template:setWeaponTubeExclusiveForCustom(0,"Homing_3")
-template:weaponTubeDisallowCustomMissile(1,"Homing_3")
+template:setWeaponTubeExclusiveForCustom(0,"WormholeXTreme")
+template:weaponTubeDisallowCustomMissile(1,"WormholeXTreme")
 template:weaponTubeAllowCustomMissile(0,"Homing_2")
 
 template:setTubeDirection(0, -90)

@@ -96,9 +96,10 @@ REGISTER_SCRIPT_CLASS(ShipTemplate)
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setWeaponStorage);
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCustomWeaponStorage);
     ///Set a custom weapon based on a regular one.
-    ///5 mandatory Arguments : base name (Homing, HVLI etc.), new weapon name, damage multiplier, speed, type of damage
+    ///5 mandatory Arguments : base name (Homing, HVLI etc.), new weapon name, damage multiplier, speed, type of damage,lifetime
     /// Damage multiplier and speed are ratio from base missile (1 is the same as the base missile). It will not increase blast radius.
     /// Damage type is Kinetic, EMP, Energy
+    /// Lifetime is in seconds, or -1 for default value
     REGISTER_SCRIPT_CLASS_FUNCTION(ShipTemplate, setCustomWeapon);
     ///Sets for first parameter name
     ///2nd param the fire count (salvo) (number of shots fired successively) 
