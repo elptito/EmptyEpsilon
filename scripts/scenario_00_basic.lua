@@ -165,10 +165,26 @@ onNewShip(
     end
 )
 
+function popWarpJammer()
+    nb_warpjam = tonumber(player:getInfosValue(1))
+    
+    if(nb_warpjam and nb_warpjam > 0) then
+        local posx,posy = player:getPosition()
+        warpJammer = WarpJammer():setFaction(player:getFaction()):setRange(10000):setPosition(posx-500, posy)
+        player:addInfos(1,"Nb Warpjam", nb_warpjam - 1)
+        player:removeCustom(popWarpJammerButton)
+        player:addCustomButton("Relay",popWarpJammerButton,string.format("Deployer antiwarp (%i)", tonumber(player:getInfosValue(1))),popWarpJammer)
+    end
+    
+end
+
 --- Initialize scenario.
 function init()
     -- Spawn a player Atlantis.
     player = PlayerSpaceship():setFaction("Human Navy"):setTemplate("Atlantis")
+    player:addInfos(1,"Nb Warpjam", "4")
+    popWarpJammerButton = "popWarpjammerButton"
+    player:addCustomButton("Relay",popWarpJammerButton,string.format("Deployer antiwarp (%i)", tonumber(player:getInfosValue(1))),popWarpJammer)
 
     enemyList = {}
     friendlyList = {}
