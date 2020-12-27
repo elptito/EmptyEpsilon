@@ -6,7 +6,7 @@ The game is written in C++ with the [SeriousProton](https://github.com/daid/Seri
 
 Inquisitor LARP edition
 =======================
-This is a fork which intended purpose is to provide battle bridge simulation for a LARP.
+This is a fork which intended purpose is to provide battle bridge simulation for a specific LARP, but it still should be entirely customisable, as is the vanilla version.
 Main additional features are:
 - Fighter squadrons which can be launched from a carrier. This is not limited to fighters, every ship can be a carrier
 - Fully customizable weapons. You can launch torpedoes which have any effect you like in LUA scripting, you can have multiple missiles fired at once etc.
