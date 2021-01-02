@@ -55,8 +55,44 @@ static inline sf::Packet& operator >> (sf::Packet& packet, PVector<SpaceObject>&
     return packet;
 }
 
+namespace
+{
+    //This is some dirty way to know using onGMClick (or other callbacks)
+    //if we're called by server or client.
+    //Best way would be for the server NOT to send commands to itself in first place
+    //So it's a TODO rewrite
+    //This has to do with multiple GM consoles on client, working by sending commands to the
+    //real server
+    class CalledFromClient
+    {
+        static bool is_set;
+    public:
+        static bool isSet()
+        {
+            return is_set;
+        }
+        CalledFromClient()
+        {
+            is_set = false;
+        }
+        ~CalledFromClient()
+        {
+            is_set = false;
+        }   
+        void Set()
+        {
+            is_set = true;
+        }
+    };
+    bool CalledFromClient::is_set = false;
+
+}
+
 void GameMasterActions::onReceiveClientCommand(int32_t client_id, sf::Packet& packet)
 {
+    CalledFromClient raii;
+    if(client_id != 0)
+        raii.Set();    
     int16_t command;
     packet >> command;
     switch(command)
@@ -410,3 +446,35 @@ static int getGMSelection(lua_State* L)
 /// getGMSelection()
 /// Returns an list of objects that the GM currently has selected.
 REGISTER_SCRIPT_FUNCTION(getGMSelection);
+
+static int onGMClick(lua_State* L)
+{
+    if(CalledFromClient::isSet())
+    {
+        return 0;   //we cannot support this on client console, because it only sets 
+                    //a callback to a button on the server...
+    }       
+    ScriptSimpleCallback callback;
+
+    int idx = 1;
+    convert<ScriptSimpleCallback>::param(L,idx,callback);
+
+    if (callback.isSet())
+    {
+        gameGlobalInfo->on_gm_click=[callback](sf::Vector2f position) mutable
+        {
+            callback.call(position.x,position.y);
+        };
+    }
+    else
+    {
+        gameGlobalInfo->on_gm_click = nullptr;
+    }
+
+    return 0;
+}
+/// onGMClick(function)
+/// Register a callback function that is called when the gm clicks on the background of their screen.
+/// Example 1: onGMClick(function(x,y) print(x,y) end) -- print the x and y when clicked.
+/// Example 2: onGMClick(nil) -- resets to no function being called on clicks
+REGISTER_SCRIPT_FUNCTION(onGMClick);

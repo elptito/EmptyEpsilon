@@ -126,7 +126,6 @@ void WeaponTube::fire(float target_angle)
     }
     else
     {
-        std::cout << "cus " << std::endl;
         const MissileWeaponData& data = MissileWeaponData::getDataFor(type_loaded);
         int target_fire_count = data.fire_count;
         line_count = data.line_count;
