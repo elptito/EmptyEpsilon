@@ -4,6 +4,18 @@ Started as a cross-platform, open-source "clone" of [Artemis Spaceship Bridge Si
 
 The game is written in C++ with the [SeriousProton](https://github.com/daid/SeriousProton) engine and uses [SFML](http://www.sfml-dev.org/) for most of the heavy lifting.
 
+Inquisitor LARP edition
+=======================
+This is a fork which intended purpose is to provide battle bridge simulation for a specific LARP, but it still should be entirely customisable, as is the vanilla version.
+Main additional features are:
+- Fighter squadrons which can be launched from a carrier. This is not limited to fighters, every ship can be a carrier
+- Fully customizable weapons. You can launch torpedoes which have any effect you like in LUA scripting, you can have multiple missiles fired at once etc.
+- Other development from other LARP version (mainly tdelc version), multi GM console, easier hack, blips on radar if not identified etc.
+- Many tweaks which are customizable
+
+and other things
+
+
 Contributing
 ===========
 
