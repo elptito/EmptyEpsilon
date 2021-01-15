@@ -165,30 +165,41 @@ onNewShip(
     end
 )
 
-function popWarpJammer()
-    nb_warpjam = tonumber(player:getInfosValue(1))
-    
+function popWarpJammer(toto)
+    nb_warpjam = tonumber(toto:getInfosValue(1))
+    print "test"
     if(nb_warpjam and nb_warpjam > 0) then
-        local posx,posy = player:getPosition()
-        warpJammer = WarpJammer():setFaction(player:getFaction()):setRange(10000):setPosition(posx-500, posy)
-        player:addInfos(1,"Nb Warpjam", nb_warpjam - 1)
-        player:removeCustom(popWarpJammerButton)
-        player:addCustomButton("Relay",popWarpJammerButton,string.format("Deployer antiwarp (%i)", tonumber(player:getInfosValue(1))),popWarpJammer)
+        local posx,posy = toto:getPosition()
+        warpJammer = WarpJammer():setFaction(toto:getFaction()):setRange(10000):setPosition(posx-500, posy)
+        toto:addInfos(1,"Nb Warpjam", nb_warpjam - 1)
+        toto:removeCustom(popWarpJammerButton)
+        toto:addCustomButton("Relay",popWarpJammerButton,string.format("Deployer antiwarp (%i)", tonumber(toto:getInfosValue(1))),toto.popWarpJammer)
     end
     
 end
+
+onNewPlayerShip(
+	function(pc)
+		pc.popWarpJammer = function()
+			popWarpJammer(pc)
+		end
+		pc:addInfos(1,"Nb Warpjam", "4")
+		popWarpJammerButton = "popWarpjammerButton"
+		pc:addCustomButton("Relay",popWarpJammerButton,string.format("Deployer antiwarp (%i)", tonumber(pc:getInfosValue(1))),pc.popWarpJammer)
+	end
+
+)
+
 
 --- Initialize scenario.
 function init()
     -- Spawn a player Atlantis.
     player = PlayerSpaceship():setFaction("Human Navy"):setTemplate("Atlantis")
-    player:addInfos(1,"Nb Warpjam", "4")
-    popWarpJammerButton = "popWarpjammerButton"
-    player:addCustomButton("Relay",popWarpJammerButton,string.format("Deployer antiwarp (%i)", tonumber(player:getInfosValue(1))),popWarpJammer)
 
     enemyList = {}
     friendlyList = {}
     stationList = {}
+	list_info_value = {}
 
     -- Randomly distribute 3 allied stations throughout the region.
     local n
@@ -404,4 +415,15 @@ function update(delta)
             end
         end
     end
+	
+	for pidx=1,12 do
+	p = getPlayerShip(pidx)
+		if p ~= nil and p:isValid() then
+			if p:getInfosValue(1) ~= list_info_value[pidx] then
+				popWarpJammerButton = "popWarpjammerButton"
+				p:addCustomButton("Relay",popWarpJammerButton,string.format("Deployer antiwarp (%i)", tonumber(p:getInfosValue(1))),p.popWarpJammer)
+				list_info_value[pidx] = p:getInfosValue(1)
+			end
+		end
+	end
 end
