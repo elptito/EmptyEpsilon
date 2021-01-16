@@ -188,10 +188,10 @@ ShipTemplate::ShipTemplate()
         weapon_storage[n] = 0;
     radar_trace = "RadarArrow.png";
     impulse_sound_file = "sfx/engine.wav";
-    has_reactor = true;
+	has_reactor = true;
     has_oxygen_generator = false;
     for(int n=0; n<10; n++)
-    {
+	{
         oxygen_zones[n].label = "";
         oxygen_zones[n].oxygen_level = 0;
         oxygen_zones[n].oxygen_max = 0;
@@ -205,6 +205,7 @@ ShipTemplate::ShipTemplate()
     repair_dock_count = 0;
     stock_dock_count = 0;
     isShipCargo = false;
+	default_ai_name = "default";    
 }
 
 void ShipTemplate::setTubes(int amount, float load_time)
@@ -751,6 +752,4 @@ ShipTemplate::TemplateType ShipTemplate::getType()
     return type;
 }
 
-#ifndef _MSC_VER
 #include "shipTemplate.hpp"
-#endif /* _MSC_VER */

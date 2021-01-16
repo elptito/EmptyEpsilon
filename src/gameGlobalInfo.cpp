@@ -188,9 +188,14 @@ void GameGlobalInfo::addScript(P<Script> script)
 
 void GameGlobalInfo::reset()
 {
+    if (state_logger)
+        state_logger->destroy();
+
     gm_callback_functions.clear();
     gm_messages.clear();
     on_gm_click = nullptr;
+
+    flushDatabaseData();
 
     foreach(GameEntity, e, entityList)
         e->destroy();
@@ -219,7 +224,6 @@ void GameGlobalInfo::startScenario(string filename)
     i18n::load("locale/" + PreferencesManager::get("language", "en") + ".po");
     i18n::load("locale/" + filename.replace(".lua", "." + PreferencesManager::get("language", "en") + ".po"));
 
-    flushDatabaseData();
     fillDefaultDatabaseData();
 
     P<ScriptObject> scienceInfoScript = new ScriptObject("science_db.lua");
@@ -241,8 +245,6 @@ void GameGlobalInfo::destroy()
 {
     reset();
     MultiplayerObject::destroy();
-    if (state_logger)
-        state_logger->destroy();
 }
 
 void GameGlobalInfo::setMapLayer(int layerId, string textureName, sf::Vector2f coordinates, float scale, string title){
@@ -426,6 +428,7 @@ static int victory(lua_State* L)
 }
 /// victory(string)
 /// Called with a faction name as parameter, sets a certain faction as victor and ends the game.
+/// (The GM can unpause the game, but the scenario with its update function is destroyed.)
 REGISTER_SCRIPT_FUNCTION(victory);
 
 static int globalMessage(lua_State* L)

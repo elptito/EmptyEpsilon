@@ -66,7 +66,6 @@ void MineSweeper::reset()
     }
     error_count = 0;
     correct_count = 0;
-
 }
 
 float MineSweeper::getProgress()
@@ -140,7 +139,6 @@ void MineSweeper::onFieldClick(int x, int y)
         gameComplete();
     }
 }
-
 
 MineSweeper::FieldItem* MineSweeper::getFieldItem(int x, int y)
 {

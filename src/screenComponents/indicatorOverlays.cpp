@@ -20,7 +20,7 @@ GuiIndicatorOverlays::GuiIndicatorOverlays(GuiContainer* owner)
     shield_low_warning_overlay = new GuiOverlay(this, "SHIELD_LOW", sf::Color(255, 0, 0, 0));
     pause_overlay = new GuiOverlay(this, "PAUSE", sf::Color(0, 0, 0, 128));
     (new GuiPanel(pause_overlay, "PAUSE_BOX"))->setPosition(0, 0, ACenter)->setSize(500, 100);
-    (new GuiLabel(pause_overlay, "PAUSE_LABEL", tr("Power cut"), 70))->setPosition(0, 0, ACenter)->setSize(500, 100);
+    (new GuiLabel(pause_overlay, "PAUSE_LABEL", tr("Game Paused"), 70))->setPosition(0, 0, ACenter)->setSize(500, 100);
     if (game_server)
     {
         (new GuiButton(pause_overlay, "PAUSE_RESUME", tr("Unpause"), []() {

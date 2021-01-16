@@ -43,6 +43,12 @@ GuiObjectTweak::GuiObjectTweak(GuiContainer* owner, ETweakType tweak_type)
         list->addEntry(tr("tab", "Ship"), "");
     }
 
+    if (tweak_type == TW_Asteroid)
+    {
+        pages.push_back(new GuiAsteroidTweak(this));
+        list->addEntry(tr("tab","Asteroid"), "");
+    }
+
     if (tweak_type == TW_Jammer)
     {
         pages.push_back(new GuiJammerTweak(this));
@@ -138,6 +144,18 @@ GuiTweakShip::GuiTweakShip(GuiContainer* owner)
     });
     turn_speed_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
+    (new GuiLabel(left_col, "", tr("Jump Min Distance:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
+    jump_min_distance_slider= new GuiSlider(left_col, "", 0.0, 100000, 0.0, [this](float value) {
+        target->setJumpDriveRange(value,target->jump_drive_max_distance);
+    });
+    jump_min_distance_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
+    (new GuiLabel(left_col, "", tr("Jump Max Distance:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
+    jump_max_distance_slider= new GuiSlider(left_col, "", 0.0, 100000, 0.0, [this](float value) {
+        target->setJumpDriveRange(target->jump_drive_min_distance,value);
+    });
+    jump_max_distance_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
     (new GuiLabel(left_col, "", tr("Jump charge:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
     jump_charge_slider = new GuiSlider(left_col, "", 0.0, 100000, 0.0, [this](float value) {
         target->setJumpDriveCharge(value);
@@ -201,6 +219,8 @@ void GuiTweakShip::onDraw(sf::RenderTarget& window)
 {
     hull_slider->setValue(target->hull_strength);
     jump_charge_slider->setValue(target->getJumpDriveCharge());
+    jump_min_distance_slider->setValue(target->jump_drive_min_distance);
+    jump_max_distance_slider->setValue(target->jump_drive_max_distance);
     type_name->setText(target->getTypeName());
     reactor_toggle->setValue(target->has_reactor);
     oxygen_generator_toggle->setValue(target->has_oxygen_generator);
@@ -269,8 +289,8 @@ GuiJammerTweak::GuiJammerTweak(GuiContainer* owner)
     right_col->setPosition(-25, 25, ATopRight)->setSize(300, GuiElement::GuiSizeMax);
 
     (new GuiLabel(left_col, "", tr("Jammer Range:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
-    jammer_range_slider = new GuiSlider(left_col, "", 0, 20000, 0, [this](float value) {
-        target->setRange(value);
+    jammer_range_slider = new GuiSlider(left_col, "", 0, 50000, 0, [this](float value) {
+        target->setRange(round(value/100)*100);
     });
     jammer_range_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 }
@@ -284,6 +304,33 @@ void GuiJammerTweak::open(P<SpaceObject> target)
 void GuiJammerTweak::onDraw(sf::RenderTarget& window)
 {
     jammer_range_slider->setValue(target->getRange());
+}
+
+GuiAsteroidTweak::GuiAsteroidTweak(GuiContainer* owner)
+: GuiTweakPage(owner)
+{
+    GuiAutoLayout* left_col = new GuiAutoLayout(this, "LEFT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    left_col->setPosition(50, 25, ATopLeft)->setSize(300, GuiElement::GuiSizeMax);
+
+    GuiAutoLayout* right_col = new GuiAutoLayout(this, "RIGHT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    right_col->setPosition(-25, 25, ATopRight)->setSize(300, GuiElement::GuiSizeMax);
+
+    (new GuiLabel(left_col, "", tr("Asteroid Size:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
+    asteroid_size_slider = new GuiSlider(left_col, "", 10, 500, 0, [this](float value) {
+        target->setSize(value);
+    });
+    asteroid_size_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+}
+
+void GuiAsteroidTweak::open(P<SpaceObject> target)
+{
+    P<Asteroid> asteroid = target;
+    this->target = asteroid;
+}
+
+void GuiAsteroidTweak::onDraw(sf::RenderTarget& window)
+{
+    asteroid_size_slider->setValue(target->getSize());
 }
 
 void GuiShipTweakMissileWeapons::onDraw(sf::RenderTarget& window)
@@ -1073,6 +1120,18 @@ GuiShipTweakPlayer2::GuiShipTweakPlayer2(GuiContainer* owner)
     });
     engineering_presets_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
 
+    (new GuiLabel(left_col, "", tr("Max Scan Probes:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
+    max_scan_probes_slider = new GuiSlider(left_col, "", 0, 20, 0.0, [this](float value) {
+        target->setMaxScanProbeCount(value);
+    });
+    max_scan_probes_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
+    (new GuiLabel(left_col, "", tr("Scan Probes:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
+    scan_probes_slider = new GuiSlider(left_col, "", 0, 20, 0.0, [this](float value) {
+        target->setScanProbeCount(value);
+    });
+    scan_probes_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
     // Right column
     // Can scan bool
     can_scan = new GuiToggleButton(right_col, "", tr("button", "Can scan"), [this](bool value) {
@@ -1131,6 +1190,8 @@ void GuiShipTweakPlayer2::onDraw(sf::RenderTarget& window)
     long_range_radar_slider->setValue(target->getLongRangeRadarRange());
     far_range_radar_slider->setValue(target->getFarRangeRadarRange());
     engineering_presets_slider->setValue(target->active_engineer_presets_number);
+    max_scan_probes_slider->setValue(target->getMaxScanProbeCount());
+    scan_probes_slider->setValue(target->getScanProbeCount());
     can_scan->setValue(target->getCanScan());
     can_hack->setValue(target->getCanHack());
     can_dock->setValue(target->getCanDock());

@@ -32,8 +32,8 @@ GuiObjectCreationView::GuiObjectCreationView(GuiContainer* owner)
             player_ship_listbox->hide();
         }
     });
-    player_cpu_selector->addEntry("cpu ship","cpu ship");
-    player_cpu_selector->addEntry("player ship","player ship");
+    player_cpu_selector->addEntry("cpu ship",tr("create", "cpu ship"));
+    player_cpu_selector->addEntry("player ship",tr("create", "player ship"));
     player_cpu_selector->setSelectionIndex(0);
     player_cpu_selector->setPosition(20, 70, ATopLeft)->setSize(300, 50);
 
@@ -48,44 +48,44 @@ GuiObjectCreationView::GuiObjectCreationView(GuiContainer* owner)
         y += 30;
     }
 
-    (new GuiButton(box, "CREATE_ARTIFACT", tr("Artifact"), [this]() {
+    (new GuiButton(box, "CREATE_ARTIFACT", tr("create", "Artifact"), [this]() {
         setCreateScript("Artifact()");
     }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
     y += 30;
-    (new GuiButton(box, "CREATE_WARP_JAMMER", tr("Warp Jammer"), [this]() {
+    (new GuiButton(box, "CREATE_WARP_JAMMER", tr("create", "Warp Jammer"), [this]() {
         setCreateScript("WarpJammer():setRotation(random(0, 360)):setFactionId(" + string(faction_selector->getSelectionIndex()) + ")");
     }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
     y += 30;
-    (new GuiButton(box, "CREATE_MINE", tr("Mine"), [this]() {
+    (new GuiButton(box, "CREATE_MINE", tr("create", "Mine"), [this]() {
         setCreateScript("Mine():setFactionId(" + string(faction_selector->getSelectionIndex()) + ")");
     }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
     y += 30;
     // Default supply drop values copied from scripts/supply_drop.lua
-    (new GuiButton(box, "CREATE_SUPPLY_DROP", tr("Supply Drop"), [this]() {
+    (new GuiButton(box, "CREATE_SUPPLY_DROP", tr("create", "Supply Drop"), [this]() {
         setCreateScript("SupplyDrop():setFactionId(" + string(faction_selector->getSelectionIndex()) + "):setEnergy(500):setWeaponStorage('Nuke', 1):setWeaponStorage('Homing', 4):setWeaponStorage('Mine', 2):setWeaponStorage('EMP', 1)");
     }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
     y += 30;
-    (new GuiButton(box, "CREATE_ASTEROID", tr("Asteroid"), [this]() {
+    (new GuiButton(box, "CREATE_ASTEROID", tr("create", "Asteroid"), [this]() {
         setCreateScript("Asteroid()");
     }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
     y += 30;
-    (new GuiButton(box, "CREATE_VISUAL_ASTEROID", tr("Visual Asteroid"), [this]() {
+    (new GuiButton(box, "CREATE_VISUAL_ASTEROID", tr("create", "Visual Asteroid"), [this]() {
         setCreateScript("VisualAsteroid()");
     }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
     y += 30;
-    (new GuiButton(box, "CREATE_PLANET", tr("Planet"), [this]() {
+    (new GuiButton(box, "CREATE_PLANET", tr("create", "Planet"), [this]() {
         setCreateScript("Planet()");
     }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
     y += 30;
-    (new GuiButton(box, "CREATE_BLACKHOLE", tr("BlackHole"), [this]() {
+    (new GuiButton(box, "CREATE_BLACKHOLE", tr("create", "BlackHole"), [this]() {
         setCreateScript("BlackHole()");
     }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
     y += 30;
-    (new GuiButton(box, "CREATE_NEBULA", tr("Nebula"), [this]() {
+    (new GuiButton(box, "CREATE_NEBULA", tr("create", "Nebula"), [this]() {
         setCreateScript("Nebula()");
     }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
     y += 30;
-    (new GuiButton(box, "CREATE_WORMHOLE", tr("Worm Hole"), [this]() {
+    (new GuiButton(box, "CREATE_WORMHOLE", tr("create", "Worm Hole"), [this]() {
         setCreateScript("WormHole()");
     }))->setTextSize(20)->setPosition(-350, y, ATopRight)->setSize(300, 30);
     y += 30;

@@ -30,31 +30,31 @@ void GuiPowerDamageIndicator::onDraw(sf::RenderTarget& window)
     if (health <= 0.0)
     {
         color = colorConfig.overlay_damaged;
-        display_text = tr("PowerDamageIndicator","DAMAGED");
+        display_text = tr("systems", "DAMAGED");
     }else if ((system == SYS_Warp || system == SYS_JumpDrive) && WarpJammer::isWarpJammed(my_spaceship->getPosition()))
     {
         color = colorConfig.overlay_jammed;
-        display_text = tr("PowerDamageIndicator","JAMMED");
+        display_text = tr("systems", "JAMMED");
     }else if (power == 0.0)
     {
         color = colorConfig.overlay_no_power;
-        display_text = tr("PowerDamageIndicator","NO POWER");
+        display_text = tr("systems", "NO POWER");
     }else if (my_spaceship->energy_level < 10)
     {
         color = colorConfig.overlay_low_energy;
-        display_text = tr("PowerDamageIndicator","LOW ENERGY");
+        display_text = tr("systems", "LOW ENERGY");
     }else if (power < 0.3)
     {
         color = colorConfig.overlay_low_power;
-        display_text = tr("PowerDamageIndicator","LOW POWER");
+        display_text = tr("systems", "LOW POWER");
     }else if (heat > 0.90)
     {
         color = colorConfig.overlay_overheating;
-        display_text = tr("PowerDamageIndicator","OVERHEATING");
+        display_text = tr("systems", "OVERHEATING");
     }else if (hacked_level > 0.1)
     {
         color = colorConfig.overlay_hacked;
-        display_text = tr("PowerDamageIndicator","HACKED");
+        display_text = tr("systems", "HACKED");
     }else if ((system == SYS_Warp && my_spaceship->current_warp > 0) || (system == SYS_JumpDrive && my_spaceship->jump_delay > 0) || (system == SYS_FrontShield && my_spaceship->shields_active) || (system == SYS_RearShield && my_spaceship->shields_active))
     {
         color = sf::Color::White;

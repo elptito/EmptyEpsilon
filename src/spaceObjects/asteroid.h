@@ -20,8 +20,9 @@ public:
     virtual void collide(Collisionable* target, float force) override;
 
     void setSize(float size);
+    float getSize();
 
-    virtual string getExportLine() override { return "Asteroid():setPosition(" + string(getPosition().x, 0) + ", " + string(getPosition().y, 0) + ")"; }
+    virtual string getExportLine() override { return "Asteroid():setPosition(" + string(getPosition().x, 0) + ", " + string(getPosition().y, 0) + ")" + ":setSize(" + string(getSize(),0) + ")"; }
 };
 
 class VisualAsteroid : public SpaceObject
@@ -37,10 +38,11 @@ public:
     virtual void draw3D() override;
 
     void setSize(float size);
+    float getSize();
     virtual bool canBeTargetedBy(P<SpaceObject> other) { return false; };
     virtual bool canBeSelectedBy(P<SpaceObject> other) { return false; };
 
-    virtual string getExportLine() override { return "VisualAsteroid():setPosition(" + string(getPosition().x, 0) + ", " + string(getPosition().y, 0) + ")"; }
+    virtual string getExportLine() override { return "VisualAsteroid():setPosition(" + string(getPosition().x, 0) + ", " + string(getPosition().y, 0) + ")" ":setSize(" + string(getSize(),0) + ")"; }
 };
 
 #endif//ASTEROID_H

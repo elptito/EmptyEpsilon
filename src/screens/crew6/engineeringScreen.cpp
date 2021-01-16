@@ -379,13 +379,13 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
             }
         }
 
-        energy_display->setValue(string(int(my_spaceship->energy_level)) + " (" + tr("{energy}/min").format({{"energy", string(int(average_energy_delta * 60.0f))}}) + ")");
+        energy_display->setValue(toNearbyIntString(my_spaceship->energy_level) + " (" + tr("{energy}/min").format({{"energy", toNearbyIntString(average_energy_delta * 60.0f)}}) + ")");
         if (my_spaceship->energy_level < 100)
             energy_display->setColor(sf::Color::Red);
         else
             energy_display->setColor(sf::Color::White);
         energy_bar->setValue(my_spaceship->energy_level / my_spaceship->max_energy_level);
-        hull_display->setValue(string(int(100 * my_spaceship->hull_strength / my_spaceship->hull_max)) + "%");
+        hull_display->setValue(toNearbyIntString(100 * my_spaceship->hull_strength / my_spaceship->hull_max) + "%");
         if (my_spaceship->hull_strength < my_spaceship->hull_max / 4.0f)
             hull_display->setColor(sf::Color::Red);
         else
@@ -397,7 +397,7 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
             shields += "/" + string(my_spaceship->getShieldPercentage(1)) + "%";
         shield_display->setValue(shields);
         shield_bar->setValue((my_spaceship->getShieldPercentage(0) / 100.0 + my_spaceship->getShieldPercentage(1) / 100.0) / 2.0);
-        coolant_display->setValue(string(int(my_spaceship->max_coolant * 10)) + "%");
+		coolant_display->setValue(toNearbyIntString(my_spaceship->max_coolant * 10) + "%");
         if (gameGlobalInfo->use_nano_repair_crew)
         {
             coolant_display->setValue(string(int(my_spaceship->max_coolant)));
@@ -417,7 +417,7 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
         oxygen_display->setValue(string(oxygen_level / oxygen_max * 100,1) + "%");
         oxygen_bar->setVisible(oxygen_max > 0);
         oxygen_bar->setValue(oxygen_level / oxygen_max);
-        
+
         for(int n=0; n<SYS_COUNT; n++)
         {
             SystemRow info = system_rows[n];
@@ -428,10 +428,10 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
                 info.damage_bar->setValue(-health)->setColor(sf::Color(128, 32, 32, 192));
             else
                 info.damage_bar->setValue(health)->setColor(sf::Color(64, 128 * health, 64 * health, 192));
-            info.damage_label->setText(string(int(health * 100)) + "%");
-            info.heat_label->setText(string(int(my_spaceship->systems[n].heat_level * 100)) + "%");
+            info.damage_label->setText(toNearbyIntString(health * 100) + "%");
+            info.heat_label->setText(toNearbyIntString(my_spaceship->systems[n].heat_level * 100) + "%");
             info.heat_label->setVisible(my_spaceship->systems[n].heat_level > 0.0);
-            info.power_label->setText(string(int(my_spaceship->systems[n].power_level * 100)) + "%");
+            info.power_label->setText(toNearbyIntString(my_spaceship->systems[n].power_level * 100) + "%");
             info.coolant_label->setText(string(my_spaceship->systems[n].coolant_level, 1));
             info.coolant_label->setVisible(my_spaceship->systems[n].coolant_level > 0.0);
             if (gameGlobalInfo->use_nano_repair_crew and gameGlobalInfo->use_system_damage)
@@ -472,9 +472,9 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
         if (selected_system != SYS_None)
         {
             ShipSystem& system = my_spaceship->systems[selected_system];
-            power_label->setText(tr("Power: {power_level}%/{power_request}%").format({{"power_level", string(int(system.power_request * 100))},{"power_request", string(int(system.power_request * 100))}}));
+            power_label->setText(tr("Power: {power_level}%/{power_request}%").format({{"power_level", toNearbyIntString(system.power_request * 100)},{"power_request", toNearbyIntString(system.power_request * 100)}}));
             power_slider->setValue(system.power_request);
-            coolant_label->setText(tr("Coolant: {coolant_level}%/{coolant_request}%").format({{"coolant_level", string(int(system.coolant_level / my_spaceship->max_coolant_per_system * 100))},{"coolant_request", string(int(std::min(system.coolant_request, my_spaceship->max_coolant) / my_spaceship->max_coolant_per_system * 100))}}));
+            coolant_label->setText(tr("Coolant: {coolant_level}%/{coolant_request}%").format({{"coolant_level", toNearbyIntString(system.coolant_level / my_spaceship->max_coolant_per_system * 100)},{"coolant_request", toNearbyIntString(std::min(system.coolant_request, my_spaceship->max_coolant) / my_spaceship->max_coolant_per_system * 100)}}));
             coolant_slider->setEnable(!my_spaceship->auto_coolant_enabled);
             coolant_slider->setRange(0.0, my_spaceship->max_coolant_per_system);
             coolant_slider->setValue(std::min(system.coolant_request, my_spaceship->max_coolant));
@@ -482,7 +482,7 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
             if (gameGlobalInfo->use_nano_repair_crew)
             {
                 coolant_label->setText(tr("Coolant: {coolant_level} / {coolant_max}\t\t (Target: {coolant_request})").format({{"coolant_level", string(system.coolant_level, 1)},{"coolant_max", string(my_spaceship->max_coolant_per_system, 1)},{"coolant_request", string(system.coolant_request, 1)}}));
-                power_label->setText(tr("Power: {power_level}% \t\t (Target: {power_request}%)").format({{"power_level", string(int(system.power_level * 100))},{"power_request", string(int(system.power_request * 100))}}));
+                power_label->setText(tr("Power: {power_level}% \t\t (Target: {power_request}%)").format({{"power_level", toNearbyIntString(system.power_level * 100)},{"power_request", toNearbyIntString(system.power_request * 100)}}));
                 if (gameGlobalInfo->use_system_damage)
                 {
                     repair_label->setText(tr("Repair: {repair_level} / {repair_max}\t\t (Target: {repair_request})").format({{"repair_level", string(system.repair_level, 1)},{"repair_max", string(my_spaceship->max_repair_per_system, 1)},{"repair_request", string(system.repair_request, 1)}}));
@@ -737,4 +737,9 @@ void EngineeringScreen::selectSystem(ESystem system)
         if (gameGlobalInfo->use_nano_repair_crew and gameGlobalInfo->use_system_damage)
             repair_slider->setValue(my_spaceship->systems[system].repair_request);
     }
+}
+
+string EngineeringScreen::toNearbyIntString(float value)
+{
+    return string(int(nearbyint(value)));
 }

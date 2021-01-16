@@ -44,6 +44,7 @@ private:
     GuiObjectTweak* object_tweak_dialog;
     GuiObjectTweak* station_tweak_dialog;
     GuiObjectTweak* jammer_tweak_dialog;
+    GuiObjectTweak* asteroid_tweak_dialog;
     GuiFactions* factions_dialog;
 
     GuiAutoLayout* info_layout;

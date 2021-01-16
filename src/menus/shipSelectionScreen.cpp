@@ -39,18 +39,17 @@ ShipSelectionScreen::ShipSelectionScreen()
 
     // List the station types and stations in the right column.
     GuiAutoLayout* stations_layout = new GuiAutoLayout(right_container, "CREW_POSITION_BUTTON_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
-    stations_layout->setPosition(0, 50, ATopCenter)->setSize(400, 800);
-    stations_label = new GuiLabel(stations_layout, "CREW_POSITION_SELECT_LABEL", tr("menu", "Select your station"), 30);
-    stations_label->addBackground()->setSize(GuiElement::GuiSizeMax, 50);
+    stations_layout->setPosition(0, 50, ATopCenter)->setSize(400, 600);
+    (new GuiLabel(stations_layout, "CREW_POSITION_SELECT_LABEL", tr("Select your station"), 30))->addBackground()->setSize(GuiElement::GuiSizeMax, 50);
 
     // Crew type selector
     crew_type_selector = new GuiSelector(stations_layout, "CREW_TYPE_SELECTION", [this](int index, string value) {
         updateCrewTypeOptions();
     });
-    crew_type_selector->setOptions({tr("menu", "6/5 player crew"), tr("menu", "4/3 player crew"), tr("menu", "extra controls"), tr("menu", "extra screens"), tr("menu", "Alternative options")})->setSize(GuiElement::GuiSizeMax, 50);
+    crew_type_selector->setOptions({tr("6/5 player crew"), tr("4/3 player crew"), tr("extra controls"), tr("extra screens"), tr("Alternative options")})->setSize(GuiElement::GuiSizeMax, 50);
 
     // Main screen button
-    main_screen_button = new GuiToggleButton(stations_layout, "MAIN_SCREEN_BUTTON", tr("station", "Main screen"), [this](bool value) {
+    main_screen_button = new GuiToggleButton(stations_layout, "MAIN_SCREEN_BUTTON", tr("Main screen"), [this](bool value) {
         my_player_info->commandSetMainScreen(value);
     });
     main_screen_button->setSize(GuiElement::GuiSizeMax, 50);
@@ -66,13 +65,13 @@ ShipSelectionScreen::ShipSelectionScreen()
     }
 
     // Main screen controls button
-    main_screen_controls_button = new GuiToggleButton(stations_layout, "MAIN_SCREEN_CONTROLS_ENABLE", tr("station", "Main screen controls"), [](bool value) {
+    main_screen_controls_button = new GuiToggleButton(stations_layout, "MAIN_SCREEN_CONTROLS_ENABLE", tr("Main screen controls"), [](bool value) {
         my_player_info->commandSetMainScreenControl(value);
     });
     main_screen_controls_button->setValue(my_player_info->main_screen_control)->setSize(GuiElement::GuiSizeMax, 50);
 
     // Game master button
-    game_master_button = new GuiToggleButton(stations_layout, "GAME_MASTER_BUTTON", tr("station", "Game master"), [this](bool value) {
+    game_master_button = new GuiToggleButton(stations_layout, "GAME_MASTER_BUTTON", tr("Game master"), [this](bool value) {
         window_button->setValue(false);
         topdown_button->setValue(false);
         cinematic_view_button->setValue(false);
@@ -93,7 +92,7 @@ ShipSelectionScreen::ShipSelectionScreen()
     // Ship window button and angle slider
     window_button_row = new GuiAutoLayout(stations_layout, "", GuiAutoLayout::LayoutHorizontalLeftToRight);
     window_button_row->setSize(GuiElement::GuiSizeMax, 50);
-    window_button = new GuiToggleButton(window_button_row, "WINDOW_BUTTON", tr("station", "Ship window"), [this](bool value) {
+    window_button = new GuiToggleButton(window_button_row, "WINDOW_BUTTON", tr("Ship window"), [this](bool value) {
         game_master_button->setValue(false);
         topdown_button->setValue(false);
         cinematic_view_button->setValue(false);
@@ -102,14 +101,14 @@ ShipSelectionScreen::ShipSelectionScreen()
     window_button->setSize(175, 50);
 
     window_angle = new GuiSlider(window_button_row, "WINDOW_ANGLE", 0.0, 359.0, 0.0, [this](float value) {
-        window_angle_label->setText(tr("{angle} degrees").format({{"angle", string(int(window_angle->getValue()))}}));
+        window_angle_label->setText(tr("shipwindow", "{angle} degrees").format({{"angle", string(int(window_angle->getValue()))}}));
     });
     window_angle->setSize(GuiElement::GuiSizeMax, 50);
-    window_angle_label = new GuiLabel(window_angle, "WINDOW_ANGLE_LABEL", tr("station", "0 degrees"), 30);
+    window_angle_label = new GuiLabel(window_angle, "WINDOW_ANGLE_LABEL", tr("shipwindow", "0 degrees"), 30);
     window_angle_label->setSize(GuiElement::GuiSizeMax, GuiElement::GuiSizeMax);
 
     // Top-down view button
-    topdown_button = new GuiToggleButton(stations_layout, "TOP_DOWN_3D_BUTTON", tr("station", "Top-down 3D view"), [this](bool value) {
+    topdown_button = new GuiToggleButton(stations_layout, "TOP_DOWN_3D_BUTTON", tr("Top-down 3D view"), [this](bool value) {
         game_master_button->setValue(false);
         window_button->setValue(false);
         cinematic_view_button->setValue(false);
@@ -118,7 +117,7 @@ ShipSelectionScreen::ShipSelectionScreen()
     topdown_button->setSize(GuiElement::GuiSizeMax, 50);
 
     // Cinematic view button
-    cinematic_view_button = new GuiToggleButton(stations_layout, "CINEMATIC_VIEW_BUTTON", tr("station", "Cinematic view"), [this](bool value) {
+    cinematic_view_button = new GuiToggleButton(stations_layout, "CINEMATIC_VIEW_BUTTON", tr("Cinematic view"), [this](bool value) {
         game_master_button->setValue(false);
         window_button->setValue(false);
         topdown_button->setValue(false);
@@ -127,7 +126,7 @@ ShipSelectionScreen::ShipSelectionScreen()
     cinematic_view_button->setSize(GuiElement::GuiSizeMax, 50);
 
     // Spectator view button
-    spectator_button = new GuiToggleButton(stations_layout, "SPECTATOR_BUTTON", tr("station", "Spectate (view all)"), [this](bool value) {
+    spectator_button = new GuiToggleButton(stations_layout, "SPECTATOR_BUTTON", tr("Spectate (view all)"), [this](bool value) {
         game_master_button->setValue(false);
         window_button->setValue(false);
         topdown_button->setValue(false);
@@ -135,7 +134,7 @@ ShipSelectionScreen::ShipSelectionScreen()
 
         if (gameGlobalInfo->gm_control_code.length() > 0 && !game_server)
         {
-            LOG(INFO) << tr("Player selected Spectate mode, which has a control code.");
+            LOG(INFO) << "Player selected Spectate mode, which has a control code.";
             password_label->setText(tr("Enter the GM control code:"));
             left_container->hide();
             right_container->hide();
@@ -152,8 +151,8 @@ ShipSelectionScreen::ShipSelectionScreen()
 
     // Player ship selection panel
     (new GuiPanel(left_container, "SHIP_SELECTION_BOX"))->setPosition(0, 50, ATopCenter)->setSize(550, 560);
-    (new GuiLabel(left_container, "SHIP_SELECTION_LABEL", tr("station", "Select ship"), 30))->addBackground()->setPosition(0, 50, ATopCenter)->setSize(510, 50);
-    no_ships_label = new GuiLabel(left_container, "SHIP_SELECTION_NO_SHIPS_LABEL", tr("menu", "Waiting for server to spawn a ship"), 30);
+    (new GuiLabel(left_container, "SHIP_SELECTION_LABEL", tr("Select ship"), 30))->addBackground()->setPosition(0, 50, ATopCenter)->setSize(510, 50);
+    no_ships_label = new GuiLabel(left_container, "SHIP_SELECTION_NO_SHIPS_LABEL", tr("Waiting for server to spawn a ship"), 30);
     no_ships_label->setPosition(0, 100, ATopCenter)->setSize(460, 50);
 
     // Player ship list
@@ -205,7 +204,7 @@ ShipSelectionScreen::ShipSelectionScreen()
 
             // Spawn a ship of the selected template near 0,0 and give it a random
             // heading.
-            (new GuiButton(left_container, "CREATE_SHIP_BUTTON", tr("button", "Spawn player ship"), [this, ship_template_selector]() {
+            (new GuiButton(left_container, "CREATE_SHIP_BUTTON", tr("Spawn player ship"), [this, ship_template_selector]() {
                 if (!gameGlobalInfo->allow_new_player_ships)
                     return;
                 P<PlayerSpaceship> ship = new PlayerSpaceship();
@@ -224,14 +223,14 @@ ShipSelectionScreen::ShipSelectionScreen()
 
         // If this is the server, the "back" button goes to the scenario
         // selection/server creation screen.
-        (new GuiButton(left_container, "DISCONNECT", tr("button", "Scenario selection"), [this]() {
+        (new GuiButton(left_container, "DISCONNECT", tr("Scenario selection"), [this]() {
             destroy();
             new ServerCreationScreen();
         }))->setPosition(0, -50, ABottomCenter)->setSize(300, 50);
     }else{
         // If this is a client, the "back" button disconnects from the server
         // and returns to the main menu.
-        (new GuiButton(left_container, "DISCONNECT", tr("button", "Disconnect"), [this]() {
+        (new GuiButton(left_container, "DISCONNECT", tr("Disconnect"), [this]() {
             destroy();
             disconnectFromServer();
             returnToMainMenu();
@@ -239,7 +238,7 @@ ShipSelectionScreen::ShipSelectionScreen()
     }
 
     // The "Ready" button.
-    ready_button = new GuiButton(right_container, "READY_BUTTON", tr("button", "Ready"), [this]() {
+    ready_button = new GuiButton(right_container, "READY_BUTTON", tr("Ready"), [this]() {
         this->onReadyClick();
     });
     ready_button->setPosition(0, -50, ABottomCenter)->setSize(300, 50);
@@ -257,7 +256,7 @@ ShipSelectionScreen::ShipSelectionScreen()
     password_label->setPosition(0, 40, ATopCenter);
     password_entry = new GuiTextEntry(password_entry_box, "PASSWORD_ENTRY", "");
     password_entry->setPosition(20, 0, ACenterLeft)->setSize(400, 50);
-    password_cancel = new GuiButton(password_entry_box, "PASSWORD_CANCEL_BUTTON", tr("button", "Cancel"), [this]() {
+    password_cancel = new GuiButton(password_entry_box, "PASSWORD_CANCEL_BUTTON", tr("Cancel"), [this]() {
         // Reset the dialog.
         password_label->setText(tr("Enter this ship's control code:"));
         password_entry->setText("");
@@ -276,7 +275,7 @@ ShipSelectionScreen::ShipSelectionScreen()
     password_cancel->setPosition(0, -20, ABottomCenter)->setSize(300, 50);
 
     // Control code entry button.
-    password_entry_ok = new GuiButton(password_entry_box, "PASSWORD_ENTRY_OK", tr("button", "Ok"), [this]()
+    password_entry_ok = new GuiButton(password_entry_box, "PASSWORD_ENTRY_OK", tr("Ok"), [this]()
     {
         P<PlayerSpaceship> ship = gameGlobalInfo->getPlayerShip(player_ship_list->getEntryValue(player_ship_list->getSelectionIndex()).toInt());
 
@@ -313,7 +312,7 @@ ShipSelectionScreen::ShipSelectionScreen()
                 LOG(INFO) << "Password doesn't match control code. Attempt: " << password;
                 my_player_info->commandSetShipId(-1);
                 // Notify the player.
-                password_label->setText(tr("Incorrect control code. Re-enter code for {ship_callsign}:").format({{"ship_callsign", ship->getCallSign()}}));
+                password_label->setText(tr("Incorrect control code. Re-enter code for {callsign}:").format({{"callsign", ship->getCallSign()}}));
                 // Reset the dialog.
                 password_entry->setText("");
             } else {
@@ -322,7 +321,7 @@ ShipSelectionScreen::ShipSelectionScreen()
                 // Set the player ship.
                 my_player_info->commandSetShipId(ship->getMultiplayerId());
                 // Notify the player.
-                password_label->setText(tr("Control code accepted.\nGranting access to {ship_callsign}.").format({{"ship_callsign", ship->getCallSign()}}));
+                password_label->setText(tr("Control code accepted.\nGranting access to {callsign}.").format({{"callsign", ship->getCallSign()}}));
                 // Reset and hide the password field.
                 password_entry->setText("");
                 password_entry->hide();
@@ -336,7 +335,7 @@ ShipSelectionScreen::ShipSelectionScreen()
     password_entry_ok->setPosition(420, 0, ACenterLeft)->setSize(160, 50);
 
     // Control code confirmation button
-    password_confirmation = new GuiButton(password_entry_box, "PASSWORD_CONFIRMATION_BUTTON", tr("button", "OK"), [this]() {
+    password_confirmation = new GuiButton(password_entry_box, "PASSWORD_CONFIRMATION_BUTTON", tr("OK"), [this]() {
         // Reset the dialog.
         password_entry->show();
         password_cancel->show();

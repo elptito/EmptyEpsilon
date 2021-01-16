@@ -7,7 +7,7 @@ These are:
 * Drones: Smallest ships in the game. docked inside other ships.
 * Starfighters: Small ships. fast and simple.
 * Frigates: Medium sized ships. Operate on a small crew.
-* Covette: Large, slower, less maneuverable ships.
+* Corvette: Large, slower, less maneuverable ships.
 * Dreadnaught: Huge things. Everything in here is really really big, and generally really really deadly.
 
 Player ships are in general large frigates to small corvette class

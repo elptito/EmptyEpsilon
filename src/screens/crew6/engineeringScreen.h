@@ -71,6 +71,8 @@ private:
     float previous_energy_level;
     float average_energy_delta;
     void selectSystem(ESystem system);
+
+    string toNearbyIntString(float value);
 public:
     EngineeringScreen(GuiContainer* owner, ECrewPosition crew_position=engineering);
 

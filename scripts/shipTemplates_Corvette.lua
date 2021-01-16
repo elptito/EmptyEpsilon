@@ -86,7 +86,7 @@ variation:addDoor(6, 3, false);
 variation:addDoor(6, 4, false);
 variation:addDoor(8, 3, false);
 variation:addDoor(8, 4, false);
- 
+
 --Airlock doors
 --variation:addDoor(2, 2, false);
 --variation:addDoor(2, 5, false);
@@ -250,7 +250,7 @@ for cnt=1,5 do
     template:setSpeed(60 - 5 * cnt, 6, 10)
     template:setRadarTrace("radar_transport.png")
     template:setDefaultAI("evasion")
-    
+
     if cnt > 2 then
         variation = template:copy("Personnel Jump Freighter " .. cnt):setLocaleName(string.format(_("Personnel Jump Freighter %d"), cnt))
         variation:setJumpDrive(true)
@@ -263,12 +263,12 @@ for cnt=1,5 do
     template:setSpeed(60 - 5 * cnt, 6, 10)
     template:setRadarTrace("radar_transport.png")
     template:setDefaultAI("evasion")
-    
+
     if cnt > 2 then
         variation = template:copy("Goods Jump Freighter " .. cnt):setLocaleName(string.format(_("Goods Jump Freighter %d"), cnt))
         variation:setJumpDrive(true)
     end
-    
+
     template = ShipTemplate():setName("Garbage Freighter " .. cnt):setLocaleName(string.format(_("Garbage Freighter %d"), cnt)):setClass(_("Corvette"), _("Freighter")):setModel("transport_3_" .. cnt)
     template:setDescription(_([[These freighters are specially designed to haul garbage and waste. They are fitted with a trash compactor and fewer stabilzation systems than cargo freighters.]]))
     template:setHull(100)
@@ -276,7 +276,7 @@ for cnt=1,5 do
     template:setSpeed(60 - 5 * cnt, 6, 10)
     template:setRadarTrace("radar_transport.png")
     template:setDefaultAI("evasion")
-    
+
     if cnt > 2 then
         variation = template:copy("Garbage Jump Freighter " .. cnt):setLocaleName(string.format(_("Garbage Jump Freighter %d"), cnt))
         variation:setJumpDrive(true)
@@ -289,7 +289,7 @@ for cnt=1,5 do
     template:setSpeed(60 - 5 * cnt, 6, 10)
     template:setRadarTrace("radar_transport.png")
     template:setDefaultAI("evasion")
-    
+
     if cnt > 2 then
         variation = template:copy("Equipment Jump Freighter " .. cnt):setLocaleName(string.format(_("Equipment Jump Freighter %d"), cnt))
         variation:setJumpDrive(true)
@@ -302,7 +302,7 @@ for cnt=1,5 do
     template:setSpeed(60 - 5 * cnt, 6, 10)
     template:setRadarTrace("radar_transport.png")
     template:setDefaultAI("evasion")
-    
+
     if cnt > 2 then
         variation = template:copy("Fuel Jump Freighter " .. cnt):setLocaleName(string.format(_("Fuel Jump Freighter %d"), cnt))
         variation:setJumpDrive(true)
@@ -334,7 +334,7 @@ variation:setBeam(1, 10, 180, 1500.0, 6.0, 4)
 variation:setBeamWeaponTurret( 0, 90,   0, 6)
 variation:setBeamWeaponTurret( 1, 90, 180, 6)
 variation:setCombatManeuver(400, 250)
-variation:setJumpDriveRange(5000, 90000) 
+variation:setJumpDriveRange(5000, 90000)
 
 variation:setRepairCrewCount(6)
 variation:addRoomSystem(3,0,2,3, "Reactor")

@@ -345,7 +345,7 @@ public:
     bool isFullyScannedByFaction(int faction_id);
 
     virtual bool canBeHackedBy(P<SpaceObject> other) override;
-    virtual std::vector<std::pair<string, float> > getHackingTargets() override;
+    virtual std::vector<std::pair<ESystem, float> > getHackingTargets() override;
     virtual void hackFinished(P<SpaceObject> source, string target, float value) override;
 
     /*!
@@ -552,7 +552,6 @@ public:
     void weaponTubeDisallowMissle(int index, EMissileWeapons type);
     void setWeaponTubeExclusiveFor(int index, EMissileWeapons type);
     void setWeaponTubeDirection(int index, float direction);
-    void setWeaponTubeSize(int index, EMissileSizes size);
     void setTubeSize(int index, EMissileSizes size);
     EMissileSizes getTubeSize(int index);
     void setWeaponTubeStation(int index, int station);
@@ -588,10 +587,5 @@ REGISTER_MULTIPLAYER_ENUM(EDamageType);
 
 
 string frequencyToString(int frequency);
-
-#ifdef _MSC_VER
-// MFC: GCC does proper external template instantiation, VC++ doesn't.
-#include "spaceship.hpp"
-#endif
 
 #endif//SPACESHIP_H

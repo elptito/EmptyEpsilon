@@ -460,5 +460,4 @@ static const sf::Color routeColors[PlayerSpaceship::max_routes] = {
 #ifdef _MSC_VER
 #include "playerSpaceship.hpp"
 #endif /* _MSC_VER */
-
 #endif//PLAYER_SPACESHIP_H
