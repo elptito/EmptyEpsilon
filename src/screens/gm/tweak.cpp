@@ -1844,23 +1844,40 @@ GuiShipTweakInfos::GuiShipTweakInfos(GuiContainer* owner)
     GuiAutoLayout* right_col = new GuiAutoLayout(this, "RIGHT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
     right_col->setPosition(-25, 25, ATopRight)->setSize(200, GuiElement::GuiSizeMax);
 
-    (new GuiLabel(left_col, "", "Label", 30))->setSize(GuiElement::GuiSizeMax, 50);
-    (new GuiLabel(right_col, "", "Valeur", 30))->setSize(GuiElement::GuiSizeMax, 50);
+    (new GuiLabel(left_col, "", "Label", 30))->setSize(GuiElement::GuiSizeMax, 45);
+    (new GuiLabel(right_col, "", "Valeur", 30))->setSize(GuiElement::GuiSizeMax, 45);
 
     for(int n = 0; n < 10; n++)
     {
         infos_label[n] = new GuiTextEntry(left_col, "", "");
-        infos_label[n]->setSize(GuiElement::GuiSizeMax, 50);
+        infos_label[n]->setSize(GuiElement::GuiSizeMax, 45);
         infos_label[n]->callback([this, n](string text) {
             target->infos_label[n] = text;
         });
 
         infos_value[n] = new GuiTextEntry(right_col, "", "");
-        infos_value[n]->setSize(GuiElement::GuiSizeMax, 50);
+        infos_value[n]->setSize(GuiElement::GuiSizeMax, 45);
         infos_value[n]->callback([this, n](string text) {
             target->infos_value[n] = text;
         });
     }
+    (new GuiLabel(left_col, "", "Labels prives", 30))->setSize(GuiElement::GuiSizeMax, 45);
+    (new GuiLabel(right_col, "", "Valeurs privees", 30))->setSize(GuiElement::GuiSizeMax, 45);
+    for(int n = 10; n < 15; n++)
+    {
+        infos_label[n] = new GuiTextEntry(left_col, "", "");
+        infos_label[n]->setSize(GuiElement::GuiSizeMax, 45);
+        infos_label[n]->callback([this, n](string text) {
+            target->infos_label[n] = text;
+        });
+
+        infos_value[n] = new GuiTextEntry(right_col, "", "");
+        infos_value[n]->setSize(GuiElement::GuiSizeMax, 45);
+        infos_value[n]->callback([this, n](string text) {
+            target->infos_value[n] = text;
+        });
+    }
+
 }
 
 void GuiShipTweakInfos::onDraw(sf::RenderTarget& window)
@@ -1868,7 +1885,7 @@ void GuiShipTweakInfos::onDraw(sf::RenderTarget& window)
     if(!target)
         return;
     // Update infos.
-    for(int n = 0; n < max_oxygen_zones; n++)
+    for(int n = 0; n < 15; n++)
     {
         infos_label[n]->setText(target->infos_label[n]);
         infos_value[n]->setText(target->infos_value[n]);

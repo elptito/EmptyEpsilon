@@ -99,8 +99,8 @@ public:
         string full_scan;
     } object_description;
 
-    string infos_label[10];
-    string infos_value[10];
+    string infos_label[15];
+    string infos_value[15];
     int scanning_complexity_value;
     int scanning_depth_value;
     string callsign;
@@ -188,7 +188,7 @@ public:
 
     void addInfos(int index, string label, string value)
     {
-        if (index < 0 || index > 9)
+        if (index < 0 || index > 14)
             return;
         infos_label[index] = label;
         infos_value[index] = value;
@@ -196,21 +196,21 @@ public:
 
     string getInfosLabel(int index)
     {
-        if (index < 0 || index > 9)
+        if (index < 0 || index > 14)
             return "";
         return infos_label[index];
     }
 
     string getInfosValue(int index)
     {
-        if (index < 0 || index > 9)
+        if (index < 0 || index > 14)
             return "";
         return infos_value[index];
     }
 
     string getInfosValueByLabel(string label)
     {
-        for(int n = 0; n < 10; n++)
+        for(int n = 0; n < 15; n++)
         {
             if (infos_label[n] == label)
                 return infos_value[n];
@@ -220,7 +220,7 @@ public:
 
     void removeInfos(int index)
     {
-        if (index < 0 || index > 9)
+        if (index < 0 || index > 14)
             return;
         infos_label[index] = "";
         infos_value[index] = "";

@@ -360,8 +360,8 @@ class GuiShipTweakInfos : public GuiTweakPage
 private:
     P<SpaceObject> target;
 
-    GuiTextEntry* infos_label[10];
-    GuiTextEntry* infos_value[10];
+    GuiTextEntry* infos_label[15];
+    GuiTextEntry* infos_value[15];
 
 public:
     GuiShipTweakInfos(GuiContainer* owner);

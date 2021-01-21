@@ -171,7 +171,7 @@ function popWarpJammer(toto)
     if(nb_warpjam and nb_warpjam > 0) then
         local posx,posy = toto:getPosition()
         warpJammer = WarpJammer():setFaction(toto:getFaction()):setRange(10000):setPosition(posx-500, posy)
-        toto:addInfos(1,"Nb Warpjam", nb_warpjam - 1)
+        toto:addInfos(11,"Nb Warpjam", nb_warpjam - 1)
         toto:removeCustom(popWarpJammerButton)
         toto:addCustomButton("Relay",popWarpJammerButton,string.format("Deployer antiwarp (%i)", tonumber(toto:getInfosValue(1))),toto.popWarpJammer)
     end
@@ -183,7 +183,7 @@ onNewPlayerShip(
 		pc.popWarpJammer = function()
 			popWarpJammer(pc)
 		end
-		pc:addInfos(1,"Nb Warpjam", "4")
+        pc:addInfos(11,"Nb Warpjam", "4")
 		popWarpJammerButton = "popWarpjammerButton"
 		pc:addCustomButton("Relay",popWarpJammerButton,string.format("Deployer antiwarp (%i)", tonumber(pc:getInfosValue(1))),pc.popWarpJammer)
 	end
@@ -380,6 +380,7 @@ end
 -- @tparam number delta the time delta (in seconds)
 function update(delta)
     -- Count all surviving enemies and allies.
+
     local enemy_count = 0
     for _, enemy in ipairs(enemyList) do
         if enemy:isValid() then
@@ -418,7 +419,8 @@ function update(delta)
 	
 	for pidx=1,12 do
 	p = getPlayerShip(pidx)
-		if p ~= nil and p:isValid() then
+        if p ~= nil and p:isValid() then
+            print(string.format("%i", tonumber(p:getInfosValue(12))))
 			if p:getInfosValue(1) ~= list_info_value[pidx] then
 				popWarpJammerButton = "popWarpjammerButton"
 				p:addCustomButton("Relay",popWarpJammerButton,string.format("Deployer antiwarp (%i)", tonumber(p:getInfosValue(1))),p.popWarpJammer)
