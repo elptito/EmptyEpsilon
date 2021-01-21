@@ -340,12 +340,6 @@ void ShipTemplateBasedObject::takeDamage(float damage_amount, DamageInfo info)
         }
     }
 
-    if (info.type != DT_EMP && damage_amount > 0.0)
-    {
-        soundManager->playSound("explosion.wav", getPosition(), 200.0, 1.0, 1.0f + random(-0.1f, 0.1f),damage_amount*100.0);
-        takeHullDamage(damage_amount, info);
-    }
-
     if (hull_strength > 0)
     {
         if (on_taking_damage.isSet())
@@ -362,6 +356,12 @@ void ShipTemplateBasedObject::takeDamage(float damage_amount, DamageInfo info)
                 on_taking_damage.call(P<ShipTemplateBasedObject>(this));
             }
         }
+    }
+
+    if (info.type != DT_EMP && damage_amount > 0.0)
+    {
+        soundManager->playSound("explosion.wav", getPosition(), 200.0, 1.0, 1.0f + random(-0.1f, 0.1f),damage_amount*100.0);
+        takeHullDamage(damage_amount, info);
     }
 }
 
