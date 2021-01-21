@@ -226,7 +226,7 @@ GameMasterScreen::GameMasterScreen()
         gm_script_options->setSelectionIndex(-1);
         gameMasterActions->commandCallGmScript(index, getSelection());
     });
-    gm_script_options->setPosition(20, 130, ATopLeft)->setSize(250, 500);
+    gm_script_options->setPosition(20, 160, ATopLeft)->setSize(250, 500);
 
     order_layout = new GuiAutoLayout(this, "ORDER_LAYOUT", GuiAutoLayout::LayoutVerticalBottomToTop);
     order_layout->setPosition(-20, -90, ABottomRight)->setSize(300, GuiElement::GuiSizeMax);
