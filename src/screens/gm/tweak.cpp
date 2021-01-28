@@ -1198,24 +1198,18 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
 
     (new GuiLabel(left_col, "", tr("Coolant:"), 25))->setSize(GuiElement::GuiSizeMax, 45);
 
-    max_coolant_slider = new GuiSlider(left_col, "", 0.0, 300.0, 0.0, [this](float value) {
-        target->max_coolant = value / 100.0;
-        P<PlayerSpaceship> player = target;
-        if (player)
-            player->setSystemCoolantRequest(ESystem(0), player->systems[0].coolant_request);
+    max_coolant_slider = new GuiSlider(left_col, "", 0, 30, 0, [this](int value) {
+        if(target)
+            target->max_coolant = value;
+        //P<PlayerSpaceship> player = target;
+        //if (player)
+        //    player->setSystemCoolantRequest(ESystem(0), player->systems[0].coolant_request);
     });
     max_coolant_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
-    max_coolant_slider->addSnapValue(0.0, 1.0);
-    max_coolant_slider->addSnapValue(50.0, 1.0);
-    max_coolant_slider->addSnapValue(100.0, 1.0);
-    max_coolant_slider->addSnapValue(150.0, 1.0);
-    max_coolant_slider->addSnapValue(200.0, 1.0);
-    max_coolant_slider->addSnapValue(250.0, 1.0);
-    max_coolant_slider->addSnapValue(300.0, 1.0);
-
+    
     (new GuiLabel(left_col, "", "Coolant (per system / max):", 25))->setSize(GuiElement::GuiSizeMax, 45);
 
-    coolant_per_system_slider = new GuiSlider(left_col, "", 0.0, 50.0, 0.0, [this](float value) {
+    coolant_per_system_slider = new GuiSlider(left_col, "", 0, 20, 0, [this](int value) {
         target->setMaxCoolantPerSystem(value);
     });
     coolant_per_system_slider->addSnapValue(10,1)->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
@@ -1363,7 +1357,7 @@ void GuiShipTweakPlayer::onDraw(sf::RenderTarget& window)
     repair_per_system_slider->setValue(target->max_repair_per_system);
 
     // Update Max of coolant level
-    max_coolant_slider->setValue(target->max_coolant * 100.0);
+    max_coolant_slider->setValue(target->max_coolant);
 
     // Update reputation points.
     if(gameGlobalInfo->use_nano_repair_crew)
