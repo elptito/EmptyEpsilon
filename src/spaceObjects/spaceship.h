@@ -61,12 +61,13 @@ public:
 
     float getHeatingDelta()
     {
-        if (health > -0.5)
+        return powf(1.7, power_level - 1.0) - (1.01 + coolant_level * 0.1);
+//        if (health > -0.5)
 //            return powf(1.7, power_level - 1.0) - (1.01 + coolant_level * 0.1);
 //            return powf(1.7, power_level - 1.0) - (1.01 + coolant_level * 0.06);
-            return powf(1.7, power_level - 1.0) - (1.01 + coolant_level * 0.6);
-        else
-            return - (coolant_level);
+//            return powf(1.7, power_level - 1.0) - (1.01 + coolant_level * 0.6);
+//        else
+//            return - (coolant_level);
 //            return - (coolant_level * 0.1);
     }
 };

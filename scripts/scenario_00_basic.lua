@@ -173,7 +173,7 @@ function popWarpJammer(toto)
         warpJammer = WarpJammer():setFaction(toto:getFaction()):setRange(10000):setPosition(posx-500, posy)
         toto:addInfos(11,"Nb Warpjam", nb_warpjam - 1)
         toto:removeCustom(popWarpJammerButton)
-        toto:addCustomButton("Relay",popWarpJammerButton,string.format("Deployer antiwarp (%i)", tonumber(toto:getInfosValue(1))),toto.popWarpJammer)
+        toto:addCustomButton("Relay",popWarpJammerButton,string.format("Deployer antiwarp (%i)", tonumber(toto:getInfosValue(11))),toto.popWarpJammer)
     end
     
 end
@@ -185,7 +185,7 @@ onNewPlayerShip(
 		end
         pc:addInfos(11,"Nb Warpjam", "4")
 		popWarpJammerButton = "popWarpjammerButton"
-		pc:addCustomButton("Relay",popWarpJammerButton,string.format("Deployer antiwarp (%i)", tonumber(pc:getInfosValue(1))),pc.popWarpJammer)
+		pc:addCustomButton("Relay",popWarpJammerButton,string.format("Deployer antiwarp (%i)", tonumber(pc:getInfosValue(11))),pc.popWarpJammer)
 	end
 
 )

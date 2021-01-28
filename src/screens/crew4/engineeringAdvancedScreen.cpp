@@ -11,8 +11,8 @@ EngineeringAdvancedScreen::EngineeringAdvancedScreen(GuiContainer* owner)
     if (gameGlobalInfo->use_beam_shield_frequencies)
     {
         //The shield frequency selection includes a shield enable button.
-        (new GuiShieldFrequencySelect(this, "SHIELD_FREQ", my_spaceship))->setPosition(20, 310, ATopLeft)->setSize(240, 100);
+        (new GuiShieldFrequencySelect(this, "SHIELD_FREQ", my_spaceship))->setPosition(-20, 100, ATopRight)->setSize(240, 100);
     }else{
-        (new GuiShieldsEnableButton(this, "SHIELDS_ENABLE", my_spaceship))->setPosition(20, 310, ATopLeft)->setSize(240, 50);
+        (new GuiShieldsEnableButton(this, "SHIELDS_ENABLE", my_spaceship))->setPosition(-20, 200, ATopRight)->setSize(240, 50);
     }
 }
