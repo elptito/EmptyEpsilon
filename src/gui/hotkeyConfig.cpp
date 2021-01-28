@@ -33,8 +33,8 @@ HotkeyConfig::HotkeyConfig()
     newKey("ZERO_IMPULSE", std::make_tuple("Impulsion nulle", "Space"));
     newKey("MAX_IMPULSE", std::make_tuple("Impulsion max", ""));
     newKey("MIN_IMPULSE", std::make_tuple("Impulsion max inverse", ""));
-    newKey("TURN_LEFT", std::make_tuple("Tourner a gauche", "Gauche"));
-    newKey("TURN_RIGHT", std::make_tuple("Tourner a droite", "Droite"));
+    newKey("TURN_LEFT", std::make_tuple("Tourner a gauche", "Left"));
+    newKey("TURN_RIGHT", std::make_tuple("Tourner a droite", "Right"));
     newKey("WARP_0", std::make_tuple("WARP 0", ""));
     newKey("WARP_1", std::make_tuple("Warp 1", ""));
     newKey("WARP_2", std::make_tuple("Warp 2", ""));
