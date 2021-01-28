@@ -43,6 +43,7 @@ ServerCreationScreen::ServerCreationScreen()
     gameGlobalInfo->use_long_range_for_relay = PreferencesManager::get("server_use_long_range_for_relay", "1").toInt();
     gameGlobalInfo->use_complex_radar_signatures = PreferencesManager::get("server_config_use_complex_radar_signatures", "0").toInt();
     gameGlobalInfo->hack_efficiency_ratio = PreferencesManager::get("hack_efficiency_ratio", "1.0").toFloat();
+    gameGlobalInfo->ai_missile_attack_range = PreferencesManager::get("ai_missile_attack_range", "4500").toInt();
 
     // Create a two-column layout.
     GuiElement* container = new GuiAutoLayout(this, "", GuiAutoLayout::ELayoutMode::LayoutVerticalColumns);

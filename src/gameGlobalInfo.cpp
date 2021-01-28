@@ -57,6 +57,7 @@ GameGlobalInfo::GameGlobalInfo()
     use_long_range_for_relay = true;
     use_complex_radar_signatures = false;
     hack_efficiency_ratio = 1.0;
+    ai_missile_attack_range = 4500;
     
     gm_control_code = "";
     elapsed_time = 0.0f;
@@ -82,6 +83,7 @@ GameGlobalInfo::GameGlobalInfo()
     registerMemberReplication(&use_long_range_for_relay);
     registerMemberReplication(&use_complex_radar_signatures);
     registerMemberReplication(&hack_efficiency_ratio);
+    registerMemberReplication(&ai_missile_attack_range);
     registerMemberReplication(&gm_control_code);
     registerMemberReplication(&elapsed_time, 0.1);
 

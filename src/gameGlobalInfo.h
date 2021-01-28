@@ -97,6 +97,7 @@ public:
     bool use_long_range_for_relay;
     bool use_complex_radar_signatures;
     float hack_efficiency_ratio;
+    int ai_missile_attack_range;
     string gm_control_code;
     float elapsed_time;
     string scenario;

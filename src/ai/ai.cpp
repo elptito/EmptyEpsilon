@@ -5,6 +5,7 @@
 #include "spaceObjects/scanProbe.h"
 #include "ai/ai.h"
 #include "ai/aiFactory.h"
+#include "gameGlobalInfo.h"
 
 REGISTER_SHIP_AI(ShipAI, "default");
 
@@ -480,7 +481,7 @@ void ShipAI::runAttack(P<SpaceObject> target)
     float distance = sf::length(position_diff);
 
     // missile attack
-    if (distance < 4500 && has_missiles)
+    if (distance < gameGlobalInfo->ai_missile_attack_range && has_missiles)
     {
         for(int n=0; n<owner->weapon_tube_count; n++)
         {

@@ -1,6 +1,7 @@
 #include "spaceObjects/cpuShip.h"
 #include "ai/missileVolleyAI.h"
 #include "ai/aiFactory.h"
+#include "gameGlobalInfo.h"
 
 REGISTER_SHIP_AI(MissileVolleyAI, "missilevolley");
 
@@ -51,7 +52,7 @@ void MissileVolleyAI::runAttack(P<SpaceObject> target)
         }
     }
 
-    if (distance < 4500 && has_missiles)
+    if (distance < gameGlobalInfo->ai_missile_attack_range && has_missiles)
     {
         bool all_possible_loaded = true;
         for(int n=0; n<owner->weapon_tube_count; n++)
