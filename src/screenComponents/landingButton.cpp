@@ -113,7 +113,6 @@ P<SpaceObject> GuiLandingButton::findLandingTarget()
     PVector<Collisionable> obj_list = CollisionManager::queryArea(landing_spaceship->getPosition() - sf::Vector2f(1000, 1000), landing_spaceship->getPosition() + sf::Vector2f(1000, 1000));
     P<SpaceObject> land_object;
     P<SpaceShip> land_ship;
-    P<SpaceStation> land_station;
     foreach(Collisionable, obj, obj_list)
     {
         land_object = obj;
@@ -123,15 +122,13 @@ P<SpaceObject> GuiLandingButton::findLandingTarget()
             continue;
         }
         land_ship = obj;
-        if(!land_ship)
+        if(land_ship && land_ship->docking_state != DS_NotDocking &&  land_ship->landing_state != LS_NotLanding)
         {
             land_object = NULL;
             continue;
         }
         //land_station = obj;
         if (land_object
-            &&(land_ship->landing_state == LS_NotLanding)
-            &&(land_ship->docking_state == DS_NotDocking)
             &&(land_object != landing_spaceship)
             &&(land_object->canBeLandedOn(landing_spaceship))
             &&(land_object->getPosition() - landing_spaceship->getPosition()) < 1000.0f + land_object->getRadius())
