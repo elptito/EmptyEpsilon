@@ -66,8 +66,8 @@ void GuiJumpControls::onDraw(sf::RenderTarget& window)
             label->setKey(tr("jumpcontrol", "Distance"));
             label->setValue(string(slider->getValue() / 1000.0, 0) + " " + DISTANCE_UNIT_1K);
             slider->enable()->show();
-            float factor_jump = std::max(1.0f,target_spaceship->getSystemEffectiveness(SYS_JumpDrive));
-            slider->setRange(target_spaceship->jump_drive_max_distance, target_spaceship->jump_drive_min_distance/factor_jump);
+            //float factor_jump = std::max(1.0f,target_spaceship->getSystemEffectiveness(SYS_JumpDrive));
+            slider->setRange(target_spaceship->jump_drive_max_distance, target_spaceship->jump_drive_min_distance);
             button->enable();
             charge_bar->hide();
         }

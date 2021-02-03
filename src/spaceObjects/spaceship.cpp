@@ -858,14 +858,14 @@ void SpaceShip::update(float delta)
     }else{
         if (has_jump_drive)
         {
-            float f = getJumpDriveRechargeRate() * getSystemEffectiveness(SYS_JumpDrive);
+            float f = getJumpDriveRechargeRate();
             if (f > 0)
             {
                 if (jump_drive_charge < jump_drive_max_distance)
                 {
                     float extra_charge = (delta / jump_drive_charge_time * jump_drive_max_distance) * f;
-//                    if (useEnergy(extra_charge * jump_drive_energy_per_km_charge / 1000.0))
-                    if (useEnergy(jump_drive_energy_per_km_charge / 1000.0))
+                    if (useEnergy(extra_charge * jump_drive_energy_per_km_charge / 1000.0))
+//                  if (useEnergy(jump_drive_energy_per_km_charge / 1000.0))
                     {
                         jump_drive_charge += extra_charge;
                         if (jump_drive_charge >= jump_drive_max_distance)
