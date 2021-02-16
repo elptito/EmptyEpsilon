@@ -25,8 +25,8 @@ void SpectatorScreen::update(float delta)
     if (mouse_wheel_delta != 0.0)
     {
         float view_distance = main_radar->getDistance() * (1.0 - (mouse_wheel_delta * 0.1f));
-        if (view_distance > 100000)
-            view_distance = 100000;
+        //if (view_distance > 100000)
+        //    view_distance = 100000;
         if (view_distance < 5000)
             view_distance = 5000;
         main_radar->setDistance(view_distance);
