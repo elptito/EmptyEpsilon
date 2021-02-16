@@ -74,6 +74,9 @@ GuiObjectTweak::GuiObjectTweak(GuiContainer* owner, ETweakType tweak_type)
         pages.push_back(new GuiShipTweakPlayer(this));
         list->addEntry(tr("tab", "Player"), "");
 
+        pages.push_back(new GuiShipTweakCrew(this));
+        list->addEntry(tr("tab", "Crew"), "");
+
         pages.push_back(new GuiShipTweakOxygen(this));
         list->addEntry("Oxygene", "");
         //Maybe later, this would be available for NPC ships too
@@ -1127,6 +1130,70 @@ void GuiShipTweakSystems::open(P<SpaceObject> target)
     this->target = ship;
 }
 
+GuiShipTweakCrew::GuiShipTweakCrew(GuiContainer* owner)
+: GuiTweakPage(owner)
+{
+    GuiAutoLayout* left_col = new GuiAutoLayout(this, "LEFT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    left_col->setPosition(50, 25, ATopLeft)->setSize(300, GuiElement::GuiSizeMax);
+
+    GuiAutoLayout* right_col = new GuiAutoLayout(this, "RIGHT_LAYOUT", GuiAutoLayout::LayoutVerticalTopToBottom);
+    right_col->setPosition(-25, 25, ATopRight)->setSize(300, GuiElement::GuiSizeMax);
+
+    // Count and list ship positions and whether they're occupied.
+    position_count = new GuiLabel(right_col, "", tr("Positions occupied: "), 30);
+    position_count->setSize(GuiElement::GuiSizeMax, 50);
+
+    for(int n = 0; n < max_crew_positions; n++)
+    {
+        string position_name = getCrewPositionName(ECrewPosition(n));
+
+        position[n] = new GuiKeyValueDisplay(right_col, "CREW_POSITION_" + position_name, 0.5, position_name, "-");
+        position[n]->setSize(GuiElement::GuiSizeMax, 30);
+    }
+
+}
+
+void GuiShipTweakCrew::onDraw(sf::RenderTarget& window)
+{
+    if(!target)
+        return;
+    // Update position list.
+    int position_counter = 0;
+
+    // Update the status of each crew position.
+    for(int n = 0; n < max_crew_positions; n++)
+    {
+        string position_name = getCrewPositionName(ECrewPosition(n));
+        string position_state = "-";
+
+         std::vector<string> players;
+         foreach(PlayerInfo, i, player_info_list)
+         {
+            if (i->ship_id == target->getMultiplayerId() && i->crew_position[n])
+            {
+                players.push_back(i->name);
+            }
+        }
+        if (target->hasPlayerAtPosition(ECrewPosition(n)))
+        {
+            position_state = tr("position", string(", ").join(players));
+            position_counter += 1;
+        }
+
+        position[n]->setValue(position_state);
+    }
+
+    // Update the total occupied position count.
+    position_count->setText(tr("Positions occupied: ") + string(position_counter));
+
+}
+
+void GuiShipTweakCrew::open(P<SpaceObject> target)
+{
+    P<PlayerSpaceship> player = target;
+    this->target = player;
+}
+
 GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
 : GuiTweakPage(owner)
 {
@@ -1249,17 +1316,7 @@ GuiShipTweakPlayer::GuiShipTweakPlayer(GuiContainer* owner)
     });
     probe_max_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
 
-    // Count and list ship positions and whether they're occupied.
-//    position_count = new GuiLabel(right_col, "", tr("Positions occupied: "), 30);
-//    position_count->setSize(GuiElement::GuiSizeMax, 50);
-//
-//    for(int n = 0; n < max_crew_positions; n++)
-//    {
-//        string position_name = getCrewPositionName(ECrewPosition(n));
-//
-//        position[n] = new GuiKeyValueDisplay(right_col, "CREW_POSITION_" + position_name, 0.5, position_name, "-");
-//        position[n]->setSize(GuiElement::GuiSizeMax, 30);
-//    }
+
 
     //tsht : probleme de place sur l'ecran... MAYBEFIX
     // {

@@ -266,8 +266,6 @@ private:
     GuiToggleButton* gravity_toggle;
     GuiToggleButton* electrical_toggle;
     GuiToggleButton* biological_toggle;
-    GuiLabel* position_count;
-    GuiKeyValueDisplay* position[max_crew_positions];
     GuiToggleButton* can_scan;
     GuiToggleButton* can_hack;
     GuiToggleButton* can_dock;
@@ -276,6 +274,19 @@ private:
     GuiToggleButton* can_launch_probe;
 public:
     GuiShipTweakPlayer(GuiContainer* owner);
+
+    virtual void open(P<SpaceObject> target) override;
+
+    virtual void onDraw(sf::RenderTarget& window) override;
+};
+
+class GuiShipTweakCrew : public GuiTweakPage
+{
+    P<PlayerSpaceship> target;
+    GuiKeyValueDisplay* position[max_crew_positions];
+    GuiLabel* position_count;
+public:
+    GuiShipTweakCrew(GuiContainer* owner);
 
     virtual void open(P<SpaceObject> target) override;
 
