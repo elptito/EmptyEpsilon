@@ -138,8 +138,8 @@ public:
     int shield_count;
     float shield_level[max_shield_count];
     float shield_recharge_rate;
-    float impulse_speed, turn_speed, warp_speed;
-    float impulse_acceleration;
+    float impulse_speed = 0.0f, impulse_reverse_speed = 0.0f, turn_speed, warp_speed;
+    float impulse_acceleration, impulse_reverse_acceleration;
     float combat_maneuver_boost_speed;
     float combat_maneuver_strafe_speed;
     bool has_jump_drive, has_cloaking;
@@ -220,6 +220,7 @@ public:
     void setShields(std::vector<float> values);
     void setShieldRechargeRate(float amount) { shield_recharge_rate = amount;}
     void setSpeed(float impulse, float turn, float acceleration);
+    void setReverseSpeed(float reverse_speed, float reverse_acceleration);
     void setCombatManeuver(float boost, float strafe);
     void setWarpSpeed(float warp);
     void setJumpDrive(bool enabled);

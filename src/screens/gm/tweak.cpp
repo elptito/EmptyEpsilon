@@ -457,6 +457,12 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
     });
     impulse_speed_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 35);
 
+    (new GuiLabel(left_col, "", tr("Impulse reverse speed:"), 30))->setSize(GuiElement::GuiSizeMax, 50);
+    impulse_reverse_speed_slider = new GuiSlider(left_col, "", 0.0, 250, 0.0, [this](float value) {
+        target->impulse_max_reverse_speed = value;
+    });
+    impulse_reverse_speed_slider->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
+
     (new GuiLabel(left_col, "", tr("Turn speed:"), 30))->setSize(GuiElement::GuiSizeMax, 45);
     turn_speed_slider = new GuiSlider(left_col, "", 0.0, 35, 0.0, [this](float value) {
         target->turn_speed = value;
@@ -594,6 +600,7 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
     reactor_toggle->setValue(target->hasReactor());
     cloaking_toggle->setValue(target->hasCloaking());
     impulse_speed_slider->setValue(target->impulse_max_speed);
+    impulse_reverse_speed_slider->setValue(target->impulse_max_reverse_speed);
     turn_speed_slider->setValue(target->turn_speed);
     combat_maneuver_boost_speed_slider->setValue(target->combat_maneuver_boost_speed);
     combat_maneuver_strafe_speed_slider->setValue(target->combat_maneuver_strafe_speed);
@@ -616,6 +623,7 @@ GuiShipTweak::GuiShipTweak(GuiContainer* owner)
     this->target = ship;
 
     impulse_speed_slider->clearSnapValues()->addSnapValue(ship->ship_template->impulse_speed, 5.0f);
+    impulse_reverse_speed_slider->clearSnapValues()->addSnapValue(ship->ship_template->impulse_reverse_speed, 5.0f);
     turn_speed_slider->clearSnapValues()->addSnapValue(ship->ship_template->turn_speed, 1.0f);
 
     combat_maneuver_boost_speed_slider->clearSnapValues()->addSnapValue(ship->combat_maneuver_boost_speed, 20.0f);
