@@ -585,6 +585,8 @@ void GuiRadarView::drawObjects(sf::RenderTarget& window_normal, sf::RenderTarget
                 P<SpaceObject> obj2 = c_obj;
                 if (obj2 && (obj->getPosition() - obj2->getPosition()) < radar_range + obj2->getRadius())
                 {
+                    if (obj2->canHideInNebula() && Nebula::blockedByNebula(obj2->getPosition(), obj->getPosition()))
+                        continue;
                     visible_objects.insert(*obj2);
                 }
             }
