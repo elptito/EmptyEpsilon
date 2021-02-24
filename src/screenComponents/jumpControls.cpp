@@ -23,7 +23,7 @@ GuiJumpControls::GuiJumpControls(GuiContainer* owner, string id, P<PlayerSpacesh
     label->setTextSize(30)->setPosition(50, -50, ABottomLeft)->setSize(40, GuiElement::GuiSizeMax);
 
     button = new GuiButton(this, id + "_BUTTON", tr("jumpcontrol", "Jump"), [this]() {
-        my_spaceship->commandJump(slider->getValue());
+        target_spaceship->commandJump(slider->getValue());
     });
     button->setPosition(0, 0, ABottomLeft)->setSize(GuiElement::GuiSizeMax, 50);
 
@@ -79,9 +79,9 @@ void GuiJumpControls::onHotkey(const HotkeyResult& key)
     if (key.category == "HELMS" && target_spaceship)
     {
 		if (key.hotkey == "JUMP_MIN")
-            slider->setValue(my_spaceship->jump_drive_min_distance);
+            slider->setValue(target_spaceship->jump_drive_min_distance);
 		if (key.hotkey == "JUMP_MAX")
-            slider->setValue(my_spaceship->jump_drive_max_distance);
+            slider->setValue(target_spaceship->jump_drive_max_distance);
         if (key.hotkey == "INC_JUMP")
             slider->setValue(slider->getValue() + 1000.0f);
         if (key.hotkey == "DEC_JUMP")
