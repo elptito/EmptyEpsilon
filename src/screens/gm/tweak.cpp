@@ -642,7 +642,7 @@ GuiShipTweakMissileWeapons::GuiShipTweakMissileWeapons(GuiContainer* owner)
     {
         custom_missile_storage_labels.push_back(new GuiLabel(left_col, "", getMissileWeaponName(kv.first) + ":", 20));
         custom_missile_storage_labels.back()->setSize(GuiElement::GuiSizeMax, 30);
-        missile_storage_amount_slider.push_back(new GuiSlider(left_col, "", 0.0, 50, 0.0, [this, kv](float value) {
+        missile_storage_amount_slider.push_back(new GuiSlider(left_col, "", 0.0, 300, 0.0, [this, kv](float value) {
             target->custom_weapon_storage_max[kv.first] = int(round(value));
             target->custom_weapon_storage[kv.first] = std::min(target->custom_weapon_storage[kv.first], target->custom_weapon_storage_max[kv.first]);
         }));
@@ -652,7 +652,7 @@ GuiShipTweakMissileWeapons::GuiShipTweakMissileWeapons(GuiContainer* owner)
     for(int n=0; n<MW_Count; n++)
     {
         (new GuiLabel(left_col, "", getLocaleMissileWeaponName(EMissileWeapons(n)) + ":", 20))->setSize(GuiElement::GuiSizeMax, 30);
-        missile_storage_amount_slider.push_back(new GuiSlider(left_col, "", 0.0, 50, 0.0, [this, n](float value) {
+        missile_storage_amount_slider.push_back(new GuiSlider(left_col, "", 0.0, 300, 0.0, [this, n](float value) {
             target->weapon_storage_max[n] = int(round(value));
             target->weapon_storage[n] = std::min(target->weapon_storage[n], target->weapon_storage_max[n]);
         }));
@@ -666,7 +666,7 @@ GuiShipTweakMissileWeapons::GuiShipTweakMissileWeapons(GuiContainer* owner)
     {
         custom_missile_current_labels.push_back(new GuiLabel(right_col, "", getMissileWeaponName(kv.first) + ":", 20));
         custom_missile_current_labels.back()->setSize(GuiElement::GuiSizeMax, 30);
-        missile_current_amount_slider.push_back(new GuiSlider(right_col, "", 0.0, 50, 0.0, [this, kv](float value) {
+        missile_current_amount_slider.push_back(new GuiSlider(right_col, "", 0.0, 300, 0.0, [this, kv](float value) {
             target->custom_weapon_storage[kv.first] = std::min(int(round(value)), target->custom_weapon_storage_max[kv.first]);
         }));
         missile_current_amount_slider.back()->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
@@ -675,7 +675,7 @@ GuiShipTweakMissileWeapons::GuiShipTweakMissileWeapons(GuiContainer* owner)
     for(int n=0; n<MW_Count; n++)
     {
         (new GuiLabel(right_col, "", getLocaleMissileWeaponName(EMissileWeapons(n)) + ":", 20))->setSize(GuiElement::GuiSizeMax, 30);
-        missile_current_amount_slider.push_back(new GuiSlider(right_col, "", 0.0, 50, 0.0, [this, n](float value) {
+        missile_current_amount_slider.push_back(new GuiSlider(right_col, "", 0.0, 300, 0.0, [this, n](float value) {
             target->weapon_storage[n] = std::min(int(round(value)), target->weapon_storage_max[n]);
         }));
         missile_current_amount_slider.back()->addOverlay()->setSize(GuiElement::GuiSizeMax, 40);
@@ -718,21 +718,33 @@ void GuiShipTweakMissileWeapons::onDraw(sf::RenderTarget& window)
     int n = 0;
     for(auto& kv : CustomMissileWeaponRegistry::getCustomMissileWeapons())
     {
-        custom_missile_storage_labels[n]->setVisible(target->custom_weapon_storage_max[kv.first]>0);
-        custom_missile_current_labels[n]->setVisible(target->custom_weapon_storage_max[kv.first]>0);
+        custom_missile_storage_labels[n]->setVisible((target->custom_weapon_storage_max[kv.first]>0)
+        || (target->ship_template->custom_weapon_storage.find(kv.first)!=target->ship_template->custom_weapon_storage.end()));
+        custom_missile_current_labels[n]->setVisible((target->custom_weapon_storage_max[kv.first]>0)
+        || (target->ship_template->custom_weapon_storage.find(kv.first)!=target->ship_template->custom_weapon_storage.end()));
+        missile_current_amount_slider[n]->setVisible((target->custom_weapon_storage_max[kv.first]>0)
+        || (target->ship_template->custom_weapon_storage.find(kv.first)!=target->ship_template->custom_weapon_storage.end()));
+        missile_storage_amount_slider[n]->setVisible((target->custom_weapon_storage_max[kv.first]>0)
+        || (target->ship_template->custom_weapon_storage.find(kv.first)!=target->ship_template->custom_weapon_storage.end()));
+        missile_current_amount_slider[n]->setRange(0, float(target->custom_weapon_storage_max[kv.first]));
 
-        missile_current_amount_slider[n]->setVisible(target->custom_weapon_storage_max[kv.first]>0);
-        missile_storage_amount_slider[n]->setVisible(target->custom_weapon_storage_max[kv.first]>0);
         if (target->custom_weapon_storage[kv.first] != int(missile_current_amount_slider[n]->getValue()))
+        {
             missile_current_amount_slider[n]->setValue(float(target->custom_weapon_storage[kv.first]));
+        }
         n++;
     }
 
     int wsIdx = 0;
     while(n<missile_current_amount_slider.size())
     {
+
+        missile_current_amount_slider[n]->setRange(0, float(target->weapon_storage_max[wsIdx]));
+
         if (target->weapon_storage[wsIdx] != int(missile_current_amount_slider[n]->getValue()))
+        {
             missile_current_amount_slider[n]->setValue(float(target->weapon_storage[wsIdx]));
+        }
         n++; wsIdx++;
     }
 }
