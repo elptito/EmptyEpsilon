@@ -138,7 +138,7 @@ public:
     int shield_count;
     float shield_level[max_shield_count];
     float shield_recharge_rate;
-    float impulse_speed = 0.0f, impulse_reverse_speed = 0.0f, turn_speed, warp_speed;
+    float impulse_speed, impulse_reverse_speed, turn_speed, warp_speed;
     float impulse_acceleration, impulse_reverse_acceleration;
     float combat_maneuver_boost_speed;
     float combat_maneuver_strafe_speed;
