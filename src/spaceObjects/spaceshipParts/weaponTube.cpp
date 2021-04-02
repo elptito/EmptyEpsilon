@@ -168,7 +168,7 @@ void WeaponTube::spawnProjectile(float target_angle)
     int local_line_count{line_count};
     while(local_line_count)
     {
-        sf::Vector2f fireLocation = parent->getPosition() + sf::rotateVector(offset, parent->getRotation()) + sf::rotateVector(parent->ship_template->model_data->getTubePosition2D(tube_index), parent->getRotation());
+        sf::Vector2f fireLocation = parent->getPosition() + sf::rotateVector(offset, parent->getRotation()+direction-90) + sf::rotateVector(parent->ship_template->model_data->getTubePosition2D(tube_index), parent->getRotation());
         //sf::Vector2f fireLocation = parent->getPosition() + offset + sf::rotateVector(sf::Vector2f(parent->getRadius()/2,parent->getRadius()/2),parent->getRotation()+direction-45);
     
         const MissileWeaponData& data = MissileWeaponData::getDataFor(type_loaded);
