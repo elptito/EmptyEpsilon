@@ -24,7 +24,7 @@ do
     continue
   fi
   SERIOUS_PROTON_BRANCH="${git_ref_name}"
-  output="$(git ls-remote --heads https://github.com/Daid/SeriousProton "${SERIOUS_PROTON_BRANCH}")"
+  output="$(git ls-remote --heads https://github.com/tsht/SeriousProton "${SERIOUS_PROTON_BRANCH}")"
   if [ -n "${output}" ]; then
     echo "Found SeriousProton branch [${SERIOUS_PROTON_BRANCH}]."
     break
