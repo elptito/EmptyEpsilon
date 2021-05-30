@@ -30,6 +30,7 @@ thumbs.db
 
 # output directory
 .bin
+_build
 
 # vim
 *.swp
