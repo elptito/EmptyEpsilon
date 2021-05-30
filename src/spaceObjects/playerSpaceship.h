@@ -2,10 +2,13 @@
 #define PLAYER_SPACESHIP_H
 
 #include "spaceship.h"
+#include "scanProbe.h"
 #include "commsScriptInterface.h"
 #include "playerInfo.h"
 #include "spaceshipParts/dock.h"
 #include <iostream>
+
+class ScanProbe;
 
 enum ECommsState
 {
@@ -33,8 +36,8 @@ class PlayerSpaceship : public SpaceShip
 {
 public:
     // Power consumption and generation base rates
-    constexpr static float energy_shield_use_per_second = 1.5f;
-    constexpr static float energy_warp_per_second = 1.0f;
+    constexpr static float default_energy_shield_use_per_second = 1.5f;
+    constexpr static float default_energy_warp_per_second = 1.0f;
     constexpr static float system_heatup_per_second = 0.05f;
     constexpr static float system_power_level_change_per_second = 0.3;
     constexpr static float energy_transfer_per_second = 5;
@@ -143,6 +146,9 @@ private:
     float far_range_radar_range = 50000.0f;
     float long_range_radar_range = 30000.0f;
     float short_range_radar_range = 5000.0f;
+
+    float energy_shield_use_per_second = default_energy_shield_use_per_second;
+    float energy_warp_per_second = default_energy_warp_per_second;
 public:
     std::vector<CustomShipFunction> custom_functions;
 
@@ -190,6 +196,8 @@ public:
     int scan_probe_stock;
     float scan_probe_recharge = 0.0;
     ScriptSimpleCallback on_probe_launch;
+    ScriptSimpleCallback on_probe_link;
+    ScriptSimpleCallback on_probe_unlink;
 
     // Main screen content
     EMainScreenSetting main_screen_setting;
@@ -277,6 +285,8 @@ public:
     int getMaxScanProbeCount() { return max_scan_probes; }
 
     void onProbeLaunch(ScriptSimpleCallback callback);
+    void onProbeLink(ScriptSimpleCallback callback);
+    void onProbeUnlink(ScriptSimpleCallback callback);
 
     void addCustomButton(ECrewPosition position, string name, string caption, ScriptSimpleCallback callback);
     void addCustomInfo(ECrewPosition position, string name, string caption);
@@ -295,8 +305,9 @@ public:
     void commandSetWarpFrequency(int32_t frequency);
     void commandJump(float distance);
     void commandSetTarget(P<SpaceObject> target, int8_t station = 0);
-    void commandSetScienceLink(int32_t id);
-    void commandSetAnalysisLink(int32_t id);
+    void commandSetScienceLink(P<ScanProbe> probe);
+    void commandClearScienceLink();
+    void commandSetAnalysisLink(int32_t id); /// Peut être remodifier
     void commandLoadTube(int8_t tubeNumber, EMissileWeapons missileType);
     void commandUnloadTube(int8_t tubeNumber);
     void commandFireTube(int8_t tubeNumber, float missile_target_angle);
@@ -393,6 +404,11 @@ public:
     // Ship scanning capability
     EScannedState getScanningCapability() { return scanning_capability; }
     void setScanningCapability(EScannedState value){ scanning_capability = value; }
+    // Flow rate controls.
+    float getEnergyShieldUsePerSecond() const { return energy_shield_use_per_second; }
+    void setEnergyShieldUsePerSecond(float rate) { energy_shield_use_per_second = rate; }
+    float getEnergyWarpPerSecond() const { return energy_warp_per_second; }
+    void setEnergyWarpPerSecond(float rate) { energy_warp_per_second = rate; }
 
     // Ship update functions
     virtual void update(float delta) override;

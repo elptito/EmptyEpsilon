@@ -15,6 +15,7 @@
 #include "menus/mainMenus.h"
 #include "menus/autoConnectScreen.h"
 #include "menus/shipSelectionScreen.h"
+#include "menus/optionsMenu.h"
 #include "mouseCalibrator.h"
 #include "factionInfo.h"
 #include "gameGlobalInfo.h"
@@ -28,7 +29,7 @@
 #include "tutorialGame.h"
 
 #include "hardware/hardwareController.h"
-#ifdef _WIN32
+#if WITH_DISCORD
 #include "discord.h"
 #endif
 
@@ -37,6 +38,8 @@
 #include <mach-o/dyld.h>
 #include <libgen.h>
 #endif
+
+#include "shaderRegistry.h"
 
 sf::Vector3f camera_position;
 float camera_yaw;
@@ -193,7 +196,7 @@ int main(int argc, char** argv)
     }
 
     colorConfig.load();
-    hotkeys.load();
+    HotkeyConfig::get().load();
     joystick.load();
 
     if (PreferencesManager::get("username", "") == "")
@@ -212,9 +215,9 @@ int main(int argc, char** argv)
         effectLayer = new RenderLayer(objectLayer);
         hudLayer = new RenderLayer(effectLayer);
         mouseLayer = new RenderLayer(hudLayer);
-        glitchPostProcessor = new PostProcessor("glitch", mouseLayer);
+        glitchPostProcessor = new PostProcessor("shaders/glitch", mouseLayer);
         glitchPostProcessor->enabled = false;
-        warpPostProcessor = new PostProcessor("warp", glitchPostProcessor);
+        warpPostProcessor = new PostProcessor("shaders/warp", glitchPostProcessor);
         warpPostProcessor->enabled = false;
         defaultRenderLayer = objectLayer;
 
@@ -234,6 +237,7 @@ int main(int argc, char** argv)
             window_manager->setTitle("EmptyEpsilon - " + PreferencesManager::get("instance_name"));
         window_manager->setAllowVirtualResize(true);
         engine->registerObject("windowManager", window_manager);
+        ShaderRegistry::Shader::initialize();
     }
     if (PreferencesManager::get("touchscreen").toInt())
     {
@@ -297,9 +301,11 @@ int main(int argc, char** argv)
             }
         }
     }
+
+    // Set up voice chat and key bindings.
     NetworkAudioRecorder* nar = new NetworkAudioRecorder();
-    nar->addKeyActivation(sf::Keyboard::Key::Tilde, 0);
-    nar->addKeyActivation(sf::Keyboard::Key::BackSpace, 1);
+    nar->addKeyActivation(HotkeyConfig::get().getKeyByHotkey("BASIC", "VOICE_CHAT_ALL"), 0);
+    nar->addKeyActivation(HotkeyConfig::get().getKeyByHotkey("BASIC", "VOICE_CHAT_SHIP"), 1);
 
     P<HardwareController> hardware_controller = new HardwareController();
 #ifdef CONFIG_DIR
@@ -310,9 +316,18 @@ int main(int argc, char** argv)
     else
         hardware_controller->loadConfiguration("hardware.ini");
 
-#ifdef _WIN32
-    new DiscordRichPresence();
+#if WITH_DISCORD
+    {
+        std::filesystem::path discord_sdk
+        {
+#ifdef RESOURCE_BASE_DIR
+        RESOURCE_BASE_DIR
 #endif
+        };
+        discord_sdk /= std::filesystem::path{ "plugins" } / DynamicLibrary::add_native_suffix("discord_game_sdk");
+        new DiscordRichPresence(discord_sdk);
+    }
+#endif // WITH_DISCORD
 
     returnToMainMenu();
     engine->runMainLoop();
@@ -414,4 +429,9 @@ void returnToShipSelection()
     {
         new ShipSelectionScreen();
     }
+}
+
+void returnToOptionMenu()
+{
+    new OptionsMenu();
 }

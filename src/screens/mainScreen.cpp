@@ -57,7 +57,7 @@ ScreenMainScreen::ScreenMainScreen()
 
     keyboard_help = new GuiHelpOverlay(this, "Keyboard Shortcuts");
 
-    for (std::pair<string, string> shortcut : hotkeys.listHotkeysByCategory("Main Screen"))
+    for (std::pair<string, string> shortcut : HotkeyConfig::get().listHotkeysByCategory("Main Screen"))
         keyboard_general += shortcut.second + ":\t" + shortcut.first + "\n";
 
     keyboard_help->setText(keyboard_general);
@@ -76,6 +76,13 @@ ScreenMainScreen::ScreenMainScreen()
 
     // Initialize and play the impulse engine sound.
     impulse_sound = std::unique_ptr<ImpulseSound>( new ImpulseSound(PreferencesManager::get("impulse_sound_enabled", "2") != "0") );
+}
+
+void ScreenMainScreen::destroy()
+{
+    if (threat_estimate)
+        threat_estimate->destroy();
+    PObject::destroy();
 }
 
 void ScreenMainScreen::update(float delta)

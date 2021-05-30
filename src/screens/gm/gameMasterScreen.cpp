@@ -178,7 +178,18 @@ GameMasterScreen::GameMasterScreen()
     gm_script_options = new GuiListbox(this, "GM_SCRIPT_OPTIONS", [this](int index, string value)
     {
         gm_script_options->setSelectionIndex(-1);
-        gameMasterActions->commandCallGmScript(index, getSelection());
+        /// Ancien script LARP
+        /// gameMasterActions->commandCallGmScript(index, getSelection());
+        int n = 0;
+        for(GMScriptCallback& callback : gameGlobalInfo->gm_callback_functions)
+        {
+            if (n == index)
+            {
+                callback.callback.call<void>();
+                return;
+            }
+            n++;
+        }
     });
     gm_script_options->setPosition(20, 170, ATopLeft)->setSize(250, 500);
 
@@ -338,7 +349,7 @@ void GameMasterScreen::update(float delta)
 
     if (targets.getTargets().size() == 1)
     {
-        selection_info["Position"] = string(targets.getTargets()[0]->getPosition().x, 0) + "," + string(targets.getTargets()[0]->getPosition().y, 0);
+        selection_info[trMark("gm_info", "Position")] = string(targets.getTargets()[0]->getPosition().x, 0) + "," + string(targets.getTargets()[0]->getPosition().y, 0);
     }
 
     unsigned int cnt = 0;
@@ -350,7 +361,7 @@ void GameMasterScreen::update(float delta)
             info_items[cnt]->setSize(GuiElement::GuiSizeMax, 30);
         }else{
             info_items[cnt]->show();
-            info_items[cnt]->setKey(i->first)->setValue(i->second);
+            info_items[cnt]->setKey(tr("gm_info", i->first))->setValue(i->second);
         }
         cnt++;
     }

@@ -89,7 +89,6 @@ private:
     EMissileWeapons type_loaded;
 
     EMissileSizes size;
-    float getSizeCategoryModifier();
     EWeaponTubeState state;
     float delay;
     int fire_count;

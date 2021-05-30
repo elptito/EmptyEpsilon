@@ -472,20 +472,20 @@ void EngineeringScreen::onDraw(sf::RenderTarget& window)
         if (selected_system != SYS_None)
         {
             ShipSystem& system = my_spaceship->systems[selected_system];
-            power_label->setText(tr("Power: {power_level}%/{power_request}%").format({{"power_level", toNearbyIntString(system.power_request * 100)},{"power_request", toNearbyIntString(system.power_request * 100)}}));
+            power_label->setText(tr("slider", "Power: {current_level}% / {requested}%").format({{"current_level", toNearbyIntString(system.power_level * 100)}, {"requested", toNearbyIntString(system.power_request * 100)}}));
             power_slider->setValue(system.power_request);
-            coolant_label->setText(tr("Coolant: {coolant_level}%/{coolant_request}%").format({{"coolant_level", toNearbyIntString(system.coolant_level / my_spaceship->max_coolant_per_system * 100)},{"coolant_request", toNearbyIntString(std::min(system.coolant_request, my_spaceship->max_coolant) / my_spaceship->max_coolant_per_system * 100)}}));
+            coolant_label->setText(tr("slider", "Coolant: {current_level}% / {requested}%").format({{"current_level", toNearbyIntString(system.coolant_level / my_spaceship->max_coolant_per_system * 100)}, {"requested", toNearbyIntString(std::min(system.coolant_request, my_spaceship->max_coolant) / my_spaceship->max_coolant_per_system * 100)}}));
             coolant_slider->setEnable(!my_spaceship->auto_coolant_enabled);
             coolant_slider->setRange(0.0, my_spaceship->max_coolant_per_system);
             coolant_slider->setValue(std::min(system.coolant_request, my_spaceship->max_coolant));
 
             if (gameGlobalInfo->use_nano_repair_crew)
             {
-                coolant_label->setText(tr("Coolant: {coolant_level} / {coolant_max}\t\t (Target: {coolant_request})").format({{"coolant_level", string(system.coolant_level, 1)},{"coolant_max", string(my_spaceship->max_coolant_per_system, 1)},{"coolant_request", string(system.coolant_request, 1)}}));
-                power_label->setText(tr("Power: {power_level}% \t\t (Target: {power_request}%)").format({{"power_level", toNearbyIntString(system.power_level * 100)},{"power_request", toNearbyIntString(system.power_request * 100)}}));
+                coolant_label->setText(tr("Coolant: {current_level} / {coolant_max}\t\t (Target: {requested})").format({{"current_level", string(system.coolant_level, 1)},{"coolant_max", string(my_spaceship->max_coolant_per_system, 1)},{"requested", string(system.coolant_request, 1)}}));
+                power_label->setText(tr("Power: {current_level}% \t\t (Target: {requested}%)").format({{"current_level", toNearbyIntString(system.power_level * 100)},{"requested", toNearbyIntString(system.power_request * 100)}}));
                 if (gameGlobalInfo->use_system_damage)
                 {
-                    repair_label->setText(tr("Repair: {repair_level} / {repair_max}\t\t (Target: {repair_request})").format({{"repair_level", string(system.repair_level, 1)},{"repair_max", string(my_spaceship->max_repair_per_system, 1)},{"repair_request", string(system.repair_request, 1)}}));
+                    repair_label->setText(tr("Repair: {current_level} / {repair_max}\t\t (Target: {requested})").format({{"current_level", string(system.repair_level, 1)},{"repair_max", string(my_spaceship->max_repair_per_system, 1)},{"requested", string(system.repair_request, 1)}}));
                     repair_slider->setEnable(!my_spaceship->auto_repair_enabled);
                     repair_slider->setRange(0.0, my_spaceship->max_repair_per_system);
                     repair_slider->setValue(std::min(system.repair_request, my_spaceship->max_repair));

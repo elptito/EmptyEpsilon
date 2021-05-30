@@ -4,6 +4,7 @@
 #include "scienceDatabase.h"
 #include "spaceObjects/nebula.h"
 #include "preferenceManager.h"
+#include "shipTemplate.h"
 
 #include "screenComponents/radarView.h"
 #include "screenComponents/rawScannerDataRadarOverlay.h"
@@ -422,6 +423,23 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
             {
                 info_shield_frequency->show();
                 info_beam_frequency->show();
+				
+				// Show on graph information that target has no beams instad of frequencies. 
+				bool has_beams = false;
+				for(int n = 0; n < max_beam_weapons; n++)
+				{
+					if (ship->beam_weapons[n].getRange() > 0.0) {
+						has_beams = true;
+						break;
+					}
+				}
+				info_beam_frequency->setEnemyHasEquipment(has_beams);
+				
+				info_shield_frequency->setFrequency(ship->shield_frequency);
+                info_beam_frequency->setFrequency(ship->beam_frequency);
+
+				// Show on graph information that target has no shields instead of frequencies. 
+				info_shield_frequency->setEnemyHasEquipment(ship->getShieldCount() > 0);
                 
                 for(int n = 0; n < SYS_COUNT; n++)
                 {
@@ -511,7 +529,7 @@ void ScienceScreen::onDraw(sf::RenderTarget& window)
                     info_other[n]->setKey(obj->infos_label[n]);
                     info_other[n]->setValue(obj->infos_value[n]);
                 }
-                
+
                 info_electrical_signal_band->hide();
                 info_gravity_signal_band->hide();
                 info_biological_signal_band->hide();

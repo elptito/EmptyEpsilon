@@ -118,22 +118,6 @@ void WeaponTube::fire(float target_angle)
     }
 }
 
-float WeaponTube::getSizeCategoryModifier()
-{
-    switch(size)
-    {
-        case MS_Small:
-            return 0.5;
-        case MS_Medium:
-            return 1.0;
-        case MS_Large:
-            return 2.0;
-        default:
-            return 1.0;
-    }
-}
-
-
 void WeaponTube::spawnProjectile(float target_angle)
 {
     sf::Vector2f fireLocation = parent->getPosition() + sf::rotateVector(parent->ship_template->model_data->getTubePosition2D(tube_index), parent->getRotation());
@@ -154,7 +138,7 @@ void WeaponTube::spawnProjectile(float target_angle)
             missile->setPositionZ(parent->getPositionZ());
             missile->setRotation(parent->getRotation() + direction);
             missile->target_angle = target_angle;
-            missile->category_modifier = getSizeCategoryModifier();
+            missile->category_modifier = MissileWeaponData::convertSizeToCategoryModifier(size);
         }
         break;
     case MW_Nuke:
@@ -167,7 +151,7 @@ void WeaponTube::spawnProjectile(float target_angle)
             missile->setPositionZ(parent->getPositionZ());
             missile->setRotation(parent->getRotation() + direction);
             missile->target_angle = target_angle;
-            missile->category_modifier = getSizeCategoryModifier();
+            missile->category_modifier = MissileWeaponData::convertSizeToCategoryModifier(size);
         }
         break;
     case MW_Mine:
@@ -190,7 +174,7 @@ void WeaponTube::spawnProjectile(float target_angle)
             missile->setPositionZ(parent->getPositionZ());
             missile->setRotation(parent->getRotation() + direction);
             missile->target_angle = parent->getRotation() + direction;
-            missile->category_modifier = getSizeCategoryModifier();
+            missile->category_modifier = MissileWeaponData::convertSizeToCategoryModifier(size);
         }
         break;
     case MW_EMP:
@@ -203,7 +187,7 @@ void WeaponTube::spawnProjectile(float target_angle)
             missile->setPositionZ(parent->getPositionZ());
             missile->setRotation(parent->getRotation() + direction);
             missile->target_angle = target_angle;
-            missile->category_modifier = getSizeCategoryModifier();
+            missile->category_modifier = MissileWeaponData::convertSizeToCategoryModifier(size);
         }
         break;
     default:
